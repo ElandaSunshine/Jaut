@@ -57,7 +57,7 @@ public:
         metadata["description"]    = "A theme for ESAC Cossin.";
         metadata["author"]         = "n/a";
         metadata["authors"]        = Array<var>();
-        metadata["license"]        = Array<var>(var(), var());
+        metadata["license"]        = Array<var>("", "");
         metadata["website"]        = "";
         metadata["excludedImages"] = Array<var>();
         metadata["screenshots"]    = Array<var>();
@@ -83,7 +83,8 @@ public:
 
                 if (jsonroot->hasProperty("license"))
                 {
-                    Array<var> license {jsonroot->getProperty("license")["type"], jsonroot->getProperty("license")["url"]};
+                    Array<var> license {jsonroot->getProperty("license").getProperty("type", ""),
+                                        jsonroot->getProperty("license").getProperty("url",  "")};
                     metadata["license"] = var(license);
                 }
 
@@ -104,10 +105,10 @@ public:
         metadata.set("description", "A theme for ESAC Cossin.");
         metadata.set("author", "n/a");
         metadata.set("authors", Array<var>());
-        metadata.set("license", Array<var>(var(), var()));
+        metadata.set("license", Array<var>("", ""));
         metadata.set("website", "");
         metadata.set("excludedImages", Array<var>());
-        metadata.set("screenshots", Array<var>());
+        metadata.set("screenshots",    Array<var>());
 
         if (!input.isExhausted())
         {
@@ -130,7 +131,8 @@ public:
 
                 if (jsonroot->hasProperty("license"))
                 {
-                    Array<var> license {jsonroot->getProperty("license")["type"], jsonroot->getProperty("license")["url"]};
+                    Array<var> license {jsonroot->getProperty("license").getProperty("type", ""),
+                                        jsonroot->getProperty("license").getProperty("url",  "")};
                     metadata.set("license", license);
                 }
 
