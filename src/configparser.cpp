@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: configparser.cpp
- * Time: 4, Mai 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   configparser.cpp
+    @date   04, May 2019
+    
+    ===============================================================
  */
 
 #include <jaut/impl/configparser.h>
@@ -39,7 +37,7 @@ const String getCommaOrNot(Config::Property::t_iterator it, Config::Property::t_
 {
     for (auto _it = ++it; _it != end; ++_it)
     {
-        if (_it.getValue().isValid())
+        if (_it->second.isValid())
         {
             return ",\n";
         }
@@ -129,9 +127,8 @@ const String getVarVal(const var &value) noexcept
 const bool appendSubPropertiesXml(const Config::Property propParent, String &fileOutput, int level,
                                   const String &tagSetting) noexcept
 {
-    for (auto prop : propParent)
+    for (auto &[name, propsetting] : propParent)
     {
-        Config::Property propsetting = prop;
         var value = propsetting.getValue();
         bool hasvalidsubproperties = propsetting.hasValid();
 
@@ -200,7 +197,7 @@ const bool appendSubPropertiesJson(const Config::Property propParent, String &fi
 {
     for (auto pairsetting = propParent.begin(); pairsetting != propParent.end(); ++pairsetting)
     {
-        Config::Property propsetting = pairsetting.getValue();
+        auto propsetting = pairsetting->second;
         var value = propsetting.getValue();
         bool hasvalidsubproperties = propsetting.hasValid();
 
@@ -402,7 +399,11 @@ const String prepareCommentYaml(const String &comment, const String &indentation
 
         if (counter == maxlength || exceedsMaxLength(charptr, counter, maxlength) || iscurrentnextline)
         {
-            result = result.dropLastCharacters(1);
+            if(CharacterFunctions::isWhitespace(result.getLastCharacter()))
+            {
+                result = result.dropLastCharacters(1);
+            }
+            
             result += "\n" + indentation + "# ";
             counter = 0;
         }
@@ -425,7 +426,7 @@ const bool appendSubPropertiesYaml(const Config::Property propParent, String &fi
     bool isfirst = true;
     for (auto pairsetting = propParent.begin(); pairsetting != propParent.end(); ++pairsetting)
     {
-        Config::Property propsetting = pairsetting.getValue();
+        auto propsetting = pairsetting->second;
         var value = propsetting.getValue();
         bool hasvalidsubproperties = propsetting.hasValid();
 
@@ -487,10 +488,8 @@ const bool readPropertiesYaml(YAML::Node node, Config::Property parentProp) noex
 
     if (hasvalidchilds)
     {
-        for (auto prop : parentProp)
+        for (auto &[name, propset] : parentProp)
         {
-            Config::Property propset = prop;
-
             if (!propset.isValid())
             {
                 continue;
@@ -686,7 +685,7 @@ const bool XmlParser::writeConfig(const File &configFile, const Config::Property
         (void) jaut::appendSubPropertiesXml(propdefaultcategory, tag, 1, tagSetting); // @noret
     }
 
-    for (auto prop : root)
+    for (auto &[name, prop] : root)
     {
         if (prop.getName().trim().equalsIgnoreCase(defaultCategory))
         {
@@ -842,7 +841,7 @@ const bool JsonParser::writeConfig(const File &configFile, const Config::Propert
 
     for (auto it = root.begin(); it != root.end(); ++it)
     {
-        Config::Property propcategory = it.getValue();
+        auto propcategory = it->second;
 
         if (propcategory.hasValid())
         {
@@ -903,7 +902,7 @@ const bool YamlParser::parseConfig(const File &configFile, Config::Property root
 
     if (noderoot)
     {
-        for (auto prop : root)
+        for (auto &[name, prop] : root)
         {
             if (!prop.hasValid())
             {
@@ -917,7 +916,7 @@ const bool YamlParser::parseConfig(const File &configFile, Config::Property root
                 continue;
             }
 
-            for (auto propset : prop)
+            for (auto &[nameset, propset] : prop)
             {
                 if (!propset.isValid())
                 {
@@ -1001,7 +1000,7 @@ const bool YamlParser::writeConfig(const File &configFile, const Config::Propert
 
     for (auto it = root.begin(); it != root.end(); ++it)
     {
-        Config::Property propcategory = it.getValue();
+        Config::Property propcategory = it->second;
 
         if (propcategory.hasValid())
         {

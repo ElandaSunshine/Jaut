@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: thememanager.h
- * Time: 19, August 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   thememanager.h
+    @date   19, August 2019
+    
+    ===============================================================
  */
 
 #pragma once
@@ -72,20 +70,21 @@ public:
         IThemeDefinition &operator*() const;
         IThemeDefinition *operator->() const;
         operator const bool() const noexcept;
+        bool operator==(const ThemePointer &right) const noexcept;
+        bool operator!=(const ThemePointer &right) const noexcept;
 
         //==============================================================================================================
         IThemeDefinition *get() const noexcept;
 
         //==============================================================================================================
-        const bool isCached() const noexcept;
+        bool isCached() const noexcept;
 
         //==============================================================================================================
-        const String getName() const noexcept;
+        String getName() const noexcept;
 
         //==============================================================================================================
         friend void swap(ThemePointer &left, ThemePointer &right) noexcept
         {
-            std::swap(left.cached, right.cached);
             std::swap(left.manager, right.manager);
             std::swap(left.name, right.name);
             left.pointer.swap(right.pointer);
@@ -94,9 +93,8 @@ public:
     private:
         friend class ThemeManager;
 
-        mutable bool cached;
         mutable ThemeManager *manager;
-        String name;
+        mutable String name;
         p_ptr_ref pointer;
 
         //==============================================================================================================

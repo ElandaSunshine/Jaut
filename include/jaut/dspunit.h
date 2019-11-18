@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: dspunit.h
- * Time: 11, July 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   dspunit.h
+    @date   11, July 2019
+    
+    ===============================================================
  */
 
 #pragma once
@@ -58,10 +56,14 @@ public:
     //=================================================================================================================
     virtual const String getName() const override = 0;
     virtual bool hasEditor() const override = 0;
+
+protected:
     virtual void process(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer) = 0;
     virtual void process(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer) {}
     virtual void beginPlayback(double sampleRate, int maxBlockSamples) = 0;
     virtual void finishPlayback() = 0;
+
+public:
     virtual void readData(const ValueTree data) = 0;
     virtual void writeData(ValueTree data) const = 0;
 

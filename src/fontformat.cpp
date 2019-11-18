@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: fontformat.cpp
- * Time: 30, Mai 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   fontformat.cpp
+    @date   30, May 2019
+    
+    ===============================================================
  */
 
 #include <jaut/fontformat.h>
@@ -36,6 +34,22 @@ namespace jaut
 namespace
 {
 
+const int getColourCode(juce_wchar charCode) noexcept
+{
+    charCode = tolower(charCode);
+
+    if(isdigit(charCode))
+    {
+        return JAUT_COLOUR_ID<4> + static_cast<int>(charCode - '0');
+    }
+    else if(charCode >= 'a' && charCode <= 'f')
+    {
+        return JAUT_COLOUR_ID<14> + static_cast<int>(charCode - 'a');
+    }
+
+    return 0;
+}
+
 const bool isCharValid(juce_wchar charCode) noexcept
 {
     charCode = tolower(charCode);
@@ -44,7 +58,7 @@ const bool isCharValid(juce_wchar charCode) noexcept
            (charCode >= 'a' && charCode <= 'f');
 }
 
-void editFont(juce_wchar charCode, Font &font, Colour &colour, const CharFormat::ColourCompound &colourComp,
+void editFont(juce_wchar charCode, Font &font, Colour &colour, LookAndFeel &lookAndFeel,
               const Colour &defaultColour) noexcept
 {
     charCode = tolower(charCode);
@@ -54,9 +68,9 @@ void editFont(juce_wchar charCode, Font &font, Colour &colour, const CharFormat:
         font.setStyleFlags(0);
         colour = defaultColour;
     }
-    else if ((charCode >= 'a' && charCode <= 'f') || isdigit(charCode))
+    else if (uint32 colourid = getColourCode(charCode))
     {
-        colour = colourComp[charCode];
+        colour = lookAndFeel.findColour(colourid);
     }
     else if (charCode >= 'x' && charCode <= 'z')
     {
@@ -64,13 +78,13 @@ void editFont(juce_wchar charCode, Font &font, Colour &colour, const CharFormat:
     }
 }
 
-FormatAttributes formatInput(const String &input, const Font &font, const CharFormat::ColourCompound &colours,
+FormatAttributes formatInput(const String &input, const Font &font, LookAndFeel &lookAndFeel,
                              const CharFormat::Options &options) noexcept
 {
     String::CharPointerType charptr = input.getCharPointer();
     Font cfont = font;
-    Colour dcol(options.defaultColour == Colours::transparentBlack ? colours.getColourFromIndex(0)
-                                                                   : options.defaultColour);
+    Colour dcol(options.defaultColour == Colours::transparentBlack || options.defaultColour == Colours::transparentWhite
+                ? lookAndFeel.findColour(CharFormat::ColourFormat0Id) : options.defaultColour);
     Colour ccol(dcol);
     String text;
     FormatAttributes as;
@@ -113,7 +127,7 @@ FormatAttributes formatInput(const String &input, const Font &font, const CharFo
                     text.clear();
                 }
 
-                editFont(nextchar, cfont, ccol, colours, dcol);
+                editFont(nextchar, cfont, ccol, lookAndFeel, dcol);
                 ++charptr;
             }
         }
@@ -138,13 +152,13 @@ FormatAttributes formatInput(const String &input, const Font &font, const CharFo
  * ================================= CharFormat =====================================
  * ================================================================================== */
 
-CharFormat::CharFormat(const ColourCompound &colourComp, const Options &options) noexcept
-    : colours(colourComp),
-      options(options)
+CharFormat::CharFormat() noexcept
+    : lookAndFeel(&Desktop::getInstance().getDefaultLookAndFeel())
 {}
 
 CharFormat::CharFormat(const Options &options) noexcept
-    : options(options)
+    : lookAndFeel(&Desktop::getInstance().getDefaultLookAndFeel()),
+      options(options)
 {}
 
 //=====================================================================================================================
@@ -154,7 +168,7 @@ void CharFormat::drawText(Graphics &g, const String &text, Rectangle<float> dest
     Graphics::ScopedSaveState sss(g);
 
     FormatLayout textLayout;
-    FormatAttributes as (formatInput(text, g.getCurrentFont(), colours, options));
+    FormatAttributes as(formatInput(text, g.getCurrentFont(), *lookAndFeel, options));
     Point<float> origin = justification.appliedToRectangle(Rectangle<float>(destRectangle.getWidth(),
                                                                             destRectangle.getHeight()),
                                                            destRectangle).getPosition();
@@ -223,9 +237,20 @@ void CharFormat::drawText(Graphics &g, const String &text, int x, int y, int wid
 }
 
 //=====================================================================================================================
-void CharFormat::setColours(const ColourCompound &colourComp) noexcept
+void CharFormat::setLookAndFeel(LookAndFeel *lookAndFeel) noexcept
 {
-    colours = colourComp;
+    if(lookAndFeel)
+    {
+        this->lookAndFeel = lookAndFeel;
+        return;
+    }
+
+    lookAndFeel = &Desktop::getInstance().getDefaultLookAndFeel();
+}
+
+LookAndFeel &CharFormat::getLookAndFeel() const noexcept
+{
+    return *lookAndFeel;
 }
 
 void CharFormat::setColour(const Colour &colour) noexcept
@@ -233,14 +258,10 @@ void CharFormat::setColour(const Colour &colour) noexcept
     options.defaultColour = colour;
 }
 
-const CharFormat::ColourCompound &CharFormat::getColours() const noexcept
+Colour CharFormat::getColour(juce_wchar colourCode) const noexcept
 {
-    return colours;
-}
-
-const Colour &CharFormat::getColour(juce_wchar colourCode) const noexcept
-{
-    return colours[colourCode];
+    const int colourid = jaut::getColourCode(colourCode);
+    return colourid && lookAndFeel ? lookAndFeel->findColour(colourid) : options.defaultColour;
 }
 
 const juce_wchar CharFormat::getFormattingCharacter() const noexcept
@@ -275,7 +296,7 @@ void FontFormat::drawText(Graphics &g, const String &text, Rectangle<float> area
     bool flagcaps          = (formats & SMALL_CAPS) == SMALL_CAPS;
     CharFormat *charformat = flagformat ? (charFormat ? charFormat : &format) : 0;
     FormatAttributes input = charformat ? FormatAttributes(formatInput(text, g.getCurrentFont(),
-                                                           charFormat->getColours(), charFormat->getOptions()))
+                                                           charformat->getLookAndFeel(), charformat->getOptions()))
                                         : FormatAttributes(text);
     auto origin            = justification.appliedToRectangle(Rectangle<float>(area.getWidth(), area.getHeight()),
                                                                                area).getPosition();
@@ -457,55 +478,5 @@ void FontFormat::drawFormattedString(Graphics &g, const String &text, int x, int
                                      Colour colour, Justification justification, CharFormat *charFormat) noexcept
 {
     drawFormattedString(g, text, Rectangle<int>(x, y, width, height).toFloat(), colour, justification, charFormat);
-}
-
-
-
-/* ==================================================================================
- * =============================== ColourCompound ===================================
- * ================================================================================== */
-
-CharFormat::ColourCompound::ColourCompound() noexcept
-{
-    std::fill_n(colours, MAX_COLOURS_SIZE, Colours::white);
-}
-
-CharFormat::ColourCompound::ColourCompound(Colour colour0, Colour colour1, Colour colour2, Colour colour3,
-                                           Colour colour4, Colour colour5, Colour colour6, Colour colour7,
-                                           Colour colour8, Colour colour9, Colour colourA, Colour colourB,
-                                           Colour colourC, Colour colourD, Colour colourE, Colour colourF) noexcept
-    : colours {colour0, colour1, colour2, colour3, colour4, colour5, colour6, colour7,
-               colour8, colour9, colourA, colourB, colourC, colourD, colourE, colourF}
-{}
-
-//=====================================================================================================================
-const Colour &CharFormat::ColourCompound::operator[](juce_wchar characterId) const noexcept
-{
-    if (isdigit(characterId))
-    {
-        return colours[characterId - '0'];
-    }
-    else if (isalpha(characterId))
-    {
-        int alphacode = tolower(characterId) - 'a' + 10;
-
-        if (alphacode > 9 && alphacode < 16)
-        {
-            return colours[alphacode];
-        }
-    }
-
-    return colours[0];
-}
-
-//=====================================================================================================================
-const Colour &CharFormat::ColourCompound::getColourFromIndex(uint32 index) const noexcept
-{
-    if (index < 0 || index > 15)
-    {
-        index = 0;
-    }
-
-    return colours[index];
 }
 }

@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: Config.h
- * Time: 4, May 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   config.h
+    @date   04, May 2019
+    
+    ===============================================================
  */
 
 #pragma once
@@ -63,26 +61,17 @@ public:
         struct JAUT_API Listener
         {
             virtual void onValueChanged(const String &name, var oldValue, var newValue) = 0;
-            virtual void onPropertyAdded(Property property) = 0;
+            virtual void onPropertyAdded(Property property) {}
         };
 
         //==============================================================================================================
-        using t_sub_map        = juce::HashMap<juce::String, Property>;
-        using t_iterator       = t_sub_map::Iterator;
+        using t_sub_map        = std::map<juce::String, Property>;
+        using t_iterator       = t_sub_map::iterator;
         using t_listener_list  = juce::ListenerList<Listener>;
-        using t_empty_it       = struct EmptyIterator final : t_iterator
-        {
-            t_sub_map emptyMap;
-
-            EmptyIterator()
-                : t_iterator(emptyMap),
-                  emptyMap(0)
-            {}
-        };
 
         //==============================================================================================================
         /** Constructs an invalid property object. */
-        Property() noexcept;
+        Property() noexcept = default;
 
         /**
             Constructs a new property object.
@@ -208,6 +197,13 @@ public:
          */
         const var &getValue() noexcept;
 
+        /**
+            Resets the properties current value, and alternatively its child's, to default.
+
+            @param recursive If this is true, all children properties will be reset too
+         */
+        void reset(bool recursive = false) noexcept;
+
         //==============================================================================================================
         /**
             Gets this' property value as string.
@@ -226,7 +222,6 @@ public:
         //==============================================================================================================
         friend void swap(Property &left, Property &right) noexcept
         {
-            std::swap(left.eventConfig, right.eventConfig);
             left.data.swap(right.data);
         }
 
@@ -237,8 +232,6 @@ public:
         using p_data_handle = std::shared_ptr<SharedObject>;
 
         p_data_handle data;
-        Config *eventConfig;
-        t_listener_list listeners;
 
         //==============================================================================================================
         void addConfig(Config *config) noexcept;
@@ -249,7 +242,7 @@ public:
     struct JAUT_API Listener
     {
         virtual void onValueChanged(const String &name, var oldValue, var newValue) = 0;
-        virtual void onPropertyAdded(Property property) = 0;
+        virtual void onPropertyAdded(Property property) {}
     };
 
     /**
@@ -353,7 +346,21 @@ public:
         @param category The name of the category the property is in
         @returns The property if it exists or an invalid property
      */
-    Property getProperty(const String &name, const String &category = String()) noexcept;
+    Property getProperty(const String &name, const String &category = String()) const noexcept;
+
+    /**
+        Gathers all properties into one root property and creates properties for the various categories.
+
+        @returns The root Property object containing all categories and subsequent Property objects
+     */
+    Property getAllProperties() const;
+
+    /**
+        Gathers all properties into one root property and creates properties for the various categories.
+
+        @returns The root Property object containing all categories and subsequent Property objects
+     */
+    Property getAllProperties();
 
     /**
         Gets the comment of a category.
@@ -361,7 +368,7 @@ public:
         @param category The category of the comment
         @returns The comment if it exists or an empty string
      */
-    const String getCategoryComment(const String &category) const noexcept;
+    String getCategoryComment(const String &category) const noexcept;
 
     /**
         Sets the comment for a certain category.
@@ -408,6 +415,12 @@ public:
      */
     Property createProperty(const String &name, const var &defaultValue = var(),
                             const String &category = String()) noexcept;
+
+    /**
+        Resets a whole category's property values.
+        Be aware that this can't be undone!
+     */
+    void resetCategory(const String &category = String()) noexcept;
 
     //==================================================================================================================
     void addListener(Listener *listener) noexcept;

@@ -1,40 +1,64 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: jaut.h
- * Time: 4, Mai 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   expo.h
+    @date   04, May 2019
+    
+    ===============================================================
  */
 
 #pragma once
 
 #include <JuceHeader.h>
 
-/**********************************************************************************************************************
-             DON'T TOUCH BEGIN
- **********************************************************************************************************************/
-//=====================================================================================================================
-//=====================================================================================================================
-//=====================================================================================================================
+/**
+    This is the jaut export header.
+    This header file defines the export macro as well as useful utilities and internal settings.
+
+    You may change any of these, but be aware that changing something you shouldn't may break internal stuff.
+    So better only alter sections explicitly stating you can do so to stay on the safe site!
+
+    Below you will find following sections (Be free to use any of these in your own project):
+    - Export:      This section defines the jaut export macro for dll's on Windows based operating systems.
+                   This macro can also be used to make sure that jaut is actually included in your project.
+    - Macros:      This section defines several useful macros used in the jaut library which can as well be
+                   used in your project.
+                   Just be sure you know what you are doing!
+    - Typedefs:    These typedefs are just convenience typedefs to better describe certain types for a
+                   particular context.
+                   You may or may not use them in your project!
+    - Settings:    The settings section defines various functionality parameters which direct the jaut
+                   library what to do or what to be, depending on the use case and context!
+    - Internal:    The internal section is just a quick way of wrapping certain functions in this file
+                   to make them easier accessible inside the jaut library.
+                   This section was not intended to be used outside of the jaut library.
+                   However, you may still use them for your own code.
+    - Utility:     The utility section of this header defines some useful utilities, which didn't fit
+                   in any other class!
+    - Error codes: Error codes were intended to be used for certain situations where a function may
+                   have returned different than expected.
+                   However, these are currently unused and may be either used or removed in future!
+ */
+
+//======================================================================================================================
+//======================================================================================================================
+//======================================================================================================================
 // BEGIN: EXPORT
 
 #undef JAUT_API
@@ -54,19 +78,23 @@
   #define JAUT_API __attribute__ ((visibility("default")))
 #endif
 
-//=====================================================================================================================
+//======================================================================================================================
 #ifndef JAUT_API
   #define JAUT_API
 #endif
 
 // END: EXPORT
-//=====================================================================================================================
-//=====================================================================================================================
-//=====================================================================================================================
+//======================================================================================================================
+//======================================================================================================================
+//======================================================================================================================
 
 
-//=====================================================================================================================
-// MACRO TOOLS
+namespace jaut
+{
+/* ==================================================================================
+ * =============================== Convenience Macros ===============================
+ * ================================================================================== */
+#if (1) // Convenience macros (Don't touch)
 #ifdef JUCE_DEBUG
   #define JT_DEBUGGING(x) x
   #define JT_NDEBUGGING(x)
@@ -81,44 +109,155 @@
     For lazy programmers to avoid implicit conversion warnings.
     Casts any numeral type to float.
  */
-#define JT_FFIX(x) static_cast<float>(x)
+#define JT_FIX_F(x) static_cast<float>(x)
 
 /**
     For lazy programmers to avoid implicit conversion warnings.
     Casts any numeral type to double.
-*/
-#define JT_DFIX(x) static_cast<double>(x)
+ */
+#define JT_FIX_D(x) static_cast<double>(x)
 
 /**
     For lazy programmers to avoid implicit conversion warnings.
     Casts any numeral type to int.
-*/
-#define JT_IFIX(x) static_cast<int>(x)
+ */
+#define JT_FIX(x) static_cast<int>(x)
 
-//=====================================================================================================================
-// Convenience typedefs
+
+#if JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP
+  /**
+      This comes in handy when messing with custom standalone windows and plugin versions.
+      As you may want to return to the default standalone window throughout developement,
+      some things may not work anymore.
+      Use this to make sure certain things only work as default standalone and as plugin.
+
+      Long story short, if you defined your custom standalone window, this will make sure that
+      certain functionality runs only when your code is compiled as a plugin.
+      If you defined the default standalone window, this will make the code run the same in the
+      standalone version as also in the plugin version.
+
+      @param x The value which should be expanded if it's run as standalone (doesn't do anything if the default
+               standalone filter is defined)
+      @param y The value which should be expanded if it's not run as standalone (this will always be evaluated if the
+               default standalone filter is defined)
+    */
+  #define JT_IS_STANDALONE_INLINE(x, y) \
+          JUCEApplicationBase::isStandaloneApp() ? (x) : (y)
+
+  /**
+      This comes in handy when messing with custom standalone windows and plugin versions.
+      As you may want to return to the default standalone window throughout developement,
+      some things may not work anymore.
+      Use this to make sure certain things only work as default standalone and as plugin.
+
+      Long story short, if you defined your custom standalone window, this will make sure that
+      certain functionality runs only when your code is compiled as a plugin.
+      If you defined the default standalone window, this will make the code run the same in the
+      standalone version as also in the plugin version.
+
+      @param x The value which should be expanded if it's run as standalone (doesn't do anything if the default
+               standalone filter is defined)
+    */
+  #define JT_IS_STANDALONE(x) \
+          if(JUCEApplicationBase::isStandaloneApp()) {x}
+
+  /**
+      This comes in handy when messing with custom standalone windows and plugin versions.
+      As you may want to return to the default standalone window throughout developement,
+      some things may not work anymore.
+      Use this to make sure certain things only work as default standalone and as plugin.
+
+      Long story short, if you defined your custom standalone window, this will make sure that
+      certain functionality runs only when your code is compiled as a plugin.
+      If you defined the default standalone window, this will make the code run the same in the
+      standalone version as also in the plugin version.
+
+      @param x The value which should be expanded if it's not run as standalone (this will always be evaluated if the
+               default standalone filter is defined)
+    */
+  #define JT_STANDALONE_ELSE(x) \
+          else {x}
+#else
+   /**
+      This comes in handy when messing with custom standalone windows and plugin versions.
+      As you may want to return to the default standalone window throughout developement,
+      some things may not work anymore.
+      Use this to make sure certain things only work as default standalone and as plugin.
+
+      Long story short, if you defined your custom standalone window, this will make sure that
+      certain functionality runs only when your code is compiled as a plugin.
+      If you defined the default standalone window, this will make the code run the same in the
+      standalone version as also in the plugin version.
+
+      @param x The value which should be expanded if it's run as standalone (doesn't do anything if the default
+               standalone filter is defined)
+      @param y The value which should be expanded if it's not run as standalone (this will always be evaluated if the
+               default standalone filter is defined)
+    */
+  #define JT_IS_STANDALONE_INLINE(x, y) y
+
+  /**
+      This comes in handy when messing with custom standalone windows and plugin versions.
+      As you may want to return to the default standalone window throughout developement,
+      some things may not work anymore.
+      Use this to make sure certain things only work as default standalone and as plugin.
+
+      Long story short, if you defined your custom standalone window, this will make sure that
+      certain functionality runs only when your code is compiled as a plugin.
+      If you defined the default standalone window, this will make the code run the same in the
+      standalone version as also in the plugin version.
+
+      @param x The value which should be expanded if it's run as standalone (doesn't do anything if the default
+               standalone filter is defined)
+    */
+  #define JT_IS_STANDALONE(x) if constexpr(false){x}
+
+  /**
+      This comes in handy when messing with custom standalone windows and plugin versions.
+      As you may want to return to the default standalone window throughout developement,
+      some things may not work anymore.
+      Use this to make sure certain things only work as default standalone and as plugin.
+
+      Long story short, if you defined your custom standalone window, this will make sure that
+      certain functionality runs only when your code is compiled as a plugin.
+      If you defined the default standalone window, this will make the code run the same in the
+      standalone version as also in the plugin version.
+
+      @param x The value which should be expanded if it's not run as standalone (this will always be evaluated if the
+               default standalone filter is defined)
+    */
+  #define JT_STANDALONE_ELSE(x) else {x}
+#endif
+#endif // Convenience macros (Don't touch)
+
+
+
+/* ==================================================================================
+ * ============================== Convenience Typedefs ==============================
+ * ================================================================================== */
+#if (1) // Convenience typedefs (Don't touch)
 typedef unsigned int ErrInt;
+#endif // Convenience typedefs (Don't touch) 
 
-/**********************************************************************************************************************
-             DON'T TOUCH END
- **********************************************************************************************************************/
 
-namespace jaut
-{
+
+/* ==================================================================================
+ * ================================= jaut::settings =================================
+ * ================================================================================== */
+#if(1) // Settings (You can change these)
 namespace settings
 {
-//=====================================================================================================================
-// GENERAL LIBRARY SETTINGS
-
+//======================================================================================================================
+// SECTION 0: GENERAL SETTINGS
 /**
     Determines whether strict mode should be enabled or not.
     This enables strict mode for certain situations which you can individually turn on/off in section 1.
 
     Default: true
  */
-constexpr bool IS_STRICT_ON = 1;
+inline constexpr bool IS_STRICT_ON = true;
 
-//=====================================================================================================================
+//======================================================================================================================
 // SECTION 1: STRICT MODE SETTINGS
 
 /**
@@ -128,7 +267,7 @@ constexpr bool IS_STRICT_ON = 1;
 
     Default: true
  */
-constexpr bool STRICT_TEMPLATES = 1;
+inline constexpr bool STRICT_TEMPLATES = true;
 
 /**
     If this is true, then the parser implementing this flag will be more strict parsing config files.
@@ -139,16 +278,17 @@ constexpr bool STRICT_TEMPLATES = 1;
 
     Default: false
  */
-constexpr bool STRICT_CONFIG_PARSING = 0;
+inline constexpr bool STRICT_CONFIG_PARSING = false;
 
 /**
-    If this is true, when a processor is set to double precision processing and a float buffer is passed or vice-versa, an assertion will be thrown.
+    If this is true, when a processor is set to double precision processing and a float buffer is passed or vice-versa,
+    an assertion will be thrown.
 
     If you don't mind losing data or wasting more memory than needed, turn this option off!
 
     Default: false
   */
-constexpr bool STRICT_PROCESSING = 1;
+inline constexpr bool STRICT_PROCESSING = true;
 
 /**
     If this is true, when the message thread tries to call a function not supposed to be called from the message thread,
@@ -156,34 +296,47 @@ constexpr bool STRICT_PROCESSING = 1;
 
     Default: 1
   */
-constexpr bool STRICT_THREAD_DISTINCTION = 1;
+inline constexpr bool STRICT_THREAD_DISTINCTION = true;
 
-//=====================================================================================================================
+//======================================================================================================================
 // SECTION 2: DEFAULT SETTINGS
 
-
+/**
+    This defines the starting colour id value of all jaut component's colour ids.
+    If you are using components which ids may threaten to clash with jaut's,
+    you may want to change this number to fix these issues.
+ */
+inline constexpr int DEFAULT_COMPONENT_COLOUR_STARTING_INDEX = 0x1000;
 }
-//=====================================================================================================================
+#endif // Settings (You can change these)
+
+
+
+/* ==================================================================================
+ * ================================= jaut::internal =================================
+ * ================================================================================== */
+#if(1) // Internal (Don't touch)
+//======================================================================================================================
 // BEGIN INTERNAL (DON'T TOUCH THIS SECTION)
-//=====================================================================================================================
+//======================================================================================================================
 namespace internal
 {
-constexpr bool JAUT_STRICT(const int strictSetting = 2) noexcept
+inline constexpr bool JAUT_STRICT(const int strictSetting = 2)
 {
     return JT_DEBUGGING_OR(settings::IS_STRICT_ON && (strictSetting < 2 ? strictSetting : 1), 0);
 }
 
-constexpr bool STRICT_TEMPLATES_ENABLED() noexcept
+inline constexpr bool STRICT_TEMPLATES_ENABLED()
 {
     return JAUT_STRICT(settings::STRICT_TEMPLATES);
 }
 
-constexpr bool STRICT_CONFIG_PARSING_ENABLED() noexcept
+inline constexpr bool STRICT_CONFIG_PARSING_ENABLED()
 {
     return JAUT_STRICT(settings::STRICT_CONFIG_PARSING);
 }
 
-constexpr bool STRICT_PROCESSING_ENABLED() noexcept
+inline constexpr bool STRICT_PROCESSING_ENABLED()
 {
     return JAUT_STRICT(settings::STRICT_PROCESSING);
 }
@@ -191,16 +344,23 @@ constexpr bool STRICT_PROCESSING_ENABLED() noexcept
 extern bool INTERNAL_DISABLE_THREAD_DIST;
 extern bool EXPLICIT_DISABILITY;
 }
-//=====================================================================================================================
+//======================================================================================================================
 //  END INTERNAL
-//=====================================================================================================================
+//======================================================================================================================
+#endif // Internal (Don't touch)
 
+
+
+/* ==================================================================================
+ * ================================= jaut - utility =================================
+ * ================================================================================== */
+#if(1) // Utility (Don't touch)
 /**
     This will disable the JAUT_ENSURE_AUDIO_THREAD() check for once and reset it again when such an event has occured.
     Beware to only use this when you really know what you're doing, as calling audio thread code on the gui without
     proper synchronisation will most of the time go wrong.
  */
-inline void JAUT_DISABLE_THREAD_DIST() noexcept
+inline JAUT_API void JAUT_DISABLE_THREAD_DIST()
 {
     JT_NDEBUGGING(return);
 
@@ -215,7 +375,7 @@ inline void JAUT_DISABLE_THREAD_DIST() noexcept
     Beware to only use this when you really know what you're doing, as calling audio thread code on the gui without
     proper synchronization will most of the time go wrong.
  */
-inline void JAUT_DISABLE_THREAD_DIST_EXPLICIT(const bool disable) noexcept
+inline JAUT_API void JAUT_DISABLE_THREAD_DIST_EXPLICIT(const bool disable)
 {
     JT_NDEBUGGING(return);
 
@@ -234,7 +394,7 @@ inline void JAUT_DISABLE_THREAD_DIST_EXPLICIT(const bool disable) noexcept
 
     You can also temporarily disable this with JAUT_DISABLE_THREAD_DIST() if you want to live on the bloody edge.
  */
-inline void JAUT_ENSURE_AUDIO_THREAD()
+inline JAUT_API void JAUT_ENSURE_AUDIO_THREAD()
 {
     JT_NDEBUGGING(return);
 
@@ -248,9 +408,16 @@ inline void JAUT_ENSURE_AUDIO_THREAD()
     internal::INTERNAL_DISABLE_THREAD_DIST = false;
 }
 
-struct ScopedATCD final
+template<int INCREASE>
+inline constexpr JAUT_API int JAUT_COLOUR_ID = settings::DEFAULT_COMPONENT_COLOUR_STARTING_INDEX + INCREASE;
+
+/**
+    This class will make sure to disable explicit thread distinction as long as it persists and resets
+    it back once it's destroyed.
+ */
+struct JAUT_API ScopedATCD final
 {
-    ScopedATCD() noexcept
+    constexpr ScopedATCD() noexcept
     {
         JAUT_DISABLE_THREAD_DIST_EXPLICIT(true);
     }
@@ -260,13 +427,19 @@ struct ScopedATCD final
         JAUT_DISABLE_THREAD_DIST_EXPLICIT(false);
     }
 };
+#endif // Utility (Don't touch)
 
-//=====================================================================================================================
-// LIBRARY ERROR CODES (currently unused)
-constexpr ErrInt ERROR_TERMINATE             = 0x0000;
-constexpr ErrInt ERROR_SUCCESS               = 0x0001;
-constexpr ErrInt ERROR_INTERNAL_ISSUE        = 0x0002;
-constexpr ErrInt ERROR_FILE_MISSING          = 0x0003;
-constexpr ErrInt ERROR_CONFIG_INVALID_FORMAT = 0x0064;
-constexpr ErrInt ERROR_CONFIG_INTERNAL       = 0x0065;
+
+
+/* ==================================================================================
+ * ================================ jaut - errorcodes ===============================
+ * ================================================================================== */
+#if(1) // Error codes (Don't touch)
+inline constexpr ErrInt ERROR_TERMINATE             = 0x0000;
+inline constexpr ErrInt ERROR_SUCCESS               = 0x0001;
+inline constexpr ErrInt ERROR_INTERNAL_ISSUE        = 0x0002;
+inline constexpr ErrInt ERROR_FILE_MISSING          = 0x0003;
+inline constexpr ErrInt ERROR_CONFIG_INVALID_FORMAT = 0x0064;
+inline constexpr ErrInt ERROR_CONFIG_INTERNAL       = 0x0065;
+#endif // Error codes (Don't touch)
 }

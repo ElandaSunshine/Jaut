@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: localisation.h
- * Time: 4, Mai 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   localisation.h
+    @date   04, May 2019
+    
+    ===============================================================
  */
 
 #pragma once
@@ -34,19 +32,10 @@ namespace jaut
 {
 /**
     The Localisation class is a simple wrapper around JUCE's inbuilt localisation system.
-    You have to specify a list of valid language and country codes to make sure those languages are
-    natively supported by this class.
-
-    If you don't want this strictness, you can still use JUCE's default localisation system.
-    For that, see the class LocalisedStrings.
  */
 class JAUT_API Localisation final
 {
 public:
-    //=================================================================================================================
-    using LangCodeMap = std::unordered_map<String, String>;
-
-    //=================================================================================================================
     /**
         Creates an invalid instance of the Localisation class.
      */
@@ -56,25 +45,8 @@ public:
         Creates a new instance of the Localisation class.
 
         @param langRootDir The root directory of the language files
-        @param codeList    The list of supported country and language codes
      */
-    Localisation(const File &langRootDir, const String &codeList);
-
-    /**
-        Creates a new instance of the Localisation class.
-
-        @param langRootDir  The root directory of the language files
-        @param codeListFile A file to the list of supported country and language codes
-     */
-    Localisation(const File &langRootDir, const File &codeListFile);
-
-    /**
-        Creates a new instance of the Localisation class.
-
-        @param langRootDir         The root directory of the language files
-        @param codeListInputStream A stream to the list of supported country and language codes
-     */
-    Localisation(const File &langRootDir, InputStream &codeListInputStream);
+    Localisation(const File &langRootDir, const LocalisedStrings &defaultLocale);
 
     Localisation(const Localisation &other);
     Localisation(Localisation &&other) noexcept;
@@ -85,69 +57,72 @@ public:
 
     //=================================================================================================================
     /**
-        Sets the default fallback language for the global language instance.
-
-        If there is not already a global language specified, this will become the fallback
-        and global language instance.
+        Sets the default fallback language.
 
         @param defaultLanguage A pointer to a new created LocalisedStrings object, this must be dynamically allocated
      */
-    void setDefault(LocalisedStrings *defaultLanguage) noexcept;
+    void setDefault(const LocalisedStrings &defaultLanguage) noexcept;
 
     /**
-        Sets the default fallback language for the global language instance.
-
-        If there is not already a global language specified, this will become the fallback
-        and global language instance.
+        Sets the default fallback language.
 
         @param languageStringUtf8 A string containing all the language data to create the language object from
      */
     void setDefault(const String &languageStringUtf8);
 
     /**
-        Sets the default fallback language for the global language instance.
-
-        If there is not already a global language specified, this will become the fallback
-        and global language instance.
+        Sets the default fallback language.
 
         @param inputStream An InputStream reading all the language data to create the language object from
      */
     void setDefault(InputStream &inputStream);
 
     /**
-        Sets the new current language of this object.
-
-        This will search your language directory for files meeting the language parameter's content.
-        Thus, the language parameter has to follow certain criteria.
-        It has to be in the format of "yy_xx" where yy is the lang code and xx is the country code.
-        These acronyms have to be contained in this class' given lang code file passed on creation.
+        Sets the new current language of this object or does nothing if no file with that name was found.
 
         @param language The language to set. English in the UK for example: en_gb
      */
-    void setCurrentLanguage(const String &language) noexcept;
+    void setCurrentLanguage(const String &language);
+
+    /**
+        Sets the new current language from another LocalisedStrings object.
+        This won't affect the default language!
+
+        @param localisedStrings The language object to set
+     */
+    void setCurrentLanguage(const LocalisedStrings &localisedStrings) noexcept;
+
+    /**
+        Sets the new current language from another Localisation object.
+        This won't affect the default language!
+
+        @param localisedStrings The language object to set
+     */
+    void setCurrentLanguage(const Localisation &locale) noexcept;
 
     //=================================================================================================================
     /**
-        Gets the current global LocalisedString object.
+        Gets the internal LocalisedStrings object.
 
-        This is just a convenience method, if you want static access to the object returned by this, just call:
-        LocalisedStrings::getCurrentMappings()
-
-        @return The current global LocalisedStrings instance if set in advance, else a null pointer
+        @return The current LocalisedString object
      */
-    LocalisedStrings *getLocale() const noexcept;
+    const LocalisedStrings &getInternalLocalisation() const noexcept;
+
+    //=================================================================================================================
+    const String translate(const String &name) const noexcept;
+    const String translate(const String &name, const String &fallbackValue) const noexcept;
 
     //=================================================================================================================
     friend void swap(Localisation &left, Localisation &right) noexcept
     {
-        left.defaultLocale.swap(right.defaultLocale);
-        left.langCodes.swap(right.langCodes);
         std::swap(left.rootDir, right.rootDir);
+        std::swap(left.currentLocale, right.currentLocale);
+        std::swap(left.defaultLocale, right.defaultLocale);
     }
 
 private:
     File rootDir;
-    LangCodeMap langCodes;
-    std::unique_ptr<LocalisedStrings> defaultLocale;
+    LocalisedStrings currentLocale;
+    LocalisedStrings defaultLocale;
 };
 }

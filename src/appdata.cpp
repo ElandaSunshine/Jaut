@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: AppData.h
- * Time: 4, Mai 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   appdata.cpp
+    @date   04, May 2019
+    
+    ===============================================================
  */
 
 #include <jaut/appdata.h>
@@ -138,8 +136,7 @@ struct Directory::SharedObject final
 
     SharedObject(const String &name, const String &baseDir)
         : baseDir(baseDir),
-          name(name),
-          subDirectories(10)
+          name(name)
     {}
 };
 
@@ -164,7 +161,7 @@ Directory Directory::operator[](const String &dirName) noexcept
 {
     if (!data)
     {
-        return invalidDirectory;
+        return Directory();
     }
 
     if (dirName.containsAnyOf("/\\"))
@@ -176,19 +173,20 @@ Directory Directory::operator[](const String &dirName) noexcept
         {
             if (hasSubDirectory(dirName))
             {
-                return recursivelySearchForDesiredDirectory(data->subDirectories.getReference(dirName), dirlist, 1);
+                return recursivelySearchForDesiredDirectory(data->subDirectories.getReference
+                                                            (dirName.trim().toLowerCase()), dirlist, 1);
             }
         }
 
-        return invalidDirectory;
+        return Directory();
     }
 
     if (!hasSubDirectory(dirName))
     {
-        (void)withSubFolder(dirName);
+        (void) withSubFolder(dirName);
     }
 
-    return data->subDirectories.getReference(dirName);
+    return data->subDirectories.getReference(dirName.trim().toLowerCase());
 }
 
 const bool Directory::operator==(const Directory &dir) const noexcept
@@ -330,11 +328,11 @@ Directory Directory::withSubFolder(const String &directoryName) noexcept
             Directory directory(directoryName, getBaseDir());
             directory.data->parent  = data;
             directory.data->baseDir = data->baseDir;
-            data->subDirectories.set(directoryName, directory);
+            data->subDirectories.set(directoryName.trim().toLowerCase(), directory);
         }
     }
 
-    return invalidDirectory;
+    return *this;
 }
 
 Directory Directory::makeDir(const String &directoryName)
@@ -347,7 +345,7 @@ Directory Directory::makeDir(const String &directoryName)
 
     (void) withSubFolder(directoryName);
 
-    return (*this)[directoryName];
+    return (*this)[directoryName.trim().toLowerCase()];
 }
 
 const Directory Directory::getDir(const String &directoryName) const noexcept
@@ -357,7 +355,7 @@ const Directory Directory::getDir(const String &directoryName) const noexcept
         return Directory();
     }
 
-    return data->subDirectories[directoryName];
+    return data->subDirectories.getReference(directoryName.trim().toLowerCase());
 }
 
 //==============================================================================
@@ -617,7 +615,7 @@ AppData &AppData::withSubFolder(const String &directoryName) noexcept
             Directory directory(directoryName, data->baseDir);
             directory.data->parent  = data;
             directory.data->baseDir = data->baseDir;
-            (void) data->subDirectories.set(directoryName, directory);
+            (void) data->subDirectories.set(directoryName.trim().toLowerCase(), directory);
         }
     }
 
@@ -633,7 +631,7 @@ Directory AppData::getSubDirOrPossibleRewrite(const String &directoryName) noexc
         return rewrites.at(lname);
     }
 
-    return invalidDirectory;
+    return Directory();
 }
 
 void AppData::addRewrite(const String &rewriteName, Directory &dir) noexcept

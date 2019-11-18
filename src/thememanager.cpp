@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: thememanager.cpp
- * Time: 19, August 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   thememanager.cpp
+    @date   19, August 2019
+    
+    ===============================================================
  */
 
 #include <jaut/thememanager.h>
@@ -37,33 +35,31 @@
 
 namespace jaut
 {
-#if (1) //Region: ThemePointer
 //======================================================================================================================
 //=============================================== ThemePointer =========================================================
 //======================================================================================================================
-
+#if (1) //Region: ThemePointer
 ThemeManager::ThemePointer::ThemePointer() noexcept
-    : cached(false), manager(nullptr)
+    : manager(nullptr)
 {}
 
 ThemeManager::ThemePointer::ThemePointer(std::nullptr_t) noexcept
-    : cached(false), manager(nullptr)
+    : manager(nullptr)
 {}
 
 ThemeManager::ThemePointer::ThemePointer(const String &name, IThemeDefinition *theme) noexcept
-    : cached(false), manager(nullptr), name(name), pointer(theme)
+    : manager(nullptr), name(name), pointer(theme)
 {
     jassert(pointer != 0);
 }
 
 ThemeManager::ThemePointer::ThemePointer(const ThemePointer &other) noexcept
-    : cached(other.cached), manager(other.manager), name(other.name),
+    : manager(other.manager), name(other.name),
       pointer(other.pointer)
 {}
 
 ThemeManager::ThemePointer::ThemePointer(ThemePointer &&other) noexcept
-    : cached(std::move(other.cached)),
-      manager(std::move(other.manager)), name(std::move(other.name)),
+    : manager(std::move(other.manager)), name(std::move(other.name)),
       pointer(std::move(other.pointer))
 {
     other.manager = nullptr;
@@ -115,6 +111,16 @@ ThemeManager::ThemePointer::operator const bool() const noexcept
     return pointer != nullptr;
 }
 
+bool ThemeManager::ThemePointer::operator==(const ThemePointer &right) const noexcept
+{
+    return pointer.get() == right.pointer.get();
+}
+
+bool ThemeManager::ThemePointer::operator!=(const ThemePointer &right) const noexcept
+{
+    return pointer.get() != right.pointer.get();
+}
+
 //======================================================================================================================
 IThemeDefinition *ThemeManager::ThemePointer::get() const noexcept
 {
@@ -122,31 +128,31 @@ IThemeDefinition *ThemeManager::ThemePointer::get() const noexcept
 }
 
 //======================================================================================================================
-const bool ThemeManager::ThemePointer::isCached() const noexcept
+bool ThemeManager::ThemePointer::isCached() const noexcept
 {
-    if(cached)
-    {
-        String id = name.trim().toLowerCase();
-
-        if(manager)
+    if(manager && manager->options.cacheThemes && pointer.use_count() > 1)
+    {        
+        for(auto &[key, value] : manager->themeCache)
         {
-            auto it = manager->themeCache.find(id);
-
-            if(it != manager->themeCache.end() && it->second.get() == get())
+            if(value.pointer == pointer)
             {
+                if(name != key)
+                {
+                    name = key;
+                }
+
                 return true;
             }
         }
 
-        cached  = false;
         manager = nullptr;
     }
 
-    return cached;
+    return false;
 }
 
 //======================================================================================================================
-const String ThemeManager::ThemePointer::getName() const noexcept
+String ThemeManager::ThemePointer::getName() const noexcept
 {
     return name;
 }
@@ -155,14 +161,15 @@ const String ThemeManager::ThemePointer::getName() const noexcept
 void ThemeManager::ThemePointer::setThemeManager(ThemeManager *manager) noexcept
 {
     this->manager = manager;
-    cached        = true;
 }
 #endif //Region: ThemePointer
-#if (1) //Region: ThemeManager
+
+
+
 //======================================================================================================================
 //=============================================== ThemeManager =========================================================
 //======================================================================================================================
-
+#if (1) //Region: ThemeManager
 ThemeManager::ThemeManager(const File &themeRoot, f_pack_init initializationCallback,
                            std::unique_ptr<IMetaReader> metadataReader, const Options &options)
     : initFunc(initializationCallback), metadataReader(metadataReader.release()),
@@ -451,7 +458,7 @@ ThemeManager::ThemePointer ThemeManager::getThemePack(const String &themeId) con
         return themeCache.at(id);
     }
 
-    return 0;
+    return nullptr;
 }
 
 std::vector<ThemeManager::ThemePointer> ThemeManager::getAllThemePacks() const

@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: fontformat.h
- * Time: 30, Mai 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   fontformat.h
+    @date   30, May 2019
+    
+    ===============================================================
  */
 
 #pragma once
@@ -44,43 +42,36 @@ constexpr int MAX_COLOURS_SIZE = 16;
 class JAUT_API CharFormat final
 {
 public:
-    class JAUT_API ColourCompound final
-    {
-    public:
-        ColourCompound() noexcept;
-        ColourCompound(Colour colour0, Colour colour1, Colour colour2, Colour colour3, Colour colour4,
-                       Colour colour5, Colour colour6, Colour colour7, Colour colour8, Colour colour9,
-                       Colour colourA, Colour colourB, Colour colourC, Colour colourD, Colour colourE,
-                       Colour colourF) noexcept;
-
-        //=========================================================================================================
-        const Colour &operator[](juce_wchar characterId) const noexcept;
-
-        //=========================================================================================================
-        const Colour &getColourFromIndex(uint32 index) const noexcept;
-
-    private:
-        Colour colours[MAX_COLOURS_SIZE];
-    };
-
-    struct Options final
+    struct JAUT_API Options final
     {
         juce_wchar terminator = '$';
-        Colour defaultColour = Colours::transparentBlack;
+        Colour defaultColour  = Colours::transparentBlack;
+    };
+
+    enum JAUT_API ColourIds
+    {
+        ColourFormat0Id = JAUT_COLOUR_ID <4>,
+        ColourFormat1Id = JAUT_COLOUR_ID <5>,
+        ColourFormat2Id = JAUT_COLOUR_ID <6>,
+        ColourFormat3Id = JAUT_COLOUR_ID <7>,
+        ColourFormat4Id = JAUT_COLOUR_ID <8>,
+        ColourFormat5Id = JAUT_COLOUR_ID <9>,
+        ColourFormat6Id = JAUT_COLOUR_ID<10>,
+        ColourFormat7Id = JAUT_COLOUR_ID<11>,
+        ColourFormat8Id = JAUT_COLOUR_ID<12>,
+        ColourFormat9Id = JAUT_COLOUR_ID<13>,
+        ColourFormatAId = JAUT_COLOUR_ID<14>,
+        ColourFormatBId = JAUT_COLOUR_ID<15>,
+        ColourFormatCId = JAUT_COLOUR_ID<16>,
+        ColourFormatDId = JAUT_COLOUR_ID<17>,
+        ColourFormatEId = JAUT_COLOUR_ID<18>,
+        ColourFormatFId = JAUT_COLOUR_ID<19>
     };
 
     /**
         Creates a new default instance of the CharFormat class.
      */
-    CharFormat() = default;
-
-    /**
-        Creates a new instance of the CharFormat class.
-
-        @param colourComp The colour compound containing all colours used for the different colour codes
-        @param terminator The character determining when a new formatting sequence begins
-     */
-    explicit CharFormat(const ColourCompound &colourComp, const Options &options) noexcept;
+    CharFormat() noexcept;
 
     /**
         Creates a new instance of the CharFormat class with all colours white.
@@ -131,11 +122,20 @@ public:
 
     //=================================================================================================================
     /**
-        Sets a new colour collection to be used for the various formatting codes.
+        Sets this formatters LookAndFeel object.
+        This is majorly used for colours this formatter should use.
 
-        @param colourComp The colour compound containing all colours used for the different colour codes
+        If this is nullptr, the default LookAndFeel will be used!
+
+        @param lookAndFeel A pointer to a LookAndFeel object which should be used
      */
-    void setColours(const ColourCompound &colourComp) noexcept;
+    void setLookAndFeel(LookAndFeel *lookAndFeel) noexcept;
+
+    /**
+        Gets the current set LookAndFeel object.
+        @returns The LookAndFeel object
+     */
+    LookAndFeel &getLookAndFeel() const noexcept;
 
     /**
         Sets the default and fallback colour for the renderer.
@@ -145,19 +145,12 @@ public:
     void setColour(const Colour &colour) noexcept;
     
     /**
-        Gets the current colour collection which is used for the various formatting codes.
-        
-        @return const The colour compound containing all colours used for the different colour codes
-     */
-    const ColourCompound &getColours() const noexcept;
-    
-    /**
         Gets a specific colour for a particular colour code.
 
         @param colourCode The colour code ranging from 0-9 and A-F
         @return The colour to that colour code or else a default colour
      */
-    const Colour &getColour(juce_wchar colourCode) const noexcept;
+    Colour getColour(juce_wchar colourCode) const noexcept;
 
     /**
         Gets the current formatting character.
@@ -174,7 +167,7 @@ public:
     const Options &getOptions() const noexcept;
 
 private:
-    ColourCompound colours;
+    LookAndFeel *lookAndFeel;
     Options options;
 };
 

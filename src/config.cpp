@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: AppData.cpp
- * Time: 4, Mai 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   config.cpp
+    @date   04, May 2019
+    
+    ===============================================================
  */
 
 #include <jaut/config.h>
@@ -76,6 +74,8 @@ const String fixPathString(const String &currentPath) noexcept
 }
 }
 
+
+
 /* ==================================================================================
  * ================================ SharedObject ====================================
  * ================================================================================== */
@@ -86,10 +86,15 @@ struct Config::Property::SharedObject final
     var defaultValue;
     String name;
     t_sub_map properties;
+    Property *parent;
     var value;
+    Config *eventConfig;
+    t_listener_list listeners;
 
+    //==================================================================================================================
     SharedObject(const String &name, const var &defaultValue) noexcept
-        : defaultValue(defaultValue), name(name), value(defaultValue)
+        : defaultValue(defaultValue), name(name), value(defaultValue),
+          parent(nullptr), eventConfig(nullptr)
     {}
 };
 
@@ -99,12 +104,8 @@ struct Config::Property::SharedObject final
  * ================================== Property ======================================
  * ================================================================================== */
 
-Config::Property::Property() noexcept
-    : eventConfig(nullptr)
-{}
-
 Config::Property::Property(const String &name, const var &defaultValue)
-    : data(new SharedObject(name.trim(), defaultValue)), eventConfig(nullptr)
+    : data(new SharedObject(name.trim(), defaultValue))
 {
     // Always make sure the Property object's name is set and valid!
     // Also, properties can't have the name "value" as this may break internal routines!
@@ -112,26 +113,13 @@ Config::Property::Property(const String &name, const var &defaultValue)
 }
 
 Config::Property::Property(const Property &other) noexcept
-    : data(other.data), eventConfig(other.eventConfig)
-{
-    for(auto *listener : other.listeners.getListeners())
-    {
-        listeners.add(listener);
-    }
-}
+    : data(other.data)
+{}
 
 Config::Property::Property(Property &&other) noexcept
-    : data(std::move(other.data)),
-      eventConfig(std::move(other.eventConfig))
+    : data(std::move(other.data))
 {
-    for(auto *listener : other.listeners.getListeners())
-    {
-        listeners.add(listener);
-    }
-
-    other.data        = nullptr;
-    other.eventConfig = nullptr;
-    other.listeners.clear();
+    other.data = nullptr;
 }
 
 //======================================================================================================================
@@ -140,26 +128,13 @@ Config::Property &Config::Property::operator=(const Property &other) noexcept
     Property temp(other);
     swap(*this, temp);
 
-    for(auto *listener : other.listeners.getListeners())
-    {
-        listeners.add(listener);
-    }
-
     return *this;
 }
 
 Config::Property &Config::Property::operator=(Property &&other) noexcept
 {
     swap(*this, other);
-
-    for(auto *listener : other.listeners.getListeners())
-    {
-        listeners.add(listener);
-    }
-
-    other.data        = nullptr;
-    other.eventConfig = nullptr;
-    other.listeners.clear();
+    other.data = nullptr;
 
     return *this;
 }
@@ -181,8 +156,10 @@ Config::Property Config::Property::createProperty(const String &name, const var 
     if (data)
     {
         Property prop(name, defaultValue);
-        data->properties.set(name.trim().toLowerCase(), prop);
-        prop.addConfig(eventConfig);
+        prop.data->parent = this;
+        prop.addConfig(data->eventConfig);
+        data->properties.emplace(name.trim().toLowerCase(), prop);
+        postAddedListener(prop);
 
         return prop;
     }
@@ -201,9 +178,10 @@ void Config::Property::addProperty(Property prop) noexcept
 
     if (!hasProperty(lname))
     {
-        data->properties.set(lname, prop);
+        data->properties.emplace(lname, prop);
+        prop.data->parent = this;
+        prop.addConfig(data->eventConfig);
         postAddedListener(prop);
-        prop.addConfig(eventConfig);
     }
 }
 
@@ -213,7 +191,7 @@ Config::Property Config::Property::getProperty(const String &name) const noexcep
 
     if (data && hasProperty(lname))
     {
-        return data->properties.getReference(lname);
+        return data->properties.at(lname);
     }
 
     return Property();
@@ -229,9 +207,9 @@ const bool Config::Property::hasValid() const noexcept
 {
     if (data)
     {
-        for (auto it : data->properties)
+        for (auto &[key, value] : data->properties)
         {
-            if (it.isValid())
+            if (value.isValid())
             {
                 return true;
             }
@@ -248,7 +226,7 @@ const bool Config::Property::isValid() const
 
 const bool Config::Property::hasProperty(const String &name) const noexcept
 {
-    return data && data->properties.contains(name.trim().toLowerCase());
+    return data && data->properties.find(name.trim().toLowerCase()) != data->properties.end();
 }
 
 //======================================================================================================================
@@ -272,13 +250,13 @@ void Config::Property::setComment(const String &comment) noexcept
 
 void Config::Property::setValue(const var &value) noexcept
 {
-    if (data)
+    if (data && value != data->value)
     {
         var oldvalue = data->value;
 
         /**
             Always make sure that the value you are passing has the same object type than the stored value.
-            This design decision makes type conversion a lot easier to maintain and, thus, helps in
+            This design decision makes type conversion a lot easier to maintain and thus, helps in
             parsing with multiple configuration languages.
          */
         jassert(oldvalue.hasSameTypeAs(value));
@@ -286,9 +264,37 @@ void Config::Property::setValue(const var &value) noexcept
         data->value = value;
         postValueChangedListener(data->name, oldvalue, value);
 
-        if (eventConfig)
+        if (data->eventConfig)
         {
-            eventConfig->postValueChangedListener(data->name, oldvalue, value);
+            String category;
+            String name      = data->name;
+            Property *parent = data->parent;
+
+            if(parent)
+            {
+                for(;;)
+                {
+                    name = parent->data->name + "." + name;
+
+                    if(!parent->data->parent)
+                    {
+                        break;
+                    }
+
+                    parent = parent->data->parent;
+                }
+            }
+            
+            for(auto &cat : data->eventConfig->categories)
+            {
+                if(cat.first.equalsIgnoreCase(parent->data->name))
+                {
+                    category = cat.first;
+                    break;
+                }
+            }
+
+            data->eventConfig->postValueChangedListener(category + "." + name, oldvalue, value);
         }
     }
 }
@@ -299,6 +305,22 @@ const var &Config::Property::getValue() noexcept
     return data ? data->value : empty;
 }
 
+void Config::Property::reset(bool recursive) noexcept
+{
+    setValue(data->defaultValue);
+
+    if(recursive)
+    {
+        for(auto &[key, value] : *this)
+        {
+            if(value.isValid())
+            {
+                value.reset(true);
+            }
+        }
+    }
+}
+
 //======================================================================================================================
 const String Config::Property::toString() const noexcept
 {
@@ -307,48 +329,60 @@ const String Config::Property::toString() const noexcept
 
 Config::Property::t_iterator Config::Property::begin() const noexcept
 {
-    return !data ? t_empty_it() : data->properties.begin();
+    return !data ? t_iterator() : data->properties.begin();
 }
 
 Config::Property::t_iterator Config::Property::end() const noexcept
 {
-    return !data ? t_empty_it() : data->properties.end();
+    return !data ? t_iterator() : data->properties.end();
 }
 
 //======================================================================================================================
 void Config::Property::addListener(Listener *listener) noexcept
 {
-    listeners.add(listener);
+    if(data)
+    {
+        data->listeners.add(listener);
+    }
 }
 
 void Config::Property::removeListener(Listener *listener) noexcept
 {
-    listeners.remove(listener);
+    if(data)
+    {
+        data->listeners.remove(listener);
+    }
 }
 
 //======================================================================================================================
 void Config::Property::addConfig(Config *config) noexcept
 {
-    if (config && data)
+    if(config && data)
     {
-        eventConfig = config;
+        data->eventConfig = config;
     }
 }
 
 void Config::Property::postAddedListener(Property prop) noexcept
 {
-    listeners.call([=, &prop] (Listener &l)
+    if(data)
     {
-        l.onPropertyAdded(prop);
-    });
+        data->listeners.call([=, &prop](Listener &l)
+        {
+            l.onPropertyAdded(prop);
+        });
+    }
 }
 
 void Config::Property::postValueChangedListener(const String &name, var oldValue, var newValue) noexcept
 {
-    listeners.call([=, &name, &oldValue, &newValue] (Listener &l)
+    if(data)
     {
-        l.onValueChanged(name, oldValue, newValue);
-    });
+        data->listeners.call([=, &name, &oldValue, &newValue](Listener &l)
+        {
+            l.onValueChanged(name, oldValue, newValue);
+        });
+    }
 }
 
 
@@ -461,27 +495,7 @@ const bool Config::load()
             return false;
         }
 
-        // Loading the config file
-        Property root ("config", 0);
-
-        for (auto &[name, category] : categories)
-        {
-            Property cat (name, 0);
-
-            if (comments.find(name) != comments.end())
-            {
-                cat.setComment(comments.at(name));
-            }
-
-            for (auto &[p0, prop] : category)
-            {
-                cat.addProperty(prop);
-            }
-
-            root.addProperty(cat);
-        }
-
-        return parser->parseConfig(config, root);
+        return parser->parseConfig(config, getAllProperties());
     }
 
     return false;
@@ -503,28 +517,11 @@ const bool Config::save() const
         }
 
         // Saving the config file
-        Property root ("config", 0);
+        Property root(getAllProperties());
 
         if (!options.configNotice.isEmpty())
         {
             root.setComment(options.configNotice);
-        }
-
-        for (auto &[name,category] : categories)
-        {
-            Property cat (name, 0);
-
-            if (comments.find(name) != comments.end())
-            {
-                cat.setComment(comments.at(name));
-            }
-
-            for (auto &[p0, prop] : category)
-            {
-                cat.addProperty(prop);
-            }
-
-            root.addProperty(cat);
         }
 
         return parser->writeConfig(config, root);
@@ -546,7 +543,7 @@ const String Config::getConfigName(bool withoutExtension) const noexcept
     return "";
 }
 
-Config::Property Config::getProperty(const String &name, const String &category) noexcept
+Config::Property Config::getProperty(const String &name, const String &category) const noexcept
 {
     String catname = !category.isEmpty() ? category.trim().toLowerCase() : options.defaultCategory.trim().toLowerCase();
 
@@ -564,7 +561,55 @@ Config::Property Config::getProperty(const String &name, const String &category)
     return Property();
 }
 
-const String Config::getCategoryComment(const String &category) const noexcept
+Config::Property Config::getAllProperties()
+{
+    Property root("config", var());
+
+    for (auto &[name, category] : categories)
+    {
+        Property cat(name, var());
+
+        if (comments.find(name) != comments.end())
+        {
+            cat.setComment(comments.at(name));
+        }
+
+        for (auto &[p0, prop] : category)
+        {
+            cat.addProperty(prop);
+        }
+
+        root.addProperty(cat);
+    }
+
+    return root;
+}
+
+Config::Property Config::getAllProperties() const
+{
+    Property root("config", var());
+
+    for (auto &[name, category] : categories)
+    {
+        Property cat(name, var());
+
+        if (comments.find(name) != comments.end())
+        {
+            cat.setComment(comments.at(name));
+        }
+
+        for (auto &[p0, prop] : category)
+        {
+            cat.addProperty(prop);
+        }
+
+        root.addProperty(cat);
+    }
+
+    return root;
+}
+
+String Config::getCategoryComment(const String &category) const noexcept
 {
     String catname = !category.isEmpty() ? category.trim().toLowerCase() : options.defaultCategory.trim().toLowerCase();
 
@@ -619,7 +664,7 @@ Config::Property Config::createProperty(const String &name, const var &defaultVa
     {
         if (shouldAutosave())
         {
-            (void)save(); // @noret
+            (void)save();
         }
 
         postAddedListener(prop);
@@ -638,10 +683,24 @@ void Config::addProperty(Property prop, const String &category) noexcept
     {
         if (shouldAutosave())
         {
-            (void)save(); // @noret
+            (void)save();
         }
 
         postAddedListener(prop);
+    }
+}
+
+void Config::resetCategory(const String &category) noexcept
+{
+    String catname = !category.isEmpty() ? category.trim().toLowerCase() : options.defaultCategory.trim().toLowerCase();
+    auto it        = categories.find(catname);
+
+    if(it != categories.end())
+    {
+        for(auto proppair : it->second)
+        {
+            proppair.second.reset(true);
+        }
     }
 }
 

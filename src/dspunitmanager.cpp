@@ -1,28 +1,26 @@
 /**
- * ===============================================================
- * This file is part of the Esac-Jaut library.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <https://www.gnu.org/licenses/>.
- *
- * Copyright (c) 2019 ElandaSunshine
- * ===============================================================
- *
- * Author: Elanda
- * File: dspunitmanager.cpp
- * Time: 25, June 2019
- *
- * ===============================================================
+    ===============================================================
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program. If not, see <https://www.gnu.org/licenses/>.
+    
+    Copyright (c) 2019 ElandaSunshine
+    ===============================================================
+    
+    @author Elanda (elanda@elandasunshine.xyz)
+    @file   dspunitmanager.cpp
+    @date   25, June 2019
+    
+    ===============================================================
  */
 
 #include <jaut/dspunitmanager.h>
@@ -30,6 +28,30 @@
 
 namespace jaut
 {
+
+namespace
+{
+inline void notify(AsyncUpdater &updated, bool shouldNotify)
+{
+    if(!shouldNotify)
+    {
+        return;
+    }
+
+    if(MessageManager::getInstance()->isThisTheMessageThread())
+    {
+        updated.cancelPendingUpdate();
+        updated.handleAsyncUpdate();
+    }
+    else
+    {
+        updated.triggerAsyncUpdate();
+    }
+}
+}
+
+
+
 class PlaceholderUnit final : public DspUnit
 {
 public:
@@ -62,19 +84,22 @@ private:
     JUCE_DECLARE_NON_COPYABLE(PlaceholderUnit)
 };
 
+
+
 DspUnitManager::DspUnitManager(AudioProcessor &parentProcessor, AudioProcessorValueTreeState &vts,
                                UndoManager *undoManager, int initialCapacity, bool unitsAreOwned) noexcept
     : DspUnit(parentProcessor, &vts, undoManager),
-      storage(initialCapacity), isOwned(unitsAreOwned)
+      selectedIndex(0), storage(initialCapacity), size(0), isOwned(unitsAreOwned)
 {
     properties.createProperty("SelectedIndex", 0);
     properties.addListener(this);
-    addProcessorType(new PlaceholderUnit(*this));
+    addProcessorType(new PlaceholderUnit(*this), false);
+    size = 0;
 }
 
 DspUnitManager::~DspUnitManager()
 {
-    if (getNumProcessors() > 0)
+    if (processors.size() > 0)
     {
         if (auto *pp = dynamic_cast<PlaceholderUnit*>(processors.getUnchecked(0)))
         {
@@ -82,10 +107,9 @@ DspUnitManager::~DspUnitManager()
         }
         else if (isOwned)
         {
-            for (auto *proc : processors)
+            for (int i = 0; i < processors.size(); ++i)
             {
-                delete proc;
-                proc = nullptr;
+                delete processors.getUnchecked(i);
             }
         }
     }
@@ -98,7 +122,7 @@ void DspUnitManager::addProcessorType(DspUnit *processor, bool notifyGui) noexce
 
     if (processor)
     {
-        if (getNumProcessors() > 0 && dynamic_cast<PlaceholderUnit*>(processors.getUnchecked(0)))
+        if (processors.size() > 0 && dynamic_cast<PlaceholderUnit*>(processors.getUnchecked(0)))
         {
             Array<DspUnit*> tempArray;
 
@@ -110,19 +134,8 @@ void DspUnitManager::addProcessorType(DspUnit *processor, bool notifyGui) noexce
             tempArray.add(processor);
             processors.swapWith(tempArray);
             delete tempArray.removeAndReturn(0);
-
-            if (notifyGui)
-            {
-                if (MessageManager::getInstance()->isThisTheMessageThread())
-                {
-                    cancelPendingUpdate();
-                    handleAsyncUpdate();
-                }
-                else
-                {
-                    triggerAsyncUpdate();
-                }
-            }
+            ++size;
+            notify(*this, notifyGui);
 
             return;
         }
@@ -136,47 +149,41 @@ void DspUnitManager::addProcessorType(DspUnit *processor, bool notifyGui) noexce
         }
 
         processors.add(processor);
-
-        if (notifyGui)
-        {
-            if (MessageManager::getInstance()->isThisTheMessageThread())
-            {
-                cancelPendingUpdate();
-                handleAsyncUpdate();
-            }
-            else
-            {
-                triggerAsyncUpdate();
-            }
-        }
+        ++size;
+        notify(*this, notifyGui);
     }
+}
+
+DspUnit *DspUnitManager::getProcessor(int index) const noexcept
+{
+    return index >= 0 && index < size ? processors.getUnchecked(index) : nullptr;
+}
+
+DspUnit *DspUnitManager::getCurrentProcessor()
+{
+    return selectedIndex >= 0 && selectedIndex < size ? processors.getUnchecked(selectedIndex) : nullptr;
 }
 
 void DspUnitManager::setCurrentProcessor(int processorIndex)
 {
     JAUT_ENSURE_AUDIO_THREAD();
 
-    if (processorIndex >= 0 && processorIndex < getNumProcessors() && selectedIndex != processorIndex)
+    if (processorIndex >= 0 && processorIndex < size && selectedIndex != processorIndex)
     {
         properties.setProperty("SelectedIndex", processorIndex);
         selectedIndex = processorIndex;
     }
 }
 
-DspUnit *DspUnitManager::getCurrentProcessor()
-{
-    return processors.getUnchecked(selectedIndex);
-}
-
 //=================================================================================================================
 const int DspUnitManager::getNumProcessors() const noexcept
 {
-    return processors.size();
+    return size;
 }
 
 const String DspUnitManager::getName() const
 {
-    return "Digital Signal Processing Unit Manager";
+    return "DspUnitManager";
 }
 
 bool DspUnitManager::hasEditor() const
@@ -192,12 +199,12 @@ const bool DspUnitManager::doesOwnUnits() const noexcept
 //=====================================================================================================================
 void DspUnitManager::process(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer)
 {
-    getCurrentProcessor()->processBlock(buffer, midiBuffer);
+    processors.getUnchecked(selectedIndex)->processBlock(buffer, midiBuffer);
 }
 
 void DspUnitManager::process(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer)
 {
-    getCurrentProcessor()->processBlock(buffer, midiBuffer);
+    processors.getUnchecked(selectedIndex)->processBlock(buffer, midiBuffer);
 }
 
 void DspUnitManager::beginPlayback(double sampleRate, int maxBlockSamples)
@@ -265,7 +272,7 @@ void DspUnitManager::writeData(ValueTree data) const
     ValueTree units = data.getOrCreateChildWithName("Units", nullptr);
     units.removeAllChildren(nullptr);
 
-    for (int i = 0; i < processors.size(); ++i)
+    for (int i = 0; i < size; ++i)
     {
         DspUnit *proc = processors.getUnchecked(i);
 
@@ -280,7 +287,14 @@ void DspUnitManager::writeData(ValueTree data) const
 //=====================================================================================================================
 void DspUnitManager::onValueChanged(const String &name, var oldValue, var newValue)
 {
-    selectedIndex = newValue;
+    if(JT_FIX(newValue) < getNumProcessors())
+    {
+        selectedIndex = newValue;
+    }
+    else
+    {
+        selectedIndex = 0;
+    }
 }
 
 DspGui *DspUnitManager::getGuiType()
