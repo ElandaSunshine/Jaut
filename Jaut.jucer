@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<JUCERPROJECT id="nf3aWd" name="Jaut" projectType="library" jucerVersion="5.4.4"
+              version="1.0.0" reportAppUsage="0" displaySplashScreen="0" cppLanguageStandard="17"
+              companyName="ElandaSunshine" companyCopyright="ElandaSunshine 2019"
+              companyWebsite="www.elandasunshine.xyz" companyEmail="support@elandasunshine.xyz">
+  <MAINGROUP id="yHcXqq" name="Jaut">
+    <GROUP id="{8DCCC984-45FE-DC13-3382-4637D2455948}" name="include">
+      <GROUP id="{EAEFFDBE-5874-1850-D929-B0D8D6A79ABA}" name="jaut">
+        <GROUP id="{D52C2E13-A9AA-A7EA-4FF2-B70550BD2A2D}" name="impl">
+          <FILE id="nhnifZ" name="configparser.h" compile="0" resource="0" file="include/jaut/impl/configparser.h"/>
+        </GROUP>
+        <FILE id="oMlNsz" name="appdata.h" compile="0" resource="0" file="include/jaut/appdata.h"/>
+        <FILE id="tAKbwT" name="config.h" compile="0" resource="0" file="include/jaut/config.h"/>
+        <FILE id="LAMAbd" name="dspgui.h" compile="0" resource="0" file="include/jaut/dspgui.h"/>
+        <FILE id="UeI8uY" name="dspunit.h" compile="0" resource="0" file="include/jaut/dspunit.h"/>
+        <FILE id="Eh2E79" name="dspunitmanager.h" compile="0" resource="0"
+              file="include/jaut/dspunitmanager.h"/>
+        <FILE id="GAeCjX" name="dynamicgui.h" compile="0" resource="0" file="include/jaut/dynamicgui.h"/>
+        <FILE id="oF37qK" name="exception.h" compile="0" resource="0" file="include/jaut/exception.h"/>
+        <FILE id="OxgtLK" name="expo.h" compile="0" resource="0" file="include/jaut/expo.h"/>
+        <FILE id="fWnien" name="fontformat.h" compile="0" resource="0" file="include/jaut/fontformat.h"/>
+        <FILE id="rnICTb" name="guidspunitmanager.h" compile="0" resource="0"
+              file="include/jaut/guidspunitmanager.h"/>
+        <FILE id="hip9xa" name="icomponentdrawing.h" compile="0" resource="0"
+              file="include/jaut/icomponentdrawing.h"/>
+        <FILE id="ooXDu9" name="iconfigparser.h" compile="0" resource="0" file="include/jaut/iconfigparser.h"/>
+        <FILE id="AWvh4l" name="imetadata.h" compile="0" resource="0" file="include/jaut/imetadata.h"/>
+        <FILE id="WKiVtL" name="imetareader.h" compile="0" resource="0" file="include/jaut/imetareader.h"/>
+        <FILE id="dJcTfT" name="impls.h" compile="0" resource="0" file="include/jaut/impls.h"/>
+        <FILE id="q5GIrP" name="ithemedefinition.h" compile="0" resource="0"
+              file="include/jaut/ithemedefinition.h"/>
+        <FILE id="wuihDX" name="jaut.h" compile="0" resource="0" file="include/jaut/jaut.h"/>
+        <FILE id="dxDs73" name="localisation.h" compile="0" resource="0" file="include/jaut/localisation.h"/>
+        <FILE id="rf2OVg" name="metadatahelper.h" compile="0" resource="0"
+              file="include/jaut/metadatahelper.h"/>
+        <FILE id="igIvBf" name="propertyattribute.h" compile="0" resource="0"
+              file="include/jaut/propertyattribute.h"/>
+        <FILE id="Lqk0ij" name="propertymap.h" compile="0" resource="0" file="include/jaut/propertymap.h"/>
+        <FILE id="Io2HRo" name="thememanager.h" compile="0" resource="0" file="include/jaut/thememanager.h"/>
+      </GROUP>
+      <GROUP id="{C074522D-6BCA-D719-FB84-A91615E9D64A}" name="yaml-cpp">
+        <FILE id="AQ6awS" name="yaml.h" compile="0" resource="0" file="include/yaml-cpp/yaml.h"/>
+      </GROUP>
+    </GROUP>
+    <GROUP id="{F4C1B4FF-8A14-6A2A-7042-EDBD8DDB0D17}" name="src">
+      <FILE id="FchLJs" name="appdata.cpp" compile="1" resource="0" file="src/appdata.cpp"/>
+      <FILE id="qHE8Qf" name="config.cpp" compile="1" resource="0" file="src/config.cpp"/>
+      <FILE id="WTt7D3" name="configparser.cpp" compile="1" resource="0"
+            file="src/configparser.cpp"/>
+      <FILE id="ahx8EL" name="dspgui.cpp" compile="1" resource="0" file="src/dspgui.cpp"/>
+      <FILE id="qOnNRZ" name="dspunit.cpp" compile="1" resource="0" file="src/dspunit.cpp"/>
+      <FILE id="gtrOhx" name="dspunitmanager.cpp" compile="1" resource="0"
+            file="src/dspunitmanager.cpp"/>
+      <FILE id="rZjSvE" name="dynamicgui.cpp" compile="1" resource="0" file="src/dynamicgui.cpp"/>
+      <FILE id="sLDNme" name="fontformat.cpp" compile="1" resource="0" file="src/fontformat.cpp"/>
+      <FILE id="BJfuZL" name="guidspunitmanager.cpp" compile="1" resource="0"
+            file="src/guidspunitmanager.cpp"/>
+      <FILE id="EkKnOd" name="localisation.cpp" compile="1" resource="0"
+            file="src/localisation.cpp"/>
+      <FILE id="izDCLO" name="propertyattribute.cpp" compile="1" resource="0"
+            file="src/propertyattribute.cpp"/>
+      <FILE id="aBod3X" name="propertymap.cpp" compile="1" resource="0" file="src/propertymap.cpp"/>
+      <FILE id="luztCY" name="thememanager.cpp" compile="1" resource="0"
+            file="src/thememanager.cpp"/>
+    </GROUP>
+  </MAINGROUP>
+  <EXPORTFORMATS>
+    <LINUX_MAKE targetFolder="bin/LinuxMakefile">
+      <CONFIGURATIONS>
+        <CONFIGURATION isDebug="1" name="Debug" headerPath="../../externals&#10;../../externals/yaml-cpp/include"
+                       targetName="lib_jaut-debug"/>
+        <CONFIGURATION isDebug="0" name="Release" headerPath="../../externals&#10;../../externals/yaml-cpp/include"
+                       targetName="lib_jaut"/>
+      </CONFIGURATIONS>
+      <MODULEPATHS>
+        <MODULEPATH id="juce_opengl" path="../../juce"/>
+        <MODULEPATH id="juce_gui_extra" path="../../juce"/>
+        <MODULEPATH id="juce_gui_basics" path="../../juce"/>
+        <MODULEPATH id="juce_graphics" path="../../juce"/>
+        <MODULEPATH id="juce_events" path="../../juce"/>
+        <MODULEPATH id="juce_data_structures" path="../../juce"/>
+        <MODULEPATH id="juce_cryptography" path="../../juce"/>
+        <MODULEPATH id="juce_core" path="../../juce"/>
+        <MODULEPATH id="juce_audio_processors" path="../../juce"/>
+        <MODULEPATH id="juce_audio_formats" path="../../juce"/>
+        <MODULEPATH id="juce_audio_devices" path="../../juce"/>
+        <MODULEPATH id="juce_audio_basics" path="../../juce"/>
+      </MODULEPATHS>
+    </LINUX_MAKE>
+  </EXPORTFORMATS>
+  <MODULES>
+    <MODULE id="juce_audio_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_devices" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_formats" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_audio_processors" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_core" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_cryptography" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_data_structures" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_events" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_graphics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_basics" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_gui_extra" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+    <MODULE id="juce_opengl" showAllCode="1" useLocalCopy="0" useGlobalPath="1"/>
+  </MODULES>
+  <LIVE_SETTINGS>
+    <WINDOWS/>
+    <LINUX/>
+  </LIVE_SETTINGS>
+  <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>
+</JUCERPROJECT>
