@@ -299,7 +299,7 @@ void Config::Property::setValue(const var &value) noexcept
     }
 }
 
-const var &Config::Property::getValue() noexcept
+const var &Config::Property::getValue() const noexcept
 {
     static var empty;
     return data ? data->value : empty;
@@ -437,7 +437,7 @@ Config::Config(const String &root, const Options &options, std::unique_ptr<IConf
 
     fullPath = filepath;
     ipMutex.reset(options.processSynced ? new InterProcessLock(filepath) : nullptr);
-    (void) categories[options.defaultCategory.trim().toLowerCase()]; // @noret
+    (void) categories[options.defaultCategory.trim().toLowerCase()];
 }
 
 Config::Config(Config &&other) noexcept
@@ -632,7 +632,7 @@ void Config::setCategoryComment(const String &category, const String &comment) n
 
         if (comment != cmt && shouldAutosave())
         {
-            (void) save(); // @noret
+            (void) save();
         }
     }
 }

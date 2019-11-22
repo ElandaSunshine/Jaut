@@ -36,6 +36,10 @@ namespace jaut
 class JAUT_API Localisation final
 {
 public:
+    static bool isValidLanguageFile(const File &file);
+    static std::pair<String, StringArray> getLanguageFileData(const File &file);
+
+    //==================================================================================================================
     /**
         Creates an invalid instance of the Localisation class.
      */
@@ -51,11 +55,11 @@ public:
     Localisation(const Localisation &other);
     Localisation(Localisation &&other) noexcept;
 
-    //=================================================================================================================
+    //==================================================================================================================
     Localisation &operator=(const Localisation &other);
     Localisation &operator=(Localisation &&other) noexcept;
 
-    //=================================================================================================================
+    //==================================================================================================================
     /**
         Sets the default fallback language.
 
@@ -81,8 +85,9 @@ public:
         Sets the new current language of this object or does nothing if no file with that name was found.
 
         @param language The language to set. English in the UK for example: en_gb
+        @return True if setting the new language was successfull, false if not
      */
-    void setCurrentLanguage(const String &language);
+    bool setCurrentLanguage(const String &language);
 
     /**
         Sets the new current language from another LocalisedStrings object.
@@ -100,7 +105,15 @@ public:
      */
     void setCurrentLanguage(const Localisation &locale) noexcept;
 
-    //=================================================================================================================
+    //==================================================================================================================
+    /**
+        Gets the current language file.
+
+        @return The language file
+     */
+    File getLanguageFile() const noexcept;
+
+    //==================================================================================================================
     /**
         Gets the internal LocalisedStrings object.
 
@@ -108,11 +121,11 @@ public:
      */
     const LocalisedStrings &getInternalLocalisation() const noexcept;
 
-    //=================================================================================================================
+    //==================================================================================================================
     const String translate(const String &name) const noexcept;
     const String translate(const String &name, const String &fallbackValue) const noexcept;
 
-    //=================================================================================================================
+    //==================================================================================================================
     friend void swap(Localisation &left, Localisation &right) noexcept
     {
         std::swap(left.rootDir, right.rootDir);
@@ -122,6 +135,7 @@ public:
 
 private:
     File rootDir;
+    String fileName;
     LocalisedStrings currentLocale;
     LocalisedStrings defaultLocale;
 };

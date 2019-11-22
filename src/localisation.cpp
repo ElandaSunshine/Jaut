@@ -27,6 +27,106 @@
 
 namespace jaut
 {
+bool Localisation::isValidLanguageFile(const File &file)
+{
+    if(file.exists() && !file.isDirectory() && file.getFileName().matchesWildcard("??_??.lang", true))
+    {
+        FileInputStream input_stream(file);
+        String language_name;
+        StringArray countries;
+
+        while(!input_stream.isExhausted())
+        {
+            if(!language_name.isEmpty() && !countries.isEmpty())
+            {
+                return true;
+            }
+
+            const String line = input_stream.readNextLine();
+
+            if(line.startsWith("language:"))
+            {
+                const String definition = line.substring(9).trim();
+
+                if(definition.containsNonWhitespaceChars() && definition.length() > 2)
+                {
+                    language_name = definition;
+                    continue;
+                }
+            }
+            else if(line.startsWith("countries:"))
+            {
+                const String definition = line.substring(10).trim();
+                countries.addTokens(definition, true);
+
+                if(!countries.isEmpty())
+                {
+                    continue;
+                }
+            }
+            else if(line.isEmpty())
+            {
+                continue;
+            }
+
+            break;
+        }
+    }
+
+    return false;
+}
+
+std::pair<String, StringArray> Localisation::getLanguageFileData(const File &file)
+{
+    decltype(std::declval<Localisation>().getLanguageFileData(File())) result;
+
+    if(file.exists() && !file.isDirectory())
+    {
+        FileInputStream input_stream(file);
+        String language;
+        StringArray countries;
+
+        while(!input_stream.isExhausted())
+        {
+            if(!language.isEmpty() && countries.size() > 0)
+            {
+                result = std::make_pair(language, countries);
+                break;
+            }
+
+            const String line = input_stream.readNextLine();
+
+            if(line.startsWith("language:") && language.isEmpty())
+            {
+                language = line.substring(9).trim();
+                continue;
+            }
+            else if(line.startsWith("countries:") && countries.size() == 0)
+            {
+                const String countries_string = line.substring(10).trim().toUpperCase();
+                countries.addTokens(countries_string, true);
+
+                if(countries.isEmpty() && countries_string.containsNonWhitespaceChars()
+                                       && countries_string.length() == 2)
+                {
+                    countries.add(countries_string);
+                }
+
+                continue;
+            }
+            else if(line.isEmpty())
+            {
+                continue;
+            }
+
+            break;
+        }
+    }
+
+    return result;
+}
+
+//=====================================================================================================================
 Localisation::Localisation(const File &langRootDir, const LocalisedStrings &defaultLocale)
     : rootDir(langRootDir), currentLocale(defaultLocale), defaultLocale(defaultLocale)
 {}
@@ -87,48 +187,38 @@ void Localisation::setDefault(InputStream &inputStream)
     currentLocale.setFallback(new LocalisedStrings(defaultLocale));
 }
 
-void Localisation::setCurrentLanguage(const String &language)
+bool Localisation::setCurrentLanguage(const String &language)
 {
     const File langfile = rootDir.getChildFile(language + ".lang");
 
-    if(langfile.exists())
+    if(Localisation::isValidLanguageFile(langfile))
     {
-        StringArray lines;
-        langfile.readLines(lines);
-
-        if(lines > 2 && lines[0].startsWithIgnoreCase("language:") && lines[1].startsWithIgnoreCase("regions:"))
-        {
-            const String regions  = lines[1].trim().substring(8);
-            const String language = lines[0].trim().substring(9);
-
-            if(regions.isEmpty() || language.isEmpty())
-            {
-                /* Lang files must include language:{language} on the first line and
-                   regions:[regions] on the second line!
-                 */
-                jassertfalse;
-                return;
-            }
-
-            FileInputStream fis(langfile);
-
-            if(!fis.isExhausted())
-            {
-                currentLocale = LocalisedStrings(fis.readEntireStreamAsString(), true);
-                currentLocale.setFallback(new LocalisedStrings(defaultLocale));
-            }
-        }
+        fileName      = langfile.getFileNameWithoutExtension();
+        currentLocale = LocalisedStrings(langfile.loadFileAsString(), true);
+        currentLocale.setFallback(new LocalisedStrings(defaultLocale));
+        
+        return true;
     }
+
+    return false;
 }
 
 void Localisation::setCurrentLanguage(const LocalisedStrings &localisedStrings) noexcept
 {
     currentLocale = localisedStrings;
+    fileName      = "";
 }
 
 void Localisation::setCurrentLanguage(const Localisation &locale) noexcept
 {
     currentLocale = locale.currentLocale;
+    fileName      = "";
+}
+
+//=====================================================================================================================
+File Localisation::getLanguageFile() const noexcept
+{
+    return rootDir.exists() && !fileName.isEmpty() ? rootDir.getChildFile(fileName + ".lang") : File();
 }
 
 //=====================================================================================================================

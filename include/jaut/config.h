@@ -195,7 +195,7 @@ public:
 
             @returns The value of the property
          */
-        const var &getValue() noexcept;
+        const var &getValue() const noexcept;
 
         /**
             Resets the properties current value, and alternatively its child's, to default.
