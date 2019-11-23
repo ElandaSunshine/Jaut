@@ -191,12 +191,12 @@ public:
     static void drawText(Graphics &g, const String &text, int x, int y, int width, int height,
                          Colour colour,  Justification justification, Formats formats = NONE,
                          CharFormat *charFormat = nullptr) noexcept;
-    static void drawSmallCaps(Graphics &g, const String &text, Rectangle<float> area, Colour colour,
+    static void drawSmallCaps(Graphics &g, const String &text, Rectangle<float> area,
                               Justification justification) noexcept;
     static void drawSmallCaps(Graphics &g, const String &text, float x, float y, float width, float height,
-                              Colour colour, Justification justification) noexcept;
+                              Justification justification) noexcept;
     static void drawSmallCaps(Graphics &g, const String &text, int x, int y, int width, int height,
-                              Colour colour, Justification justification) noexcept;
+                              Justification justification) noexcept;
     static void drawFormattedString(Graphics &g, const String &text, Rectangle<float> area, Colour colour,
                                     Justification justification, CharFormat *charFormat = nullptr) noexcept;
     static void drawFormattedString(Graphics &g, const String &text, float x, float y, float width, float height,

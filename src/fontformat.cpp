@@ -394,7 +394,7 @@ void FontFormat::drawText(Graphics &g, const String &text, int x, int y, int wid
     drawText(g, text, Rectangle<int>(x, y, width, height).toFloat(), colour, justification, formats, charFormat);
 }
 
-void FontFormat::drawSmallCaps(Graphics &g, const String &text, Rectangle<float> area, Colour colour,
+void FontFormat::drawSmallCaps(Graphics &g, const String &text, Rectangle<float> area,
                                Justification justification) noexcept
 {
     if (text.isEmpty() || !g.clipRegionIntersects(area.getSmallestIntegerContainer()))
@@ -438,20 +438,19 @@ void FontFormat::drawSmallCaps(Graphics &g, const String &text, Rectangle<float>
     arr.justifyGlyphs(0, arr.getNumGlyphs(), area.getX(), area.getY(), area.getWidth(), area.getHeight(),
                       justification);
     
-    g.setColour(colour);
     arr.draw(g);
 }
 
 void FontFormat::drawSmallCaps(Graphics &g, const String &text, float x, float y, float width, float height,
-                               Colour colour, Justification justification) noexcept
+                               Justification justification) noexcept
 {
-    drawSmallCaps(g, text, {x, y, width, height}, colour, justification);
+    drawSmallCaps(g, text, {x, y, width, height}, justification);
 }
 
 void FontFormat::drawSmallCaps(Graphics &g, const String &text, int x, int y, int width, int height,
-                               Colour colour, Justification justification) noexcept
+                               Justification justification) noexcept
 {
-    drawSmallCaps(g, text, Rectangle<int>(x, y, width, height).toFloat(), colour, justification);
+    drawSmallCaps(g, text, Rectangle<int>(x, y, width, height).toFloat(), justification);
 }
 
 void FontFormat::drawFormattedString(Graphics &g, const String &text, Rectangle<float> area, Colour colour,
