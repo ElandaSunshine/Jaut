@@ -30,91 +30,101 @@
 namespace jaut
 {
 
-class IThemeDefinition;
 class IMetadata;
 class IMetaReader;
+class IThemeDefinition;
+class ThemeManager;
+
+class JAUT_API ThemePointer final
+{
+public:
+    using p_SharedTheme = std::shared_ptr<IThemeDefinition>;
+
+    ThemePointer() noexcept;
+    ThemePointer(std::nullptr_t) noexcept;
+    ThemePointer(const String &name, IThemeDefinition *theme) noexcept;
+    ThemePointer(const ThemePointer &other) noexcept;
+    ThemePointer(ThemePointer &&other) noexcept;
+    ~ThemePointer();
+
+    //==============================================================================================================
+    ThemePointer &operator=(const ThemePointer &right) noexcept;
+    ThemePointer &operator=(ThemePointer &&right) noexcept;
+
+    //==============================================================================================================
+    IThemeDefinition &operator*() const;
+    IThemeDefinition *operator->() const;
+    operator const bool() const noexcept;
+    bool operator==(const ThemePointer &right) const noexcept;
+    bool operator!=(const ThemePointer &right) const noexcept;
+
+    //==============================================================================================================
+    IThemeDefinition *get() const noexcept;
+
+    //==============================================================================================================
+    bool isCached() const noexcept;
+    bool isValid() const noexcept;
+
+    //==============================================================================================================
+    String getName() const noexcept;
+
+    //==============================================================================================================
+    friend void swap(ThemePointer &left, ThemePointer &right) noexcept
+    {
+        std::swap(left.manager, right.manager);
+        std::swap(left.name, right.name);
+        left.pointer.swap(right.pointer);
+    }
+
+private:
+    friend class ThemeManager;
+
+    mutable ThemeManager *manager;
+    mutable String name;
+    p_SharedTheme pointer;
+
+    //==============================================================================================================
+    void setThemeManager(ThemeManager *manager) noexcept;
+};
 
 class JAUT_API ThemeManager final
 {
 public:
     struct JAUT_API Options final
     {
+        bool cacheThemes;
         String themeMetaId;
         String themePrefix;
-        bool cacheThemes;
 
-        //==============================================================================================================
-        Options()
-            : themeMetaId("packdata.json"),
-              cacheThemes(true)
+        Options() noexcept
+            : cacheThemes(true),
+              themeMetaId("packdata.json")
         {}
     };
 
-    class JAUT_API ThemePointer final
-    {
-    public:
-        using p_ptr_ref = std::shared_ptr<IThemeDefinition>;
-
-        ThemePointer() noexcept;
-        ThemePointer(std::nullptr_t) noexcept;
-        ThemePointer(const String &name, IThemeDefinition *theme) noexcept;
-        ThemePointer(const ThemePointer &other) noexcept;
-        ThemePointer(ThemePointer &&other) noexcept;
-        ~ThemePointer();
-
-        //==============================================================================================================
-        ThemePointer &operator=(const ThemePointer &right) noexcept;
-        ThemePointer &operator=(ThemePointer &&right) noexcept;
-
-        //==============================================================================================================
-        IThemeDefinition &operator*() const;
-        IThemeDefinition *operator->() const;
-        operator const bool() const noexcept;
-        bool operator==(const ThemePointer &right) const noexcept;
-        bool operator!=(const ThemePointer &right) const noexcept;
-
-        //==============================================================================================================
-        IThemeDefinition *get() const noexcept;
-
-        //==============================================================================================================
-        bool isCached() const noexcept;
-
-        //==============================================================================================================
-        String getName() const noexcept;
-
-        //==============================================================================================================
-        friend void swap(ThemePointer &left, ThemePointer &right) noexcept
-        {
-            std::swap(left.manager, right.manager);
-            std::swap(left.name, right.name);
-            left.pointer.swap(right.pointer);
-        }
-
-    private:
-        friend class ThemeManager;
-
-        mutable ThemeManager *manager;
-        mutable String name;
-        p_ptr_ref pointer;
-
-        //==============================================================================================================
-        void setThemeManager(ThemeManager *manager) noexcept;
-    };
-
-    using p_theme_ptr  = std::shared_ptr<IThemeDefinition>;
-    using p_mread_ptr  = std::unique_ptr<IMetaReader>;
-    using p_theme_sptr = std::shared_ptr<IThemeDefinition>;
-    using f_pack_init  = std::function<IThemeDefinition*(const juce::File&, IMetadata *meta)>;
-    using t_pack_map   = std::map<juce::String, ThemePointer>;
+    using p_SharedTheme   = std::shared_ptr<IThemeDefinition>;
+    using p_MetaReader    = std::unique_ptr<IMetaReader>;
+    using p_Theme         = std::shared_ptr<IThemeDefinition>;
+    using f_ThemeInit     = std::function<IThemeDefinition*(const juce::File&, IMetadata *meta)>;
+    using t_ThemeMap      = std::map<juce::String, ThemePointer>;
+    using t_ThemeIterator = t_ThemeMap::const_iterator;
+    using t_ThemeVector   = std::vector<ThemePointer>;
 
     //==================================================================================================================
-    ThemeManager(const File &themeRoot, f_pack_init initializationCallback, std::unique_ptr<IMetaReader> metadataReader,
+    ThemeManager(const File &themeRoot, f_ThemeInit initializationCallback, p_MetaReader metadataReader,
                  const Options &options = Options());
     ThemeManager(ThemeManager &&other) noexcept;
     ~ThemeManager();
 
     //==================================================================================================================
     ThemeManager &operator=(ThemeManager &&right) noexcept;
+
+    //==================================================================================================================
+    ThemePointer getCurrentTheme() const;
+    bool setCurrentTheme(const String &themeId);
+
+    //==================================================================================================================
+    int numThemePacks() const noexcept;
 
     //==================================================================================================================
     void reloadThemePacks();
@@ -127,13 +137,18 @@ public:
     ThemePointer loadExternalThemePack(const File &themeFolder, bool override);
 
     //==================================================================================================================
-    ThemePointer getThemePack(const String &themeId) const;
-    std::vector<ThemePointer> getAllThemePacks() const;
+    ThemePointer  getThemePack(const String &themeId) const;
+    t_ThemeVector getAllThemePacks() const;
     const Options &getOptions() const noexcept;
+
+    //==================================================================================================================
+    t_ThemeIterator begin() const noexcept;
+    t_ThemeIterator end()   const noexcept; 
 
     //==================================================================================================================
     friend void swap(ThemeManager &left, ThemeManager &right) noexcept
     {
+        std::swap(left.currentThemeId, right.currentThemeId);
         std::swap(left.initFunc, right.initFunc);
         std::swap(left.themeRoot, right.themeRoot);
         std::swap(left.options, right.options);
@@ -142,12 +157,13 @@ public:
     }
 
 private:
-    friend class ThemeManager::ThemePointer;
+    friend class ThemePointer;
 
-    f_pack_init initFunc;
-    p_mread_ptr metadataReader;
+    String currentThemeId;
+    f_ThemeInit initFunc;
+    p_MetaReader metadataReader;
     Options options;
-    t_pack_map themeCache;
+    t_ThemeMap themeCache;
     File themeRoot;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ThemeManager)

@@ -35,7 +35,7 @@
     So better only alter sections explicitly stating you can do so to stay on the safe site!
 
     Below you will find following sections (Be free to use any of these in your own project):
-    - Export:      This section defines the jaut export macro for dll's on Windows based operating systems.
+    - Export:      This section defines the jaut export macro for dlls on Windows based operating systems.
                    This macro can also be used to make sure that jaut is actually included in your project.
     - Macros:      This section defines several useful macros used in the jaut library which can as well be
                    used in your project.
@@ -127,7 +127,7 @@ namespace jaut
 #if JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP
   /**
       This comes in handy when messing with custom standalone windows and plugin versions.
-      As you may want to return to the default standalone window throughout developement,
+      As you may want to return to the default standalone window throughout development,
       some things may not work anymore.
       Use this to make sure certain things only work as default standalone and as plugin.
 
@@ -146,7 +146,7 @@ namespace jaut
 
   /**
       This comes in handy when messing with custom standalone windows and plugin versions.
-      As you may want to return to the default standalone window throughout developement,
+      As you may want to return to the default standalone window throughout development,
       some things may not work anymore.
       Use this to make sure certain things only work as default standalone and as plugin.
 
@@ -163,7 +163,7 @@ namespace jaut
 
   /**
       This comes in handy when messing with custom standalone windows and plugin versions.
-      As you may want to return to the default standalone window throughout developement,
+      As you may want to return to the default standalone window throughout development,
       some things may not work anymore.
       Use this to make sure certain things only work as default standalone and as plugin.
 
@@ -180,7 +180,7 @@ namespace jaut
 #else
    /**
       This comes in handy when messing with custom standalone windows and plugin versions.
-      As you may want to return to the default standalone window throughout developement,
+      As you may want to return to the default standalone window throughout development,
       some things may not work anymore.
       Use this to make sure certain things only work as default standalone and as plugin.
 
@@ -198,7 +198,7 @@ namespace jaut
 
   /**
       This comes in handy when messing with custom standalone windows and plugin versions.
-      As you may want to return to the default standalone window throughout developement,
+      As you may want to return to the default standalone window throughout development,
       some things may not work anymore.
       Use this to make sure certain things only work as default standalone and as plugin.
 
@@ -214,7 +214,7 @@ namespace jaut
 
   /**
       This comes in handy when messing with custom standalone windows and plugin versions.
-      As you may want to return to the default standalone window throughout developement,
+      As you may want to return to the default standalone window throughout development,
       some things may not work anymore.
       Use this to make sure certain things only work as default standalone and as plugin.
 
@@ -302,8 +302,8 @@ inline constexpr bool STRICT_THREAD_DISTINCTION = true;
 // SECTION 2: DEFAULT SETTINGS
 
 /**
-    This defines the starting colour id value of all jaut component's colour ids.
-    If you are using components which ids may threaten to clash with jaut's,
+    This defines the starting colour id value of all jaut component colour ids.
+    If you are using components which ids may threaten to clash with jauts',
     you may want to change this number to fix these issues.
  */
 inline constexpr int DEFAULT_COMPONENT_COLOUR_STARTING_INDEX = 0x1000;
@@ -356,7 +356,7 @@ extern bool EXPLICIT_DISABILITY;
  * ================================================================================== */
 #if(1) // Utility (Don't touch)
 /**
-    This will disable the JAUT_ENSURE_AUDIO_THREAD() check for once and reset it again when such an event has occured.
+    This will disable the JAUT_ENSURE_AUDIO_THREAD() check for once and reset it again when such an event has occurred.
     Beware to only use this when you really know what you're doing, as calling audio thread code on the gui without
     proper synchronisation will most of the time go wrong.
  */
@@ -371,15 +371,13 @@ inline JAUT_API void JAUT_DISABLE_THREAD_DIST()
 }
 
 /**
-    This will disable the JAUT_ENSURE_AUDIO_THREAD() check for once and reset it again when such an event has occured.
-    Beware to only use this when you really know what you're doing, as calling audio thread code on the gui without
-    proper synchronization will most of the time go wrong.
+    This will disable the JAUT_ENSURE_AUDIO_THREAD() check for as long as you didn't set it back to true.
  */
-inline JAUT_API void JAUT_DISABLE_THREAD_DIST_EXPLICIT(const bool disable)
+inline JAUT_API void JAUT_DISABLE_THREAD_DIST_EXPLICIT(const bool disable) noexcept
 {
     JT_NDEBUGGING(return);
 
-    internal::EXPLICIT_DISABILITY = disable;
+    internal::EXPLICIT_DISABILITY          = disable;
     internal::INTERNAL_DISABLE_THREAD_DIST = false;
 }
 
@@ -408,8 +406,8 @@ inline JAUT_API void JAUT_ENSURE_AUDIO_THREAD()
     internal::INTERNAL_DISABLE_THREAD_DIST = false;
 }
 
-template<int INCREASE>
-inline constexpr JAUT_API int JAUT_COLOUR_ID = settings::DEFAULT_COMPONENT_COLOUR_STARTING_INDEX + INCREASE;
+template<int Increment>
+inline constexpr JAUT_API int JAUT_COLOUR_ID = settings::DEFAULT_COMPONENT_COLOUR_STARTING_INDEX + Increment;
 
 /**
     This class will make sure to disable explicit thread distinction as long as it persists and resets
@@ -417,7 +415,7 @@ inline constexpr JAUT_API int JAUT_COLOUR_ID = settings::DEFAULT_COMPONENT_COLOU
  */
 struct JAUT_API ScopedATCD final
 {
-    constexpr ScopedATCD() noexcept
+    ScopedATCD() noexcept
     {
         JAUT_DISABLE_THREAD_DIST_EXPLICIT(true);
     }
@@ -427,6 +425,16 @@ struct JAUT_API ScopedATCD final
         JAUT_DISABLE_THREAD_DIST_EXPLICIT(false);
     }
 };
+
+//======================================================================================================================
+// Functions
+
+template<class NumberType>
+inline constexpr bool JAUT_API is_in_range(NumberType toTest, NumberType start, NumberType end) noexcept
+{
+    return toTest >= std::min<NumberType>(start, end) && toTest <= std::max<NumberType>(start, end);
+}
+
 #endif // Utility (Don't touch)
 
 

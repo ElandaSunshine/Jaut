@@ -31,7 +31,7 @@
 namespace jaut
 {
 /**
-    The Localisation class is a simple wrapper around JUCE's inbuilt localisation system.
+    The Localisation class is a simple wrapper around JUCEs' inbuilt localisation system.
  */
 class JAUT_API Localisation final
 {
@@ -106,6 +106,13 @@ public:
     void setCurrentLanguage(const Localisation &locale) noexcept;
 
     //==================================================================================================================
+    /**
+        Gets the locale root directory.
+
+        @return The root directory
+     */
+    File getRootDirectory() const noexcept;
+
     /**
         Gets the current language file.
 

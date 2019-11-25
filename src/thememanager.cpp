@@ -39,37 +39,38 @@ namespace jaut
 //=============================================== ThemePointer =========================================================
 //======================================================================================================================
 #if (1) //Region: ThemePointer
-ThemeManager::ThemePointer::ThemePointer() noexcept
+ThemePointer::ThemePointer() noexcept
     : manager(nullptr)
 {}
 
-ThemeManager::ThemePointer::ThemePointer(std::nullptr_t) noexcept
+ThemePointer::ThemePointer(std::nullptr_t) noexcept
     : manager(nullptr)
 {}
 
-ThemeManager::ThemePointer::ThemePointer(const String &name, IThemeDefinition *theme) noexcept
+ThemePointer::ThemePointer(const String &name, IThemeDefinition *theme) noexcept
     : manager(nullptr), name(name), pointer(theme)
 {
     jassert(pointer != 0);
 }
 
-ThemeManager::ThemePointer::ThemePointer(const ThemePointer &other) noexcept
+ThemePointer::ThemePointer(const ThemePointer &other) noexcept
     : manager(other.manager), name(other.name),
       pointer(other.pointer)
 {}
 
-ThemeManager::ThemePointer::ThemePointer(ThemePointer &&other) noexcept
-    : manager(std::move(other.manager)), name(std::move(other.name)),
+ThemePointer::ThemePointer(ThemePointer &&other) noexcept
+    : manager(std::move(other.manager)),
+      name(std::move(other.name)),
       pointer(std::move(other.pointer))
 {
     other.manager = nullptr;
 }
 
-ThemeManager::ThemePointer::~ThemePointer()
+ThemePointer::~ThemePointer()
 {}
 
 //======================================================================================================================
-ThemeManager::ThemePointer &ThemeManager::ThemePointer::operator=(const ThemePointer &right) noexcept
+ThemePointer &ThemePointer::operator=(const ThemePointer &right) noexcept
 {
     ThemePointer temp(right);
     swap(*this, temp);
@@ -77,16 +78,17 @@ ThemeManager::ThemePointer &ThemeManager::ThemePointer::operator=(const ThemePoi
     return *this;
 }
 
-ThemeManager::ThemePointer &ThemeManager::ThemePointer::operator=(ThemePointer &&right) noexcept
+ThemePointer &ThemePointer::operator=(ThemePointer &&right) noexcept
 {
     swap(*this, right);
     right.manager = nullptr;
+    right.pointer = nullptr;
 
     return *this;
 }
 
 //======================================================================================================================
-IThemeDefinition &ThemeManager::ThemePointer::operator*() const
+IThemeDefinition &ThemePointer::operator*() const
 {
     if(pointer)
     {
@@ -96,7 +98,7 @@ IThemeDefinition &ThemeManager::ThemePointer::operator*() const
     throw jaut::exception::NullDereference("ThemePointer object -> " + name + " (*)");
 }
 
-IThemeDefinition *ThemeManager::ThemePointer::operator->() const
+IThemeDefinition *ThemePointer::operator->() const
 {
     if(pointer)
     {
@@ -106,29 +108,29 @@ IThemeDefinition *ThemeManager::ThemePointer::operator->() const
     throw jaut::exception::NullDereference("ThemePointer object -> " + name + " (->)");
 }
 
-ThemeManager::ThemePointer::operator const bool() const noexcept
+ThemePointer::operator const bool() const noexcept
 {
     return pointer != nullptr;
 }
 
-bool ThemeManager::ThemePointer::operator==(const ThemePointer &right) const noexcept
+bool ThemePointer::operator==(const ThemePointer &right) const noexcept
 {
     return pointer.get() == right.pointer.get();
 }
 
-bool ThemeManager::ThemePointer::operator!=(const ThemePointer &right) const noexcept
+bool ThemePointer::operator!=(const ThemePointer &right) const noexcept
 {
     return pointer.get() != right.pointer.get();
 }
 
 //======================================================================================================================
-IThemeDefinition *ThemeManager::ThemePointer::get() const noexcept
+IThemeDefinition *ThemePointer::get() const noexcept
 {
     return pointer.get();
 }
 
 //======================================================================================================================
-bool ThemeManager::ThemePointer::isCached() const noexcept
+bool ThemePointer::isCached() const noexcept
 {
     if(manager && manager->options.cacheThemes && pointer.use_count() > 1)
     {        
@@ -151,14 +153,19 @@ bool ThemeManager::ThemePointer::isCached() const noexcept
     return false;
 }
 
+bool ThemePointer::isValid() const noexcept
+{
+    return pointer && pointer->isValid();
+}
+
 //======================================================================================================================
-String ThemeManager::ThemePointer::getName() const noexcept
+String ThemePointer::getName() const noexcept
 {
     return name;
 }
 
 //======================================================================================================================
-void ThemeManager::ThemePointer::setThemeManager(ThemeManager *manager) noexcept
+void ThemePointer::setThemeManager(ThemeManager *manager) noexcept
 {
     this->manager = manager;
 }
@@ -169,20 +176,21 @@ void ThemeManager::ThemePointer::setThemeManager(ThemeManager *manager) noexcept
 //======================================================================================================================
 //=============================================== ThemeManager =========================================================
 //======================================================================================================================
-#if (1) //Region: ThemeManager
-ThemeManager::ThemeManager(const File &themeRoot, f_pack_init initializationCallback,
-                           std::unique_ptr<IMetaReader> metadataReader, const Options &options)
-    : initFunc(initializationCallback), metadataReader(metadataReader.release()),
-      options(options), themeRoot(themeRoot)
+#if(1) //Region: ThemeManager
+
+ThemeManager::ThemeManager(const File &themeRoot, f_ThemeInit initializationCallback, p_MetaReader metadataReader,
+                           const Options &options)
+    : initFunc(initializationCallback), metadataReader(std::move(metadataReader)), options(options),
+      themeRoot(themeRoot)
 {
-    /**
-     * You have to supply your own MetaReader, as themes need meta-information.
-     * If you don't pass a valid MetaReader, themes can't be loaded.
+    /** 
+     *  You have to supply your own MetaReader, as themes need meta-information.
+     *  If you don't pass a valid MetaReader, themes can't be loaded.
      */
     jassert(this->metadataReader != nullptr);
 
     /**
-     * Make sure the root directory of your theme-packs exists.
+     *  Make sure the root directory of your theme-packs exists.
      */
     jassert(themeRoot.exists());
 
@@ -193,13 +201,15 @@ ThemeManager::ThemeManager(const File &themeRoot, f_pack_init initializationCall
 }
 
 ThemeManager::ThemeManager(ThemeManager &&other) noexcept
-    : initFunc(std::move(other.initFunc)),
+    : currentThemeId(std::move(other.currentThemeId)),
+      initFunc(std::move(other.initFunc)),
       metadataReader(std::move(other.metadataReader)),
       options(std::move(other.options)),
       themeCache(std::move(other.themeCache)),
       themeRoot(std::move(other.themeRoot))
 {
-    other.initFunc = nullptr;
+    other.initFunc       = nullptr;
+    other.metadataReader = nullptr;
 }
 
 ThemeManager::~ThemeManager() {}
@@ -208,9 +218,35 @@ ThemeManager::~ThemeManager() {}
 ThemeManager& ThemeManager::operator=(ThemeManager &&right) noexcept
 {
     swap(*this, right);
-    right.initFunc = nullptr;
+    right.initFunc       = nullptr;
+    right.metadataReader = nullptr;
 
     return *this;
+}
+
+//======================================================================================================================
+ThemePointer ThemeManager::getCurrentTheme() const
+{
+    return getThemePack(currentThemeId);
+}
+
+bool ThemeManager::setCurrentTheme(const String &themeId)
+{
+    const String theme_id = themeId.trim().toLowerCase();
+
+    if(themeCache.find(theme_id) != themeCache.end())
+    {
+        currentThemeId = theme_id;
+        return true;
+    }
+
+    return false;
+}
+
+//======================================================================================================================
+int ThemeManager::numThemePacks() const noexcept
+{
+    return themeCache.size();
 }
 
 //======================================================================================================================
@@ -221,42 +257,52 @@ void ThemeManager::reloadThemePacks()
         return;
     }
 
-    t_pack_map tempmap;
-    DirectoryIterator it(themeRoot, false, options.themePrefix + "*", File::findDirectories);
+    t_ThemeMap temp_map;
+    DirectoryIterator iterator(themeRoot, false, options.themePrefix + "*", File::findDirectories);
 
-    while(it.next())
+    while(iterator.next())
     {
-        ThemePointer themeptr(std::move(loadExternalThemePack(it.getFile())));
+        ThemePointer pointer = std::move(loadExternalThemePack(iterator.getFile()));
 
-        if(themeptr)
+        if(pointer)
         {
-            themeptr.setThemeManager(this);
-            tempmap.emplace(themeptr.getName().trim().toLowerCase(), themeptr);
+            pointer.setThemeManager(this);
+            temp_map.emplace(pointer.getName().trim().toLowerCase(), pointer);
         }
     }
 
     for(auto &[key, pack] : themeCache)
     {
-        File themeroot (pack->getThemeRootPath());
+        File theme_root = pack->getThemeRootPath();
 
-        if(themeroot.exists() && themeroot.getParentDirectory() != this->themeRoot)
+        if(theme_root.exists() && theme_root.getParentDirectory() != this->themeRoot)
         {
-            ThemePointer themeptr(std::move(loadExternalThemePack(themeroot)));
+            ThemePointer pointer = std::move(loadExternalThemePack(theme_root));
 
-            if(themeptr)
+            if(pointer)
             {
-                themeptr.setThemeManager(this);
-                tempmap.emplace(themeptr.getName().trim().toLowerCase(), themeptr);
+                pointer.setThemeManager(this);
+                temp_map.emplace(pointer.getName().trim().toLowerCase(), pointer);
             }
         }
     }
 
-    themeCache.swap(tempmap);
+    themeCache.swap(temp_map);
+
+    if(!getCurrentTheme() && numThemePacks() > 0)
+    {
+        for(auto &[key, theme] : themeCache)
+        {
+            currentThemeId = key;
+            return;
+        }
+    }
 }
 
 void ThemeManager::clearThemePacks()
 {
     themeCache.clear();
+    currentThemeId = "";
 }
 
 void ThemeManager::reloadThemePack(const String &themeId)
@@ -266,30 +312,30 @@ void ThemeManager::reloadThemePack(const String &themeId)
         return;
     }
 
-    String id = themeId.trim().toLowerCase();
+    String theme_id = themeId.trim().toLowerCase();
 
-    if(themeCache.find(id) != themeCache.end())
+    if(themeCache.find(theme_id) != themeCache.end())
     {
-        File folderpath(themeCache.at(id)->getThemeRootPath());
+        File theme_folder (themeCache.at(theme_id)->getThemeRootPath());
 
-        if(folderpath.exists())
+        if(theme_folder.exists())
         {
-            File meta = folderpath.getChildFile(options.themeMetaId);
+            File meta_file = theme_folder.getChildFile(options.themeMetaId);
 
-            if(!meta.exists())
+            if(!meta_file.exists())
             {
                 return;
             }
 
-            FileInputStream fis(meta);
+            FileInputStream input_stream(meta_file);
 
-            if(!fis.isExhausted())
+            if(!input_stream.isExhausted())
             {
-                auto prop = MetadataHelper::readMetaToNamedValueSet(fis)["name"];
+                auto theme_name = MetadataHelper::readMetaToNamedValueSet(input_stream)["name"];
 
-                if(prop.isString() && prop.toString().trim().equalsIgnoreCase(themeId))
+                if(theme_name.isString() && theme_name.toString().trim().equalsIgnoreCase(themeId))
                 {
-                    (void)loadExternalThemePack(folderpath, true);
+                    (void)loadExternalThemePack(theme_folder, true);
                 }
             }
         }
@@ -321,10 +367,19 @@ void ThemeManager::reloadThemePack(const String &themeId)
             }
         }
     }
+
+    if(theme_id == currentThemeId && !getCurrentTheme() && numThemePacks() > 0)
+    {
+        for(auto &[key, theme] : themeCache)
+        {
+            currentThemeId = key;
+            return;
+        }
+    }
 }
 
 //======================================================================================================================
-ThemeManager::ThemePointer ThemeManager::loadThemePack(const String &themeId) const
+ThemePointer ThemeManager::loadThemePack(const String &themeId) const
 {
     String id = themeId.trim().toLowerCase();
     DirectoryIterator it(themeRoot, false, options.themePrefix + "*", File::findDirectories);
@@ -355,7 +410,7 @@ ThemeManager::ThemePointer ThemeManager::loadThemePack(const String &themeId) co
     return 0;
 }
 
-ThemeManager::ThemePointer ThemeManager::loadExternalThemePack(const File &themeFolder) const
+ThemePointer ThemeManager::loadExternalThemePack(const File &themeFolder) const
 {
     if(themeFolder.exists())
     {
@@ -380,7 +435,7 @@ ThemeManager::ThemePointer ThemeManager::loadExternalThemePack(const File &theme
     return 0;
 }
 
-ThemeManager::ThemePointer ThemeManager::loadExternalThemePack(const File &themeFolder, bool override)
+ThemePointer ThemeManager::loadExternalThemePack(const File &themeFolder, bool override)
 {
     if(!options.cacheThemes)
     {
@@ -429,11 +484,11 @@ ThemeManager::ThemePointer ThemeManager::loadExternalThemePack(const File &theme
                             (void) themeCache.erase(id);
                         }
 
-                        ThemePointer themeptr(name, theme);
-                        themeptr.setThemeManager(this);
-                        (void)themeCache.emplace(id, themeptr);
+                        ThemePointer pointer(name, theme);
+                        pointer.setThemeManager(this);
+                        (void) themeCache.emplace(id, pointer);
 
-                        return themeptr;
+                        return pointer;
                     }
                 }
             }
@@ -444,24 +499,24 @@ ThemeManager::ThemePointer ThemeManager::loadExternalThemePack(const File &theme
 }
 
 //======================================================================================================================
-ThemeManager::ThemePointer ThemeManager::getThemePack(const String &themeId) const
+ThemePointer ThemeManager::getThemePack(const String &themeId) const
 {
     if(!options.cacheThemes)
     {
         return loadThemePack(themeId);
     }
 
-    String id = themeId.trim().toLowerCase();
+    String theme_id = themeId.trim().toLowerCase();
 
-    if(themeCache.find(id) != themeCache.end())
+    if(themeCache.find(theme_id) != themeCache.end())
     {
-        return themeCache.at(id);
+        return themeCache.at(theme_id);
     }
 
     return nullptr;
 }
 
-std::vector<ThemeManager::ThemePointer> ThemeManager::getAllThemePacks() const
+std::vector<ThemePointer> ThemeManager::getAllThemePacks() const
 {
     std::vector<ThemePointer> pointers;
 
@@ -481,9 +536,9 @@ std::vector<ThemeManager::ThemePointer> ThemeManager::getAllThemePacks() const
     {
         pointers.reserve(themeCache.size());
 
-        for(auto &[key, tptr] : themeCache)
+        for(auto &[key, pointer] : themeCache)
         {
-            pointers.emplace_back(tptr);
+            pointers.emplace_back(pointer);
         }
     }
 
@@ -493,6 +548,17 @@ std::vector<ThemeManager::ThemePointer> ThemeManager::getAllThemePacks() const
 const ThemeManager::Options &ThemeManager::getOptions() const noexcept
 {
     return options;
+}
+
+//======================================================================================================================
+ThemeManager::t_ThemeIterator ThemeManager::begin() const noexcept
+{
+    return themeCache.cbegin();
+}
+
+ThemeManager::t_ThemeIterator ThemeManager::end() const noexcept
+{
+    return themeCache.cend();
 }
 #endif //Region: ThemeManager
 }

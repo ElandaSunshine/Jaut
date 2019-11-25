@@ -199,45 +199,6 @@ const bool Directory::operator!=(const Directory &dir) const noexcept
     return !data || data.get() != dir.data.get();
 }
 
-/*
-const bool Directory::operator<(const Directory &dir) const noexcept
-{
-    if (!isValidDirectory())
-        return false;
-
-    Directory *directory = pParent;
-
-    do
-    {
-        if (&dir == directory)
-            return true;
-    }
-    while(directory != 0 && (directory = directory->pParent) != 0);
-
-    return false;
-}
-
-const bool Directory::operator<=(const Directory &dir) const noexcept
-{
-    if (!isValidDirectory())
-        return false;
-
-    if(&dir == this)
-        return true;
-
-    Directory *directory = pParent;
-
-    do
-    {
-        if (&dir == directory)
-            return true;
-    }
-    while(directory != 0 && (directory = directory->pParent) != 0);
-
-    return false;
-}
-// */
-
 const bool Directory::operator>(const Directory &dir) const noexcept
 {
     if (!data || !dir.data)

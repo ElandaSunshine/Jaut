@@ -162,7 +162,6 @@ Localisation &Localisation::operator=(Localisation &&other) noexcept
 void Localisation::setDefault(const LocalisedStrings &fallbackLanguage) noexcept
 {
     defaultLocale = fallbackLanguage;
-    currentLocale.setFallback(new LocalisedStrings(defaultLocale));
 }
 
 void Localisation::setDefault(const String &languageStringUtf8)
@@ -173,7 +172,6 @@ void Localisation::setDefault(const String &languageStringUtf8)
     }
 
     defaultLocale = LocalisedStrings(languageStringUtf8, true);
-    currentLocale.setFallback(new LocalisedStrings(defaultLocale));
 }
 
 void Localisation::setDefault(InputStream &inputStream)
@@ -184,7 +182,6 @@ void Localisation::setDefault(InputStream &inputStream)
     }
 
     defaultLocale = LocalisedStrings(inputStream.readEntireStreamAsString(), true);
-    currentLocale.setFallback(new LocalisedStrings(defaultLocale));
 }
 
 bool Localisation::setCurrentLanguage(const String &language)
@@ -195,7 +192,6 @@ bool Localisation::setCurrentLanguage(const String &language)
     {
         fileName      = langfile.getFileNameWithoutExtension();
         currentLocale = LocalisedStrings(langfile.loadFileAsString(), true);
-        currentLocale.setFallback(new LocalisedStrings(defaultLocale));
         
         return true;
     }
@@ -212,10 +208,15 @@ void Localisation::setCurrentLanguage(const LocalisedStrings &localisedStrings) 
 void Localisation::setCurrentLanguage(const Localisation &locale) noexcept
 {
     currentLocale = locale.currentLocale;
-    fileName      = "";
+    fileName      = locale.fileName;
 }
 
 //=====================================================================================================================
+File Localisation::getRootDirectory() const noexcept
+{
+    return rootDir;
+}
+
 File Localisation::getLanguageFile() const noexcept
 {
     return rootDir.exists() && !fileName.isEmpty() ? rootDir.getChildFile(fileName + ".lang") : File();
