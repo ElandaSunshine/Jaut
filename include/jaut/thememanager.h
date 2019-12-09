@@ -29,35 +29,41 @@
 
 namespace jaut
 {
-
 class IMetadata;
 class IMetaReader;
 class IThemeDefinition;
 class ThemeManager;
 
+/**
+    The ThemePointer is a wrapper around a IThemeDefinition object, sharing it along all other ThemePointer objects
+    pointing to the same memory location.
+
+    It acts like a smart pointer, with the only difference that it has member methods regarding the the underlying
+    type like isValid() and getId().
+
+    The jaut::ThemeManager class uses this class to cache themes. 
+    
+    @see jaut::ThemeManager
+ */
 class JAUT_API ThemePointer final
 {
 public:
-    using p_SharedTheme = std::shared_ptr<IThemeDefinition>;
-
-    ThemePointer() noexcept;
+    ThemePointer() noexcept = default;
     ThemePointer(std::nullptr_t) noexcept;
-    ThemePointer(const String &name, IThemeDefinition *theme) noexcept;
-    ThemePointer(const ThemePointer &other) noexcept;
-    ThemePointer(ThemePointer &&other) noexcept;
+    ThemePointer(const String &id, IThemeDefinition *theme);
     ~ThemePointer();
-
-    //==============================================================================================================
-    ThemePointer &operator=(const ThemePointer &right) noexcept;
-    ThemePointer &operator=(ThemePointer &&right) noexcept;
 
     //==============================================================================================================
     IThemeDefinition &operator*() const;
     IThemeDefinition *operator->() const;
-    operator const bool() const noexcept;
+
+    operator bool() const noexcept;
+
     bool operator==(const ThemePointer &right) const noexcept;
     bool operator!=(const ThemePointer &right) const noexcept;
-
+    bool operator==(const IThemeDefinition &right) const noexcept;
+    bool operator!=(const IThemeDefinition &right) const noexcept;
+    
     //==============================================================================================================
     IThemeDefinition *get() const noexcept;
 
@@ -66,22 +72,19 @@ public:
     bool isValid() const noexcept;
 
     //==============================================================================================================
-    String getName() const noexcept;
+    String getId() const noexcept;
 
     //==============================================================================================================
     friend void swap(ThemePointer &left, ThemePointer &right) noexcept
     {
-        std::swap(left.manager, right.manager);
-        std::swap(left.name, right.name);
-        left.pointer.swap(right.pointer);
+        left.data.swap(right.data);
     }
 
 private:
     friend class ThemeManager;
+    struct ThemeData;
 
-    mutable ThemeManager *manager;
-    mutable String name;
-    p_SharedTheme pointer;
+    std::shared_ptr<ThemeData> data;
 
     //==============================================================================================================
     void setThemeManager(ThemeManager *manager) noexcept;
@@ -92,12 +95,23 @@ class JAUT_API ThemeManager final
 public:
     struct JAUT_API Options final
     {
+        enum JAUT_API DuplicateMode
+        {
+            KeepLast,
+            KeepLatest,
+            KeepDuplicates,
+            KeepFirstFound
+        };
+
         bool cacheThemes;
+        ThemePointer defaultTheme;
+        DuplicateMode duplicateBehaviour;
         String themeMetaId;
         String themePrefix;
 
         Options() noexcept
             : cacheThemes(true),
+              duplicateBehaviour(KeepLast),
               themeMetaId("packdata.json")
         {}
     };
@@ -105,7 +119,7 @@ public:
     using p_SharedTheme   = std::shared_ptr<IThemeDefinition>;
     using p_MetaReader    = std::unique_ptr<IMetaReader>;
     using p_Theme         = std::shared_ptr<IThemeDefinition>;
-    using f_ThemeInit     = std::function<IThemeDefinition*(const juce::File&, IMetadata *meta)>;
+    using f_ThemeInit     = std::function<IThemeDefinition*(const juce::File&, std::unique_ptr<IMetadata>)>;
     using t_ThemeMap      = std::map<juce::String, ThemePointer>;
     using t_ThemeIterator = t_ThemeMap::const_iterator;
     using t_ThemeVector   = std::vector<ThemePointer>;
@@ -121,25 +135,30 @@ public:
 
     //==================================================================================================================
     ThemePointer getCurrentTheme() const;
-    bool setCurrentTheme(const String &themeId);
+    bool setCurrentTheme(const String &themeId, bool setToDefaultOnFail = false);
 
     //==================================================================================================================
-    int numThemePacks() const noexcept;
+    int numThemes() const noexcept;
 
     //==================================================================================================================
-    void reloadThemePacks();
-    void clearThemePacks();
-    void reloadThemePack(const String &themeId);
+    void reloadThemes();
+    void clearThemes();
+    void reloadTheme(const String &themeId);
 
     //==================================================================================================================
-    ThemePointer loadThemePack(const String &themeId) const;
-    ThemePointer loadExternalThemePack(const File &themeFolder) const;
-    ThemePointer loadExternalThemePack(const File &themeFolder, bool override);
+    ThemePointer loadTheme(const String &themeId) const;
+    ThemePointer loadExternalTheme(const File &themeFolder) const;
+    ThemePointer loadExternalTheme(const File &themeFolder, bool override);
 
     //==================================================================================================================
-    ThemePointer  getThemePack(const String &themeId) const;
-    t_ThemeVector getAllThemePacks() const;
+    ThemePointer  getTheme(const String &themeId) const;
+    t_ThemeVector getAllThemes() const;
     const Options &getOptions() const noexcept;
+
+    //==================================================================================================================
+    bool contains(const String &themeId) const;
+    bool contains(const ThemePointer &themePointer) const;
+    bool contains(const IThemeDefinition &theme)    const;
 
     //==================================================================================================================
     t_ThemeIterator begin() const noexcept;
@@ -157,8 +176,6 @@ public:
     }
 
 private:
-    friend class ThemePointer;
-
     String currentThemeId;
     f_ThemeInit initFunc;
     p_MetaReader metadataReader;

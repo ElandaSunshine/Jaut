@@ -26,7 +26,6 @@
 #pragma once
 
 #include <jaut/expo.h>
-#include <jaut/imetadata.h>
 #include <unordered_map>
 
 namespace jaut
@@ -36,6 +35,7 @@ class JAUT_API MetadataHelper final
 {
 public:
     using t_meta_map = std::unordered_map<juce::String, juce::var>;
+
     static t_meta_map readMetaToMap(InputStream &input) noexcept;
     static NamedValueSet readMetaToNamedValueSet(InputStream &input) noexcept;
     static void setPlaceholder(const String &name, const String &value) noexcept;

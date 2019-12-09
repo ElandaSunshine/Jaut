@@ -33,7 +33,7 @@ namespace jaut
 {
 namespace
 {
-const String getCommaOrNot(Config::Property::t_iterator it, Config::Property::t_iterator &end)
+const String getCommaOrNot(Config::Property::t_Iterator it, Config::Property::t_Iterator &end)
 {
     for (auto _it = ++it; _it != end; ++_it)
     {
@@ -185,7 +185,7 @@ const bool readPropertiesXml(const XmlElement *xml, Config::Property propParent,
     {
         forEachXmlChildElementWithTagName(*xml, xmlsubsetting, tagSetting)
         {
-            (void)readPropertiesXml(xmlsubsetting, propParent.getProperty(xmlsubsetting->getStringAttribute("name")), // @noret
+            (void)readPropertiesXml(xmlsubsetting, propParent.getProperty(xmlsubsetting->getStringAttribute("name")),
                                     tagSetting);
         }
     }
@@ -218,7 +218,7 @@ const bool appendSubPropertiesJson(const Config::Property propParent, String &fi
 
             fileOutput += indentation + "\"" + propsetting.getName() + "\": ";
 
-            auto endit = propParent.end();
+            auto end_iterator = propParent.end();
 
             if (hasvalidsubproperties)
             {
@@ -229,12 +229,12 @@ const bool appendSubPropertiesJson(const Config::Property propParent, String &fi
                     fileOutput += "    " + indentation + "\"value\": " + getVarVal(value) + ",\n";
                 }
 
-                (void)appendSubPropertiesJson(propsetting, fileOutput, level + 1); // @noret
-                fileOutput += "\n" + indentation + "}" + getCommaOrNot(pairsetting, endit);
+                (void)appendSubPropertiesJson(propsetting, fileOutput, level + 1);
+                fileOutput += "\n" + indentation + "}" + getCommaOrNot(pairsetting, end_iterator);
             }
             else
             {
-                fileOutput += getVarVal(value) + getCommaOrNot(pairsetting, endit);
+                fileOutput += getVarVal(value) + getCommaOrNot(pairsetting, end_iterator);
             }
         }
     }
@@ -371,7 +371,7 @@ const String getVarValYaml(const var &value, const String &indentation) noexcept
             output = result;
         }
 
-        return output;
+        return "\"" + output + "\"";
     }
 
     return value.toString();
@@ -424,6 +424,7 @@ const String prepareCommentYaml(const String &comment, const String &indentation
 const bool appendSubPropertiesYaml(const Config::Property propParent, String &fileOutput, int level) noexcept
 {
     bool isfirst = true;
+
     for (auto pairsetting = propParent.begin(); pairsetting != propParent.end(); ++pairsetting)
     {
         auto propsetting = pairsetting->second;
@@ -479,30 +480,28 @@ const bool appendSubPropertiesYaml(const Config::Property propParent, String &fi
 
 const bool readPropertiesYaml(YAML::Node node, Config::Property parentProp) noexcept
 {
-    const bool hasvalidchilds = parentProp.hasValid();
-
     if (!parentProp.isValid() || !node)
     {
         return false;
     }
 
-    if (hasvalidchilds)
+    if (parentProp.hasValid())
     {
-        for (auto &[name, propset] : parentProp)
+        for (auto &setting_pair : parentProp)
         {
-            if (!propset.isValid())
+            if (!setting_pair.second.isValid())
             {
                 continue;
             }
 
-            YAML::Node nodeset = node[propset.getName().toRawUTF8()];
+            YAML::Node node_setting = node[setting_pair.first.toRawUTF8()];
 
-            if (!nodeset)
+            if (!node_setting)
             {
                 continue;
             }
 
-            (void) jaut::readPropertiesYaml(nodeset, propset);
+            (void) jaut::readPropertiesYaml(node_setting, setting_pair.second);
         }
     }
     else if(!parentProp.getValue().isVoid())
@@ -516,14 +515,14 @@ const bool readPropertiesYaml(YAML::Node node, Config::Property parentProp) noex
                 return false;
             }
 
-            Array<var> nodearray;
+            Array<var> node_array;
 
             for (int i = 0; i < node.size(); ++i)
             {
-                nodearray.add(String(node[i].as<std::string>()));
+                node_array.add(String(node[i].as<std::string>()));
             }
 
-            value = nodearray;
+            value = node_array;
         }
         else if (value.isDouble() || value.isInt() || value.isInt64())
         {
@@ -839,14 +838,14 @@ const bool JsonParser::writeConfig(const File &configFile, const Config::Propert
         tag += "    \"" + noticeId + "\": \"" + newtext + "\",\n\n\n";
     }
 
-    for (auto it = root.begin(); it != root.end(); ++it)
+    for (auto i = root.begin(); i != root.end(); ++i)
     {
-        auto propcategory = it->second;
+        auto propcategory = i->second;
 
         if (propcategory.hasValid())
         {
             String categorycomment = propcategory.getComment();
-            Config::Property::t_iterator it(it);
+            auto iterator = i;
 
             if (!categorycomment.isEmpty())
             {
@@ -857,8 +856,8 @@ const bool JsonParser::writeConfig(const File &configFile, const Config::Propert
 
             (void) jaut::appendSubPropertiesJson(propcategory, tag, 2); // @noret
 
-            auto endit = root.end();
-            tag += "\n    }" + jaut::getCommaOrNot(it, endit);
+            auto end_iterator = root.end();
+            tag += "\n    }" + jaut::getCommaOrNot(iterator, end_iterator);
         }
     }
 
@@ -888,49 +887,49 @@ const bool YamlParser::parseConfig(const File &configFile, Config::Property root
     }
 
     bool wassuccessful = false;
-    std::string yaml = configFile.loadFileAsString().toStdString();
-    YAML::Node noderoot;
+    std::string yaml   = configFile.loadFileAsString().toStdString();
+    YAML::Node node_root;
 
     try
     {
-        noderoot = YAML::Load(yaml);
+        node_root = YAML::Load(yaml);
     }
     catch (std::exception&)
     {
         return false;
     }
 
-    if (noderoot)
+    if (node_root)
     {
-        for (auto &[name, prop] : root)
+        for (auto &category_pair : root)
         {
-            if (!prop.hasValid())
+            if (!category_pair.second.hasValid())
             {
                 continue;
             }
 
-            YAML::Node nodecat = noderoot[prop.getName().toRawUTF8()];
+            YAML::Node node_category = node_root[category_pair.first.toRawUTF8()];
 
-            if (!nodecat)
+            if (!node_category)
             {
                 continue;
             }
 
-            for (auto &[nameset, propset] : prop)
+            for (auto &setting_pair : category_pair.second)
             {
-                if (!propset.isValid())
+                if (!setting_pair.second.isValid())
                 {
                     continue;
                 }
 
-                YAML::Node nodeset = nodecat[propset.getName().toRawUTF8()];
+                YAML::Node node_setting = node_category[setting_pair.first.toRawUTF8()];
 
-                if (!nodeset)
+                if (!node_setting)
                 {
                     continue;
                 }
 
-                if (jaut::readPropertiesYaml(nodeset, propset))
+                if (jaut::readPropertiesYaml(node_setting, setting_pair.second))
                 {
                     wassuccessful = true;
                 }

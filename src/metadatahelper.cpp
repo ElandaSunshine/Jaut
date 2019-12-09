@@ -26,39 +26,48 @@
 #include <jaut/metadatahelper.h>
 #include <regex>
 
-namespace jaut
-{
 namespace
 {
 static std::unordered_map<String, String> placeholderMap;
 
 inline String findPlaceholderAndReplace(const String &input)
 {
-    String output           = input.toStdString();
-    std::string regex_input = input.toStdString();
-    std::smatch match;
-    std::regex pattern(R"(\{\s*([a-zA-Z0-9]+)\s*\})");
-    int max_attempts = 10;
+    const std::regex pattern(R"(\{\s*([a-zA-Z0-9_-]+)\s*\})");
+    const std::string regex_input   = input.toStdString();
+    const std::regex_iterator begin = std::sregex_iterator(regex_input.begin(), regex_input.end(), pattern);
+    const std::regex_iterator end   = std::sregex_iterator();
+    String output = input.toStdString();
 
-    while(std::regex_search(regex_input, match, pattern) && max_attempts > 0)
+    for(auto i = begin; i != end; ++i)
     {
-        auto iterator = placeholderMap.find(String(match.str(1)).toLowerCase());
+        std::smatch match = *i;
+        auto iterator     = placeholderMap.find(String(match.str(1)).toLowerCase());
 
         if(iterator != placeholderMap.end())
         {
-            regex_input = (output = output.replace(match.str(0), iterator->second, true)).toStdString();
+            output = output.replace(match.str(0), iterator->second, true);
             continue;
         }
-
-        --max_attempts;
     }
 
     return output;
 }
+
+inline bool checkIfIsVersionString(const String &version)
+{
+    std::regex pattern(R"(^[0-9]+\.[0-9]+$)");
+
+    if(std::regex_match(version.toStdString(), pattern))
+    {
+        return true;
+    }
+
+    return false;
+}
 }
 
-
-
+namespace jaut
+{
 /* ==================================================================================
  * ================================= MetadataHelper =================================
  * ================================================================================== */
@@ -91,22 +100,23 @@ MetadataHelper::t_meta_map MetadataHelper::readMetaToMap(InputStream &input) noe
 
             if(jsonroot->hasProperty("name"))
             {
-                metadata["name"] = jaut::findPlaceholderAndReplace(jsonroot->getProperty("name"));
+                metadata["name"] = jsonroot->getProperty("name");
             }
 
             if(jsonroot->hasProperty("version"))
             {
-                metadata["version"] = jaut::findPlaceholderAndReplace(jsonroot->getProperty("version"));
+                const String version_string = ::findPlaceholderAndReplace(jsonroot->getProperty("version"));
+                metadata["version"]         = ::checkIfIsVersionString(version_string) ? version_string : "1.0";
             }
 
             if(jsonroot->hasProperty("description"))
             {
-                metadata["description"] = jaut::findPlaceholderAndReplace(jsonroot->getProperty("description"));
+                metadata["description"] = ::findPlaceholderAndReplace(jsonroot->getProperty("description"));
             }
 
             if(jsonroot->hasProperty("author"))
             {
-                metadata["author"] = jaut::findPlaceholderAndReplace(jsonroot->getProperty("author"));
+                metadata["author"] = ::findPlaceholderAndReplace(jsonroot->getProperty("author"));
             }
 
             if(jsonroot->hasProperty("authors"))
@@ -121,20 +131,20 @@ MetadataHelper::t_meta_map MetadataHelper::readMetaToMap(InputStream &input) noe
 
                 if(license.isObject())
                 {
-                    Array<var> license_array {jaut::findPlaceholderAndReplace(license.getProperty("type", "")),
-                                              jaut::findPlaceholderAndReplace(license.getProperty("url",  ""))};
+                    Array<var> license_array {::findPlaceholderAndReplace(license.getProperty("type", "")),
+                                              ::findPlaceholderAndReplace(license.getProperty("url",  ""))};
                     
                     metadata["license"] = var(license_array);
                 }
                 else if(license.isString())
                 {
-                    metadata["license"] = var(Array<var>(jaut::findPlaceholderAndReplace(license), ""));
+                    metadata["license"] = var(Array<var>(::findPlaceholderAndReplace(license), ""));
                 }
             }
 
             if(jsonroot->hasProperty("website"))
             {
-                metadata["website"] = jaut::findPlaceholderAndReplace(jsonroot->getProperty("website"));
+                metadata["website"] = ::findPlaceholderAndReplace(jsonroot->getProperty("website"));
             }
 
             if(jsonroot->hasProperty("excludedImages"))
@@ -182,22 +192,23 @@ NamedValueSet MetadataHelper::readMetaToNamedValueSet(InputStream &input) noexce
 
             if(jsonroot->hasProperty("name"))
             {
-                metadata.set("name", jaut::findPlaceholderAndReplace(jsonroot->getProperty("name")));
+                metadata.set("name", jsonroot->getProperty("name"));
             }
 
             if(jsonroot->hasProperty("version"))
             {
-                metadata.set("version", jaut::findPlaceholderAndReplace(jsonroot->getProperty("version")));
+                const String version_string = ::findPlaceholderAndReplace(jsonroot->getProperty("version"));
+                metadata.set("version", ::checkIfIsVersionString(version_string) ? version_string : "1.0");
             }
 
             if(jsonroot->hasProperty("description"))
             {
-                metadata.set("description", jaut::findPlaceholderAndReplace(jsonroot->getProperty("description")));
+                metadata.set("description", ::findPlaceholderAndReplace(jsonroot->getProperty("description")));
             }
 
             if(jsonroot->hasProperty("author"))
             {
-                metadata.set("author", jaut::findPlaceholderAndReplace(jsonroot->getProperty("author")));
+                metadata.set("author", ::findPlaceholderAndReplace(jsonroot->getProperty("author")));
             }
 
             if(jsonroot->hasProperty("authors"))
@@ -212,20 +223,20 @@ NamedValueSet MetadataHelper::readMetaToNamedValueSet(InputStream &input) noexce
 
                 if(license.isObject())
                 {
-                    Array<var> license_array {jaut::findPlaceholderAndReplace(license.getProperty("type", "")),
-                                              jaut::findPlaceholderAndReplace(license.getProperty("url",  ""))};
+                    Array<var> license_array {::findPlaceholderAndReplace(license.getProperty("type", "")),
+                                              ::findPlaceholderAndReplace(license.getProperty("url",  ""))};
                     
                     metadata.set("license", var(license_array));
                 }
                 else if(license.isString())
                 {
-                    metadata.set("license", var(Array<var>(jaut::findPlaceholderAndReplace(license), "")));
+                    metadata.set("license", var(Array<var>(::findPlaceholderAndReplace(license), "")));
                 }
             }
 
             if(jsonroot->hasProperty("website"))
             {
-                metadata.set("website", jaut::findPlaceholderAndReplace(jsonroot->getProperty("website")));
+                metadata.set("website", ::findPlaceholderAndReplace(jsonroot->getProperty("website")));
             }
 
             if(jsonroot->hasProperty("excludedImages"))
@@ -248,7 +259,7 @@ NamedValueSet MetadataHelper::readMetaToNamedValueSet(InputStream &input) noexce
 void MetadataHelper::setPlaceholder(const String &name, const String &value) noexcept
 {
     const String name_adjusted = name.toLowerCase().removeCharacters(" ");
-    jaut::placeholderMap[name_adjusted] = value;
+    ::placeholderMap[name_adjusted] = value;
 }
 #endif // MetadataHelper
 }

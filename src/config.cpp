@@ -74,22 +74,20 @@ const String fixPathString(const String &currentPath) noexcept
 }
 }
 
-
-
 /* ==================================================================================
- * ================================ SharedObject ====================================
+ * ================================== Property ======================================
  * ================================================================================== */
-
-struct Config::Property::SharedObject final
+//#region Property
+struct Config::Property::SharedObject
 {
     String comment;
     var defaultValue;
     String name;
-    t_sub_map properties;
+    t_ChildMap properties;
     Property *parent;
     var value;
     Config *eventConfig;
-    t_listener_list listeners;
+    ListenerList<Listener> listeners;
 
     //==================================================================================================================
     SharedObject(const String &name, const var &defaultValue) noexcept
@@ -100,10 +98,7 @@ struct Config::Property::SharedObject final
 
 
 
-/* ==================================================================================
- * ================================== Property ======================================
- * ================================================================================== */
-
+//======================================================================================================================
 Config::Property::Property(const String &name, const var &defaultValue)
     : data(new SharedObject(name.trim(), defaultValue))
 {
@@ -112,37 +107,12 @@ Config::Property::Property(const String &name, const var &defaultValue)
     jassert(!name.isEmpty() && !name.equalsIgnoreCase("value"));
 }
 
-Config::Property::Property(const Property &other) noexcept
-    : data(other.data)
-{}
-
-Config::Property::Property(Property &&other) noexcept
-    : data(std::move(other.data))
-{
-    other.data = nullptr;
-}
-
-//======================================================================================================================
-Config::Property &Config::Property::operator=(const Property &other) noexcept
-{
-    Property temp(other);
-    swap(*this, temp);
-
-    return *this;
-}
-
-Config::Property &Config::Property::operator=(Property &&other) noexcept
-{
-    swap(*this, other);
-    other.data = nullptr;
-
-    return *this;
-}
+Config::Property::~Property() noexcept {}
 
 //======================================================================================================================
 Config::Property Config::Property::operator[](const String &name) noexcept
 {
-    if (data)
+    if (isValid())
     {
         return data->properties[name.trim().toLowerCase()];
     }
@@ -153,7 +123,7 @@ Config::Property Config::Property::operator[](const String &name) noexcept
 //======================================================================================================================
 Config::Property Config::Property::createProperty(const String &name, const var &defaultValue) noexcept
 {
-    if (data)
+    if (isValid())
     {
         Property prop(name, defaultValue);
         prop.data->parent = this;
@@ -169,16 +139,16 @@ Config::Property Config::Property::createProperty(const String &name, const var 
 
 void Config::Property::addProperty(Property prop) noexcept
 {
-    if (!data)
+    if (!isValid())
     {
         return;
     }
 
-    String lname = prop.getName().trim().toLowerCase();
+    String property_id = prop.getName().trim().toLowerCase();
 
-    if (!hasProperty(lname))
+    if (!hasProperty(property_id))
     {
-        data->properties.emplace(lname, prop);
+        data->properties.emplace(property_id, prop);
         prop.data->parent = this;
         prop.addConfig(data->eventConfig);
         postAddedListener(prop);
@@ -187,11 +157,11 @@ void Config::Property::addProperty(Property prop) noexcept
 
 Config::Property Config::Property::getProperty(const String &name) const noexcept
 {
-    String lname = name.trim().toLowerCase();
+    String property_id = name.trim().toLowerCase();
 
-    if (data && hasProperty(lname))
+    if (isValid() && hasProperty(property_id))
     {
-        return data->properties.at(lname);
+        return data->properties.at(property_id);
     }
 
     return Property();
@@ -200,12 +170,12 @@ Config::Property Config::Property::getProperty(const String &name) const noexcep
 //======================================================================================================================
 const int Config::Property::size() const noexcept
 {
-    return data ? static_cast<int>(data->properties.size()) : 0;
+    return isValid() ? static_cast<int>(data->properties.size()) : 0;
 }
 
 const bool Config::Property::hasValid() const noexcept
 {
-    if (data)
+    if (isValid())
     {
         for (auto &[key, value] : data->properties)
         {
@@ -226,23 +196,23 @@ const bool Config::Property::isValid() const
 
 const bool Config::Property::hasProperty(const String &name) const noexcept
 {
-    return data && data->properties.find(name.trim().toLowerCase()) != data->properties.end();
+    return isValid() && data->properties.find(name.trim().toLowerCase()) != data->properties.end();
 }
 
 //======================================================================================================================
 const String Config::Property::getName() const noexcept
 {
-    return data ? data->name : "";
+    return isValid() ? data->name : "";
 }
 
 const String Config::Property::getComment() const noexcept
 {
-    return data ? data->comment : "";
+    return isValid() ? data->comment : "";
 }
 
 void Config::Property::setComment(const String &comment) noexcept
 {
-    if (data)
+    if (isValid())
     {
         data->comment = comment;
     }
@@ -250,19 +220,19 @@ void Config::Property::setComment(const String &comment) noexcept
 
 void Config::Property::setValue(const var &value) noexcept
 {
-    if (data && value != data->value)
+    if (isValid() && value != data->value)
     {
-        var oldvalue = data->value;
+        var old_value = data->value;
 
         /**
             Always make sure that the value you are passing has the same object type than the stored value.
             This design decision makes type conversion a lot easier to maintain and thus, helps in
             parsing with multiple configuration languages.
          */
-        jassert(oldvalue.hasSameTypeAs(value));
+        jassert(old_value.hasSameTypeAs(value));
 
         data->value = value;
-        postValueChangedListener(data->name, oldvalue, value);
+        postValueChangedListener(data->name, old_value, value);
 
         if (data->eventConfig)
         {
@@ -294,7 +264,7 @@ void Config::Property::setValue(const var &value) noexcept
                 }
             }
 
-            data->eventConfig->postValueChangedListener(category + "." + name, oldvalue, value);
+            data->eventConfig->postValueChangedListener(category + "." + name, old_value, value);
         }
     }
 }
@@ -302,20 +272,25 @@ void Config::Property::setValue(const var &value) noexcept
 const var &Config::Property::getValue() const noexcept
 {
     static var empty;
-    return data ? data->value : empty;
+    return isValid() ? data->value : empty;
 }
 
 void Config::Property::reset(bool recursive) noexcept
 {
+    if(!isValid())
+    {
+        return;
+    }
+
     setValue(data->defaultValue);
 
     if(recursive)
     {
-        for(auto &[key, value] : *this)
+        for(auto &[key, property] : *this)
         {
-            if(value.isValid())
+            if(property.isValid())
             {
-                value.reset(true);
+                property.reset(true);
             }
         }
     }
@@ -324,23 +299,44 @@ void Config::Property::reset(bool recursive) noexcept
 //======================================================================================================================
 const String Config::Property::toString() const noexcept
 {
-    return data ? data->value.toString() : "";
+    return getValue().toString();
 }
 
-Config::Property::t_iterator Config::Property::begin() const noexcept
+//======================================================================================================================
+Config::Property::t_Iterator Config::Property::begin() noexcept
 {
-    return !data ? t_iterator() : data->properties.begin();
+    return !isValid() ? t_Iterator() : data->properties.begin();
 }
 
-Config::Property::t_iterator Config::Property::end() const noexcept
+Config::Property::t_Iterator Config::Property::end() noexcept
 {
-    return !data ? t_iterator() : data->properties.end();
+    return !isValid() ? t_Iterator() : data->properties.end();
+}
+
+Config::Property::t_CIterator Config::Property::begin() const noexcept
+{
+    return !isValid() ? t_CIterator() : data->properties.begin();
+}
+
+Config::Property::t_CIterator Config::Property::end() const noexcept
+{
+    return !isValid() ? t_CIterator() : data->properties.end();
+}
+
+Config::Property::t_CIterator Config::Property::cbegin() const noexcept
+{
+    return !isValid() ? t_CIterator() : data->properties.begin();
+}
+
+Config::Property::t_CIterator Config::Property::cend() const noexcept
+{
+    return !isValid() ? t_CIterator() : data->properties.end();
 }
 
 //======================================================================================================================
 void Config::Property::addListener(Listener *listener) noexcept
 {
-    if(data)
+    if(isValid())
     {
         data->listeners.add(listener);
     }
@@ -348,7 +344,7 @@ void Config::Property::addListener(Listener *listener) noexcept
 
 void Config::Property::removeListener(Listener *listener) noexcept
 {
-    if(data)
+    if(isValid())
     {
         data->listeners.remove(listener);
     }
@@ -357,15 +353,23 @@ void Config::Property::removeListener(Listener *listener) noexcept
 //======================================================================================================================
 void Config::Property::addConfig(Config *config) noexcept
 {
-    if(config && data)
+    if(isValid())
     {
         data->eventConfig = config;
+
+        if(hasValid())
+        {
+            for(auto property : *this)
+            {
+                property.second.addConfig(config);
+            }
+        }
     }
 }
 
 void Config::Property::postAddedListener(Property prop) noexcept
 {
-    if(data)
+    if(isValid())
     {
         data->listeners.call([=, &prop](Listener &l)
         {
@@ -376,7 +380,7 @@ void Config::Property::postAddedListener(Property prop) noexcept
 
 void Config::Property::postValueChangedListener(const String &name, var oldValue, var newValue) noexcept
 {
-    if(data)
+    if(isValid())
     {
         data->listeners.call([=, &name, &oldValue, &newValue](Listener &l)
         {
@@ -384,13 +388,14 @@ void Config::Property::postValueChangedListener(const String &name, var oldValue
         });
     }
 }
+//#endregion Property
 
 
 
 /* ==================================================================================
- * =================================== Options ======================================
+ * =================================== Config =======================================
  * ================================================================================== */
-
+//#region Config
 Config::Options::Options() noexcept
     : autoSave(false),
       processSynced(false),
@@ -399,16 +404,13 @@ Config::Options::Options() noexcept
 
 
 
-/* ==================================================================================
- * =================================== Config =======================================
- * ================================================================================== */
-
+//======================================================================================================================
 Config::Config(const String &root, const Options &options, std::unique_ptr<IConfigParser> configParser)
     : autoSaveActive(true), lock(nullptr),
       parser(configParser.release(), [](IConfigParser *parser) { delete parser; }), options(options)
 {
-    const String filepath = fixPathString(root + "/" + options.fileName);
-    File file(filepath);
+    const String file_path = fixPathString(root + "/" + options.fileName);
+    File file(file_path);
 
     /*
        If this error occurs then you know that
@@ -435,8 +437,8 @@ Config::Config(const String &root, const Options &options, std::unique_ptr<IConf
      */
     jassert(parser != nullptr);
 
-    fullPath = filepath;
-    ipMutex.reset(options.processSynced ? new InterProcessLock(filepath) : nullptr);
+    fullPath = file_path;
+    ipMutex.reset(options.processSynced ? new InterProcessLock(file_path) : nullptr);
     (void) categories[options.defaultCategory.trim().toLowerCase()];
 }
 
@@ -455,10 +457,29 @@ Config::Config(Config &&other) noexcept
         listeners.add(listener);
     }
 
+    for(auto &[p0, category_map] : categories)
+    {
+        for(auto &[p1, property] : category_map)
+        {
+            property.addConfig(this);
+        }
+    }
+
     other.lock    = nullptr;
     other.parser  = nullptr;
     other.ipMutex = nullptr;
     other.listeners.clear();
+}
+
+Config::~Config()
+{
+    for(auto &[p0, category_map] : categories)
+    {
+        for(auto &[p1, property] : category_map)
+        {
+            property.addConfig(nullptr);
+        }
+    }
 }
 
 //======================================================================================================================
@@ -469,6 +490,14 @@ Config &Config::operator=(Config &&other) noexcept
     for(auto *listener : other.listeners.getListeners())
     {
         listeners.add(listener);
+    }
+
+    for(auto &[p0, category_map] : categories)
+    {
+        for(auto &[p1, property] : category_map)
+        {
+            property.addConfig(this);
+        }
     }
 
     other.lock    = nullptr;
@@ -488,9 +517,9 @@ const bool Config::load()
     {
         // Try to lock for no other threads and/or processes to modify the
         // file at the same time!
-        p_proc_scp scl(createIpcLock());
+        p_ProcessLock lock (createIpcLock());
 
-        if (scl && !scl->isLocked())
+        if (lock && !lock->isLocked())
         {
             return false;
         }
@@ -503,21 +532,21 @@ const bool Config::load()
 
 const bool Config::save() const
 {
-    File config(fullPath);
+    File config (fullPath);
 
     if (config.getParentDirectory().exists())
     {
         // Try to lock for no other threads and/or processes to modify the
         // file at the same time!
-        p_proc_scp scl(createIpcLock());
+        p_ProcessLock lock (createIpcLock());
 
-        if (scl && !scl->isLocked())
+        if (lock && !lock->isLocked())
         {
             return false;
         }
 
         // Saving the config file
-        Property root(getAllProperties());
+        Property root = getAllProperties();
 
         if (!options.configNotice.isEmpty())
         {
@@ -545,16 +574,17 @@ const String Config::getConfigName(bool withoutExtension) const noexcept
 
 Config::Property Config::getProperty(const String &name, const String &category) const noexcept
 {
-    String catname = !category.isEmpty() ? category.trim().toLowerCase() : options.defaultCategory.trim().toLowerCase();
+    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
+                                               : options.defaultCategory.trim().toLowerCase();
 
-    if (categories.find(catname) != categories.end())
+    if (categories.find(category_name) != categories.end())
     {
-        auto &propmap = categories.at(catname);
-        String propname = name.trim().toLowerCase();
+        const t_PropertyMap &property_map = categories.at(category_name);
+        String property_id = name.trim().toLowerCase();
 
-        if (propmap.find(propname) != propmap.end())
+        if (property_map.find(property_id) != property_map.end())
         {
-            return propmap.at(propname);
+            return property_map.at(property_id);
         }
     }
 
@@ -565,45 +595,45 @@ Config::Property Config::getAllProperties()
 {
     Property root("config", var());
 
-    for (auto &[name, category] : categories)
+    for (auto &[name, category_map] : categories)
     {
-        Property cat(name, var());
+        Property category(name, var());
 
         if (comments.find(name) != comments.end())
         {
-            cat.setComment(comments.at(name));
+            category.setComment(comments.at(name));
         }
 
-        for (auto &[p0, prop] : category)
+        for (auto &[p0, property] : category_map)
         {
-            cat.addProperty(prop);
+            category.addProperty(property);
         }
 
-        root.addProperty(cat);
+        root.addProperty(category);
     }
 
     return root;
 }
 
-Config::Property Config::getAllProperties() const
+const Config::Property Config::getAllProperties() const
 {
     Property root("config", var());
 
-    for (auto &[name, category] : categories)
+    for (auto &[name, category_map] : categories)
     {
-        Property cat(name, var());
+        Property category(name, var());
 
         if (comments.find(name) != comments.end())
         {
-            cat.setComment(comments.at(name));
+            category.setComment(comments.at(name));
         }
 
-        for (auto &[p0, prop] : category)
+        for (auto &[p0, property] : category_map)
         {
-            cat.addProperty(prop);
+            category.addProperty(property);
         }
 
-        root.addProperty(cat);
+        root.addProperty(category);
     }
 
     return root;
@@ -611,11 +641,12 @@ Config::Property Config::getAllProperties() const
 
 String Config::getCategoryComment(const String &category) const noexcept
 {
-    String catname = !category.isEmpty() ? category.trim().toLowerCase() : options.defaultCategory.trim().toLowerCase();
+    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
+                                               : options.defaultCategory.trim().toLowerCase();
 
-    if (catname != options.defaultCategory && comments.find(catname) != comments.end())
+    if (category_name != options.defaultCategory && comments.find(category_name) != comments.end())
     {
-        return comments.at(catname);
+        return comments.at(category_name);
     }
 
     return "";
@@ -623,17 +654,12 @@ String Config::getCategoryComment(const String &category) const noexcept
 
 void Config::setCategoryComment(const String &category, const String &comment) noexcept
 {
-    String catname = !category.isEmpty() ? category.trim().toLowerCase() : options.defaultCategory.trim().toLowerCase();
+    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
+                                               : options.defaultCategory.trim().toLowerCase();
 
-    if (catname != options.defaultCategory && categories.find(catname) != categories.end())
+    if (category_name != options.defaultCategory && comments.find(category_name) != comments.end())
     {
-        String &cmt = comments[catname];
-        cmt = comment;
-
-        if (comment != cmt && shouldAutosave())
-        {
-            (void) save();
-        }
+        comments.at(category_name) = comment;
     }
 }
 
@@ -655,38 +681,47 @@ const Config::Options &Config::getOptions() const noexcept
 //======================================================================================================================
 Config::Property Config::createProperty(const String &name, const var &defaultValue, const String &category) noexcept
 {
-    Property prop (name, defaultValue);
-    String catname = !category.isEmpty() ? category.trim().toLowerCase() : options.defaultCategory.trim().toLowerCase();
-    String lname   = name.trim().toLowerCase();
-    bool added     = categories[catname].emplace(lname, prop).second;
+    Property property (name, defaultValue);
+    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
+                                               : options.defaultCategory.trim().toLowerCase();
+    String property_id = name.trim().toLowerCase();
+    bool was_added     = categories[category_name].emplace(property_id, property).second;
 
-    if (added)
+    if (was_added)
     {
         if (shouldAutosave())
         {
-            (void)save();
+            (void) save();
         }
 
-        postAddedListener(prop);
+        property.addConfig(this);
+        postAddedListener(property);
     }
 
-    return prop;
+    return property;
 }
 
-void Config::addProperty(Property prop, const String &category) noexcept
+void Config::addProperty(Property property, const String &category) noexcept
 {
-    String catname = !category.isEmpty() ? category.trim().toLowerCase() : options.defaultCategory.trim().toLowerCase();
-    String lname   = prop.getName().trim().toLowerCase();
-    bool added     = categories[catname].emplace(lname, prop).second;
+    if(property.isValid() && property.data->eventConfig)
+    {
+        return;
+    }
 
-    if (added)
+    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
+                                               : options.defaultCategory.trim().toLowerCase();
+    String property_id   = property.getName().trim().toLowerCase();
+    bool was_added       = categories[category_name].emplace(property_id, property).second;
+
+    if (was_added)
     {
         if (shouldAutosave())
         {
-            (void)save();
+            (void) save();
         }
 
-        postAddedListener(prop);
+        property.addConfig(this);
+        postAddedListener(property);
     }
 }
 
@@ -724,9 +759,9 @@ const bool Config::shouldAutosave() const noexcept
     return autoSaveActive && options.autoSave;
 }
 
-Config::t_proc_scp *Config::createIpcLock() const
+Config::t_ProcessLock *Config::createIpcLock() const
 {
-    return options.processSynced ? new t_proc_scp(*ipMutex) : nullptr;
+    return options.processSynced ? new t_ProcessLock(*ipMutex) : nullptr;
 }
 
 void Config::postAddedListener(Property prop) noexcept
@@ -744,4 +779,5 @@ void Config::postValueChangedListener(const String &name, var oldValue, var newV
         l.onValueChanged(name, oldValue, newValue);
     });
 }
+//#endregion Config
 }

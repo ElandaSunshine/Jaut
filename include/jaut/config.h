@@ -65,9 +65,9 @@ public:
         };
 
         //==============================================================================================================
-        using t_sub_map        = std::map<juce::String, Property>;
-        using t_iterator       = t_sub_map::iterator;
-        using t_listener_list  = juce::ListenerList<Listener>;
+        using t_ChildMap  = std::map<juce::String, Property>;
+        using t_Iterator  = t_ChildMap::iterator;
+        using t_CIterator = t_ChildMap::iterator;
 
         //==============================================================================================================
         /** Constructs an invalid property object. */
@@ -80,13 +80,7 @@ public:
             @param defaultValue The default value the property should have
          */
         Property(const String &name, const var &defaultValue);
-        Property(const Property &other) noexcept;
-        Property(Property &&other) noexcept;
-        ~Property() = default;
-
-        //==============================================================================================================
-        Property &operator=(const Property &other) noexcept;
-        Property &operator=(Property &&other) noexcept;
+        ~Property() noexcept;
 
         //==============================================================================================================
         /**
@@ -146,7 +140,7 @@ public:
         /**
             Checks whether this property is a valid property or not.
 
-            @returns True if the propt_sub_maprty is valid
+            @returns True if this property is valid
          */
         const bool isValid() const;
 
@@ -212,8 +206,13 @@ public:
          */
         const String toString() const noexcept;
 
-        t_iterator begin() const noexcept;
-        t_iterator end() const noexcept;
+        //==============================================================================================================
+        t_Iterator  begin()        noexcept;
+        t_Iterator  end()          noexcept;
+        t_CIterator begin()  const noexcept;
+        t_CIterator end()    const noexcept;
+        t_CIterator cbegin() const noexcept;
+        t_CIterator cend()   const noexcept;
 
         //==============================================================================================================
         void addListener(Listener *listener) noexcept;
@@ -226,12 +225,10 @@ public:
         }
 
     private:
-        friend class Config;
-
         struct SharedObject;
-        using p_data_handle = std::shared_ptr<SharedObject>;
-
-        p_data_handle data;
+        friend class Config;
+        
+        std::shared_ptr<SharedObject> data;
 
         //==============================================================================================================
         void addConfig(Config *config) noexcept;
@@ -280,13 +277,13 @@ public:
         String fileName;
     };
 
-    using t_cat_map       = std::unordered_map<juce::String, std::map<juce::String, Property>>;
-    using t_comt_map      = std::unordered_map<juce::String, juce::String>;
-    using t_proc_scp      = juce::InterProcessLock::ScopedLockType;
-    using t_listener_list = juce::ListenerList<Listener>;
-    using p_proc_mtx      = std::unique_ptr<juce::InterProcessLock>;
-    using p_proc_scp      = std::unique_ptr<t_proc_scp>;
-    using p_parser        = std::unique_ptr<IConfigParser, void(*)(IConfigParser*)>;
+    using t_PropertyMap  = std::map<juce::String, Property>;
+    using t_CategoryMap  = std::unordered_map<juce::String, t_PropertyMap>;
+    using t_CommentMap   = std::unordered_map<juce::String, juce::String>;
+    using t_ProcessLock  = juce::InterProcessLock::ScopedLockType;
+    using p_ProcessMutex = std::unique_ptr<juce::InterProcessLock>;
+    using p_ProcessLock  = std::unique_ptr<t_ProcessLock>;
+    using p_ConfigParser = std::unique_ptr<IConfigParser, void(*)(IConfigParser*)>;
 
     //==================================================================================================================
     /**
@@ -310,7 +307,7 @@ public:
      * @param other The other config object
      */
     Config(Config &&other) noexcept;
-    ~Config() = default;
+    ~Config();
 
     //==================================================================================================================
     Config &operator=(Config &&other) noexcept;
@@ -353,14 +350,14 @@ public:
 
         @returns The root Property object containing all categories and subsequent Property objects
      */
-    Property getAllProperties() const;
+    Property getAllProperties();
 
     /**
         Gathers all properties into one root property and creates properties for the various categories.
 
         @returns The root Property object containing all categories and subsequent Property objects
      */
-    Property getAllProperties();
+    const Property getAllProperties() const;
 
     /**
         Gets the comment of a category.
@@ -443,18 +440,18 @@ private:
     friend Property;
 
     bool autoSaveActive;
-    t_cat_map categories;
-    t_comt_map comments;
+    t_CategoryMap categories;
+    t_CommentMap comments;
     String fullPath;
-    p_proc_mtx ipMutex;
-    t_listener_list listeners;
+    p_ProcessMutex ipMutex;
+    juce::ListenerList<Listener> listeners;
     InterProcessLock *lock;
-    p_parser parser;
+    p_ConfigParser parser;
     Options options;
 
     //==================================================================================================================
     const bool shouldAutosave() const noexcept;
-    t_proc_scp *createIpcLock() const;
+    t_ProcessLock *createIpcLock() const;
     void postAddedListener(Property prop) noexcept;
     void postValueChangedListener(const String &name, var oldValue, var newValue) noexcept;
 

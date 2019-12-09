@@ -61,7 +61,4 @@ JAUT_CREATE_EXCEPTION(AppDataRootCreation, "Main data folder couldn't be created
                                            "Please report this issue to support for more"
                                            "information on how to solve this issue!");
 }
-
-#undef JAUT_CREATE_EXCEPTION
-#undef JAUT_CREATE_EXCEPTION_WITH_STRING
 }
