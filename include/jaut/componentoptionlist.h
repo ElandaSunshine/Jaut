@@ -173,7 +173,7 @@ private:
     ListenerList<Listener> listeners;
     TickType tickType;
     LabelDirection labelDirection;
-    std::vector<OptionBox> optionBoxes;
+    std::vector<OptionBox*> optionBoxes;
     bool hasLookAndFeel;
     bool capturesHoverAndClickEvents;
 

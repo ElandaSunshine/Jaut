@@ -74,10 +74,12 @@ const String fixPathString(const String &currentPath) noexcept
 }
 }
 
+
+
 /* ==================================================================================
  * ================================== Property ======================================
  * ================================================================================== */
-//#region Property
+#pragma region Property
 struct Config::Property::SharedObject
 {
     String comment;
@@ -388,14 +390,14 @@ void Config::Property::postValueChangedListener(const String &name, var oldValue
         });
     }
 }
-//#endregion Property
+#pragma endregion Property
 
 
 
 /* ==================================================================================
  * =================================== Config =======================================
  * ================================================================================== */
-//#region Config
+#pragma region Config
 Config::Options::Options() noexcept
     : autoSave(false),
       processSynced(false),
@@ -779,5 +781,5 @@ void Config::postValueChangedListener(const String &name, var oldValue, var newV
         l.onValueChanged(name, oldValue, newValue);
     });
 }
-//#endregion Config
+#pragma endregion Config
 }

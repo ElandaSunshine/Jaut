@@ -26,39 +26,43 @@
 #include <jaut/componentoptionlist.h>
 #include <jaut/lookandfeel.h>
 
-namespace jaut
-{
+#pragma region Namespace
 namespace
 {
-    constexpr int Const_Timer_Speed = 200;
+using namespace jaut;
+constexpr int Const_Timer_Speed = 200;
 
-    inline void pushStateChange(ListenerList<OptionList::OptionBox::Listener> &listeners, OptionList::OptionBox &box,
-                                OptionList::OptionBox::Listener::OptionStateType state) noexcept
+inline void pushStateChange(ListenerList<OptionList::OptionBox::Listener> &listeners, OptionList::OptionBox &box,
+                            OptionList::OptionBox::Listener::OptionStateType state) noexcept
+{
+    listeners.call([&box, &state](OptionList::OptionBox::Listener &listener)
     {
-        listeners.call([&box, &state](OptionList::OptionBox::Listener &listener)
-        {
-            listener.stateChanged(box, state);
-        });
-    }
-
-    inline void pushListChange(ListenerList<OptionList::Listener> &listeners, OptionList::OptionBox &box,
-                              int mode) noexcept
-    {
-        listeners.call([&box, mode](OptionList::Listener &listener)
-        {
-            switch(mode)
-            {
-                case 1:
-                    listener.optionBoxAdded(box);
-                    break;
-                    
-                default:
-                    listener.optionBoxStateChanged(box);
-            }
-        });
-    }
+        listener.stateChanged(box, state);
+    });
 }
 
+inline void pushListChange(ListenerList<OptionList::Listener> &listeners, OptionList::OptionBox &box, int mode) noexcept
+{
+    listeners.call([&box, mode](OptionList::Listener &listener)
+    {
+        switch(mode)
+        {
+            case 1:
+                listener.optionBoxAdded(box);
+                break;
+                
+            default:
+                listener.optionBoxStateChanged(box);
+        }
+    });
+}
+}
+#pragma endregion Namespace
+
+
+
+namespace jaut
+{
 /* ==================================================================================
  * ==================================== OptionBox ===================================
  * ================================================================================== */
@@ -136,7 +140,7 @@ void OptionList::OptionBox::setEnabled(bool enabled) noexcept
     if(optionFlags[1] != enabled)
     {
         optionFlags[1] = enabled;
-        jaut::pushStateChange(listeners, *this, Listener::Availability);
+        ::pushStateChange(listeners, *this, Listener::Availability);
 
         if(list)
         {
@@ -147,18 +151,18 @@ void OptionList::OptionBox::setEnabled(bool enabled) noexcept
                     optionFlags[0] = false;
                 }
 
-                auto it = std::find(list->optionBoxes.begin(), list->optionBoxes.end(), *this);
+                auto it = std::find(list->optionBoxes.begin(), list->optionBoxes.end(), this);
 
                 if(it != list->optionBoxes.end())
                 {
                     auto box = ++it != list->optionBoxes.end() ? it : list->optionBoxes.begin();
 
-                    while(!box->isEnabled())
+                    while(!(*box)->isEnabled())
                     {
                         ++box;
                     }
 
-                    box->optionFlags[0] = true;
+                    (*box)->optionFlags[0] = true;
                 }
 
                 list->repaint();
@@ -176,7 +180,7 @@ void OptionList::OptionBox::setVisible(bool visible) noexcept
     if(optionFlags[2]!= visible)
     {
         optionFlags[2] = visible;
-        jaut::pushStateChange(listeners, *this, Listener::Visibility);
+        ::pushStateChange(listeners, *this, Listener::Visibility);
         repaint(0, 4, 16, 16);
     }
 }
@@ -195,9 +199,9 @@ void OptionList::OptionBox::setChecked(bool checked) noexcept
             return;
         }
 
-        for(OptionBox &box : list->optionBoxes)
+        for(OptionBox *box : list->optionBoxes)
         {
-            box.optionFlags[0] = false;
+            box->optionFlags[0] = false;
         }
 
         optionFlags[0] = checked;
@@ -288,7 +292,7 @@ OptionList::OptionList(const String &componentName, TickType tickType, LabelDire
       hasLookAndFeel(dynamic_cast<jaut::LookAndFeel*>(&getLookAndFeel())),
       capturesHoverAndClickEvents(true)
 {
-    startTimer(jaut::Const_Timer_Speed);
+    startTimer(::Const_Timer_Speed);
 }
 
 //======================================================================================================================
@@ -298,13 +302,11 @@ void OptionList::add(OptionBox &optionBox, int index) noexcept
 
     if(index < 0 || index >= optionBoxes.size())
     {
-        optionBoxes.emplace_back(std::move(optionBox));
-        jaut::pushListChange(listeners, optionBoxes.at(optionBoxes.size() - 1), 1);
+        ::pushListChange(listeners, *optionBoxes.emplace_back(&optionBox), 1);
     }
     else
     {
-        optionBoxes.insert(optionBoxes.begin() + index, std::move(optionBox));
-        jaut::pushListChange(listeners, optionBoxes.at(index), 1);
+        ::pushListChange(listeners, **optionBoxes.insert(optionBoxes.begin() + index, &optionBox), 1);
     }
 }
 
@@ -319,19 +321,19 @@ void OptionList::add(const Rectangle<int> &bounds, const String &label, bool che
 //======================================================================================================================
 const OptionList::OptionBox &OptionList::get(int index) const noexcept
 {
-    return optionBoxes.at(index);
+    return *optionBoxes.at(index);
 }
 
 OptionList::OptionBox &OptionList::get(int index) noexcept
 {
-    return optionBoxes.at(index);
+    return *optionBoxes.at(index);
 }
 
 const int OptionList::getFirstCheckedIndex() const noexcept
 {
     for(int i = 0; i < optionBoxes.size(); ++i)
     {
-        if(optionBoxes.at(i).isChecked())
+        if(optionBoxes.at(i)->isChecked())
         {
             return i;
         }
@@ -344,7 +346,7 @@ const int OptionList::getLastCheckedIndex() const noexcept
 {
     for(int i = optionBoxes.size() - 1; i >= 0; --i)
     {
-        if(optionBoxes.at(i).isChecked())
+        if(optionBoxes.at(i)->isChecked())
         {
             return i;
         }
@@ -379,34 +381,30 @@ void OptionList::paint(Graphics &g)
     jaut::LookAndFeel *lf = dynamic_cast<jaut::LookAndFeel*>(&getLookAndFeel());
     lf->drawOptionListBackground(g, 0, 0, getWidth(), getHeight());
 
-    for(OptionBox &box : optionBoxes)
+    for(OptionBox *box : optionBoxes)
     {
-        if(!box.isVisible())
+        if(!box->isVisible())
         {
             continue;
         }
 
-        const bool mouseover = box.mouseOver;
-        const bool mousedown = box.mouseDown;
-
         {
             Graphics::ScopedSaveState sss(g);
-            g.setOrigin(box.getX(), box.getY());
-            lf->drawOptionListOptionBox(g, box.withX(0).withY(0), tickType == Multiple,
-                                        box.isChecked(), box.isEnabled(), mouseover, mousedown);
+
+            g.setOrigin(box->getX(), box->getY());
+            lf->drawOptionListOptionBox(g, box->withX(0).withY(0), tickType == Multiple,
+                                        box->isChecked(), box->isEnabled(), box->mouseOver, box->mouseDown);
         }
         
         if(labelDirection != None)
-        {
-            Graphics::ScopedSaveState sss(g);
-            const int labelw = lf->getOptionListLabelWidth(box.label);
-            const int labelx = labelDirection  == Right ? box.getRight()
-                             : (labelDirection == Left  ? box.getX() - labelw : 0);
+        {  
+            const int label_width = lf->getOptionListLabelWidth(box->label);
+            const int label_x     = labelDirection == Right ? box->getRight() : box->getX() - label_width;
             
-            g.setOrigin(labelx, box.getY());
-            lf->drawOptionListOptionLabel(g, box.getLabel(), {0, 0, labelw, box.getHeight()},
-                                          tickType == Multiple, labelDirection == Right, box.isChecked(),
-                                          box.isEnabled(), mouseover, mousedown);
+            g.setOrigin(label_x, box->getY());
+            lf->drawOptionListOptionLabel(g, box->getLabel(), {0, 0, label_width, box->getHeight()},
+                                          tickType == Multiple, labelDirection == Right, box->isChecked(),
+                                          box->isEnabled(), box->mouseOver, box->mouseDown);
         }
     }
 }
@@ -421,48 +419,49 @@ void OptionList::mouseDown(const MouseEvent &e)
 
     if(capturesHoverAndClickEvents)
     {
-        startTimer(jaut::Const_Timer_Speed);
+        startTimer(::Const_Timer_Speed);
     }
 
     if(tickType == Single)
     {
-        int boxupdate  = false;
+        int box_update = false;
         int index      = 0;
         
         for(int i = optionBoxes.size() - 1; i >= 0; --i)
         {
-            OptionBox &box        = optionBoxes.at(i);
-            const bool boxclicked = box.contains(e.x, e.y);
-            const bool boxvalid   = box.isEnabled() && box.isVisible();
+            const OptionBox &box       = *optionBoxes.at(i);
+            const bool was_box_clicked = box.contains(e.x, e.y);
+            const bool is_box_valid    = box.isEnabled() && box.isVisible();
 
-            if(boxvalid && boxclicked)
+            if(is_box_valid && was_box_clicked)
             {
                 if(box.isChecked())
                 {
                     return;
                 }
 
-                index     = i;
-                boxupdate = true;
+                index      = i;
+                box_update = true;
+
                 break;
             }
         }
 
-        if(boxupdate)
+        if(box_update)
         {
-            optionBoxes.at(index).setChecked(true);
+            optionBoxes.at(index)->setChecked(true);
         }
     }
     else
     {
         for(int i = optionBoxes.size() - 1; i >= 0; --i)
         {
-            OptionBox &box = optionBoxes.at(i);
+            OptionBox &box = *optionBoxes.at(i);
 
             if(box.isEnabled() && box.isVisible() && box.contains(e.x, e.y))
             {
                 box.setChecked(!box.isChecked());
-                jaut::pushListChange(listeners, box, 0);
+                ::pushListChange(listeners, box, 0);
                 break;
             }
         }
@@ -475,22 +474,22 @@ void OptionList::mouseMove(const MouseEvent &e)
 {
     if(!isTimerRunning() && hasLookAndFeel && capturesHoverAndClickEvents)
     {
-        startTimer(jaut::Const_Timer_Speed);
+        startTimer(::Const_Timer_Speed);
     }
 }
 
 //======================================================================================================================
 void OptionList::timerCallback()
 {
-    bool hasenableds = false;
+    bool has_enabled_boxes = false;
 
     if(isEnabled() && isVisible())
     {
         // mouse enters box
         for(int i = optionBoxes.size() - 1; i >= 0; --i)
         {
-            OptionBox &box = optionBoxes.at(i);
-            bool anychange = false;
+            OptionBox &box   = *optionBoxes.at(i);
+            bool any_changes = false;
 
             if(box.contains(getMouseXYRelative()))
             {
@@ -498,12 +497,12 @@ void OptionList::timerCallback()
                 {
                     box.mouseDown = true;
                     box.mouseOver = true;
-                    anychange     = true;
+                    any_changes   = true;
                 }
                 else if(!box.isMouseOver())
                 {
                     box.mouseOver = true;
-                    anychange     = true;
+                    any_changes   = true;
                 }
             }
             else
@@ -511,29 +510,29 @@ void OptionList::timerCallback()
                 if(box.isMouseDown())
                 {
                     box.mouseDown = false;
-                    anychange     = true;
+                    any_changes   = true;
                 }
 
                 if(box.isMouseOver())
                 {
                     box.mouseOver = false;
-                    anychange     = true;
+                    any_changes   = true;
                 }
             }
 
-            if(anychange)
+            if(any_changes)
             {
                 box.repaint();
             }
 
             if(box.mouseOver || box.mouseDown)
             {
-                hasenableds = true;
+                has_enabled_boxes = true;
             }
         }
     }
 
-    if(!hasenableds)
+    if(!has_enabled_boxes)
     {
         stopTimer();
     }

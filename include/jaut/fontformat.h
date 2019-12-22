@@ -29,14 +29,12 @@
 
 namespace jaut
 {
-constexpr int MAX_COLOURS_SIZE = 16;
-
 /**
-    The ChatFormat class helps you to format text directly through text instead of creating a new font
-    over and over again.
-    You can change the colour and font style, like making it bold or italic.
-
-    The default key is '$' followed by a number or character to identify the format applied to the text.
+ * The ChatFormat class helps you to format text directly through text instead of creating a new font
+ * over and over again.
+ * You can change the colour and font style, like making it bold or italic.
+ *
+ * The default terminator is '$' followed by a number or character to identify the format applied to the text.
  */
 
 class JAUT_API CharFormat final
@@ -44,10 +42,21 @@ class JAUT_API CharFormat final
 public:
     struct JAUT_API Options final
     {
+        /**
+         * The terminator character defines when a formatted sequence should begin.
+         * e.g. "$xThis is a test" <- This will make the text bold
+         */
         juce_wchar terminator = '$';
+
+        /**
+         * The default colour to use when there was a problem finding a colour.
+         */
         Colour defaultColour  = Colours::transparentBlack;
     };
 
+    /**
+     * The list of colours applicable for formatting.
+     */
     enum JAUT_API ColourIds
     {
         ColourFormat0Id = JAUT_COLOUR_ID <4>,
@@ -69,66 +78,62 @@ public:
     };
 
     /**
-        Creates a new default instance of the CharFormat class.
+     * Creates a new default instance of the CharFormat class.
      */
     CharFormat() noexcept;
 
     /**
-        Creates a new instance of the CharFormat class with all colours white.
-
-        @param terminator The character determining when a new formatting sequence begins
+     * Creates a new instance of the CharFormat class with all colours white.
+     * @param terminator The character determining when a new formatting sequence begins
      */
     explicit CharFormat(const Options &options) noexcept;
 
     //==================================================================================================================
     /**
-        Draws the formatted text to screen.
-
-        @param g             The graphics context
-        @param text          The text to draw
-        @param destRectangle The destination rectangle
-        @param justification The justification to apply to the text
+     * Draws the formatted text to screen.
+     * @param g             The graphics context
+     * @param text          The text to draw
+     * @param destRectangle The destination rectangle
+     * @param justification The justification to apply to the text
      */
     void drawText(Graphics &g, const String &text, Rectangle<float> destRectangle,
                   Justification justification) const noexcept;
 
     /**
-        Draws the formatted text to screen.
-
-        @param g             The graphics context
-        @param text          The text to draw
-        @param x             The x coordinate of the text
-        @param y             The y coordinate of the text
-        @param width         The max width the text should be able to occupy
-        @param height        The max height the text should be able to occupy
-        @param justification The justification to apply to the text
+     * Draws the formatted text to screen.
+     * @param g             The graphics context
+     * @param text          The text to draw
+     * @param x             The x coordinate of the text
+     * @param y             The y coordinate of the text
+     * @param width         The max width the text should be able to occupy
+     * @param height        The max height the text should be able to occupy
+     * @param justification The justification to apply to the text
      */
     void drawText(Graphics &g, const String &text, float x, float y, float width, float height,
                   Justification justification) const noexcept;
 
     /**
-        Draws the formatted text to screen.
-
-        @param g             The graphics context
-        @param text          The text to draw
-        @param x             The x coordinate of the text
-        @param y             The y coordinate of the text
-        @param width         The max width the text should be able to occupy
-        @param height        The max height the text should be able to occupy
-        @param justification The justification to apply to the text
+     * Draws the formatted text to screen.
+     * @param g             The graphics context
+     * @param text          The text to draw
+     * @param x             The x coordinate of the text
+     * @param y             The y coordinate of the text
+     * @param width         The max width the text should be able to occupy
+     * @param height        The max height the text should be able to occupy
+     * @param justification The justification to apply to the text
      */
     void drawText(Graphics &g, const String &text, int x, int y, int width, int height,
                   Justification justification) const noexcept;
 
     //=================================================================================================================
     /**
-        Sets this formatters LookAndFeel object.
-        This is majorly used for colours this formatter should use.
-
-        If this is nullptr, the default LookAndFeel will be used!
-
-        @param lookAndFeel A pointer to a LookAndFeel object which should be used
+     * Sets this formatters LookAndFeel object.
+     * This is majorly used for colours this formatter should use.
+     * 
+     * If this is nullptr, the default LookAndFeel will be used!
+     * @param lookAndFeel A pointer to a LookAndFeel object which should be used
      */
+    
     void setLookAndFeel(LookAndFeel *lookAndFeel) noexcept;
 
     /**
@@ -176,20 +181,20 @@ class JAUT_API FontFormat final
 public:
     enum JAUT_API Formats
     {
-        NONE,
-        SMALL_CAPS,
-        FORMAT
+        None,
+        SmallCaps,
+        Format
     };
 
     //=================================================================================================================
     static void drawText(Graphics &g, const String &text, Rectangle<float> area, Colour colour,
-                         Justification justification, Formats formats = NONE,
+                         Justification justification, Formats formats = None,
                          CharFormat *charFormat = nullptr) noexcept;
     static void drawText(Graphics &g, const String &text, float x, float y, float width, float height,
-                         Colour colour,  Justification justification, Formats formats = NONE,
+                         Colour colour,  Justification justification, Formats formats = None,
                          CharFormat *charFormat = nullptr) noexcept;
     static void drawText(Graphics &g, const String &text, int x, int y, int width, int height,
-                         Colour colour,  Justification justification, Formats formats = NONE,
+                         Colour colour,  Justification justification, Formats formats = None,
                          CharFormat *charFormat = nullptr) noexcept;
     static void drawSmallCaps(Graphics &g, const String &text, Rectangle<float> area,
                               Justification justification) noexcept;

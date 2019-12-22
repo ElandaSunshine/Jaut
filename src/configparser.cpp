@@ -494,7 +494,7 @@ const bool readPropertiesYaml(YAML::Node node, Config::Property parentProp) noex
                 continue;
             }
 
-            YAML::Node node_setting = node[setting_pair.first.toRawUTF8()];
+            YAML::Node node_setting = node[setting_pair.second.getName().toRawUTF8()];
 
             if (!node_setting)
             {
@@ -873,7 +873,6 @@ const bool JsonParser::writeConfig(const File &configFile, const Config::Propert
 /* ==================================================================================
  * ================================= YamlParser =====================================
  * ================================================================================== */
-
 const bool YamlParser::parseConfig(const File &configFile, Config::Property root) const
 {
     if (!root.isValid())
@@ -886,8 +885,8 @@ const bool YamlParser::parseConfig(const File &configFile, Config::Property root
         return false;
     }
 
-    bool wassuccessful = false;
-    std::string yaml   = configFile.loadFileAsString().toStdString();
+    bool was_successful = false;
+    std::string yaml    = configFile.loadFileAsString().toStdString();
     YAML::Node node_root;
 
     try
@@ -922,7 +921,7 @@ const bool YamlParser::parseConfig(const File &configFile, Config::Property root
                     continue;
                 }
 
-                YAML::Node node_setting = node_category[setting_pair.first.toRawUTF8()];
+                YAML::Node node_setting = node_category[setting_pair.second.getName().toRawUTF8()];
 
                 if (!node_setting)
                 {
@@ -931,13 +930,13 @@ const bool YamlParser::parseConfig(const File &configFile, Config::Property root
 
                 if (jaut::readPropertiesYaml(node_setting, setting_pair.second))
                 {
-                    wassuccessful = true;
+                    was_successful = true;
                 }
             }
         }
     }
 
-    return wassuccessful;
+    return was_successful;
 }
 
 const bool YamlParser::writeConfig(const File &configFile, const Config::Property root) const

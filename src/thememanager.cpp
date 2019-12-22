@@ -127,10 +127,11 @@ inline NamedValueSet peakThemeMeta(const File &metaFile)
 }
 
 
+
 //======================================================================================================================
 //=============================================== ThemePointer =========================================================
 //======================================================================================================================
-//#region ThemePointer
+#pragma region ThemePointer
 struct ThemePointer::ThemeData
 {
     ThemeManager *manager;
@@ -238,13 +239,14 @@ void ThemePointer::setThemeManager(ThemeManager *manager) noexcept
         data->cached  = manager;
     }
 }
-//#endregion
+#pragma endregion
+
 
 
 //======================================================================================================================
 //=============================================== ThemeManager =========================================================
 //======================================================================================================================
-//#region ThemeManager
+#pragma region ThemeManager
 ThemeManager::ThemeManager(const File &themeRoot, f_ThemeInit initializationCallback, p_MetaReader metadataReader,
                            const Options &options)
     : initFunc(initializationCallback), metadataReader(std::move(metadataReader)), options(options),
@@ -730,5 +732,5 @@ ThemeManager::t_ThemeIterator ThemeManager::end() const noexcept
 {
     return themeCache.cend();
 }
-//#endregion
+#pragma endregion
 }
