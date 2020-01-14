@@ -35,7 +35,7 @@ class JAUT_API DspUnit : public AudioProcessor
 {
 public:
     //=================================================================================================================
-    using t_parameter = AudioProcessorValueTreeState::Parameter;
+    using t_Parameter = AudioProcessorValueTreeState::Parameter;
 
     //=================================================================================================================
     DspUnit(DspUnit &processor, AudioProcessorValueTreeState *vts = nullptr,
@@ -56,15 +56,11 @@ public:
     //=================================================================================================================
     virtual const String getName() const override = 0;
     virtual bool hasEditor() const override = 0;
-
-protected:
     virtual void process(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer) = 0;
     virtual void process(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer) {}
     virtual void beginPlayback(double sampleRate, int maxBlockSamples) = 0;
     virtual void finishPlayback() = 0;
-
-public:
-    virtual void readData(const ValueTree data) = 0;
+    virtual void readData(const ValueTree data)  = 0;
     virtual void writeData(ValueTree data) const = 0;
 
     //=================================================================================================================
@@ -96,8 +92,9 @@ protected:
     RangedAudioParameter *createParameter(const String &parId, const String &parName, const String &parLabel,
                                           const NormalisableRange<float> &range, float defaultValue,
                                           std::function<String(float)> valueToTextFunction,
-                                          std::function<float(const String &)> textToValueFunction, bool isMetaParameter = false,
-                                          bool isAutomatableParameter = true, bool isDiscrete = false,
+                                          std::function<float(const String &)> textToValueFunction,
+                                          bool isMetaParameter = false, bool isAutomatableParameter = true,
+                                          bool isDiscrete = false,
                                           AudioProcessorParameter::Category category = AudioProcessorParameter::genericParameter,
                                           bool isBoolean = false);
     RangedAudioParameter *getParameter(const String &parId) noexcept;

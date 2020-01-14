@@ -43,10 +43,10 @@ class JAUT_API PropertyMap final
 {
 public:
     //=================================================================================================================
-    struct JAUT_API Listener // @suppress("Class has a virtual method and non-virtual destructor")
+    struct JAUT_API Listener
     {
         virtual void onValueChanged(const String &name, var oldValue, var newValue) = 0;
-        virtual void onPropertyAdded(const String &name, var value) = 0;
+        virtual void onPropertyAdded(const String &name, var value) {}
     };
 
     using t_map           = NamedValueSet;

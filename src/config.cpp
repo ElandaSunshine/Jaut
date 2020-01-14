@@ -26,8 +26,7 @@
 #include <jaut/config.h>
 #include <jaut/iconfigparser.h>
 
-namespace jaut
-{
+#pragma region Namespace
 namespace
 {
 const String fixPathString(const String &currentPath) noexcept
@@ -73,13 +72,16 @@ const String fixPathString(const String &currentPath) noexcept
     return newpath;
 }
 }
+#pragma endregion Namespace
 
 
 
+namespace jaut
+{
+#pragma region Property
 /* ==================================================================================
  * ================================== Property ======================================
  * ================================================================================== */
-#pragma region Property
 struct Config::Property::SharedObject
 {
     String comment;
@@ -394,9 +396,6 @@ void Config::Property::postValueChangedListener(const String &name, var oldValue
 
 
 
-/* ==================================================================================
- * =================================== Config =======================================
- * ================================================================================== */
 #pragma region Config
 Config::Options::Options() noexcept
     : autoSave(false),
@@ -406,12 +405,14 @@ Config::Options::Options() noexcept
 
 
 
-//======================================================================================================================
+/* ==================================================================================
+ * =================================== Config =======================================
+ * ================================================================================== */
 Config::Config(const String &root, const Options &options, std::unique_ptr<IConfigParser> configParser)
     : autoSaveActive(true), lock(nullptr),
       parser(configParser.release(), [](IConfigParser *parser) { delete parser; }), options(options)
 {
-    const String file_path = fixPathString(root + "/" + options.fileName);
+    const String file_path = ::fixPathString(root + "/" + options.fileName);
     File file(file_path);
 
     /*

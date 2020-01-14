@@ -133,12 +133,14 @@ Localisation::Localisation(const File &langRootDir, const LocalisedStrings &defa
 
 Localisation::Localisation(const Localisation &other)
     : rootDir(other.rootDir),
+      fileName(other.fileName),
       currentLocale(other.currentLocale),
       defaultLocale(other.defaultLocale)
 {}
 
 Localisation::Localisation(Localisation &&other) noexcept
     : rootDir(std::move(other.rootDir)),
+      fileName(std::move(other.fileName)),
       currentLocale(std::move(other.currentLocale)),
       defaultLocale(std::move(other.defaultLocale))
 {}

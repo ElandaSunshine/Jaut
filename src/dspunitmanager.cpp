@@ -124,16 +124,16 @@ void DspUnitManager::addProcessorType(DspUnit *processor, bool notifyGui) noexce
     {
         if (processors.size() > 0 && dynamic_cast<PlaceholderUnit*>(processors.getUnchecked(0)))
         {
-            Array<DspUnit*> tempArray;
+            Array<DspUnit*> temp_array;
 
             if (storage > 0)
             {
-                tempArray.ensureStorageAllocated(storage);
+                temp_array.ensureStorageAllocated(storage);
             }
 
-            tempArray.add(processor);
-            processors.swapWith(tempArray);
-            delete tempArray.removeAndReturn(0);
+            temp_array.add(processor);
+            processors.swapWith(temp_array);
+            delete temp_array.removeAndReturn(0);
             ++size;
             notify(*this, notifyGui);
 
@@ -199,19 +199,19 @@ const bool DspUnitManager::doesOwnUnits() const noexcept
 //=====================================================================================================================
 void DspUnitManager::process(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer)
 {
-    processors.getUnchecked(selectedIndex)->processBlock(buffer, midiBuffer);
+    processors.getUnchecked(selectedIndex)->process(buffer, midiBuffer);
 }
 
 void DspUnitManager::process(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer)
 {
-    processors.getUnchecked(selectedIndex)->processBlock(buffer, midiBuffer);
+    processors.getUnchecked(selectedIndex)->process(buffer, midiBuffer);
 }
 
 void DspUnitManager::beginPlayback(double sampleRate, int maxBlockSamples)
 {
     for (auto *proc : processors)
     {
-        proc->prepareToPlay(sampleRate, maxBlockSamples);
+        proc->beginPlayback(sampleRate, maxBlockSamples);
     }
 }
 
@@ -219,7 +219,7 @@ void DspUnitManager::finishPlayback()
 {
     for (auto *proc : processors)
     {
-        proc->releaseResources();
+        proc->finishPlayback();
     }
 }
 

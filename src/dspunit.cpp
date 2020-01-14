@@ -58,7 +58,7 @@ void DspUnit::processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer)
 {
     JAUT_ENSURE_AUDIO_THREAD();
 
-    if (internal::STRICT_PROCESSING_ENABLED())
+    if constexpr(internal::STRICT_PROCESSING_ENABLED())
     {
         /**
             You should not use this method when double precision processing is enabled as
@@ -76,11 +76,11 @@ void DspUnit::processBlock(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer)
 {
     JAUT_ENSURE_AUDIO_THREAD();
 
-    if (internal::STRICT_PROCESSING_ENABLED())
+    if constexpr(internal::STRICT_PROCESSING_ENABLED())
     {
         /**
             You should not use this method when double precision processing is disabled as
-            you may use an unneccasary amount of memory the buffer doesn't even need!
+            you may use an unnecessary amount of memory the buffer doesn't even need!
 
             If you don't care about memory garbage, turn off STRICT_PROCESSING in the expo.h file!
          */
@@ -184,11 +184,9 @@ void DspUnit::initialize() noexcept
 {
     this->setNonRealtime(processor.isNonRealtime());
     this->setProcessingPrecision(processor.getProcessingPrecision());
-    this->setBusesLayoutWithoutEnabling(processor.getBusesLayout());
     this->setCurrentProgram(processor.getCurrentProgram());
     this->setLatencySamples(processor.getLatencySamples());
     this->setTypeOfNextNewPlugin(processor.wrapperType);
     this->setRateAndBufferSizeDetails(processor.getSampleRate(), processor.getBlockSize());
-    this->setPlayHead(processor.getPlayHead());
 }
 }
