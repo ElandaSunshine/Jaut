@@ -102,7 +102,7 @@ void DspUnit::releaseResources()
 }
 
 //=====================================================================================================================
-RangedAudioParameter *DspUnit::createParameter(std::unique_ptr<t_parameter> par)
+RangedAudioParameter *DspUnit::createParameter(std::unique_ptr<t_Parameter> par)
 {
     if (parameters && !parameters->state.isValid() && par.get() && !parameters->getParameter(par->paramID))
     {
@@ -121,7 +121,7 @@ RangedAudioParameter *DspUnit::createParameter(const String &parId, const String
 {
     if (parameters && !parameters->state.isValid() && !parameters->getParameter(parId))
     {
-        return parameters->createAndAddParameter(std::make_unique<t_parameter>(parId, parName, parLabel, range,
+        return parameters->createAndAddParameter(std::make_unique<t_Parameter>(parId, parName, parLabel, range,
                                                                                defaultValue, valueToTextFunction,
                                                                                textToValueFunction, isMetaParameter,
                                                                                isAutomatableParameter, isDiscrete,

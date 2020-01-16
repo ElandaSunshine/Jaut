@@ -116,11 +116,12 @@ AudioProcessorRack::RackDevice::RackDevice(DspUnit *unit, bool isLinked)
 
 AudioProcessorRack::RackDevice::RackDevice(RackDevice &&other)
     : rack(std::move(other.rack)),
-      connection(std::move(other.connection)),
+      connection(0),
       unit(std::move(other.unit)),
       linked(std::move(other.linked)),
       id(std::move(other.id))
 {
+    connection.store(other.connection.exchange(connection));
     other.rack = nullptr;
     other.unit = nullptr;
 }
@@ -293,7 +294,7 @@ AudioProcessorRack::RackDevice *AudioProcessorRack::RackDevice::getPreviousDevic
     {
         rack->traverseChain([this, &result](RackDevice &device, bool &cancel)
         {
-            if(jaut::fit_s(device.connection, 0, rack->getNumDevices()))
+            if(jaut::fit_s(device.connection.load(), 0, rack->getNumDevices()))
             {
                 RackDevice &next_device = rack->devices.at(device.connection);
 
@@ -317,7 +318,7 @@ AudioProcessorRack::RackDevice *AudioProcessorRack::RackDevice::getNextDevice() 
     {
         rack->traverseChain([this, &result](RackDevice &device, bool &cancel)
         {
-            if(device == *this && jaut::fit_s(this->connection, 0, rack->getNumDevices()))
+            if(device == *this && jaut::fit_s(this->connection.load(), 0, rack->getNumDevices()))
             {
                 result = &rack->devices.at(this->connection);
                 cancel = true;
@@ -331,8 +332,6 @@ AudioProcessorRack::RackDevice *AudioProcessorRack::RackDevice::getNextDevice() 
 //======================================================================================================================
 void AudioProcessorRack::RackDevice::connectWith(int_Connection index)
 {
-    JAUT_ENSURE_AUDIO_THREAD();
-
     if(!rack)
     {
         return;
@@ -375,6 +374,7 @@ AudioProcessorRack::AudioProcessorRack(AudioProcessor &processor, AudioProcessor
 //======================================================================================================================
 void AudioProcessorRack::addDevice(DspUnit &unit)
 {
+    JAUT_ENSURE_AUDIO_THREAD();
     RackDevice device(unit);
 
     if(!::findDevice(devices, device.getId()))
@@ -393,6 +393,7 @@ void AudioProcessorRack::addDevice(DspUnit &unit)
 
 void AudioProcessorRack::addDevice(DspUnit *unit, bool isLinked)
 {
+    JAUT_ENSURE_AUDIO_THREAD();
     RackDevice device(unit, isLinked);
 
     if(!::findDevice(devices, device.getId()))
@@ -411,6 +412,8 @@ void AudioProcessorRack::addDevice(DspUnit *unit, bool isLinked)
 
 void AudioProcessorRack::removeDevice(int index)
 {
+    JAUT_ENSURE_AUDIO_THREAD();
+
     if(jaut::fit_s<int>(index, 0, devices.size()))
     {
         (void) devices.erase(devices.begin() + index);
@@ -421,6 +424,8 @@ void AudioProcessorRack::removeDevice(int index)
 
 void AudioProcessorRack::removeDevice(const String &id)
 {
+    JAUT_ENSURE_AUDIO_THREAD();
+
     for(int i = 0; i < devices.size(); ++i)
     {
         if(devices.at(i).getId().equalsIgnoreCase(id.removeCharacters(" ")))
@@ -436,6 +441,8 @@ void AudioProcessorRack::removeDevice(const String &id)
 
 void AudioProcessorRack::removeDevice(const DspUnit &unit)
 {
+    JAUT_ENSURE_AUDIO_THREAD();
+
     for(int i = 0; i < devices.size(); ++i)
     {
         if(&unit == devices.at(i).getUnit())
@@ -451,6 +458,8 @@ void AudioProcessorRack::removeDevice(const DspUnit &unit)
 
 void AudioProcessorRack::removeDevice(const RackDevice &device)
 {
+    JAUT_ENSURE_AUDIO_THREAD();
+
     for(int i = 0; i < devices.size(); ++i)
     {
         if(device == devices.at(i))
@@ -525,7 +534,7 @@ AudioProcessorRack::int_Connection AudioProcessorRack::getConnectionIndex() cons
 //======================================================================================================================
 void AudioProcessorRack::process(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer)
 {
-    t_CallbackLock lock (getCallbackLock());
+    JAUT_ENSURE_AUDIO_THREAD();
 
     traverseChain([&buffer, &midiBuffer](RackDevice &device, bool&)
     {
@@ -535,7 +544,7 @@ void AudioProcessorRack::process(AudioBuffer<float> &buffer, MidiBuffer &midiBuf
 
 void AudioProcessorRack::process(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer)
 {
-    t_CallbackLock lock (getCallbackLock());
+    JAUT_ENSURE_AUDIO_THREAD();
 
     traverseChain([&buffer, &midiBuffer](RackDevice &device, bool&)
     {
@@ -545,8 +554,6 @@ void AudioProcessorRack::process(AudioBuffer<double> &buffer, MidiBuffer &midiBu
 
 void AudioProcessorRack::beginPlayback(double sampleRate, int maxBlockSamples)
 {
-    t_CallbackLock lock (getCallbackLock());
-
     traverseChain([&sampleRate, maxBlockSamples](RackDevice &device, bool&)
     {
         device->beginPlayback(sampleRate, maxBlockSamples);
@@ -555,8 +562,6 @@ void AudioProcessorRack::beginPlayback(double sampleRate, int maxBlockSamples)
 
 void AudioProcessorRack::finishPlayback()
 {
-    t_CallbackLock lock (getCallbackLock());
-
     traverseChain([](RackDevice &device, bool&)
     {
         device->finishPlayback();
@@ -583,6 +588,14 @@ void AudioProcessorRack::createLinearChain()
     }
 
     closedChain = devices.size() > 0;
+}
+
+void AudioProcessorRack::reverseChain()
+{
+    if(closedChain)
+    {
+        connection.store(setAndReturnPrevious(-1, connection).connection.load());
+    }
 }
 
 void AudioProcessorRack::createSoloChain(int index)
@@ -684,6 +697,16 @@ void AudioProcessorRack::traverseChain(std::function<void(RackDevice&,bool&)> ca
 
         last_connection = device.connection;
     }
+}
+
+AudioProcessorRack::RackDevice& AudioProcessorRack::setAndReturnPrevious(int previousIndex, int currentIndex)
+{
+    RackDevice &device       = devices.at(currentIndex);
+    const int dev_connection = device.connection;
+
+    device.connection = previousIndex != -1 ? previousIndex : -2;
+
+    return dev_connection == -2 ? device : setAndReturnPrevious(currentIndex, dev_connection);
 }
 #pragma endregion AudioProcessorRack
 }

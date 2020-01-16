@@ -34,6 +34,7 @@ class JAUT_API AudioProcessorRack final : public jaut::DspUnit
 {
 public:
     using int_Connection = int;
+    using t_ConnectPin   = std::atomic<int_Connection>;
     using t_CallbackLock = CriticalSection::ScopedLockType;
 
     class JAUT_API RackDevice final
@@ -78,9 +79,9 @@ public:
         friend void swap(RackDevice &left, RackDevice &right)
         {
             std::swap(left.rack, right.rack);
-            std::swap(left.connection, right.connection);
             std::swap(left.unit, right.unit);
             std::swap(left.linked, right.linked);
+            left.connection.store(right.connection.exchange(left.connection));
             left.id.swapWith(right.id);
         }
 
@@ -89,7 +90,7 @@ public:
         friend class Iterator;
 
         AudioProcessorRack *rack;
-        int_Connection connection;
+        t_ConnectPin connection;
         DspUnit *unit;
         bool linked;
         String id;
@@ -141,8 +142,8 @@ public:
 
     //==================================================================================================================
     void createLinearChain();
+    void reverseChain();
     void createSoloChain(int index);
-    void traverseChain(std::function<void(RackDevice&,bool&)> callback);
 
     //==================================================================================================================
     virtual void readData(const ValueTree data) override;
@@ -155,12 +156,13 @@ public:
     t_ConstIterator end()   const noexcept;
 
 private:
-    int_Connection connection;
+    t_ConnectPin connection;
     std::vector<RackDevice> devices;
     bool closedChain;
 
     //==================================================================================================================
     jaut::DspGui *getGuiType() override { return nullptr; }
-    void getNextDeviceConnectionAndSet(RackDevice &device, int index);
+    void traverseChain(std::function<void(RackDevice&,bool&)> callback);
+    RackDevice &setAndReturnPrevious(int previousIndex, int currentIndex);
 };
 }

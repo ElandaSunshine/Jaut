@@ -26,25 +26,13 @@
 #pragma once
 
 #include <jaut/expo.h>
-#include <jaut/componentoptionlist.h>
 
 namespace jaut
 {
-class JAUT_API LookAndFeel : public LookAndFeel_V4, public OptionList::LookAndFeelMethods
+class JAUT_API LookAndFeel : public LookAndFeel_V4
 {
 public:
     LookAndFeel() noexcept;
     virtual ~LookAndFeel() override {}
-
-    //==================================================================================================================
-    // OptionList methods
-    virtual int getOptionListLabelWidth(const String &label) override;
-    virtual int getOptionListSpaceBetweenLabelAndBox() override;
-    virtual void drawOptionListBackground(Graphics &g, int x, int y, int width, int height) override;
-    virtual void drawOptionListOptionBox(Graphics &g, Rectangle<int> bounds, bool isCheckBox, bool checked,
-                                         bool enabled, bool isMouseOver, bool isMouseDown) override;
-    virtual void drawOptionListOptionLabel(Graphics &g, const String &label, Rectangle<int> bounds, bool isCheckBox,
-                                           bool isRightAligned, bool checked, bool enabled,  bool isMouseOver,
-                                           bool isMouseDown) override;
 };
 }

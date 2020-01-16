@@ -88,7 +88,7 @@ protected:
 
     //=================================================================================================================
     virtual DspGui *getGuiType() = 0;
-    RangedAudioParameter *createParameter(std::unique_ptr<t_parameter> par);
+    RangedAudioParameter *createParameter(std::unique_ptr<t_Parameter> par);
     RangedAudioParameter *createParameter(const String &parId, const String &parName, const String &parLabel,
                                           const NormalisableRange<float> &range, float defaultValue,
                                           std::function<String(float)> valueToTextFunction,

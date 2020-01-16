@@ -30,12 +30,6 @@ namespace jaut
 {
 LookAndFeel::LookAndFeel() noexcept
 {
-    // OptionList
-    setColour(OptionList::ColourListBackgroundId,    Colours::transparentBlack);
-    setColour(OptionList::ColourOptionBoxEnabledId,  Colours::white);
-    setColour(OptionList::ColourOptionBoxDisabledId, Colours::grey);
-    setColour(OptionList::ColourOptionLabelId,       Colours::white);
-
     // CharFormat
     setColour(CharFormat::ColourFormat0Id,           Colours::white);
     setColour(CharFormat::ColourFormat1Id,           Colours::red);
@@ -53,81 +47,5 @@ LookAndFeel::LookAndFeel() noexcept
     setColour(CharFormat::ColourFormatDId,           Colours::brown);
     setColour(CharFormat::ColourFormatEId,           Colours::grey);
     setColour(CharFormat::ColourFormatFId,           Colours::black);
-}
-
-int LookAndFeel::getOptionListLabelWidth(const String &label)
-{
-    return Font().getStringWidth(label);
-}
-
-int LookAndFeel::getOptionListSpaceBetweenLabelAndBox()
-{
-    return 4;
-}
-
-void LookAndFeel::drawOptionListBackground(Graphics &g, int x, int y, int width, int height)
-{}
-
-void LookAndFeel::drawOptionListOptionBox(Graphics &g, Rectangle<int> bounds, bool isCheckBox, bool checked,
-                                          bool enabled, bool isMouseOver, bool isMouseDown)
-{
-    g.setColour(findColour(enabled ? OptionList::ColourOptionBoxEnabledId : OptionList::ColourOptionBoxDisabledId));
-
-    if(isCheckBox)
-    {
-        g.drawRect(bounds);
-
-        if(checked)
-        {
-            const int w = bounds.getWidth();
-            const int h = bounds.getHeight();
-
-            Path p;
-            p.addLineSegment({w * 0.2f, h * 0.6f, w * 0.4f, h * 0.8f}, 1.0f);
-            p.addLineSegment({w * 0.4f, h * 0.8f, w * 0.8f, h * 0.2f}, 1.0f);
-
-            g.fillPath(p);
-        }
-        else if(isMouseOver)
-        {
-            g.setColour(findColour(OptionList::ColourOptionBoxEnabledId).withAlpha(0.3f));
-            const int w = bounds.getWidth();
-            const int h = bounds.getHeight();
-
-            Path p;
-            p.addLineSegment({w * 0.2f, h * 0.6f, w * 0.4f, h * 0.8f}, 1.0f);
-            p.addLineSegment({w * 0.4f, h * 0.8f, w * 0.8f, h * 0.2f}, 1.0f);
-
-            g.fillPath(p);
-        }
-    }
-    else
-    {
-        const float ellipsemul = 0.3f;
-        g.drawEllipse(bounds.toFloat().reduced(bounds.getWidth() * (ellipsemul / 3),
-                                               bounds.getHeight() * (ellipsemul / 3)), 1.0f);
-
-        if(checked)
-        {
-            g.fillEllipse(bounds.toFloat().reduced(bounds.getWidth() * ellipsemul, bounds.getHeight() * ellipsemul));
-        }
-        else if(isMouseOver)
-        {
-            g.setColour(findColour(OptionList::ColourOptionBoxEnabledId).withAlpha(0.3f));
-            g.fillEllipse(bounds.toFloat().reduced(bounds.getWidth() * ellipsemul, bounds.getHeight() * ellipsemul));
-        }
-    }
-}
-
-void LookAndFeel::drawOptionListOptionLabel(Graphics &g, const String &label, Rectangle<int> bounds, bool isCheckBox,
-                                            bool isRightAligned, bool checked, bool enabled,  bool isMouseOver,
-                                            bool isMouseDown)
-{
-    const Justification align      = isRightAligned ? Justification::centredLeft : Justification::centredRight;
-    const Rectangle<int> newbounds = isRightAligned ? bounds.withX(getOptionListSpaceBetweenLabelAndBox())
-                                   : bounds.withWidth(bounds.getWidth() - getOptionListSpaceBetweenLabelAndBox());
-
-    g.setColour(findColour(OptionList::ColourOptionLabelId));
-    g.drawText(label, newbounds, align);
 }
 }

@@ -373,12 +373,13 @@ extern bool EXPLICIT_DISABILITY;
  */
 inline JAUT_API void JAUT_DISABLE_THREAD_DIST()
 {
-    JT_NDEBUGGING(return);
-
-    if (!internal::EXPLICIT_DISABILITY)
-    {
-        internal::INTERNAL_DISABLE_THREAD_DIST = true;
-    }
+    JT_DEBUGGING
+    (
+        if (!internal::EXPLICIT_DISABILITY)
+        {
+            internal::INTERNAL_DISABLE_THREAD_DIST = true;
+        }
+    )
 }
 
 /**
@@ -386,10 +387,11 @@ inline JAUT_API void JAUT_DISABLE_THREAD_DIST()
  */
 inline JAUT_API void JAUT_DISABLE_THREAD_DIST_EXPLICIT(bool disable) noexcept
 {
-    JT_NDEBUGGING(return);
-
-    internal::EXPLICIT_DISABILITY          = disable;
-    internal::INTERNAL_DISABLE_THREAD_DIST = false;
+    JT_DEBUGGING
+    (
+        internal::EXPLICIT_DISABILITY          = disable;
+        internal::INTERNAL_DISABLE_THREAD_DIST = false;
+    )
 }
 
 /**
@@ -405,16 +407,17 @@ inline JAUT_API void JAUT_DISABLE_THREAD_DIST_EXPLICIT(bool disable) noexcept
  */
 inline JAUT_API void JAUT_ENSURE_AUDIO_THREAD()
 {
-    JT_NDEBUGGING(return);
+    JT_DEBUGGING
+    (
+        const bool flag = !internal::INTERNAL_DISABLE_THREAD_DIST && !internal::EXPLICIT_DISABILITY;
 
-    const bool flag = !internal::INTERNAL_DISABLE_THREAD_DIST && !internal::EXPLICIT_DISABILITY;
+        if (internal::JAUT_STRICT(settings::STRICT_THREAD_DISTINCTION) && flag)
+        {
+            jassert(!MessageManager::getInstance()->isThisTheMessageThread());
+        }
 
-    if (internal::JAUT_STRICT(settings::STRICT_THREAD_DISTINCTION) && flag)
-    {
-        jassert(!MessageManager::getInstance()->isThisTheMessageThread());
-    }
-
-    internal::INTERNAL_DISABLE_THREAD_DIST = false;
+        internal::INTERNAL_DISABLE_THREAD_DIST = false;
+    )
 }
 
 template<int Increment>
