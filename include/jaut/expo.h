@@ -126,6 +126,7 @@ namespace jaut
 #define JT_FIX(x) static_cast<int>(x)
 
 
+
 #if JUCE_USE_CUSTOM_PLUGIN_STANDALONE_APP
   /**
    * This comes in handy when messing with custom standalone windows and plugin versions.
@@ -143,8 +144,7 @@ namespace jaut
    * @param y The value which should be expanded if it's not run as standalone (this will always be evaluated if the
    *          default standalone filter is defined)
    */
-  #define JT_IS_STANDALONE_INLINE(x, y) \
-          JUCEApplicationBase::isStandaloneApp() ? (x) : (y)
+  #define JT_IS_STANDALONE_INLINE(x, y) JUCEApplicationBase::isStandaloneApp() ? (x) : (y)
 
   /**
    * This comes in handy when messing with custom standalone windows and plugin versions.
@@ -160,8 +160,7 @@ namespace jaut
    * @param x The value which should be expanded if it's run as standalone (doesn't do anything if the default
    *          standalone filter is defined)
    */
-  #define JT_IS_STANDALONE(x) \
-          if(JUCEApplicationBase::isStandaloneApp()) {x}
+  #define JT_IS_STANDALONE(x) if(JUCEApplicationBase::isStandaloneApp()) {x}
 
   /**
    * This comes in handy when messing with custom standalone windows and plugin versions.
@@ -177,8 +176,7 @@ namespace jaut
    * @param x The value which should be expanded if it's not run as standalone (this will always be evaluated if the
    *          default standalone filter is defined)
    */
-  #define JT_STANDALONE_ELSE(x) \
-          else {x}
+  #define JT_STANDALONE_ELSE(x) else {x}
 #else
   /**
    * This comes in handy when messing with custom standalone windows and plugin versions.
@@ -334,6 +332,7 @@ namespace internal
 {
 inline constexpr bool JAUT_STRICT(int strictSetting = 2)
 {
+    (void)(strictSetting);
     return JT_DEBUGGING_OR(settings::IS_STRICT_ON && (strictSetting < 2 ? strictSetting : 1), 0);
 }
 
@@ -387,6 +386,8 @@ inline JAUT_API void JAUT_DISABLE_THREAD_DIST()
  */
 inline JAUT_API void JAUT_DISABLE_THREAD_DIST_EXPLICIT(bool disable) noexcept
 {
+    ignoreUnused(disable);
+
     JT_DEBUGGING
     (
         internal::EXPLICIT_DISABILITY          = disable;

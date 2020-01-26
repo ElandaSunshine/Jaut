@@ -101,8 +101,8 @@ private:
     void finishPlayback() override;
 
     //==================================================================================================================
-    void readData(const ValueTree data) override {}
-    void writeData(ValueTree data) const override {}
+    void readData(const ValueTree data) override { ignoreUnused(data); }
+    void writeData(ValueTree data) const override { ignoreUnused(data); }
 
     JUCE_DECLARE_NON_COPYABLE(SfxUnit)
 };

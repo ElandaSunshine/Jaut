@@ -127,7 +127,7 @@ namespace
  * ================================= SharedObject ===================================
  * ================================================================================== */
 
-struct Directory::SharedObject final
+struct Directory::SharedObject
 {
     String baseDir;
     String name;
@@ -147,7 +147,7 @@ struct Directory::SharedObject final
  * ================================================================================== */
 
 Directory::Directory(const String &name, const String &baseDir) noexcept
-    : data(new SharedObject(name, baseDir), [](SharedObject *so) { delete so; })
+    : data(new SharedObject(name, baseDir))
 {
     /**
        The file base can't be created therefor it has to exists already.
@@ -155,6 +155,8 @@ Directory::Directory(const String &name, const String &baseDir) noexcept
     */
     jassert(File(baseDir).exists());
 }
+
+Directory::~Directory() {}
 
 //==============================================================================
 Directory Directory::operator[](const String &dirName) noexcept
@@ -166,15 +168,15 @@ Directory Directory::operator[](const String &dirName) noexcept
 
     if (dirName.containsAnyOf("/\\"))
     {
-        StringArray dirlist;
-        generateSubDirList(dirlist, dirName);
+        StringArray dir_list;
+        generateSubDirList(dir_list, dirName);
 
-        if (dirlist.size() > 0)
+        if (dir_list.size() > 0)
         {
             if (hasSubDirectory(dirName))
             {
-                return recursivelySearchForDesiredDirectory(data->subDirectories.getReference
-                                                            (dirName.trim().toLowerCase()), dirlist, 1);
+                return recursivelySearchForDesiredDirectory(data->subDirectories.at(dirName.trim().toLowerCase()),
+                                                            dir_list, 1);
             }
         }
 
@@ -186,7 +188,7 @@ Directory Directory::operator[](const String &dirName) noexcept
         (void) withSubFolder(dirName);
     }
 
-    return data->subDirectories.getReference(dirName.trim().toLowerCase());
+    return data->subDirectories.at(dirName.trim().toLowerCase());
 }
 
 const bool Directory::operator==(const Directory &dir) const noexcept
@@ -289,7 +291,8 @@ Directory Directory::withSubFolder(const String &directoryName) noexcept
             Directory directory(directoryName, getBaseDir());
             directory.data->parent  = data;
             directory.data->baseDir = data->baseDir;
-            data->subDirectories.set(directoryName.trim().toLowerCase(), directory);
+
+            data->subDirectories.emplace(directoryName.trim().toLowerCase(), std::move(directory));
         }
     }
 
@@ -306,17 +309,12 @@ Directory Directory::makeDir(const String &directoryName)
 
     (void) withSubFolder(directoryName);
 
-    return (*this)[directoryName.trim().toLowerCase()];
+    return data ? data->subDirectories.at(directoryName.trim().toLowerCase()) : Directory();
 }
 
 const Directory Directory::getDir(const String &directoryName) const noexcept
 {
-    if (!hasSubDirectory(directoryName))
-    {
-        return Directory();
-    }
-
-    return data->subDirectories.getReference(directoryName.trim().toLowerCase());
+    return hasSubDirectory(directoryName) ? data->subDirectories.at(directoryName.trim().toLowerCase()) : Directory();
 }
 
 //==============================================================================
@@ -342,12 +340,7 @@ const bool Directory::hasSubDirectories() const noexcept
 
 const bool Directory::hasSubDirectory(const String &name) const noexcept
 {
-    if(!data)
-    {
-        return false;
-    }
-
-    return data->subDirectories.contains(name.trim().toLowerCase());
+    return data ? data->subDirectories.find(name.trim().toLowerCase()) != data->subDirectories.end() : false;
 }
 
 const bool Directory::hasParentDirectory() const noexcept
@@ -357,42 +350,22 @@ const bool Directory::hasParentDirectory() const noexcept
 
 const size_t Directory::numSubDirectories() const noexcept
 {
-    if(!data)
-    {
-        return false;
-    }
-
-    return data->subDirectories.size();
+    return data ? data->subDirectories.size() : 0;
 }
 
 const String Directory::getBaseDir() const noexcept
 {
-    if(!data)
-    {
-        return "";
-    }
-
-    return data->baseDir;
+    return data ? data->baseDir : "";
 }
 
 const String Directory::getDirectoryName() const noexcept
 {
-    if(!data)
-    {
-        return "";
-    }
-
-    return data->name;
+    return data ? data->name : "";
 }
 
 File Directory::getFile(const String &fileName) const noexcept
 {
-    if (!data)
-    {
-        return File();
-    }
-
-    return File(toString(true) + "/" + fileName);
+    return data ? File(toString(true) + "/" + fileName) : File();
 }
 
 Directory Directory::getParentDirectory() const noexcept
@@ -403,7 +376,11 @@ Directory Directory::getParentDirectory() const noexcept
     }
 
     Directory dir;
-    dir.data = data->parent.lock();
+
+    if(auto ptr = data->parent.lock())
+    {
+        dir.data.swap(ptr);
+    }
 
     return !dir.data ? invalidDirectory : dir;
 }
@@ -439,32 +416,17 @@ Directory::t_file_vec Directory::listDirectories(const t_search_set &fileNames, 
 
 Directory::t_iterator Directory::begin() noexcept
 {
-    if(!data)
-    {
-        return t_sub_map(0).begin();
-    }
-
-    return data->subDirectories.begin();
+    return data ? data->subDirectories.begin() : t_iterator();
 }
 
 Directory::t_iterator Directory::end() noexcept
 {
-    if(!data)
-    {
-        return t_sub_map(0).end();
-    }
-
-    return data->subDirectories.end();
+    return data ? data->subDirectories.end() : t_iterator();
 }
 
 File Directory::toFile() const noexcept
 {
-    if (!data)
-    {
-        return File();
-    }
-
-    return File(toString(true));
+    return data ? File(toString(true)) : File();
 }
 
 const String Directory::toString(bool absolute) const noexcept
@@ -474,16 +436,16 @@ const String Directory::toString(bool absolute) const noexcept
         return "";
     }
 
-    String fullpath;
+    String full_path;
     p_shared_object sharedobject(data);
 
     do
     {
-        fullpath = sharedobject->name + (fullpath.isEmpty() ? "" : "/" + fullpath);
+        full_path = sharedobject->name + (full_path.isEmpty() ? "" : "/" + full_path);
     }
     while(sharedobject = sharedobject->parent.lock());
 
-    return absolute ? (data->baseDir + fullpath) : fullpath;
+    return absolute ? (data->baseDir + full_path) : full_path;
 }
 
 void Directory::createFolderHierarchy(bool recursive) const noexcept
@@ -493,10 +455,9 @@ void Directory::createFolderHierarchy(bool recursive) const noexcept
         return;
     }
 
-    for (auto it = data->subDirectories.begin(); it != data->subDirectories.end(); ++it)
+    for (auto &[name, dir] : data->subDirectories)
     {
-        Directory dir = data->subDirectories[it.getKey()];
-        File newdir   = dir.toFile();
+        File newdir = dir.toFile();
 
         if (!newdir.exists())
         {
@@ -576,7 +537,8 @@ AppData &AppData::withSubFolder(const String &directoryName) noexcept
             Directory directory(directoryName, data->baseDir);
             directory.data->parent  = data;
             directory.data->baseDir = data->baseDir;
-            (void) data->subDirectories.set(directoryName.trim().toLowerCase(), directory);
+
+            (void) data->subDirectories.emplace(directoryName.trim().toLowerCase(), std::move(directory));
         }
     }
 
@@ -592,7 +554,7 @@ Directory AppData::getSubDirOrPossibleRewrite(const String &directoryName) noexc
         return rewrites.at(lname);
     }
 
-    return Directory();
+    return hasSubDirectory(directoryName) ? getDir(directoryName) : Directory();
 }
 
 void AppData::addRewrite(const String &rewriteName, Directory &dir) noexcept

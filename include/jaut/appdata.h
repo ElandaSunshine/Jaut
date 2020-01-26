@@ -49,8 +49,8 @@ class JAUT_API Directory
 {
 public:
     //=================================================================================================================
-    using t_sub_map    = juce::HashMap<juce::String, Directory>;
-    using t_iterator   = t_sub_map::Iterator;
+    using t_sub_map    = std::map<juce::String, Directory>;
+    using t_iterator   = t_sub_map::iterator;
     using t_file_vec   = std::vector<juce::File>;
     using t_search_set = std::unordered_set<juce::String>;
     using t_file_type  = juce::File::TypesOfFileToFind;
@@ -66,6 +66,7 @@ public:
         @param baseDir The root path where this directory sits in
      */
     explicit Directory(const String &name, const String &baseDir) noexcept;
+    ~Directory();
 
     //=================================================================================================================
     /**
@@ -162,9 +163,9 @@ public:
      */
     const bool operator+=(const Directory &dir) const noexcept;
 
-    /**getParentDirectory
+    /**
         Checks whether this Directory object isgetParentDirectory a parent of the given Directory object or vice-versa.
-getParentDirectory
+        
         @param dir The Directory object which is supposed to be either a child or  a parent directory
         @returns   True if this Directory object is either a parent or a child of the given Directory object
      */

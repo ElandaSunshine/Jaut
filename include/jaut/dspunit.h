@@ -57,7 +57,7 @@ public:
     virtual const String getName() const override = 0;
     virtual bool hasEditor() const override = 0;
     virtual void process(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer) = 0;
-    virtual void process(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer) {}
+    virtual void process(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer) { ignoreUnused(buffer, midiBuffer); }
     virtual void beginPlayback(double sampleRate, int maxBlockSamples) = 0;
     virtual void finishPlayback() = 0;
     virtual void readData(const ValueTree data)  = 0;
@@ -104,7 +104,7 @@ private:
 
     //=================================================================================================================
     void initialize() noexcept;
-    AudioProcessorEditor *createEditor() override final { return 0; }
+    AudioProcessorEditor *createEditor() override final { return nullptr; }
 
     JUCE_DECLARE_NON_COPYABLE(DspUnit)
 };

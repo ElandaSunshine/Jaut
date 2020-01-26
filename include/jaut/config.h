@@ -61,7 +61,7 @@ public:
         struct JAUT_API Listener
         {
             virtual void onValueChanged(const String &name, var oldValue, var newValue) = 0;
-            virtual void onPropertyAdded(Property property) {}
+            virtual void onPropertyAdded(Property property) { ignoreUnused(property); }
         };
 
         //==============================================================================================================
@@ -239,7 +239,7 @@ public:
     struct JAUT_API Listener
     {
         virtual void onValueChanged(const String &name, var oldValue, var newValue) = 0;
-        virtual void onPropertyAdded(Property property) {}
+        virtual void onPropertyAdded(Property property) { ignoreUnused(property); }
     };
 
     /**

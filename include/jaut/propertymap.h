@@ -29,9 +29,8 @@
 
 namespace jaut
 {
-
 /**
-    The PropertyMap class is similiar to the AudioProcessorValueTreeState in that,
+    The PropertyMap class is similar to the AudioProcessorValueTreeState in that,
     that it can synchronize processor data with the gui thread.
     
     In combination with the PropertyAttachment class,
@@ -46,7 +45,7 @@ public:
     struct JAUT_API Listener
     {
         virtual void onValueChanged(const String &name, var oldValue, var newValue) = 0;
-        virtual void onPropertyAdded(const String &name, var value) {}
+        virtual void onPropertyAdded(const String &name, var value) { ignoreUnused(name, value); }
     };
 
     using t_map           = NamedValueSet;
