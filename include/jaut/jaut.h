@@ -56,8 +56,6 @@
 #include <jaut/ithemedefinition.h>
 #include <jaut/localisation.h>
 #include <jaut/metadatahelper.h>
-#include <jaut/propertyattribute.h>
-#include <jaut/propertymap.h>
 #include <jaut/thememanager.h>
 
 #if JAUT_INCLUDE_NAMESPACE

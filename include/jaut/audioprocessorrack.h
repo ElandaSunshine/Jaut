@@ -26,143 +26,86 @@
 #pragma once
 
 #include <jaut/expo.h>
-#include <jaut/dspunit.h>
+#include <jaut/messagehandler.h>
+#include <jaut/serializableaudioprocessor.h>
 
 namespace jaut
 {
-class JAUT_API AudioProcessorRack final : public jaut::DspUnit
+class JAUT_API AudioProcessorRack final : public SerializableAudioProcessor, public MessageHandler<16>
 {
 public:
-    using int_Connection = int;
-    using t_ConnectPin   = std::atomic<int_Connection>;
-    using t_CallbackLock = CriticalSection::ScopedLockType;
-
-    class JAUT_API RackDevice final
+    enum JAUT_API ProcessingMode
     {
-    public:
-        //==============================================================================================================
-        RackDevice(DspUnit &unit);
-        RackDevice(DspUnit *unit, bool isLinked);
-        RackDevice(RackDevice &&other);
-        ~RackDevice();
-
-        //==============================================================================================================
-        RackDevice &operator=(RackDevice &&right);
-
-        //==============================================================================================================
-        bool operator >(const RackDevice &right) const noexcept;
-        bool operator <(const RackDevice &right) const noexcept;
-        bool operator==(const RackDevice &right) const noexcept;
-        bool operator!=(const RackDevice &right) const noexcept;
-        bool operator>=(const RackDevice &right) const noexcept;
-        bool operator<=(const RackDevice &right) const noexcept;
-
-        //==============================================================================================================
-        DspUnit *operator->() const;
-        DspUnit &operator*() const;
-
-        //==============================================================================================================
-        String getId() const noexcept;
-        bool isLinkedUnit() const noexcept;
-        DspUnit *getUnit() const noexcept;
-        AudioProcessorRack *getRack() const noexcept;
-        int_Connection getConnectionIndex() const noexcept;
-
-        //==============================================================================================================
-        RackDevice *getPreviousDevice() const noexcept;
-        RackDevice *getNextDevice() const noexcept;
-
-        //==============================================================================================================
-        void connectWith(int_Connection index);
-
-        //==============================================================================================================
-        friend void swap(RackDevice &left, RackDevice &right)
-        {
-            std::swap(left.rack, right.rack);
-            std::swap(left.unit, right.unit);
-            std::swap(left.linked, right.linked);
-            left.connection.store(right.connection.exchange(left.connection));
-            left.id.swapWith(right.id);
-        }
-
-    private:
-        friend class AudioProcessorRack;
-        friend class Iterator;
-
-        AudioProcessorRack *rack;
-        t_ConnectPin connection;
-        DspUnit *unit;
-        bool linked;
-        String id;
-
-        //==============================================================================================================
-        void setRack(AudioProcessorRack*);
-
-        JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(RackDevice)
+        Serial,
+        Single
     };
 
     //==================================================================================================================
-    using t_Rack          = std::vector<RackDevice>;
-    using t_Iterator      = t_Rack::iterator;
-    using t_ConstIterator = t_Rack::const_iterator;
+    using Processor        = SerializableAudioProcessor*;
+    using ProcessorPointer = std::shared_ptr<std::remove_pointer_t<Processor>>;
+    using ProcessorVector  = std::vector<ProcessorPointer>;
+    using InitializerFunc  = std::function<ProcessorPointer(const String&)>;
+    using LockType         = SpinLock::ScopedLockType;
 
     //==================================================================================================================
-    AudioProcessorRack(AudioProcessor &processor, AudioProcessorValueTreeState *vts = nullptr,
-                       UndoManager *undoManager = nullptr);
+    AudioProcessorRack(AudioProcessor &processor, ProcessingMode mode, AudioProcessorValueTreeState &vts,
+                       InitializerFunc processorInitializer, UndoManager *undoManager = nullptr) noexcept;
 
     //==================================================================================================================
-    void addDevice(DspUnit &unit);
-    void addDevice(DspUnit *unit, bool isLinked = false);
-    void removeDevice(int index);
-    void removeDevice(const String &id);
-    void removeDevice(const DspUnit &unit);
-    void removeDevice(const RackDevice &device);
+    bool addDevice(const String &deviceId);
+    bool removeDevice(const String &deviceId);
+    bool moveDevice(const String &deviceId, int index);
+    bool clear();
 
     //==================================================================================================================
     const String getName() const override;
     bool hasEditor() const override { return false; }
-    void clear();
+
+    //==================================================================================================================
     int getNumDevices() const noexcept;
 
     //==================================================================================================================
-    RackDevice *getDevice(int index) noexcept;
-    RackDevice *getDevice(const String &id) noexcept;
-    const RackDevice *getDevice(int index) const noexcept;
-    const RackDevice *getDevice(const String &id) const noexcept;
+    Processor getDevice(int index) noexcept;
+    Processor getDevice(const String &deviceId) noexcept;
+    Processor getDevice(int index) const noexcept;
+    Processor getDevice(const String &deviceId) const noexcept;
 
     //==================================================================================================================
-    void connectDevice(int_Connection deviceIndex);
-    int_Connection getConnectionIndex() const noexcept;
+    Processor getActivated();
+    String getActivatedId() const;
+    int getActiveIndex() const;
+    bool setActivated(int index);
+    bool setActivated(const String &id);
 
     //==================================================================================================================
-    virtual void process(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer) override;
-    virtual void process(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer) override;
-    virtual void beginPlayback(double sampleRate, int maxBlockSamples) override;
-    virtual void finishPlayback() override;
+    void processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer) override;
+    void processBlock(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer) override;
+    void prepareToPlay(double sampleRate, int maxBlockSamples) override;
+    void releaseResources() override;
 
     //==================================================================================================================
-    void createLinearChain();
-    void reverseChain();
-    void createSoloChain(int index);
-
-    //==================================================================================================================
-    virtual void readData(const ValueTree data) override;
-    virtual void writeData(ValueTree data) const override;
-
-    //==================================================================================================================
-    t_Iterator begin() noexcept;
-    t_Iterator end()   noexcept;
-    t_ConstIterator begin() const noexcept;
-    t_ConstIterator end()   const noexcept;
+    void readData(const ValueTree data) override;
+    void writeData(ValueTree data) override;
 
 private:
-    t_ConnectPin connection;
-    std::vector<RackDevice> devices;
-    bool closedChain;
+    template<bool> class UndoableAddRemove;
+    class UndoableClear;
+    class UndoableMove;
+    class MessageSwap;
 
     //==================================================================================================================
-    jaut::DspGui *getGuiType() override { return nullptr; }
-    void traverseChain(std::function<void(RackDevice&,bool&)> callback);
-    RackDevice &setAndReturnPrevious(int previousIndex, int currentIndex);
+    AudioProcessor &parent;
+    AudioProcessorValueTreeState &parameters;
+    UndoManager *undoManager;
+
+    SpinLock swapLock;
+    ProcessorVector devices, source;
+    InitializerFunc initializerFunction;
+    ProcessingMode mode;
+    std::atomic<int> activeIndex;
+    int previousIndex;
+
+    //==================================================================================================================
+    void sendSwapMessage();
 };
 }

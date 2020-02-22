@@ -26,626 +26,669 @@
 #include <jaut/audioprocessorrack.h>
 #include <jaut/exception.h>
 
-
-
-#pragma region Namespace
+//region Namespace
+/* ================================================================================================================== */
 namespace
 {
 using namespace jaut;
 
-inline const AudioProcessorRack::RackDevice *findDevice(const std::vector<AudioProcessorRack::RackDevice> &devices,
-                                                        const String &id) noexcept
+inline int hasProcessor(const AudioProcessorRack::ProcessorVector &rack, const String &id)
 {
-    for(auto &device : devices)
+    for(int i = 0; i < rack.size(); ++i)
     {
-        if(device.getId() == id)
+        const auto device = rack.at(i);
+
+        if(device->getName().removeCharacters(" ").toLowerCase() == id)
         {
-            return &device;
+            return i;
         }
     }
 
-    return nullptr;
-}
-
-inline AudioProcessorRack::RackDevice *findDevice(std::vector<AudioProcessorRack::RackDevice> &devices,
-                                                  const String &id) noexcept
-{
-    for(auto &device : devices)
-    {
-        if(device.getId() == id)
-        {
-            return &device;
-        }
-    }
-
-    return nullptr;
-}
-
-inline void checkAndRemoveDevice(std::vector<AudioProcessorRack::RackDevice> &devices)
-{
-    for(auto &device : devices)
-    {
-        if(!jaut::fit_s<int>(device.getConnectionIndex(), -2, devices.size()))
-        {
-            device.connectWith(-1);
-        }
-    }
-}
-
-inline bool doesProcessorChainOutput(int startIndex, std::vector<AudioProcessorRack::RackDevice> &devices)
-{
-    for(int i = 0; i < devices.size(); ++i)
-    {
-        if(startIndex < 0)
-        {
-            break;
-        }
-        else if(startIndex >= devices.size())
-        {
-            startIndex = -1;
-            break;
-        }
-        else
-        {
-            startIndex = devices.at(startIndex).getConnectionIndex();
-        }
-    }
-
-    return startIndex == -2;
+    return -1;
 }
 }
-#pragma endregion Namespace
-
-
+//endregion Namespace
 
 namespace jaut
 {
-#pragma region AudioProcessorRack::RackDevice
-/* ==================================================================================
- * =================================== RackDevice ===================================
- * ================================================================================== */
-AudioProcessorRack::RackDevice::RackDevice(DspUnit &unit)
-    : connection(-2), unit(&unit), linked(true),
-      id(unit.getName().removeCharacters(" ").toLowerCase())
-{}
-
-AudioProcessorRack::RackDevice::RackDevice(DspUnit *unit, bool isLinked)
-    : connection(-2), unit(unit), linked(isLinked),
-      id(unit ? unit->getName().removeCharacters(" ").toLowerCase() : "")
-{}
-
-AudioProcessorRack::RackDevice::RackDevice(RackDevice &&other)
-    : rack(std::move(other.rack)),
-      connection(0),
-      unit(std::move(other.unit)),
-      linked(std::move(other.linked)),
-      id(std::move(other.id))
+//region UndoHistory
+/* ================================================================================================================== */
+template<>
+class AudioProcessorRack::UndoableAddRemove<true> final : public UndoableAction
 {
-    connection.store(other.connection.exchange(connection));
-    other.rack = nullptr;
-    other.unit = nullptr;
-}
+public:
+    UndoableAddRemove(AudioProcessorRack *rack, String itemId)
+        : rack(rack), itemId(std::move(itemId))
+    {}
 
-AudioProcessorRack::RackDevice::~RackDevice()
-{
-    if(!linked)
+    //==================================================================================================================
+    bool perform() override
     {
-        delete unit;
-    }
-    else
-    {
-        unit->setPlayHead(nullptr);
-        unit->reset();
-    }
-}
-
-//======================================================================================================================
-AudioProcessorRack::RackDevice &AudioProcessorRack::RackDevice::operator=(RackDevice &&right)
-{
-    swap(*this, right);
-    right.rack = nullptr;
-    right.unit = nullptr;
-
-    return *this;
-}
-
-//======================================================================================================================
-bool AudioProcessorRack::RackDevice::operator>(const RackDevice &right) const noexcept
-{
-    bool found_this = false;
-    bool found_next = false;
-    
-    if(rack && right != *this)
-    {
-        rack->traverseChain([this, &right, &found_this, &found_next](RackDevice &device, bool &cancel)
+        if(!rack)
         {
-            if(found_next)
+            const String id = itemId.removeCharacters(" ").toLowerCase();
+
+            if(::hasProcessor(rack->source, id) == -1)
             {
-                cancel = true;
-                return;
-            }
-
-            if(device == *this)
-            {
-                found_this = true;
-            }
-            else if(device == right)
-            {
-                found_next = true;
-            }
-        });
-    }
-
-    return found_this && found_next;
-}
-
-bool AudioProcessorRack::RackDevice::operator<(const RackDevice &right) const noexcept
-{
-    bool found_prev = false;
-    bool found_this = false;
-    
-    if(rack && right != *this)
-    {
-        rack->traverseChain([this, &right, &found_this, &found_prev](RackDevice &device, bool &cancel)
-        {
-            if(found_this)
-            {
-                cancel = true;
-                return;
-            }
-
-            if(device == right)
-            {
-                found_prev = true;
-            }
-            else if(device == *this)
-            {
-                found_this = true;
-            }
-        });
-    }
-
-    return found_prev && found_this;
-}
-
-bool AudioProcessorRack::RackDevice::operator==(const RackDevice &right) const noexcept
-{
-    return unit == right.unit;
-}
-
-bool AudioProcessorRack::RackDevice::operator!=(const RackDevice &right) const noexcept
-{
-    return unit != right.unit;
-}
-
-bool AudioProcessorRack::RackDevice::operator>=(const RackDevice &right) const noexcept
-{
-    if(right != *this)
-    {
-        return *this > right;
-    }
-
-    return true;
-}
-
-bool AudioProcessorRack::RackDevice::operator<=(const RackDevice &right) const noexcept
-{
-    if(right != *this)
-    {
-        return *this < right;
-    }
-
-    return true;
-}
-
-//======================================================================================================================
-DspUnit *AudioProcessorRack::RackDevice::operator->() const
-{
-    if(unit)
-    {
-        return unit;
-    }
-
-    throw exception::NullDereference("RackDevice '" + getId() + "' (->)");
-}
-
-DspUnit &AudioProcessorRack::RackDevice::operator*() const
-{
-    if(unit)
-    {
-        return *unit;
-    }
-
-    throw exception::NullDereference("RackDevice '" + getId() + "' (*)");
-}
-
-//======================================================================================================================
-String AudioProcessorRack::RackDevice::getId() const noexcept
-{
-    return id;
-}
-
-bool AudioProcessorRack::RackDevice::isLinkedUnit() const noexcept
-{
-    return linked;
-}
-
-DspUnit *AudioProcessorRack::RackDevice::getUnit() const noexcept
-{
-    return unit;
-}
-
-AudioProcessorRack *AudioProcessorRack::RackDevice::getRack() const noexcept
-{
-    return rack;
-}
-
-AudioProcessorRack::int_Connection AudioProcessorRack::RackDevice::getConnectionIndex() const noexcept
-{
-    return connection;
-}
-
-//======================================================================================================================
-AudioProcessorRack::RackDevice *AudioProcessorRack::RackDevice::getPreviousDevice() const noexcept
-{
-    RackDevice *result = nullptr;
-
-    if(rack)
-    {
-        rack->traverseChain([this, &result](RackDevice &device, bool &cancel)
-        {
-            if(jaut::fit_s(device.connection.load(), 0, rack->getNumDevices()))
-            {
-                RackDevice &next_device = rack->devices.at(device.connection);
-
-                if(next_device == *this)
+                if(auto new_processor = rack->initializerFunction(id))
                 {
-                    result = &device;
-                    cancel = true;
+                    if(data.isValid())
+                    {
+                        new_processor->readData(data);
+                    }
+
+                    new_processor->prepareToPlay(rack->getSampleRate(), rack->getBlockSize());
+                    new_processor->setPlayHead(rack->getPlayHead());
+
+                    {
+                        SpinLock::ScopedLockType locker(rack->swapLock);
+                        rack->source.emplace_back(new_processor);
+                    }
+
+                    rack->sendSwapMessage();
+                    return true;
                 }
             }
-        });
+        }
+
+        return false;
     }
 
-    return result;
-}
-
-AudioProcessorRack::RackDevice *AudioProcessorRack::RackDevice::getNextDevice() const noexcept
-{
-    RackDevice *result = nullptr;
-
-    if(rack)
+    bool undo() override
     {
-        rack->traverseChain([this, &result](RackDevice &device, bool &cancel)
+        if(!rack)
         {
-            if(device == *this && jaut::fit_s(this->connection.load(), 0, rack->getNumDevices()))
+            const String id           = itemId.removeCharacters(" ").toLowerCase();
+            const int processor_index = ::hasProcessor(rack->source, id);
+
+            if(processor_index >= 0)
             {
-                result = &rack->devices.at(this->connection);
-                cancel = true;
+                data = ValueTree("Data");
+                rack->source.at(processor_index)->writeData(data);
+
+                {
+                    SpinLock::ScopedLockType locker(rack->swapLock);
+                    rack->source.erase(rack->source.begin() + processor_index);
+                }
+
+                if(rack->getActiveIndex() >= rack->source.size())
+                {
+                    rack->activeIndex.store(rack->source.size() - 1);
+                }
+
+                rack->sendSwapMessage();
+                return true;
             }
-        });
+        }
+
+        return false;
     }
 
-    return result;
-}
+    //==================================================================================================================
+    int getSizeInUnits()  override
+    {
+        return static_cast<int>(sizeof(*this));
+    }
 
-//======================================================================================================================
-void AudioProcessorRack::RackDevice::connectWith(int_Connection index)
+private:
+    AudioProcessorRack *rack;
+    String itemId;
+    ValueTree data;
+};
+
+template<>
+class AudioProcessorRack::UndoableAddRemove<false> final : public UndoableAction
 {
-    if(!rack)
+public:
+    UndoableAddRemove(AudioProcessorRack *rack, String itemId)
+            : rack(rack), itemId(std::move(itemId)), data("Data")
+    {}
+
+    //==================================================================================================================
+    bool perform() override
     {
-        return;
+        if(!rack)
+        {
+            const String id           = itemId.removeCharacters(" ").toLowerCase();
+            const int processor_index = ::hasProcessor(rack->source, id);
+
+            if(processor_index >= 0)
+            {
+                rack->source.at(processor_index)->writeData(data);
+
+                {
+                    SpinLock::ScopedLockType locker(rack->swapLock);
+                    rack->source.erase(rack->source.begin() + processor_index);
+                }
+
+                if(rack->getActiveIndex() >= rack->source.size())
+                {
+                    rack->activeIndex.store(rack->source.size() - 1);
+                }
+
+                rack->sendSwapMessage();
+                return true;
+            }
+        }
+
+        return false;
     }
 
-    if(!jaut::fit_s(index, -2, rack->getNumDevices()))
+    bool undo() override
     {
-        jassertfalse; // Index out of bounds, device must either be inside size of added devices
-                      // or -1 for no device, or -2 for output
-        return;
+        if(!rack)
+        {
+            const String id = itemId.removeCharacters(" ").toLowerCase();
+
+            if(::hasProcessor(rack->source, id) == -1)
+            {
+                if(auto new_processor = rack->initializerFunction(id))
+                {
+                    new_processor->readData(data);
+                    new_processor->prepareToPlay(rack->getSampleRate(), rack->getBlockSize());
+                    new_processor->setPlayHead(rack->getPlayHead());
+
+                    {
+                        SpinLock::ScopedLockType locker(rack->swapLock);
+                        rack->source.emplace_back(new_processor);
+                    }
+
+                    rack->sendSwapMessage();
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
-    connection = index;
-}
+    //==================================================================================================================
+    int getSizeInUnits()  override
+    {
+        return static_cast<int>(sizeof(*this));
+    }
 
-//======================================================================================================================
-void AudioProcessorRack::RackDevice::setRack(AudioProcessorRack *rack)
+private:
+    AudioProcessorRack *rack;
+    String itemId;
+    ValueTree data;
+};
+
+class AudioProcessorRack::UndoableClear final : public UndoableAction
 {
-    this->rack = rack;
+public:
+    explicit UndoableClear(AudioProcessorRack *rack)
+        : rack(rack), data("Data")
+    {}
 
-    if(rack)
+    //==================================================================================================================
+    bool perform() override
     {
-        unit->setPlayHead(rack->getPlayHead());
+        if(!rack && !rack->source.empty())
+        {
+            rack->writeData(data);
+
+            {
+                SpinLock::ScopedLockType locker(rack->swapLock);
+                rack->source.clear();
+            }
+
+            rack->activeIndex.store(0);
+            rack->sendSwapMessage();
+
+            return true;
+        }
+
+        return false;
     }
-}
-#pragma endregion AudioProcessorRack::RackDevice
 
+    bool undo() override
+    {
+        if(!rack && data.isValid())
+        {
+            {
+                SpinLock::ScopedLockType locker(rack->swapLock);
+                rack->readData(data);
+            }
 
+            rack->sendSwapMessage();
+            return true;
+        }
 
-#pragma region AudioProcessorRack
+        return false;
+    }
+
+    //==================================================================================================================
+    int getSizeInUnits()  override
+    {
+        return static_cast<int>(sizeof(*this));
+    }
+
+private:
+    AudioProcessorRack *rack;
+    ValueTree data;
+};
+
+class AudioProcessorRack::UndoableMove final : public UndoableAction
+{
+public:
+    UndoableMove(AudioProcessorRack *rack, String id, int index)
+        : rack(rack), itemId(std::move(id)), itemIndex(index)
+    {}
+
+    //==================================================================================================================
+    bool perform() override
+    {
+        if(!rack)
+        {
+            const String id           = itemId.removeCharacters(" ").toLowerCase();
+            const int processor_index = ::hasProcessor(rack->source, id);
+
+            if(processor_index >= 0 && processor_index != itemIndex &&
+               jaut::fit_s<int>(itemIndex, 0, rack->source.size()))
+            {
+                {
+                    SpinLock::ScopedLockType locker(rack->swapLock);
+                    makeRotation(processor_index, itemIndex);
+                }
+
+                itemIndex = processor_index;
+                rack->sendSwapMessage();
+
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    bool undo() override
+    {
+        if(!rack)
+        {
+            const String id           = itemId.removeCharacters(" ").toLowerCase();
+            const int processor_index = ::hasProcessor(rack->source, id);
+
+            {
+                SpinLock::ScopedLockType locker(rack->swapLock);
+                makeRotation(processor_index, itemIndex);
+            }
+
+            itemIndex = processor_index;
+            rack->sendSwapMessage();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    //==================================================================================================================
+    int getSizeInUnits()  override
+    {
+        return static_cast<int>(sizeof(*this));
+    }
+
+private:
+    AudioProcessorRack *rack;
+    String itemId;
+    int itemIndex;
+
+    //==================================================================================================================
+    void makeRotation(int indexToMove, int targetIndex)
+    {
+        ProcessorVector &vector = rack->source;
+
+        if(indexToMove < targetIndex)
+        {
+            for(int i = indexToMove; i < targetIndex; ++i)
+            {
+                std::swap(vector.at(i), vector.at(i + 1));
+            }
+        }
+        else
+        {
+            for(int i = indexToMove; i > targetIndex; --i)
+            {
+                std::swap(vector.at(i), vector.at(i - 1));
+            }
+        }
+    }
+};
+//endregion UndoHistory
+//region Messages
+/* ================================================================================================================== */
+class AudioProcessorRack::MessageSwap final : public IMessage
+{
+public:
+    explicit MessageSwap(ProcessorVector source)
+        : sourceCopy(std::move(source))
+    {}
+
+    //==================================================================================================================
+    void handleMessage(IMessageHandler *context, MessageDirection messageDirection) override
+    {
+        AudioProcessorRack &rack = *static_cast<AudioProcessorRack*>(context);
+
+        if(messageDirection == TargetThread)
+        {
+            if(rack.swapLock.tryEnter())
+            {
+                sourceCopy = rack.source;
+                rack.swapLock.exit();
+            }
+
+            std::swap(sourceCopy, rack.devices);
+        }
+        else
+        {
+            std::swap(rack.source, sourceCopy);
+        }
+    }
+
+private:
+    ProcessorVector sourceCopy;
+};
+//endregion Messages
+//region AudioProcessorRack
 /* ==================================================================================
  * =============================== AudioProcessorRack ===============================
  * ================================================================================== */
-AudioProcessorRack::AudioProcessorRack(AudioProcessor &processor, AudioProcessorValueTreeState *vts,
-                                       UndoManager *undoManager)
-    : DspUnit(processor, vts, undoManager),
-      connection(0), closedChain(false)
-{}
+AudioProcessorRack::AudioProcessorRack(AudioProcessor &processor, ProcessingMode mode,
+                                       AudioProcessorValueTreeState &vts, InitializerFunc processorInitializer,
+                                       UndoManager *undoManager) noexcept
+    : parent(processor), parameters(vts), undoManager(undoManager), initializerFunction(processorInitializer),
+      mode(mode), activeIndex(0), previousIndex(0)
+{
+    JAUT_ENSURE_MESSAGE_THREAD();
+}
 
 //======================================================================================================================
-void AudioProcessorRack::addDevice(DspUnit &unit)
+bool AudioProcessorRack::addDevice(const String &deviceId)
 {
-    JAUT_ENSURE_AUDIO_THREAD();
-    RackDevice device(unit);
-
-    if(!::findDevice(devices, device.getId()))
-    {
-        RackDevice *const last_device = getNumDevices() > 0 ? &devices.at(getNumDevices() - 1) : nullptr;
-
-        device.setRack(this);
-        (void) devices.emplace_back(std::move(device));
-
-        if(last_device && last_device->connection == -2)
-        {
-            last_device->connection = getNumDevices() - 1;
-        }
-    }
+    JAUT_ENSURE_MESSAGE_THREAD();
+    return undoManager ? undoManager->perform(new UndoableAddRemove<true>(this, deviceId)) :
+                         UndoableAddRemove<true>(this, deviceId).perform();
 }
 
-void AudioProcessorRack::addDevice(DspUnit *unit, bool isLinked)
+bool AudioProcessorRack::removeDevice(const String &deviceId)
 {
-    JAUT_ENSURE_AUDIO_THREAD();
-    RackDevice device(unit, isLinked);
-
-    if(!::findDevice(devices, device.getId()))
-    {
-        RackDevice *const last_device = getNumDevices() > 0 ? &devices.at(getNumDevices() - 1) : nullptr;
-        
-        device.setRack(this);
-        (void) devices.emplace_back(std::move(device));
-
-        if(last_device && last_device->connection == -2)
-        {
-            last_device->connection = getNumDevices() - 1;
-        }
-    }
+    JAUT_ENSURE_MESSAGE_THREAD();
+    return undoManager ? undoManager->perform(new UndoableAddRemove<false>(this, deviceId)) :
+                         UndoableAddRemove<false>(this, deviceId).perform();
 }
 
-void AudioProcessorRack::removeDevice(int index)
+bool AudioProcessorRack::moveDevice(const String &deviceId, int index)
 {
-    JAUT_ENSURE_AUDIO_THREAD();
-
-    if(jaut::fit_s<int>(index, 0, devices.size()))
-    {
-        (void) devices.erase(devices.begin() + index);
-        ::checkAndRemoveDevice(devices);
-        closedChain = ::doesProcessorChainOutput(connection, devices);
-    }
+    JAUT_ENSURE_MESSAGE_THREAD();
+    return undoManager ? undoManager->perform(new UndoableMove(this, deviceId, index)) :
+                         UndoableMove(this, deviceId, index).perform();
 }
 
-void AudioProcessorRack::removeDevice(const String &id)
+bool AudioProcessorRack::clear()
 {
-    JAUT_ENSURE_AUDIO_THREAD();
-
-    for(int i = 0; i < devices.size(); ++i)
-    {
-        if(devices.at(i).getId().equalsIgnoreCase(id.removeCharacters(" ")))
-        {
-            (void) devices.erase(devices.begin() + i);
-            ::checkAndRemoveDevice(devices);
-            closedChain = ::doesProcessorChainOutput(connection, devices);
-
-            return;
-        }
-    }
-}
-
-void AudioProcessorRack::removeDevice(const DspUnit &unit)
-{
-    JAUT_ENSURE_AUDIO_THREAD();
-
-    for(int i = 0; i < devices.size(); ++i)
-    {
-        if(&unit == devices.at(i).getUnit())
-        {
-            (void) devices.erase(devices.begin() + i);
-            ::checkAndRemoveDevice(devices);
-            closedChain = ::doesProcessorChainOutput(connection, devices);
-
-            return;
-        }
-    }
-}
-
-void AudioProcessorRack::removeDevice(const RackDevice &device)
-{
-    JAUT_ENSURE_AUDIO_THREAD();
-
-    for(int i = 0; i < devices.size(); ++i)
-    {
-        if(device == devices.at(i))
-        {
-            (void) devices.erase(devices.begin() + i);
-            ::checkAndRemoveDevice(devices);
-            closedChain = ::doesProcessorChainOutput(connection, devices);
-
-            return;
-        }
-    }
+    JAUT_ENSURE_MESSAGE_THREAD();
+    return undoManager ? undoManager->perform(new UndoableClear(this)) : UndoableClear(this).perform();
 }
 
 //======================================================================================================================
 const String AudioProcessorRack::getName() const
 {
-    return "Rack Processor";
-}
-
-void AudioProcessorRack::clear()
-{
-    devices.clear();
-    connection == 0;
-    closedChain = false;
+    return "AudioProcessorRack";
 }
 
 int AudioProcessorRack::getNumDevices() const noexcept
 {
-    return devices.size();
+    JAUT_ENSURE_MESSAGE_THREAD();
+    return source.size();
 }
 
 //==================================================================================================================
-AudioProcessorRack::RackDevice *AudioProcessorRack::getDevice(int index) noexcept
+AudioProcessorRack::Processor AudioProcessorRack::getDevice(int index) noexcept
 {
-    return jaut::fit_s(index, 0, getNumDevices()) ? &devices.at(index) : nullptr;
+    JAUT_ENSURE_MESSAGE_THREAD();
+    return jaut::fit_s(index, 0, getNumDevices()) ? source.at(index).get() : nullptr;
 }
 
-AudioProcessorRack::RackDevice *AudioProcessorRack::getDevice(const String &id) noexcept
+AudioProcessorRack::Processor AudioProcessorRack::getDevice(const String &deviceId) noexcept
 {
-    return ::findDevice(devices, id);
+    JAUT_ENSURE_MESSAGE_THREAD();
+
+    const String id = deviceId.removeCharacters(" ").toLowerCase();
+    int index       = ::hasProcessor(source, id);
+
+    return index >= 0 ? source.at(index).get() : nullptr;
 }
 
-const AudioProcessorRack::RackDevice *AudioProcessorRack::getDevice(int index) const noexcept
+AudioProcessorRack::Processor AudioProcessorRack::getDevice(int index) const noexcept
 {
-    return jaut::fit_s(index, 0, getNumDevices()) ? &devices.at(index) : nullptr;
+    JAUT_ENSURE_MESSAGE_THREAD();
+    return jaut::fit_s(index, 0, getNumDevices()) ? source.at(index).get() : nullptr;
 }
 
-const AudioProcessorRack::RackDevice *AudioProcessorRack::getDevice(const String &id) const noexcept
+AudioProcessorRack::Processor AudioProcessorRack::getDevice(const String &deviceId) const noexcept
 {
-    return ::findDevice(devices, id);
-}
+    JAUT_ENSURE_MESSAGE_THREAD();
 
-//==================================================================================================================
-void AudioProcessorRack::connectDevice(int_Connection deviceIndex)
-{
-    if(!jaut::fit_s(deviceIndex, -1, getNumDevices()))
-    {
-        jassertfalse; // Index out of bounds, device must either be inside size of added devices
-                      // or -1 denoting no device
-        return;
-    }
+    const String id = deviceId.removeCharacters(" ").toLowerCase();
+    int index       = ::hasProcessor(source, id);
 
-    connection  = deviceIndex;
-    closedChain = ::doesProcessorChainOutput(connection, devices);
-}
-
-AudioProcessorRack::int_Connection AudioProcessorRack::getConnectionIndex() const noexcept
-{
-    return connection;
+    return index >= 0 ? source.at(index).get() : nullptr;
 }
 
 //======================================================================================================================
-void AudioProcessorRack::process(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer)
+AudioProcessorRack::Processor AudioProcessorRack::getActivated()
 {
-    JAUT_ENSURE_AUDIO_THREAD();
-
-    traverseChain([&buffer, &midiBuffer](RackDevice &device, bool&)
+    if(mode == Serial)
     {
-        device->processBlock(buffer, midiBuffer);
-    });
+        return nullptr;
+    }
+
+    return source.at(getActiveIndex()).get();
 }
 
-void AudioProcessorRack::process(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer)
+String AudioProcessorRack::getActivatedId() const
 {
-    JAUT_ENSURE_AUDIO_THREAD();
-
-    traverseChain([&buffer, &midiBuffer](RackDevice &device, bool&)
+    if(mode == Serial)
     {
-        device->processBlock(buffer, midiBuffer);
-    });
+        return String();
+    }
+
+    return source.at(getActiveIndex())->getName().removeCharacters(" ").toLowerCase();
 }
 
-void AudioProcessorRack::beginPlayback(double sampleRate, int maxBlockSamples)
+int AudioProcessorRack::getActiveIndex() const
 {
-    traverseChain([&sampleRate, maxBlockSamples](RackDevice &device, bool&)
-    {
-        device->beginPlayback(sampleRate, maxBlockSamples);
-    });
+    return activeIndex.load();
 }
 
-void AudioProcessorRack::finishPlayback()
+bool AudioProcessorRack::setActivated(int index)
 {
-    traverseChain([](RackDevice &device, bool&)
+    if(mode == Serial)
     {
-        device->finishPlayback();
-    });
+        return false;
+    }
+
+    const int active_index = getActiveIndex();
+
+    if(index != active_index && index >= 0 && index < source.size())
+    {
+        previousIndex = active_index;
+        activeIndex.store(index);
+
+        return true;
+    }
+
+    return false;
+}
+
+bool AudioProcessorRack::setActivated(const String &id)
+{
+    if(mode == Serial)
+    {
+        return false;
+    }
+
+    const int index        = ::hasProcessor(source, id.removeCharacters(" ").toLowerCase());
+    const int active_index = getActiveIndex();
+
+    if(index != active_index && index >= 0)
+    {
+        previousIndex = active_index;
+        activeIndex.store(index);
+
+        return true;
+    }
+
+    return false;
 }
 
 //======================================================================================================================
-void AudioProcessorRack::createLinearChain()
+void AudioProcessorRack::processBlock(AudioBuffer<float> &buffer, MidiBuffer &midiBuffer)
 {
-    connection = 0;
+    processNextMessage();
 
-    for(int i = 0; i < devices.size(); ++i)
+    // Process
+    if(mode == Serial)
     {
-        RackDevice &device = devices.at(i);
-
-        if(i == devices.size() - 1)
+        for(auto &device : devices)
         {
-            device.connection = -2;
-        }
-        else
-        {
-            device.connection = i + 1;
+            device->processBlock(buffer, midiBuffer);
         }
     }
-
-    closedChain = devices.size() > 0;
-}
-
-void AudioProcessorRack::reverseChain()
-{
-    if(closedChain)
+    else
     {
-        connection.store(setAndReturnPrevious(-1, connection).connection.load());
+        if(devices.empty())
+        {
+            return;
+        }
+
+        int devices_size = devices.size();
+        int index        = activeIndex.load();
+
+        if(index >= devices_size)
+        {
+            index = previousIndex < devices_size ? previousIndex : devices_size - 1;
+        }
+
+        devices.at(index)->processBlock(buffer, midiBuffer);
     }
 }
 
-void AudioProcessorRack::createSoloChain(int index)
+void AudioProcessorRack::processBlock(AudioBuffer<double> &buffer, MidiBuffer &midiBuffer)
 {
-    if(jaut::fit_s(index, 0, getNumDevices()))
+    processNextMessage();
+
+    // Process
+    if(mode == Serial)
     {
-        connection = index;
-        devices.at(index).connection = -2;
-        closedChain = true;
+        for(auto &device : devices)
+        {
+            device->processBlock(buffer, midiBuffer);
+        }
+    }
+    else
+    {
+        if(devices.empty())
+        {
+            return;
+        }
+
+        int devices_size = devices.size();
+        int index        = activeIndex.load();
+
+        if(index >= devices_size)
+        {
+            index = previousIndex < devices_size ? previousIndex : devices_size - 1;
+        }
+
+        devices.at(index)->processBlock(buffer, midiBuffer);
+    }
+}
+
+void AudioProcessorRack::prepareToPlay(double sampleRate, int maxBlockSamples)
+{
+    setRateAndBufferSizeDetails(sampleRate, maxBlockSamples);
+
+    for (auto &device : devices)
+    {
+        device->setRateAndBufferSizeDetails(sampleRate, maxBlockSamples);
+        device->prepareToPlay(sampleRate, maxBlockSamples);
+    }
+}
+
+void AudioProcessorRack::releaseResources()
+{
+    for (auto &device : devices)
+    {
+        device->releaseResources();
     }
 }
 
 //======================================================================================================================
 void AudioProcessorRack::readData(const ValueTree data)
 {
-    if(data.isValid() && data.getNumChildren() > 0)
-    {
-        for(auto child : data)
-        {
-            if(child.hasType("Device"))
-            {
-                const var index_var = child.getProperty("Index", -1);
-                const int index     = index_var;
+    ProcessorVector data_vector;
+    data_vector.reserve(data.getNumChildren());
 
-                if(jaut::fit_s<int>(index, 0, devices.size()))
+    for(const auto &child : data)
+    {
+        if(child.hasType("RackDevice"))
+        {
+            const String id = child.getProperty("Id", "");
+
+            if(auto device = initializerFunction(id))
+            {
+                ValueTree device_data = child.getChild(0);
+
+                if(device_data.isValid())
                 {
-                    RackDevice &device = devices.at(index);
-                    device->readData(child);
-                    device.connectWith(child.getProperty("Connection", -1));
+                    device->readData(device_data);
                 }
+
+                device->setPlayHead(getPlayHead());
+                data_vector.emplace_back(device);
             }
         }
     }
+
+    if(MessageManager::getInstance()->isThisTheMessageThread())
+    {
+        std::swap(source, data_vector);
+        sendSwapMessage();
+    }
+    else
+    {
+        {
+            SpinLock::ScopedLockType locker(swapLock);
+            source = data_vector;
+        }
+
+        std::swap(devices, data_vector);
+    }
+
+    activeIndex.store(data.getProperty("ActiveIndex", 0));
 }
 
-void AudioProcessorRack::writeData(ValueTree data) const
+void AudioProcessorRack::writeData(ValueTree data)
 {
+    ProcessorVector data_vector(source);
+
     if(data.isValid())
     {
         data.removeAllChildren(nullptr);
+        data.setProperty("ActiveIndex", getActiveIndex(), nullptr);
 
-        for(int i = 0; i < devices.size(); ++i)
+        for(auto &device : data_vector)
         {
-            const RackDevice &device = devices.at(i);
-            ValueTree device_state("Device");
+            const String id = device->getName().removeCharacters(" ").toLowerCase();
 
-            device->writeData(device_state);
-            (void) device_state.setProperty("Index", i, nullptr);
-            (void) device_state.setProperty("Connection", device.getConnectionIndex(), nullptr);
-            (void) device_state.setProperty("Name", device->getName(), nullptr);
+            ValueTree device_state("RackDevice");
+            (void) device_state.setProperty("Id", id, nullptr);
+
+            ValueTree device_data("Data");
+            device->writeData(device_data);
+            device_state.appendChild(device_data, nullptr);
 
             data.appendChild(device_state, nullptr);
         }
@@ -653,60 +696,10 @@ void AudioProcessorRack::writeData(ValueTree data) const
 }
 
 //======================================================================================================================
-AudioProcessorRack::t_Iterator AudioProcessorRack::begin() noexcept
+void AudioProcessorRack::sendSwapMessage()
 {
-    return devices.begin();
+    cancelPendingMessages();
+    send<MessageSwap>(source);
 }
-
-AudioProcessorRack::t_Iterator AudioProcessorRack::end() noexcept
-{
-    return devices.end();
-}
-
-AudioProcessorRack::t_ConstIterator AudioProcessorRack::begin() const noexcept
-{
-    return devices.begin();
-}
-
-AudioProcessorRack::t_ConstIterator AudioProcessorRack::end() const noexcept
-{
-    return devices.end();
-}
-
-//======================================================================================================================
-void AudioProcessorRack::traverseChain(std::function<void(RackDevice&,bool&)> callback)
-{
-    if(!closedChain || !callback)
-    {
-        return;
-    }
-
-    int last_connection = connection;
-    int loop_count      = 0;
-    bool should_cancel  = false;
-
-    while(last_connection != -2 && loop_count++ < getNumDevices())
-    {
-        RackDevice &device = devices.at(last_connection);
-        callback(device, should_cancel);
-
-        if(should_cancel)
-        {
-            return;
-        }
-
-        last_connection = device.connection;
-    }
-}
-
-AudioProcessorRack::RackDevice& AudioProcessorRack::setAndReturnPrevious(int previousIndex, int currentIndex)
-{
-    RackDevice &device       = devices.at(currentIndex);
-    const int dev_connection = device.connection;
-
-    device.connection = previousIndex != -1 ? previousIndex : -2;
-
-    return dev_connection == -2 ? device : setAndReturnPrevious(currentIndex, dev_connection);
-}
-#pragma endregion AudioProcessorRack
+//endregion AudioProcessorRack
 }
