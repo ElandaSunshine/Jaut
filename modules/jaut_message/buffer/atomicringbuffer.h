@@ -29,22 +29,17 @@ template<int BufferSize = 64>
 class JAUT_API AtomicRingBuffer final : public IMessageBuffer
 {
 public:
-    std::array<Message, BufferSize> buffer;
-    std::atomic<int> head;
-    std::atomic<int> tail;
-
-    //==============================================================================================================
     AtomicRingBuffer()
-            : head(0),
-              tail(0)
+        : head(0),
+          tail(0)
     {}
 
     //==============================================================================================================
     void push(Message message) override
     {
         const int current_head = head.load(std::memory_order_relaxed);
-        const int next_head = (current_head + 1) % BufferSize;
-
+        const int next_head    = (current_head + 1) % BufferSize;
+        
         if (next_head != tail.load(std::memory_order_acquire))
         {
             buffer[current_head] = message;
@@ -56,15 +51,15 @@ public:
     Message pop() override
     {
         const int current_tail = tail.load(std::memory_order_relaxed);
-
+        
         if (current_tail == head.load(std::memory_order_acquire))
         {
             return nullptr;
         }
-
+        
         Message message = std::exchange(buffer[current_tail], nullptr);
         tail.store((current_tail + 1) % BufferSize, std::memory_order_release);
-
+        
         return message;
     }
 
@@ -73,9 +68,8 @@ public:
     {
         const int current_head = head.load();
         const int current_tail = tail.load();
-
-        return (current_head >= current_tail ? current_head - current_tail
-                                             : current_head - current_tail + BufferSize);
+        
+        return (current_head >= current_tail ? current_head - current_tail : current_head - current_tail + BufferSize);
     }
 
     int capacity() const override
@@ -86,12 +80,23 @@ public:
     //==============================================================================================================
     bool isFull() const override
     {
-        return (((head + 1) % BufferSize) == tail);
+        const int current_head = head.load();
+        const int current_tail = tail.load();
+        
+        return (((current_head + 1) % BufferSize) == current_tail);
     }
 
     bool isEmpty() const override
     {
-        return (head == tail);
+        const int current_head = head.load();
+        const int current_tail = tail.load();
+        
+        return (current_head == current_tail);
     }
+
+private:
+    std::array<Message, BufferSize> buffer;
+    std::atomic<int> head;
+    std::atomic<int> tail;
 };
 }

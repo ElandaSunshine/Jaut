@@ -23,30 +23,28 @@
     ===============================================================
  */
 
-#include <jaut/provider/config/configparser.h>
-
 #ifdef YAML_CPP_API
 #include <regex>
 #endif
 
-namespace jaut
-{
+// region Namespace
 namespace
 {
-const String getCommaOrNot(Config::Property::t_Iterator it, Config::Property::t_Iterator &end)
+using namespace jaut;
+String getCommaOrNot(Config::Property::ConstIterator begin, const Config::Property::ConstIterator &end)
 {
-    for (auto _it = ++it; _it != end; ++_it)
+    for (++begin; begin != end; ++begin)
     {
-        if (_it->second.isValid())
+        if (begin->second.isValid())
         {
             return ",\n";
         }
     }
-
+    
     return "";
 }
 
-const bool exceedsMaxLength(String::CharPointerType charPtr, int currentLength, int maxLength)
+bool exceedsMaxLength(String::CharPointerType charPtr, int currentLength, int maxLength)
 {
     for (;;)
     {
@@ -54,7 +52,7 @@ const bool exceedsMaxLength(String::CharPointerType charPtr, int currentLength, 
         {
             break;
         }
-
+        
         if (!charPtr.isWhitespace())
         {
             ++currentLength;
@@ -64,231 +62,229 @@ const bool exceedsMaxLength(String::CharPointerType charPtr, int currentLength, 
         {
             break;
         }
-
+        
         if (currentLength > maxLength)
         {
             return true;
         }
     }
-
+    
     return false;
 }
 
-const String prepareCommentJson(const String &comment, const String &indentation)
+String prepareCommentJson(const String &comment, const String &indentation)
 {
-    const int maxlength = 80;
-    String::CharPointerType charptr = comment.getCharPointer();
+    const int max_length = 80;
+    String::CharPointerType char_ptr = comment.getCharPointer();
     int counter = 1;
-    String result = "";
-    bool iscurrentnextline = false;
-
+    bool is_current_next_line = false;
+    String result;
+    
     for (;;)
     {
-        if (*charptr == 0)
+        if (*char_ptr == 0)
         {
             break;
         }
-
-        if (*charptr == '\n')
+        
+        if (*char_ptr == '\n')
         {
-            iscurrentnextline = true;
+            is_current_next_line = true;
         }
-
-        if (counter == maxlength || exceedsMaxLength(charptr, counter, maxlength) || iscurrentnextline)
+        
+        if (counter == max_length || exceedsMaxLength(char_ptr, counter, max_length) || is_current_next_line)
         {
             result += " \\\n       " + indentation;
             counter = 0;
         }
-
-        if (!iscurrentnextline)
+        
+        if (!is_current_next_line)
         {
-            result += *charptr;
+            result += *char_ptr;
         }
-
+        
         ++counter;
-        ++charptr;
-        iscurrentnextline = false;
+        ++char_ptr;
+        is_current_next_line = false;
     }
-
+    
     return result;
 }
 
-const String getVarVal(const var &value) noexcept
+String getVarVal(const var &value) noexcept
 {
     if (value.isVoid())
     {
         return "\"\"";
     }
-
+    
     return !value.isString() ? (value.isBool() ? (value ? "true" : "false") : value.toString())
                              : "\"" + value.toString() + "\"";
 }
 
-const bool appendSubPropertiesXml(const Config::Property propParent, String &fileOutput, int level,
-                                  const String &tagSetting) noexcept
+String appendSubPropertiesXml(const Config::Property parent, int level, const String &tagSetting) noexcept
 {
-    for (auto &[name, propsetting] : propParent)
+    String output;
+    
+    for (const auto &[name, setting_property] : parent)
     {
-        var value = propsetting.getValue();
-        bool hasvalidsubproperties = propsetting.hasValid();
-
-        if (propsetting.isValid() && (!value.isVoid() || hasvalidsubproperties))
+        const var value = setting_property.getValue();
+        const bool has_valid_sub_properties = setting_property.hasValid();
+        
+        if (setting_property.isValid() && (!value.isVoid() || has_valid_sub_properties))
         {
-            String comment = propsetting.getComment();
+            const String comment = setting_property.getComment();
             String indentation;
-
+            
             for (int i = 0; i < level; ++i)
             {
                 indentation += "    ";
             }
-
+            
             if (!comment.isEmpty())
             {
-                fileOutput += "\n" + indentation + "<!-- " + comment + " -->\n";
+                output << "\n" << indentation << "<!-- " << comment << " -->\n";
             }
-
-            fileOutput += indentation + "<" + tagSetting + " Name=\"" + propsetting.getName();
-
+            
+            output << indentation << "<" << tagSetting << " Name=\"" << setting_property.getName();
+            
             if (!value.isVoid())
             {
-                fileOutput += "\" Value=\"" + value.toString() + "\"";
+                output << "\" Value=\"" << value.toString() << "\"";
             }
-
-            if (hasvalidsubproperties)
+            
+            if (has_valid_sub_properties)
             {
-                fileOutput += ">\n";
-                (void)appendSubPropertiesXml(propsetting, fileOutput, level + 1, tagSetting); // @noret
-                fileOutput += indentation + "</" + tagSetting + ">\n";
+                output << ">\n" << appendSubPropertiesXml(setting_property, level + 1, tagSetting)
+                       << indentation << "</" << tagSetting << ">\n";
             }
             else
             {
-                fileOutput += "/>\n";
+                output << "/>\n";
             }
         }
     }
-
-    return true;
+    
+    return output;
 }
 
-const bool readPropertiesXml(const XmlElement *xml, Config::Property propParent, const String &tagSetting) noexcept
+bool readPropertiesXml(const XmlElement *const xml, Config::Property parent, const String &tagSetting) noexcept
 {
-    int childsize = xml->getNumChildElements();
-
-    if (!propParent.isValid() || (childsize == 0 && xml->getStringAttribute("value").isEmpty()))
+    const int num_childs = xml->getNumChildElements();
+    
+    if (!parent.isValid() || (num_childs == 0 && xml->getStringAttribute("value").isEmpty()))
     {
         return false;
     }
-
-    propParent.setValue(xml->getStringAttribute("value"));
-
-    if (childsize > 0)
+    
+    parent.setValue(xml->getStringAttribute("value"));
+    
+    if (num_childs > 0)
     {
-        forEachXmlChildElementWithTagName(*xml, xmlsubsetting, tagSetting)
+        forEachXmlChildElementWithTagName(*xml, setting, tagSetting)
         {
-            (void)readPropertiesXml(xmlsubsetting, propParent.getProperty(xmlsubsetting->getStringAttribute("name")),
-                                    tagSetting);
+            (void) readPropertiesXml(setting, parent.getProperty(setting->getStringAttribute("name")), tagSetting);
         }
     }
-
+    
     return true;
 }
 
-const bool appendSubPropertiesJson(const Config::Property propParent, String &fileOutput, int level) noexcept
+String appendSubPropertiesJson(const Config::Property parent, int level) noexcept
 {
-    for (auto pairsetting = propParent.begin(); pairsetting != propParent.end(); ++pairsetting)
+    String output;
+    
+    for (auto it = parent.begin(); it != parent.end(); ++it)
     {
-        auto propsetting = pairsetting->second;
-        var value = propsetting.getValue();
-        bool hasvalidsubproperties = propsetting.hasValid();
-
-        if (propsetting.isValid())
+        const Config::Property property = it->second;
+        const var &value                = property.getValue();
+        
+        if (property.isValid())
         {
-            String comment = propsetting.getComment();
+            const String comment = property.getComment();
             String indentation;
-
+            
             for (int i = 0; i < level; ++i)
             {
                 indentation += "    ";
             }
-
+            
             if (!comment.isEmpty())
             {
-                fileOutput += "\n" + indentation + "\"//\": \"" + prepareCommentJson(comment, indentation) + "\",\n";
+                output << "\n" << indentation << R"("//": ")" << prepareCommentJson(comment, indentation) << "\",\n";
             }
-
-            fileOutput += indentation + "\"" + propsetting.getName() + "\": ";
-
-            auto end_iterator = propParent.end();
-
-            if (hasvalidsubproperties)
+            
+            output << indentation << "\"" << property.getName() << "\": ";
+            
+            if (property.hasValid())
             {
-                fileOutput += "{\n";
-
+                output << "{\n";
+                
                 if (!value.isVoid())
                 {
-                    fileOutput += "    " + indentation + "\"value\": " + getVarVal(value) + ",\n";
+                    output << "    " << indentation << "\"value\": " << getVarVal(value) << ",\n";
                 }
-
-                (void)appendSubPropertiesJson(propsetting, fileOutput, level + 1);
-                fileOutput += "\n" + indentation + "}" + getCommaOrNot(pairsetting, end_iterator);
+                
+                output << appendSubPropertiesJson(property, level + 1) << "\n" << indentation << "}"
+                       << getCommaOrNot(it, property.end());
             }
             else
             {
-                fileOutput += getVarVal(value) + getCommaOrNot(pairsetting, end_iterator);
+                output << getVarVal(value) << getCommaOrNot(it, property.end());
             }
         }
     }
-
-    return true;
+    
+    return output;
 }
 
-const bool readPropertiesJson(const var &json, Config::Property parentProp) noexcept
+bool readPropertiesJson(const var &json, Config::Property parent) noexcept
 {
-    DynamicObject *objsubsetting = json.getDynamicObject();
-
-    if (!objsubsetting)
+    DynamicObject *const setting_obj = json.getDynamicObject();
+    
+    if (!setting_obj)
     {
-        parentProp.setValue(json);
+        parent.setValue(json);
         return !json.isVoid();
     }
-
-    for (auto &pairobjsubsetting : objsubsetting->getProperties())
+    
+    for (const auto &[name, value] : setting_obj->getProperties())
     {
-        if (pairobjsubsetting.name.toString().equalsIgnoreCase("//"))
+        if (name.toString().equalsIgnoreCase("//"))
         {
             continue;
         }
-
-        if (pairobjsubsetting.name.toString().equalsIgnoreCase("value"))
+        
+        if (name.toString().equalsIgnoreCase("value"))
         {
-            parentProp.setValue(pairobjsubsetting.value);
+            parent.setValue(value);
             continue;
         }
-
-        Config::Property propsubsetting = parentProp.getProperty(pairobjsubsetting.name.toString());
-
-        if (propsubsetting.isValid())
+        
+        Config::Property property = parent.getProperty(name.toString());
+        
+        if (property.isValid())
         {
-            readPropertiesJson(pairobjsubsetting.value, propsubsetting);
+            (void) readPropertiesJson(value, property);
         }
     }
-
+    
     return true;
 }
 
 #ifdef YAML_CPP_API
-const String getVarValYaml(const var &value, const String &indentation) noexcept
+String getVarValYaml(const var &value, const String &indentation) noexcept
 {
     if (value.isDouble())
     {
-        String val = value.toString();
-
-        if (!val.containsChar('.'))
+        String double_value = value.toString();
+        
+        if (!double_value.containsChar('.'))
         {
-            val += ".0";
+            double_value += ".0";
         }
-
-        return value.toString();
+        
+        return double_value;
     }
     else if (value.isBool())
     {
@@ -296,232 +292,231 @@ const String getVarValYaml(const var &value, const String &indentation) noexcept
         {
             return "false";
         }
-
+        
         return "true";
     }
     else if (value.isArray())
     {
-        String outputstring;
-
-        for (var entry : *value.getArray())
+        String output;
+        
+        for (const var &entry : *value.getArray())
         {
-            outputstring += "\n" + indentation + "- " + entry.toString();
+            output << "\n" << indentation << "- " + entry.toString();
         }
-
-        return outputstring;
+        
+        return output;
     }
     else if (value.isString())
     {
         String output = value.toString();
-
+        
         if (output.containsChar('\n'))
         {
-            String::CharPointerType charptr = output.getCharPointer();
-            juce_wchar currentchar;
+            String::CharPointerType char_ptr = output.getCharPointer();
             String result = "|\n" + indentation + "  ";
-
+            juce_wchar current_char;
+            
             for (;;)
             {
-                currentchar = charptr.getAndAdvance();
-
-                if (currentchar == 0)
+                current_char = char_ptr.getAndAdvance();
+                
+                if (current_char == 0)
                 {
                     break;
                 }
-
-                if (currentchar == '\n')
+                
+                if (current_char == '\n')
                 {
-                    result += currentchar;
-                    result += indentation + "  ";
+                    result << current_char << indentation << "  ";
                     continue;
                 }
-
-                result += currentchar;
+                
+                result << current_char;
             }
-
+            
             output = result;
         }
         else if(output.length() > 80 && output.containsChar(' '))
         {
-            String::CharPointerType charptr = output.getCharPointer();
-            juce_wchar currentchar;
+            String::CharPointerType char_ptr = output.getCharPointer();
             String result = ">\n" + indentation + "  ";
-            int counter = 1;
-
+            int counter   = 1;
+            juce_wchar current_char;
+            
             for (;;)
             {
-                currentchar = charptr.getAndAdvance();
-
-                if (currentchar == 0)
+                current_char = char_ptr.getAndAdvance();
+                
+                if (current_char == 0)
                 {
                     break;
                 }
-
-                if (exceedsMaxLength(charptr - 1, counter, 80))
+                
+                if (exceedsMaxLength((char_ptr - 1), counter, 80))
                 {
                     result = result.dropLastCharacters(1);
-                    result += "\n" + indentation + "  ";
+                    result << "\n" << indentation << "  ";
                     counter = 0;
                 }
-
-                result += currentchar;
+                
+                result << current_char;
                 ++counter;
             }
-
+            
             output = result;
         }
-
+        
         return "\"" + output + "\"";
     }
-
+    
     return value.toString();
 }
 
-const String prepareCommentYaml(const String &comment, const String &indentation)
+String prepareCommentYaml(const String &comment, const String &indentation)
 {
-    const int maxlength = 80;
-    String::CharPointerType charptr = comment.getCharPointer();
-    int counter = 1;
+    const int max_length = 80;
+    String::CharPointerType char_ptr = comment.getCharPointer();
+    bool is_current_next_line        = false;
+    int counter   = 1;
     String result = "";
-    bool iscurrentnextline = false;
-
+    
     for (;;)
     {
-        if (*charptr == 0)
+        if (*char_ptr == 0)
         {
             break;
         }
-
-        if (*charptr == '\n')
+        
+        if (*char_ptr == '\n')
         {
-            iscurrentnextline = true;
+            is_current_next_line = true;
         }
-
-        if (counter == maxlength || exceedsMaxLength(charptr, counter, maxlength) || iscurrentnextline)
+        
+        if (counter == max_length || exceedsMaxLength(char_ptr, counter, max_length) || is_current_next_line)
         {
             if(CharacterFunctions::isWhitespace(result.getLastCharacter()))
             {
                 result = result.dropLastCharacters(1);
             }
             
-            result += "\n" + indentation + "# ";
+            result << "\n" << indentation << "# ";
             counter = 0;
         }
-
-        if (!iscurrentnextline)
+        
+        if (!is_current_next_line)
         {
-            result += *charptr;
+            result << *char_ptr;
         }
-
+        
         ++counter;
-        ++charptr;
-        iscurrentnextline = false;
+        ++char_ptr;
+        is_current_next_line = false;
     }
-
+    
     return indentation + "# " + result + "\n";
 }
 
-const bool appendSubPropertiesYaml(const Config::Property propParent, String &fileOutput, int level) noexcept
+String appendSubPropertiesYaml(const Config::Property parent, int level) noexcept
 {
-    bool isfirst = true;
-
-    for (auto pairsetting = propParent.begin(); pairsetting != propParent.end(); ++pairsetting)
+    String output;
+    bool is_first = true;
+    
+    for (const auto &it : parent)
     {
-        auto propsetting = pairsetting->second;
-        var value = propsetting.getValue();
-        bool hasvalidsubproperties = propsetting.hasValid();
-
-        if (propsetting.isValid())
+        const Config::Property property = it.second;
+        const var &value                = property.getValue();
+        
+        if (property.isValid())
         {
-            String comment = propsetting.getComment();
+            String comment = property.getComment();
             String indentation;
-
+            
             for (int i = 0; i < level; ++i)
             {
-                indentation += "    ";
+                indentation << "    ";
             }
-
-            if (hasvalidsubproperties)
+            
+            if (property.hasValid())
             {
                 if (!comment.isEmpty())
                 {
-                    if (!isfirst)
+                    if (!is_first)
                     {
-                        fileOutput += "\n";
+                        output << "\n";
                     }
-
-                    fileOutput += prepareCommentYaml(comment, indentation);
+                    
+                    output << prepareCommentYaml(comment, indentation);
                 }
-
-                fileOutput += indentation + propsetting.getName() + ":\n";
-                (void) jaut::appendSubPropertiesYaml(propsetting, fileOutput, level + 1);
+                
+                output << indentation << property.getName() << ":\n"
+                       << appendSubPropertiesYaml(property, level + 1);
             }
             else if (!value.isVoid())
             {
                 if (!comment.isEmpty())
                 {
-                    if (!isfirst)
+                    if (!is_first)
                     {
-                        fileOutput += "\n";
+                        output << "\n";
                     }
-
-                    fileOutput += prepareCommentYaml(comment, indentation);
+                    
+                    output << prepareCommentYaml(comment, indentation);
                 }
-
-                fileOutput += indentation + propsetting.getName() + ": " + getVarValYaml(value, indentation) + "\n";
+                
+                output << indentation << property.getName() << ": " << getVarValYaml(value, indentation) << "\n";
             }
         }
-
-        isfirst = false;
+        
+        is_first = false;
     }
-
-    return true;
+    
+    return output;
 }
 
-const bool readPropertiesYaml(YAML::Node node, Config::Property parentProp) noexcept
+bool readPropertiesYaml(YAML::Node node, Config::Property parent) noexcept
 {
-    if (!parentProp.isValid() || !node)
+    if (!parent.isValid() || !node)
     {
         return false;
     }
-
-    if (parentProp.hasValid())
+    
+    if (parent.hasValid())
     {
-        for (auto &setting_pair : parentProp)
+        for (auto &[_, property] : parent)
         {
-            if (!setting_pair.second.isValid())
+            if (!property.isValid())
             {
                 continue;
             }
-
-            YAML::Node node_setting = node[setting_pair.second.getName().toRawUTF8()];
-
+            
+            const YAML::Node node_setting = node[property.getName().toRawUTF8()];
+            
             if (!node_setting)
             {
                 continue;
             }
-
-            (void) jaut::readPropertiesYaml(node_setting, setting_pair.second);
+            
+            (void) readPropertiesYaml(node_setting, property);
         }
     }
-    else if(!parentProp.getValue().isVoid())
+    else if(!parent.getValue().isVoid())
     {
-        var value = parentProp.getValue();
-
+        var value = parent.getValue();
+        
         if (value.isArray())
         {
             if (!node.IsSequence())
             {
                 return false;
             }
-
+            
             Array<var> node_array;
-
-            for (int i = 0; i < node.size(); ++i)
+            
+            for (auto &&i : node)
             {
-                node_array.add(String(node[i].as<std::string>()));
+                node_array.add(String(i.as<std::string>()));
             }
-
+            
             value = node_array;
         }
         else if (value.isDouble() || value.isInt() || value.isInt64())
@@ -530,10 +525,10 @@ const bool readPropertiesYaml(YAML::Node node, Config::Property parentProp) noex
             {
                 return false;
             }
-
-            String data = node.as<std::string>();
-            std::regex regex("[-+]?([0-9]*\\.[0-9]+|[0-9]+)");
-
+            
+            const String data = node.as<std::string>();
+            const std::regex regex("[-+]?([0-9]*\\.[0-9]+|[0-9]+)");
+            
             if (!data.isEmpty() && std::regex_match(data.toStdString(), regex))
             {
                 if (value.isDouble())
@@ -556,9 +551,9 @@ const bool readPropertiesYaml(YAML::Node node, Config::Property parentProp) noex
             {
                 return false;
             }
-
-            String data = node.as<std::string>();
-
+            
+            const String data = node.as<std::string>();
+            
             if (!data.isEmpty())
             {
                 if (data.equalsIgnoreCase("yes") || data.equalsIgnoreCase("true") || data.equalsIgnoreCase("1"))
@@ -577,29 +572,30 @@ const bool readPropertiesYaml(YAML::Node node, Config::Property parentProp) noex
             {
                 return false;
             }
-
-            String data = node.as<std::string>();
-
+            
+            const String data = node.as<std::string>();
+            
             if (!data.isEmpty())
             {
                 value = data;
             }
         }
-
-        parentProp.setValue(value);
+        
+        parent.setValue(value);
     }
-
+    
     return true;
 }
 #endif
 }
+// endregion Namespace
 
-
-
+namespace jaut
+{
+// region XmlParser
 /* ==================================================================================
  * ================================== XmlParser =====================================
  * ================================================================================== */
-
 XmlParser::XmlParser(const String &defaultCategory, const String &tagSettingId, const String &tagIntroId,
                      const String &tagCategoryId) noexcept
     : defaultCategory(defaultCategory.trim()),
@@ -608,45 +604,52 @@ XmlParser::XmlParser(const String &defaultCategory, const String &tagSettingId, 
       tagCategory(tagCategoryId.trim())
 {}
 
-const bool XmlParser::parseConfig(const File &configFile, Config::Property root) const
+//======================================================================================================================
+OperationResult XmlParser::parseConfig(const File &configFile, Config::Property root) const
 {
     if (!root.isValid())
     {
-        throw std::invalid_argument("The config root property can't be invalid and must define a clear structure.");
+        jassertfalse;
+        DBG("Root node is invalid.");
+        return ErrorCodes::InvalidRootNote;
     }
 
     if (!configFile.exists())
     {
-        return false;
+        DBG("File not found: " << configFile.getFullPathName());
+        return ErrorCodes::FileNotFound;
     }
-
+    
     XmlDocument document(configFile);
     std::unique_ptr<XmlElement> config(document.getDocumentElement());
-    Config::Property propdefaultcategory = root.getProperty(defaultCategory);
-
+    
     if (!config || !config->hasTagName(tagIntro))
     {
-        return false;
+        DBG("Config is missing root tag.");
+        return ErrorCodes::InvalidConfig;
     }
-
-    forEachXmlChildElement(*config, xmlcategory)
+    
+    Config::Property default_category_property = root.getProperty(defaultCategory);
+    
+    forEachXmlChildElement(*config, xml_category)
     {
-        if (xmlcategory->hasTagName(tagSetting))
+        if (xml_category->hasTagName(tagSetting))
         {
-            String settingname = xmlcategory->getStringAttribute("name");
-            (void) jaut::readPropertiesXml(xmlcategory, propdefaultcategory.getProperty(settingname), tagSetting); // @noret
+            const String category_name = xml_category->getStringAttribute("name");
+            (void) ::readPropertiesXml(xml_category, default_category_property.getProperty(category_name),
+                                           tagSetting);
         }
-        else if (xmlcategory->hasTagName(tagCategory))
+        else if (xml_category->hasTagName(tagCategory))
         {
-            String categoryname   = xmlcategory->getStringAttribute("name");
-            Config::Property propcategory = root.getProperty(categoryname);
-
-            if (propcategory.isValid())
+            const String category_name     = xml_category->getStringAttribute("name");
+            Config::Property prop_category = root.getProperty(category_name);
+            
+            if (prop_category.isValid())
             {
-                forEachXmlChildElementWithTagName(*xmlcategory, xmlsetting, tagSetting)
+                forEachXmlChildElementWithTagName(*xml_category, xml_setting, tagSetting)
                 {
-                    String settingname = xmlsetting->getStringAttribute("name");
-                    (void) jaut::readPropertiesXml(xmlsetting, propcategory.getProperty(settingname), tagSetting); // @noret
+                    const String setting_name = xml_setting->getStringAttribute("name");
+                    (void) ::readPropertiesXml(xml_setting, prop_category.getProperty(setting_name), tagSetting);
                 }
             }
         }
@@ -655,21 +658,25 @@ const bool XmlParser::parseConfig(const File &configFile, Config::Property root)
     return true;
 }
 
-const bool XmlParser::writeConfig(const File &configFile, const Config::Property root) const
+OperationResult XmlParser::writeConfig(const File &configFile, const Config::Property root) const
 {
     if (!root.isValid())
     {
-        throw std::invalid_argument("The config root property can't be invalid and must define a clear structure.");
+        jassertfalse;
+        DBG("Root node is invalid.");
+        return ErrorCodes::InvalidRootNote;
     }
-
+    
     if (!configFile.exists())
     {
-        return false;
+        DBG("File not found: " << configFile.getFullPathName());
+        return ErrorCodes::FileNotFound;
     }
 
-    Config::Property propdefaultcategory = root.getProperty(defaultCategory);
-    String comment               = root.getComment();
+    const Config::Property default_category_property = root.getProperty(defaultCategory);
+    String comment = root.getComment();
     String tag;
+    
     configFile.replaceWithText("");
 
     if (!comment.isEmpty())
@@ -677,106 +684,106 @@ const bool XmlParser::writeConfig(const File &configFile, const Config::Property
         tag = "<!-- " + comment + " -->\n\n";
     }
 
-    tag += "<" + tagIntro + ">\n";
+    tag << "<" << tagIntro << ">\n";
 
-    if (propdefaultcategory.isValid())
+    if (default_category_property.isValid())
     {
-        (void) jaut::appendSubPropertiesXml(propdefaultcategory, tag, 1, tagSetting); // @noret
+        tag << ::appendSubPropertiesXml(default_category_property, 1, tagSetting);
     }
 
-    for (auto &[name, prop] : root)
+    for (const auto &[name, property] : root)
     {
-        if (prop.getName().trim().equalsIgnoreCase(defaultCategory))
+        if (name.equalsIgnoreCase(defaultCategory))
         {
             continue;
         }
 
-        if (prop.hasValid())
+        if (property.hasValid())
         {
-            String categorycomment = prop.getComment();
+            const String category_comment = property.getComment();
 
-            if (!categorycomment.isEmpty())
+            if (!category_comment.isEmpty())
             {
-                tag += "\n    <!-- " + categorycomment + " -->\n";
+                tag << "\n    <!-- " << category_comment << " -->\n";
             }
 
-            tag += "    <" + tagCategory + " Name=\"" + prop.getName() + "\">\n";
-
-            (void) jaut::appendSubPropertiesXml(prop, tag, 2, tagSetting);
-
-            tag += "    </" + tagCategory + ">\n";
+            tag << "    <" << tagCategory << " Name=\"" << property.getName() << "\">\n"
+                << ::appendSubPropertiesXml(property, 2, tagSetting)
+                << "    </" << tagCategory << ">\n";
         }
     }
 
-    tag += "</" + tagIntro + ">\n";
+    tag << "</" << tagIntro << ">\n";
     configFile.replaceWithText(tag);
 
     return true;
 }
-
-
-
+// endregion XmlParser
+// region JsonParser
 /* ==================================================================================
  * ================================= JsonParser =====================================
  * ================================================================================== */
-
 JsonParser::JsonParser(const String &noticeId) noexcept
     : noticeId(noticeId.trim())
 {}
 
-const bool JsonParser::parseConfig(const File &configFile, Config::Property root) const
+OperationResult JsonParser::parseConfig(const File &configFile, Config::Property root) const
 {
     if (!root.isValid())
     {
-        throw std::invalid_argument("The config root property can't be invalid and must define a clear structure.");
+        jassertfalse;
+        DBG("Root node is invalid.");
+        return ErrorCodes::InvalidRootNote;
     }
-
+    
     if (!configFile.exists())
     {
-        return false;
+        DBG("File not found: " << configFile.getFullPathName());
+        return ErrorCodes::FileNotFound;
     }
 
     var json;
 
     if (JSON::parse(configFile.loadFileAsString(), json).wasOk())
     {
-        DynamicObject *jsonroot = json.getDynamicObject();
+        DynamicObject *const obj_root = json.getDynamicObject();
 
-        if (!jsonroot)
+        if (!obj_root)
         {
-            return false;
+            DBG("Json file is invalid.");
+            return ErrorCodes::InvalidConfig;
         }
 
-        for (auto &pairobjcategory : jsonroot->getProperties())
+        for (const auto &[category_name, json_category] : obj_root->getProperties())
         {
-            if (pairobjcategory.name.toString().equalsIgnoreCase("//"))
+            if (category_name.toString().equalsIgnoreCase("//"))
+            {
+                continue;
+            }
+    
+            DynamicObject *const obj_category  = json_category.getDynamicObject();
+            Config::Property property_category = root.getProperty(category_name.toString());
+
+            if (!property_category.hasValid() || !obj_category)
             {
                 continue;
             }
 
-            Config::Property propcategory = root.getProperty(pairobjcategory.name.toString());
-            DynamicObject *objcategory = pairobjcategory.value.getDynamicObject();
-
-            if (!propcategory.hasValid() || !objcategory)
+            for (const auto &[setting_name, json_settings] : obj_category->getProperties())
             {
-                continue;
-            }
-
-            for (auto &pairobjsetting : objcategory->getProperties())
-            {
-                if (pairobjsetting.name.toString().equalsIgnoreCase("//"))
+                if (setting_name.toString().equalsIgnoreCase("//"))
                 {
                     continue;
                 }
 
-                Config::Property propsetting = propcategory.getProperty(pairobjsetting.name.toString());
+                Config::Property property_setting = property_category.getProperty(setting_name.toString());
 
-                if (!propsetting.isValid())
+                if (!property_setting.isValid())
                 {
                     continue;
                 }
 
-                (void) jaut::readPropertiesJson(pairobjsetting.value, propsetting); // @noret
+                (void) ::readPropertiesJson(json_settings, property_setting);
             }
         }
     }
@@ -784,109 +791,110 @@ const bool JsonParser::parseConfig(const File &configFile, Config::Property root
     return true;
 }
 
-const bool JsonParser::writeConfig(const File &configFile, const Config::Property root) const
+OperationResult JsonParser::writeConfig(const File &configFile, const Config::Property root) const
 {
     if (!root.isValid())
     {
-        throw std::invalid_argument("The config root property can't be invalid and must define a clear structure.");
+        jassertfalse;
+        DBG("Root node is invalid.");
+        return ErrorCodes::InvalidRootNote;
     }
-
+    
     if (!configFile.exists())
     {
-        return false;
+        DBG("File not found: " << configFile.getFullPathName());
+        return ErrorCodes::FileNotFound;
     }
 
-    String comment = root.getComment();
+    const String comment = root.getComment();
     String tag = "{\n";
+    
     configFile.replaceWithText("");
-
+    
     if (!comment.isEmpty())
     {
-        String::CharPointerType charptr = comment.getCharPointer();
+        String::CharPointerType char_ptr = comment.getCharPointer();
         int counter = 1;
-        String newtext = "";
-        bool iscurrentnextline = false;
+        String new_text = "";
+        bool is_current_next_line = false;
 
         for (;;)
         {
-            if (*charptr == 0)
+            if (*char_ptr == 0)
             {
                 break;
             }
 
-            if (*charptr == '\n')
+            if (*char_ptr == '\n')
             {
-                iscurrentnextline = true;
+                is_current_next_line = true;
             }
 
-            if (counter == 80 || iscurrentnextline)
+            if (counter == 80 || is_current_next_line)
             {
-                newtext += " \\\n               ";
+                new_text += " \\\n               ";
                 counter = 0;
             }
 
-            if (!iscurrentnextline)
+            if (!is_current_next_line)
             {
-                newtext += *charptr;
+                new_text += *char_ptr;
             }
 
             ++counter;
-            ++charptr;
-            iscurrentnextline = false;
+            ++char_ptr;
+            is_current_next_line = false;
         }
 
-        tag += "    \"" + noticeId + "\": \"" + newtext + "\",\n\n\n";
+        tag << "    \"" << noticeId << "\": \"" << new_text << "\",\n\n\n";
     }
 
-    for (auto i = root.begin(); i != root.end(); ++i)
+    for (auto it = root.begin(); it != root.end(); ++it)
     {
-        auto propcategory = i->second;
+        const Config::Property property_category = it->second;
 
-        if (propcategory.hasValid())
+        if (property_category.hasValid())
         {
-            String categorycomment = propcategory.getComment();
-            auto iterator = i;
-
-            if (!categorycomment.isEmpty())
+            const String category_comment = property_category.getComment();
+            
+            if (!category_comment.isEmpty())
             {
-                tag += "\n    \"//\": \"" + jaut::prepareCommentJson(categorycomment, "    ") + "\",\n";
+                tag << "\n    \"//\": \"" << ::prepareCommentJson(category_comment, "    ") << "\",\n";
             }
 
-            tag += "    \"" + propcategory.getName() + "\": {\n";
-
-            (void) jaut::appendSubPropertiesJson(propcategory, tag, 2); // @noret
-
-            auto end_iterator = root.end();
-            tag += "\n    }" + jaut::getCommaOrNot(iterator, end_iterator);
+            tag << "    \"" << property_category.getName() << "\": {\n"
+                << ::appendSubPropertiesJson(property_category, 2)
+                << "\n    }" << ::getCommaOrNot(it, root.end());
         }
     }
 
-    tag += "\n}";
+    tag << "\n}";
     configFile.replaceWithText(tag);
 
     return true;
 }
-
-
-
+// endregion JsonParser
+// region YamlParser
 #ifdef YAML_CPP_API
 /* ==================================================================================
  * ================================= YamlParser =====================================
  * ================================================================================== */
-const bool YamlParser::parseConfig(const File &configFile, Config::Property root) const
+OperationResult YamlParser::parseConfig(const File &configFile, Config::Property root) const
 {
     if (!root.isValid())
     {
-        throw std::invalid_argument("The config root property can't be invalid and must define a clear structure.");
+        jassertfalse;
+        DBG("Root node is invalid.");
+        return ErrorCodes::InvalidRootNote;
     }
-
+    
     if (!configFile.exists())
     {
-        return false;
+        DBG("File not found: " << configFile.getFullPathName());
+        return ErrorCodes::FileNotFound;
     }
-
-    bool was_successful = false;
-    std::string yaml    = configFile.loadFileAsString().toStdString();
+    
+    const std::string yaml = configFile.loadFileAsString().toStdString();
     YAML::Node node_root;
 
     try
@@ -895,135 +903,139 @@ const bool YamlParser::parseConfig(const File &configFile, Config::Property root
     }
     catch (std::exception&)
     {
-        return false;
+        DBG("YAML file is invalid.");
+        return ErrorCodes::InvalidConfig;
     }
-
+    
+    int error_code = ErrorCodes::InvalidConfig;
+    
     if (node_root)
     {
-        for (auto &category_pair : root)
+        for (auto &[category_name, property_category] : root)
         {
-            if (!category_pair.second.hasValid())
+            if (!property_category.hasValid())
             {
                 continue;
             }
 
-            YAML::Node node_category = node_root[category_pair.first.toRawUTF8()];
+            const YAML::Node node_category = node_root[category_name.toRawUTF8()];
 
             if (!node_category)
             {
                 continue;
             }
 
-            for (auto &setting_pair : category_pair.second)
+            for (auto &[setting_name, property_setting] : property_category)
             {
-                if (!setting_pair.second.isValid())
+                if (!property_setting.isValid())
                 {
                     continue;
                 }
 
-                YAML::Node node_setting = node_category[setting_pair.second.getName().toRawUTF8()];
-
+                YAML::Node node_setting = node_category[property_setting.getName().toRawUTF8()];
+                
                 if (!node_setting)
                 {
                     continue;
                 }
 
-                if (jaut::readPropertiesYaml(node_setting, setting_pair.second))
+                if (::readPropertiesYaml(node_setting, property_setting))
                 {
-                    was_successful = true;
+                    error_code = 0;
                 }
             }
         }
     }
 
-    return was_successful;
+    return error_code;
 }
 
-const bool YamlParser::writeConfig(const File &configFile, const Config::Property root) const
+OperationResult YamlParser::writeConfig(const File &configFile, const Config::Property root) const
 {
     if (!root.isValid())
     {
-        throw std::invalid_argument("The config root property can't be invalid and must define a clear structure.");
+        jassertfalse;
+        DBG("Root node is invalid.");
+        return ErrorCodes::InvalidRootNote;
     }
-
+    
     if (!configFile.exists())
     {
-        return false;
+        DBG("File not found: " << configFile.getFullPathName());
+        return ErrorCodes::FileNotFound;
     }
 
-    String comment = root.getComment();
+    const String comment = root.getComment();
     String tag;
+    
     configFile.replaceWithText("");
 
     if (!comment.isEmpty())
     {
-        const int maxlength = 80;
-        String::CharPointerType charptr = comment.getCharPointer();
+        const int max_length = 80;
+        String::CharPointerType char_ptr = comment.getCharPointer();
         int counter = 1;
         String result = "";
-        bool iscurrentnextline = false;
+        bool is_current_next_line = false;
 
         for (;;)
         {
-            if (*charptr == 0)
+            if (*char_ptr == 0)
             {
                 break;
             }
 
-            if (*charptr == '\n')
+            if (*char_ptr == '\n')
             {
-                iscurrentnextline = true;
+                is_current_next_line = true;
             }
 
-            if (counter == maxlength || jaut::exceedsMaxLength(charptr, counter, maxlength) || iscurrentnextline)
+            if (counter == max_length || ::exceedsMaxLength(char_ptr, counter, max_length) || is_current_next_line)
             {
-                result += "\n# ";
+                result << "\n# ";
                 counter = 0;
             }
 
-            if (!iscurrentnextline)
+            if (!is_current_next_line)
             {
-                result += *charptr;
+                result << *char_ptr;
             }
 
             ++counter;
-            ++charptr;
-            iscurrentnextline = false;
+            ++char_ptr;
+            is_current_next_line = false;
         }
 
-        tag += "# " + result + "\n\n";
+        tag << "# " << result << "\n\n";
     }
-
-    int count = 0;
-
+    
     for (auto it = root.begin(); it != root.end(); ++it)
     {
-        Config::Property propcategory = it->second;
-
-        if (propcategory.hasValid())
+        const Config::Property property_category = it->second;
+        
+        if (property_category.hasValid())
         {
-            String categorycomment = propcategory.getComment();
+            const String category_comment = property_category.getComment();
 
-            if (!categorycomment.isEmpty())
+            if (!category_comment.isEmpty())
             {
-                tag += jaut::prepareCommentYaml(categorycomment, "");
+                tag << ::prepareCommentYaml(category_comment, "");
             }
 
-            tag += propcategory.getName() + ":\n";
+            tag << property_category.getName() << ":\n"
+                << ::appendSubPropertiesYaml(property_category, 1);
 
-            (void) jaut::appendSubPropertiesYaml(propcategory, tag, 1);
-
-            if (count < (root.size() - 1))
+            if (std::distance(root.begin(), it) < (root.size() - 1))
             {
-                tag += "\n";
+                tag << "\n";
             }
         }
-
-        ++count;
     }
 
     configFile.replaceWithText(tag);
+    
     return true;
 }
 #endif
+// endregion YamlParser
 }

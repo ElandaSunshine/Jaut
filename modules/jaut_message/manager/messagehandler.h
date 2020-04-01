@@ -29,39 +29,75 @@ namespace jaut
 {
 struct IMessageHandler {};
 
+/**
+ *  A simple implementation of an one-way thread synchronisation manager.
+ *  The MessageHandler class helps sending messages from the message-thread to any other thread.
+ *
+ *  To get started with this class, simply inherit from this class and, if needed, override handleMessage() if
+ *  message receiving needs to be handled manually.
+ *
+ *  @tparam BufferSize    The size of the message buffer and the garbage collector
+ *  @tparam MessageBuffer The type of buffer to use as the message buffer
+ */
 template<int BufferSize = 64, class MessageBuffer = AtomicRingBuffer<BufferSize>>
-class JAUT_API MessageHandler : public IMessageHandler, private Timer
+class JAUT_API MessageHandler : public IMessageHandler, private juce::Timer
 {
 public:
+    /**
+     *  Declares a few options for the MessageHandler class.
+     */
     struct JAUT_API Options final
     {
-        int maxMessagesPerLoop       {  100 };
-        int garbageCollectorInterval {  100 };
+        /**
+         *  Determines the maximum amount of messages to handle when processAllMessages was called.
+         */
+        int maxMessagesPerLoop { 100 };
+        
+        /**
+         *  Determines the intervall of when the garbage collector should kick in to collect old messages.
+         */
+        int garbageCollectorInterval { 100 };
+        
+        /**
+         *  Determines whether garbage collection should be enabled, which will dispose old, unused messages on the
+         *  message thread.
+         */
         bool enableGarbageCollecting { true };
-        bool strictThreadDistinction { true };
     };
 
     //==================================================================================================================
-    explicit MessageHandler(const Options &options = Options())
+    /**
+     *  Constructs a new MessageHandler instance.
+     *  @param options The options for this MessageHandler instance
+     */
+    explicit MessageHandler(const Options &options = Options()) noexcept
         : options(options), cancelUpdates(false),
           cancelCount(0)
     {
-        jassert((std::is_base_of_v<IMessageBuffer, MessageBuffer>));
+        JAUT_ENSURE_MESSAGE_THREAD;
+        
+        static_assert(std::is_base_of_v<IMessageBuffer, MessageBuffer>, R"(Type-argument "MessageBuffer" must be )"
+                                                                        R"(any type inheriting IMessageBuffer.)");
 
-        if(ensureMessageThread() && options.enableGarbageCollecting)
+        if(options.enableGarbageCollecting)
         {
-            startTimer(jmax(options.garbageCollectorInterval, 1));
+            startTimer(std::max(options.garbageCollectorInterval, 1));
         }
     }
 
     //==================================================================================================================
-    void send(const std::shared_ptr<IMessage> &message)
+    /**
+     *  Schedules a new message for the target-thread and pushes it into the message buffer.
+     *  If the message buffer is full, this won't do anything.
+     *
+     *  This will start the garbage collector if it wasn't scheduled already.
+     *
+     *  @param message The message to send to the target-thread
+     */
+    void send(std::shared_ptr<IMessage> message)
     {
-        if(!ensureMessageThread())
-        {
-            return;
-        }
-
+        JAUT_ENSURE_MESSAGE_THREAD;
+        
         if(!message)
         {
             /**
@@ -71,28 +107,47 @@ public:
             return;
         }
 
-        if(MessageManager::getInstance()->isThisTheMessageThread())
+        if(!isTimerRunning() && options.enableGarbageCollecting)
         {
-            if(!isTimerRunning() && options.enableGarbageCollecting)
-            {
-                startTimer(jmax(options.garbageCollectorInterval, 1));
-            }
+            startTimer(std::max(options.garbageCollectorInterval, 1));
         }
 
         messageBuffer.push(message);
     }
 
+    /**
+     *  Schedules a new message for the target-thread and pushes it into the message buffer.
+     *  If the message buffer is full, this won't do anything.
+     *
+     *  This will start the garbage collector if it wasn't scheduled already.
+     *
+     *  Other than send(std::shared_ptr<IMessage>), this constructs a new message from its constructor's
+     *  parameters and pushes it into the buffer.
+     *  You should always prefer this function over the other.
+     *
+     *  @tparam MessageType The message class
+     *  @tparam Args The parameters of the message class' constructor
+     *  @param args The arguments to pass to the message's constructor
+     */
     template<class MessageType, class... Args>
-    void send(Args&&... ctorArgs)
+    void send(Args&&... args)
     {
         /**
          *  MessageType must be of type IMessage.
          */
         jassert((std::is_base_of_v<IMessage, MessageType>));
 
-        send(std::make_shared<MessageType>(std::forward<Args>(ctorArgs)...));
+        send(std::make_shared<MessageType>(std::forward<Args>(args)...));
     }
 
+    /**
+     *  Schedules a list of messages to send to the target-thread and pushes them into the buffer.
+     *  All the messages that don't fit into the buffer anymore, will be ignored and destroyed.
+     *
+     *  This will start the garbage collector if it wasn't scheduled already.
+     *
+     *  @param messages The list of messages to schedule
+     */
     void send(std::initializer_list<std::shared_ptr<IMessage>> messages)
     {
         for(auto message : messages)
@@ -102,13 +157,17 @@ public:
     }
 
     //==================================================================================================================
+    /**
+     *  Schedules a new message for the target-thread and pushes it into the message buffer.
+     *  If the message buffer is full, this won't do anything.
+     *
+     *  Other than send(std::shared_ptr<IMessage>), this will not only push the message but also handle the message
+     *  right on the sender-thread.
+     *
+     *  @param message The message to push
+     */
     void sendToAll(std::shared_ptr<IMessage> message)
     {
-        if(!ensureMessageThread())
-        {
-            return;
-        }
-
         /**
          *  A jaut_message can't be null!
          */
@@ -116,22 +175,41 @@ public:
 
         if(message)
         {
-            handleMessage(message, MessageThread);
+            handleMessage(message.get(), MessageThread);
             send(message);
         }
     }
 
+    /**
+     *  Schedules a new message for the target-thread and pushes it into the message buffer.
+     *  If the message buffer is full, this won't do anything.
+     *
+     *  Other than send(Args&&... args), this will not only push the message but also handle the message
+     *  right on the sender-thread.
+     *
+     *  @tparam MessageType The message class
+     *  @tparam Args The parameters of the message class' constructor
+     *  @param args The arguments to pass to the message's constructor
+     */
     template<class MessageType, class... Args>
-    void sendToAll(Args&&... ctorArgs)
+    void sendToAll(Args&&... args)
     {
         /**
          *  MessageType must be of type IMessage.
          */
         jassert((std::is_base_of_v<IMessage, MessageType>));
-
-        sendToAll(std::make_shared<MessageType>(std::forward<Args>(ctorArgs)...));
+        sendToAll(std::make_shared<MessageType>(std::forward<Args>(args)...));
     }
-
+    
+    /**
+     *  Schedules a list of messages to send to the target-thread and pushes them into the buffer.
+     *  All the messages that don't fit into the buffer anymore, will be ignored and destroyed.
+     *
+     *  Other than send(std::initializer_list<std::shared_ptr<IMessage>>), this will not only push the message but
+     *  also handle the message right on the sender-thread.
+     *
+     *  @param messages The list of messages to schedule
+     */
     void sendToAll(std::initializer_list<std::shared_ptr<IMessage>> messages)
     {
         for(auto message : messages)
@@ -141,36 +219,47 @@ public:
     }
 
     //==================================================================================================================
+    /**
+     *  Returns whether there are any pending messages in the buffer.
+     *  @return True if there are messages in the buffer, false if not
+     */
     bool hasPendingMessages() const noexcept
     {
         return !messageBuffer.isEmpty();
     };
 
 protected:
+    /**
+     *  Handles the message.
+     *
+     *  @param message   The message to handle
+     *  @param direction The thread the message was handled on
+     */
     virtual void handleMessage(IMessage *message, MessageDirection direction)
     {
-        message->handleMessage(*this, direction);
+        message->handleMessage(this, direction);
     }
 
     //==================================================================================================================
+    /**
+     *  Processes the next message in the buffer on the target-thread and calls handleMessage().
+     *  After the message was handled, it will, if and only if the garbage collector is enabled, push it into
+     *  the garbage collector and schedule it for disposal.
+     */
     void processNextMessage()
     {
-        if(!ensureNotMessageThread())
-        {
-            return;
-        }
-
-        const bool should_collect = !MessageManager::getInstance()->isThisTheMessageThread();
-
-        if(should_collect && cancelUpdates.load(std::memory_order_acquire))
+        const bool should_collect = !juce::MessageManager::getInstance()->isThisTheMessageThread();
+        const bool should_cancel  = cancelUpdates.load(std::memory_order_acquire);
+        
+        if (should_collect && should_cancel)
         {
             deleteUnusedMessages();
-            cancelUpdates.store(0, std::memory_order_relaxed);
+            cancelUpdates.store(false, std::memory_order_relaxed);
         }
 
-        if(auto message = messageBuffer->pop())
+        if (auto message = messageBuffer.pop())
         {
-            handleMessage(message.get());
+            handleMessage(message.get(), should_collect ? TargetThread : MessageThread);
 
             if(should_collect)
             {
@@ -178,29 +267,32 @@ protected:
             }
         }
     }
-
+    
+    /**
+     *  Processes all messages in the buffer on the target-thread and calls handleMessage().
+     *  After the message was handled, it will, if and only if the garbage collector is enabled, push it into
+     *  the garbage collector and schedule it for disposal.
+     */
     void processAllMessages()
     {
-        bool is_not_message_thread = ensureNotMessageThread();
-
-        if(!is_not_message_thread)
+        if(!juce::MessageManager::getInstance()->isThisTheMessageThread())
         {
             return;
         }
 
-        const bool should_collect = !MessageManager::getInstance()->isThisTheMessageThread();
+        const bool should_collect = !juce::MessageManager::getInstance()->isThisTheMessageThread();
 
         if(should_collect)
         {
             deleteUnusedMessages();
         }
 
-        int  counter = options.maxMessagesPerLoop;
+        int counter  = options.maxMessagesPerLoop;
         auto message = messageBuffer.pop();
 
-        while(message && (counter == -1 || (--counter) > 0))
+        while(message && (counter == -1 || --counter > 0))
         {
-            handleMessage(message.get());
+            handleMessage(message.get(), should_collect ? TargetThread : MessageThread);
 
             if(should_collect)
             {
@@ -212,6 +304,10 @@ protected:
     }
 
     //==================================================================================================================
+    /**
+     *  Cancels all pending messages in the buffer currently scheduled.
+     *  If there are no messages, this will do nothing.
+     */
     void cancelPendingMessages()
     {
         if(!hasPendingMessages())
@@ -219,7 +315,7 @@ protected:
             return;
         }
 
-        if(MessageManager::getInstance()->isThisTheMessageThread())
+        if(juce::MessageManager::getInstance()->isThisTheMessageThread())
         {
             cancelCount = messageBuffer.size();
             cancelUpdates.store(true, std::memory_order_release);
@@ -244,48 +340,24 @@ private:
     }
 
     //==================================================================================================================
-    bool deleteUnusedMessages()
+    void deleteUnusedMessages()
     {
-        bool should_delete = cancelUpdates.load(std::memory_order_acquire);
+        const bool should_delete = cancelUpdates.load(std::memory_order_acquire);
 
         if(should_delete)
         {
-            int counter = (cancelCount > 0 ? std::exchange(cancelCount, 0) : messageBuffer.size());
+            int counter = (cancelCount > 0 ? cancelCount : messageBuffer.size());
             IMessageBuffer::Message message = messageBuffer.pop();
 
-            while(message != nullptr && (--counter) > 0)
+            while(message && --counter > 0)
             {
                 garbageCollector.push(message);
                 message = messageBuffer.pop();
             }
 
-            cancelUpdates.store(false, std::memory_order_relaxed);
+            cancelCount = 0;
+            cancelUpdates.store(false, std::memory_order_release);
         }
-    }
-
-    //==================================================================================================================
-    inline bool ensureNotMessageThread() const
-    {
-        if(options.strictThreadDistinction)
-        {
-            const bool is_not_message_thread = !MessageManager::getInstance()->isThisTheMessageThread();
-            jassert(is_not_message_thread);
-            return is_not_message_thread;
-        }
-
-        return true;
-    }
-
-    inline bool ensureMessageThread() const
-    {
-        if(options.strictThreadDistinction)
-        {
-            const bool is_message_thread = MessageManager::getInstance()->isThisTheMessageThread();
-            jassert(is_message_thread);
-            return is_message_thread;
-        }
-
-        return true;
     }
 };
 }

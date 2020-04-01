@@ -23,7 +23,9 @@
     ===============================================================
  */
 
-#include <jaut/processor/sfxunit.h>
+#include <jaut_audio/processor/audioprocessoreffect.h>
+
+using namespace juce;
 
 namespace
 {

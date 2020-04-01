@@ -31,7 +31,7 @@
     website:            https://github.com/elandasunshine/jaut
     license:            AGPL v3
     minimumCppStandard: C++17
-    dependencies:       juce_core juce_events
+    dependencies:       jaut_core, juce_core, juce_events, juce_graphics
 
     END_JUCE_MODULE_DECLARATION
     ===============================================================
@@ -39,7 +39,21 @@
 
 #pragma once
 
-#include <jaut/expo.h>
-#include <jaut/jaut_provider/config/interfaces/iconfigparser.h>
-#include <jaut/jaut_provider/config/config.h>
-#include <jaut/jaut_provider/config/configparser.h>
+// Dependencies
+#include <jaut_core/jaut_core.h>
+#include <juce_core/juce_core.h>
+#include <juce_events/juce_events.h>
+#include <juce_graphics/juce_graphics.h>
+
+// Interfaces
+#include <jaut_provider/interfaces/iconfigparser.h>
+#include <jaut_provider/interfaces/imetadata.h>
+#include <jaut_provider/interfaces/imetareader.h>
+#include <jaut_provider/interfaces/ithemedefinition.h>
+
+// Config
+#include <jaut_provider/config/config.h>
+#include <jaut_provider/config/configparser.h>
+
+// File
+#include <jaut_provider/file/appdata.h>

@@ -23,149 +23,122 @@
     ===============================================================
  */
 
-#include <jaut/provider/appdata.h>
-#include <jaut/jaut_util/exception.h>
-
-namespace jaut
-{
 namespace
 {
-    static Directory invalidDirectory;
+using namespace jaut;
 
-    //=================================================================================================================
-    void generateSubDirList(StringArray &strArray, const String &dirName) noexcept
+AppData::Directory invalidDirectory;
+
+//======================================================================================================================
+StringArray generateSubDirList(const String &dirName) noexcept
+{
+    StringArray result;
+    String::CharPointerType char_ptr = dirName.getCharPointer();
+    String text = "";
+    
+    for (;;)
     {
-        String::CharPointerType charptr = dirName.getCharPointer();
-        juce_wchar character;
-        String text = "";
-
-        for (;;)
+        const juce_wchar current_char = char_ptr.getAndAdvance();
+        
+        if (current_char == 0)
         {
-            character = charptr.getAndAdvance();
-
-            if (character == 0)
+            break;
+        }
+        
+        if (current_char == '\\' || current_char == '/')
+        {
+            const juce_wchar next_char = *char_ptr;
+            
+            if (next_char != 0)
             {
-                break;
-            }
-
-            if (character == '\\' || character == '/')
-            {
-                juce_wchar nextchar = *charptr;
-                if (nextchar != 0)
+                if (next_char != '/' && next_char != '\\' && !text.isEmpty())
                 {
-                    if (nextchar != '/' && nextchar != '\\' && !text.isEmpty())
-                    {
-                        strArray.add(text);
-                        text = "";
-                    }
-
-                    ++charptr;
+                    result.add(text);
+                    text.clear();
                 }
-                else
-                {
-                    break;
-                }
+                
+                ++char_ptr;
             }
             else
             {
-                text += character;
+                break;
             }
         }
-
-        if (!text.isEmpty())
+        else
         {
-            strArray.add(text);
+            text << current_char;
         }
     }
-
-    Directory &recursivelySearchForDesiredDirectory(Directory &dir, StringArray &strArray, int level) noexcept
+    
+    if (!text.isEmpty())
     {
-        Directory *thisdir = &dir;
-
-        if (level < strArray.size())
-        {
-            String key = strArray[level++];
-
-            if (dir.hasSubDirectory(key))
-            {
-                Directory nextdir = dir[key];
-                thisdir = &recursivelySearchForDesiredDirectory(nextdir, strArray, level);
-            }
-        }
-
-        return *thisdir;
+        result.add(text);
     }
+    
+    return result;
+}
 
-    void searchOnFileSystemFor(Directory::t_file_type type, File &searchRoot,
-                               const Directory::t_search_set &searchPatternList, bool recursive,
-                               Directory::t_file_vec &files) noexcept
+AppData::Directory &recursivelySearchForDesiredDirectory(AppData::Directory &dir, const StringArray &strArray,
+                                                         int level) noexcept
+{
+    AppData::Directory *this_dir = &dir;
+    
+    if (level < strArray.size())
     {
-        File basedirfile = searchRoot;
-
-        if (basedirfile.exists())
+        const String name = strArray[level++];
+        
+        if (dir.hasSubDirectory(name))
         {
-            String searchpattern = "";
-            bool first = true;
+            AppData::Directory &next_dir = dir[name];
+            this_dir = &recursivelySearchForDesiredDirectory(next_dir, strArray, level);
+        }
+    }
+    
+    return *this_dir;
+}
 
-            for (auto it = searchPatternList.begin(); it != searchPatternList.end(); ++it)
-            {
-                searchpattern += (first ? "*." : ";*.") + it->trim();
-                first = false;
-            }
-
-            DirectoryIterator diriterator(basedirfile, recursive, searchpattern, type);
-
-            while (diriterator.next())
-            {
-                (void)files.push_back(diriterator.getFile());
-            }
+void searchOnFileSystemFor(File::TypesOfFileToFind type, File &searchRoot,
+                           const AppData::Directory::SearchSet &searchPatternList, bool recursive,
+                           AppData::Directory::FileVec &files) noexcept
+{
+    File basedirfile = searchRoot;
+    
+    if (basedirfile.exists())
+    {
+        String searchpattern = "";
+        bool first = true;
+        
+        for (auto it = searchPatternList.begin(); it != searchPatternList.end(); ++it)
+        {
+            searchpattern += (first ? "*." : ";*.") + it->trim();
+            first = false;
+        }
+        
+        DirectoryIterator diriterator(basedirfile, recursive, searchpattern, type);
+        
+        while (diriterator.next())
+        {
+            (void)files.push_back(diriterator.getFile());
         }
     }
 }
+}
 
-/* ==================================================================================
- * ================================= SharedObject ===================================
- * ================================================================================== */
-
-struct Directory::SharedObject
+namespace jaut
 {
-    String baseDir;
-    String name;
-    std::weak_ptr<SharedObject> parent;
-    t_sub_map subDirectories;
-
-    SharedObject(const String &name, const String &baseDir)
-        : baseDir(baseDir),
-          name(name)
-    {}
-};
-
-
-
 /* ==================================================================================
  * ================================== Directory =====================================
  * ================================================================================== */
 
-Directory::Directory(const String &name, const String &baseDir) noexcept
-    : data(new SharedObject(name, baseDir))
-{
-    /**
-       The file base can't be created therefor it has to exists already.
-       Make sure your filesystem is prepared when you are using this class!
-    */
-    jassert(File(baseDir).exists());
-}
+AppData::Directory::Directory(const String &name, const String &baseDir) noexcept
+    : file(baseDir + "/" + name)
+{}
 
-Directory::~Directory() {}
+AppData::Directory::~Directory() {}
 
 //==============================================================================
-Directory Directory::operator[](const String &dirName) noexcept
+AppData::Directory AppData::Directory::operator[](const String &dirName) noexcept
 {
-    if (!data)
-    {
-        return Directory();
-    }
-
     if (dirName.containsAnyOf("/\\"))
     {
         StringArray dir_list;
@@ -191,17 +164,17 @@ Directory Directory::operator[](const String &dirName) noexcept
     return data->subDirectories.at(dirName.trim().toLowerCase());
 }
 
-const bool Directory::operator==(const Directory &dir) const noexcept
+bool AppData::Directory::operator==(const Directory &dir) const noexcept
 {
     return data && data.get() == dir.data.get();
 }
 
-const bool Directory::operator!=(const Directory &dir) const noexcept
+bool AppData::Directory::operator!=(const Directory &dir) const noexcept
 {
     return !data || data.get() != dir.data.get();
 }
 
-const bool Directory::operator>(const Directory &dir) const noexcept
+bool AppData::Directory::operator>(const Directory &dir) const noexcept
 {
     if (!data || !dir.data)
     {
@@ -225,12 +198,12 @@ const bool Directory::operator>(const Directory &dir) const noexcept
     return false;
 }
 
-const bool Directory::operator>=(const Directory &dir) const noexcept
+bool AppData::Directory::operator>=(const Directory &dir) const noexcept
 {
     return *this > dir || *this == dir;
 }
 
-const bool Directory::operator+(const Directory &dir) const noexcept
+bool AppData::Directory::operator+(const Directory &dir) const noexcept
 {
     if(!data || !dir.data)
     {
@@ -242,22 +215,22 @@ const bool Directory::operator+(const Directory &dir) const noexcept
     return dirparent && dirparent.get() == data.get();
 }
 
-const bool Directory::operator+=(const Directory &dir) const noexcept
+bool AppData::Directory::operator+=(const Directory &dir) const noexcept
 {
     return *this + dir || &dir == this;
 }
 
-const bool Directory::operator*(const Directory &dir) const noexcept
+bool AppData::Directory::operator*(const Directory &dir) const noexcept
 {
     return dir > *this || *this > dir;
 }
 
-const bool Directory::operator*=(const Directory &dir) const noexcept
+bool AppData::Directory::operator*=(const Directory &dir) const noexcept
 {
     return *this * dir || &dir == this;
 }
 
-const bool Directory::operator/(const Directory &dir) const noexcept
+bool AppData::Directory::operator/(const Directory &dir) const noexcept
 {
     if(!data || !dir.data)
     {
@@ -270,13 +243,13 @@ const bool Directory::operator/(const Directory &dir) const noexcept
     return thisparent && thisparent.get() == dirparent.get();
 }
 
-const bool Directory::operator/=(const Directory &dir) const noexcept
+bool AppData::Directory::operator/=(const Directory &dir) const noexcept
 {
     return *this / dir || &dir == this;
 }
 
 //==============================================================================
-Directory Directory::withSubFolder(const String &directoryName) noexcept
+Directory AppData::Directory::withSubFolder(const String &directoryName) noexcept
 {
     if(data)
     {
@@ -299,7 +272,7 @@ Directory Directory::withSubFolder(const String &directoryName) noexcept
     return *this;
 }
 
-Directory Directory::makeDir(const String &directoryName)
+Directory AppData::Directory::makeDir(const String &directoryName)
 {
     if (directoryName.containsAnyOf("\\/") || hasSubDirectory(directoryName))
     {
@@ -312,63 +285,63 @@ Directory Directory::makeDir(const String &directoryName)
     return data ? data->subDirectories.at(directoryName.trim().toLowerCase()) : Directory();
 }
 
-const Directory Directory::getDir(const String &directoryName) const noexcept
+AppData::Directory AppData::Directory::getDir(const String &directoryName) const noexcept
 {
     return hasSubDirectory(directoryName) ? data->subDirectories.at(directoryName.trim().toLowerCase()) : Directory();
 }
 
 //==============================================================================
-const bool Directory::isValidDirectory() const noexcept
+bool AppData::Directory::isValidDirectory() const noexcept
 {
     return data != nullptr;
 }
 
-const bool Directory::isRootDirectory() const noexcept
+bool AppData::Directory::isRootDirectory() const noexcept
 {
     return data && !data->parent.lock();
 }
 
-const bool Directory::exists() const noexcept
+bool AppData::Directory::exists() const noexcept
 {
     return toFile().exists();
 }
 
-const bool Directory::hasSubDirectories() const noexcept
+bool AppData::Directory::hasSubDirectories() const noexcept
 {
     return numSubDirectories() > 0;
 }
 
-const bool Directory::hasSubDirectory(const String &name) const noexcept
+bool AppData::Directory::hasSubDirectory(const String &name) const noexcept
 {
     return data ? data->subDirectories.find(name.trim().toLowerCase()) != data->subDirectories.end() : false;
 }
 
-const bool Directory::hasParentDirectory() const noexcept
+bool AppData::Directory::hasParentDirectory() const noexcept
 {
     return data && data->parent.lock();
 }
 
-const size_t Directory::numSubDirectories() const noexcept
+int AppData::Directory::numSubDirectories() const noexcept
 {
     return data ? data->subDirectories.size() : 0;
 }
 
-const String Directory::getBaseDir() const noexcept
+String AppData::Directory::getBaseDir() const noexcept
 {
     return data ? data->baseDir : "";
 }
 
-const String Directory::getDirectoryName() const noexcept
+String AppData::Directory::getDirectoryName() const noexcept
 {
     return data ? data->name : "";
 }
 
-File Directory::getFile(const String &fileName) const noexcept
+File AppData::Directory::getFile(const String &fileName) const noexcept
 {
     return data ? File(toString(true) + "/" + fileName) : File();
 }
 
-Directory Directory::getParentDirectory() const noexcept
+Directory AppData::Directory::getParentDirectory() const noexcept
 {
     if(!data)
     {
@@ -386,7 +359,7 @@ Directory Directory::getParentDirectory() const noexcept
 }
 
 //==============================================================================
-Directory::t_file_vec Directory::listFiles(const t_search_set &fileNames, bool recursiveSearch) const noexcept
+AppData::Directory::FileVec AppData::Directory::listFiles(const t_search_set &fileNames, bool recursiveSearch) const noexcept
 {
     if (!data)
     {
@@ -400,7 +373,7 @@ Directory::t_file_vec Directory::listFiles(const t_search_set &fileNames, bool r
     return files;
 }
 
-Directory::t_file_vec Directory::listDirectories(const t_search_set &fileNames, bool recursiveSearch) const noexcept
+AppData::Directory::FileVec AppData::Directory::listDirectories(const t_search_set &fileNames, bool recursiveSearch) const noexcept
 {
     if (!data)
     {
@@ -414,22 +387,42 @@ Directory::t_file_vec Directory::listDirectories(const t_search_set &fileNames, 
     return files;
 }
 
-Directory::t_iterator Directory::begin() noexcept
+AppData::Directory::Iterator AppData::Directory::begin() noexcept
 {
-    return data ? data->subDirectories.begin() : t_iterator();
+    return data ? data->subDirectories.begin() : Iterator();
 }
 
-Directory::t_iterator Directory::end() noexcept
+AppData::Directory::Iterator AppData::Directory::end() noexcept
 {
-    return data ? data->subDirectories.end() : t_iterator();
+    return data ? data->subDirectories.end() : Iterator();
 }
 
-File Directory::toFile() const noexcept
+AppData::Directory::ConstIterator AppData::Directory::begin() const noexcept
+{
+    return data ? data->subDirectories.begin() : ConstIterator();
+}
+
+AppData::Directory::ConstIterator AppData::Directory::end() const noexcept
+{
+    return data ? data->subDirectories.end() : ConstIterator();
+}
+
+AppData::Directory::ConstIterator AppData::Directory::cbegin() const noexcept
+{
+    return data ? data->subDirectories.begin() : ConstIterator();
+}
+
+AppData::Directory::ConstIterator AppData::Directory::cend() const noexcept
+{
+    return data ? data->subDirectories.end() : ConstIterator();
+}
+
+File AppData::Directory::toFile() const noexcept
 {
     return data ? File(toString(true)) : File();
 }
 
-const String Directory::toString(bool absolute) const noexcept
+const String AppData::Directory::toString(bool absolute) const noexcept
 {
     if (!data)
     {
@@ -448,7 +441,7 @@ const String Directory::toString(bool absolute) const noexcept
     return absolute ? (data->baseDir + full_path) : full_path;
 }
 
-void Directory::createFolderHierarchy(bool recursive) const noexcept
+void AppData::Directory::createFolderHierarchy(bool recursive) const noexcept
 {
     if (!data)
     {

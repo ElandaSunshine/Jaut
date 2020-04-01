@@ -31,7 +31,7 @@
     website:            https://github.com/elandasunshine/jaut
     license:            AGPL v3
     minimumCppStandard: C++17
-    dependencies:       juce_core juce_events
+    dependencies:       juce_core, juce_events, jaut_core
 
     END_JUCE_MODULE_DECLARATION
     ===============================================================
@@ -39,8 +39,13 @@
 
 #pragma once
 
-#include <jaut/expo.h>
-#include <jaut/jaut_message/interfaces/imessage.h>
-#include <jaut/jaut_message/interfaces/imessagebuffer.h>
-#include <jaut/jaut_message/buffer/atomicringbuffer.h>
-#include <jaut/jaut_message/manager/messagehandler.h>
+#include <juce_core/juce_core.h>
+#include <juce_events/juce_events.h>
+#include <jaut_core/jaut_core.h>
+
+// Interfaces
+#include <jaut_message/interfaces/imessage.h>
+#include <jaut_message/interfaces/imessagebuffer.h>
+
+#include <jaut_message/buffer/atomicringbuffer.h>
+#include <jaut_message/manager/messagehandler.h>

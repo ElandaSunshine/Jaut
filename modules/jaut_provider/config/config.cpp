@@ -23,16 +23,13 @@
     ===============================================================
  */
 
-#include <jaut/provider/config/config.h>
-#include <jaut/provider/config/interfaces/iconfigparser.h>
-
-#pragma region Namespace
+// region Namespace
 namespace
 {
-const String fixPathString(const String &currentPath) noexcept
-{
-    String newpath = currentPath;
+var emptyValue;
 
+inline String fixPathString(String currentPath)
+{
     if (currentPath.isEmpty())
     {
         return "";
@@ -40,148 +37,369 @@ const String fixPathString(const String &currentPath) noexcept
 
     if (currentPath.containsChar('\\'))
     {
-        newpath = currentPath.replaceCharacters("\\", "/");
+        currentPath = currentPath.replaceCharacters("\\", "/");
 
-        if (newpath.contains("//"))
+        if (currentPath.contains("//"))
         {
-            CharPointer_UTF8 charptr = newpath.getCharPointer();
-            juce_wchar currchar;
-            String newuri;
+            CharPointer_UTF8 char_ptr = currentPath.getCharPointer();
+            juce_wchar curr_char; // NOLINT
+            String new_uri;
 
             for (;;)
             {
-                currchar = charptr.getAndAdvance();
+                curr_char = char_ptr.getAndAdvance();
 
-                if (currchar == 0)
+                if (curr_char == 0)
                 {
                     break;
                 }
 
-                if (currchar == '/' && *charptr == '/')
+                if (curr_char == '/' && *char_ptr == '/')
                 {
                     continue;
                 }
 
-                newuri += currchar;
+                new_uri += curr_char;
             }
 
-            newpath = newuri;
+            currentPath = new_uri;
         }
     }
 
-    return newpath;
+    return currentPath;
+}
+
+inline String trimAndValidate(const String &name, bool periodCheck)
+{
+    const String trimmed_name = name.removeCharacters(" ");
+
+    /**
+     *  Always make sure the property's name is set!
+     */
+    jassert(!trimmed_name.isEmpty());
+
+    /**
+     *  Properties can't have the name "value" as this may break internal routines.
+     */
+    jassert(!trimmed_name.equalsIgnoreCase("value"));
+
+    if(periodCheck)
+    {
+        /**
+         *  Properties can't have dots in their names, as these are used to resolve child properties.
+         */
+        jassert(!trimmed_name.contains("."));
+    }
+
+    return name;
+}
+
+inline String getCategory(const jaut::Config *config, const String &category)
+{
+    return category.isEmpty() ? config->getOptions().defaultCategory : category.removeCharacters(" ").toLowerCase();
 }
 }
-#pragma endregion Namespace
-
-
+// endregion Namespace
 
 namespace jaut
 {
-#pragma region Property
+// region Property
 /* ==================================================================================
  * ================================== Property ======================================
  * ================================================================================== */
-struct Config::Property::SharedObject
+struct Config::Property::PropertyData final
 {
-    String comment;
-    var defaultValue;
+    // Main
     String name;
-    t_ChildMap properties;
+    var    defaultValue;
+    var    value;
+    
+    // References
+    Config   *config;
     Property *parent;
-    var value;
-    Config *eventConfig;
-    ListenerList<Listener> listeners;
-
+    
+    // Optional
+    String   comment;
+    ChildMap properties;
+    
     //==================================================================================================================
-    SharedObject(const String &name, const var &defaultValue) noexcept
-        : defaultValue(defaultValue), name(name), value(defaultValue),
-          parent(nullptr), eventConfig(nullptr)
+    PropertyData(String name, var defaultValue)
+        : name(std::move(name)),
+          defaultValue(defaultValue),
+          value(std::move(defaultValue)),
+          config(nullptr), parent(nullptr)
     {}
 };
 
-
-
 //======================================================================================================================
 Config::Property::Property(const String &name, const var &defaultValue)
-    : data(new SharedObject(name.trim(), defaultValue))
+    : data(std::make_unique<PropertyData>(::trimAndValidate(name, true), defaultValue))
+{}
+
+Config::Property::Property(const Property &other) noexcept
+    : data(other.data)
+{}
+
+Config::Property::Property(Property &&other) noexcept
+    : data(std::move(other.data))
 {
-    // Always make sure the Property object's name is set and valid!
-    // Also, properties can't have the name "value" as this may break internal routines!
-    jassert(!name.isEmpty() && !name.equalsIgnoreCase("value"));
+    other.data = nullptr;
 }
 
-Config::Property::~Property() noexcept {}
+Config::Property::~Property()
+{
+    setConfig(nullptr);
+}
 
 //======================================================================================================================
-Config::Property Config::Property::operator[](const String &name) noexcept
+Config::Property &Config::Property::operator=(const Property &right) noexcept
+{
+    Property temp(right);
+    swap(*this, temp);
+    return *this;
+}
+
+Config::Property &Config::Property::operator=(Property &&right) noexcept
+{
+    swap(*this, right);
+    right.data = nullptr;
+    return *this;
+}
+
+//======================================================================================================================
+Config::Property Config::Property::operator[](const String &name)
 {
     if (isValid())
     {
-        return data->properties[name.trim().toLowerCase()];
+        const String trimmed_name = ::trimAndValidate(name, false);
+        
+        if (trimmed_name.contains("."))
+        {
+            if (trimmed_name.endsWithChar('.') || trimmed_name.startsWithChar('.') || trimmed_name.contains(".."))
+            {
+                return {};
+            }
+            
+            StringArray property_names;
+            property_names.addTokens(name, ".", "\"");
+            
+            if (property_names.isEmpty())
+            {
+                return {};
+            }
+            
+            for (auto &prop_name : property_names)
+            {
+                if (prop_name.length() < 3 || prop_name.equalsIgnoreCase("value"))
+                {
+                    return {};
+                }
+            }
+            
+            return recurseChilds(property_names, sendNotification);
+        }
+
+        const String property_id = trimmed_name.toLowerCase();
+        const auto property_it   = data->properties.find(property_id);
+        Property property        = property_it->second;
+        
+        if (property_it == data->properties.end())
+        {
+            property = Property(name, {});
+            property.data->parent = this;
+            property.data->config = data->config;
+            data->properties.emplace(trimmed_name.toLowerCase(), property);
+    
+            {
+                PropertyAddedHandler handler = PropertyAdded;
+                handler(property);
+                
+                if (data->config)
+                {
+                    PropertyAddedHandler cfg_handler = data->config->PropertyAdded;
+                    cfg_handler(property);
+                }
+            }
+        }
+        
+        return property;
     }
 
-    return Property();
+    return {};
 }
 
 //======================================================================================================================
-Config::Property Config::Property::createProperty(const String &name, const var &defaultValue) noexcept
+Config::Property Config::Property::createProperty(const String &name, const var &defaultValue,
+                                                  NotificationType notification)
 {
     if (isValid())
     {
-        Property prop(name, defaultValue);
-        prop.data->parent = this;
-        prop.addConfig(data->eventConfig);
-        data->properties.emplace(name.trim().toLowerCase(), prop);
-        postAddedListener(prop);
-
-        return prop;
+        const String trimmed_name = ::trimAndValidate(name, true);
+        const String id           = trimmed_name.toLowerCase();
+        const auto it             = data->properties.find(id);
+        Property property         = it->second;
+        
+        if(it == data->properties.end())
+        {
+            property = Property(name, {});
+            property.data->parent = this;
+            property.data->config = data->config;
+            data->properties.emplace(id, property);
+    
+            if (notification != dontSendNotification)
+            {
+                PropertyAddedHandler handler = PropertyAdded;
+                handler(property);
+        
+                if (data->config)
+                {
+                    PropertyAddedHandler cfg_handler = data->config->PropertyAdded;
+                    cfg_handler(property);
+                }
+            }
+        }
+        
+        return property;
     }
-
-    return Property();
+    
+    return {};
 }
 
-void Config::Property::addProperty(Property prop) noexcept
+OperationResult Config::Property::addProperty(Property property, NotificationType notification)
 {
-    if (!isValid())
+    if (isValid() && property.isValid())
     {
-        return;
+        if(property.data->config)
+        {
+            return ErrorCodes::PropertyOwned;
+        }
+        
+        const String id = property.getName().toLowerCase();
+        
+        if (data->properties.find(id) == data->properties.end())
+        {
+            property.data->parent = this;
+            property.setConfig(data->config);
+            data->properties.emplace(id, property);
+            
+            if (notification != dontSendNotification)
+            {
+                PropertyAddedHandler handler = PropertyAdded;
+                handler(property);
+                
+                if (data->config)
+                {
+                    PropertyAddedHandler cfg_handler = data->config->PropertyAdded;
+                    cfg_handler(property);
+                }
+            }
+            
+            return true;
+        }
+        
+        return ErrorCodes::PropertyExists;
     }
-
-    String property_id = prop.getName().trim().toLowerCase();
-
-    if (!hasProperty(property_id))
-    {
-        data->properties.emplace(property_id, prop);
-        prop.data->parent = this;
-        prop.addConfig(data->eventConfig);
-        postAddedListener(prop);
-    }
+    
+    return ErrorCodes::PropertyInvalid;
 }
 
-Config::Property Config::Property::getProperty(const String &name) const noexcept
+Config::Property Config::Property::getProperty(const String &name)
 {
-    String property_id = name.trim().toLowerCase();
-
-    if (isValid() && hasProperty(property_id))
+    if (isValid())
     {
-        return data->properties.at(property_id);
+        const String id = ::trimAndValidate(name, false).toLowerCase();
+        
+        if(id.contains("."))
+        {
+            if(id.endsWithChar('.') || id.startsWithChar('.') || id.contains(".."))
+            {
+                return {};
+            }
+            
+            StringArray property_names;
+            property_names.addTokens(name, ".", "\"");
+            
+            if(property_names.isEmpty())
+            {
+                return {};
+            }
+            
+            for (auto &prop_name : property_names)
+            {
+                if(prop_name.length() < 3 || prop_name.equalsIgnoreCase("value"))
+                {
+                    return {};
+                }
+            }
+            
+            return recurseChilds(property_names);
+        }
+        
+        const auto it = data->properties.find(id);
+        
+        if(it != data->properties.end())
+        {
+            return it->second;
+        }
     }
+    
+    return {};
+}
 
-    return Property();
+const Config::Property Config::Property::getProperty(const String &name) const
+{
+    if (isValid())
+    {
+        const String id = ::trimAndValidate(name, false).toLowerCase();
+        
+        if(id.contains("."))
+        {
+            if(id.endsWithChar('.') || id.startsWithChar('.') || id.contains(".."))
+            {
+                return {};
+            }
+            
+            StringArray property_names;
+            property_names.addTokens(name, ".", "\"");
+            
+            if(property_names.isEmpty())
+            {
+                return {};
+            }
+            
+            for (auto &prop_name : property_names)
+            {
+                if(prop_name.length() < 3 || prop_name.equalsIgnoreCase("value"))
+                {
+                    return {};
+                }
+            }
+            
+            return recurseChilds(property_names);
+        }
+        
+        const auto it = data->properties.find(id);
+        
+        if(it != data->properties.end())
+        {
+            return it->second;
+        }
+    }
+    
+    return {};
 }
 
 //======================================================================================================================
-const int Config::Property::size() const noexcept
+int Config::Property::size() const noexcept
 {
     return isValid() ? static_cast<int>(data->properties.size()) : 0;
 }
 
-const bool Config::Property::hasValid() const noexcept
+bool Config::Property::hasValid() const noexcept
 {
     if (isValid())
     {
-        for (auto &[key, value] : data->properties)
+        for (auto &[_, value] : data->properties)
         {
             if (value.isValid())
             {
@@ -193,228 +411,253 @@ const bool Config::Property::hasValid() const noexcept
     return false;
 }
 
-const bool Config::Property::isValid() const
+bool Config::Property::isValid() const noexcept
 {
     return data != nullptr;
 }
 
-const bool Config::Property::hasProperty(const String &name) const noexcept
+bool Config::Property::hasProperty(const String &name) const
 {
-    return isValid() && data->properties.find(name.trim().toLowerCase()) != data->properties.end();
+    const String id = ::trimAndValidate(name, true).toLowerCase();
+    return data->properties.find(id) != data->properties.end();
 }
 
 //======================================================================================================================
-const String Config::Property::getName() const noexcept
+String Config::Property::getName() const noexcept
 {
-    return isValid() ? data->name : "";
+    return isValid() ? data->name : String();
 }
 
-const String Config::Property::getComment() const noexcept
-{
-    return isValid() ? data->comment : "";
-}
-
-void Config::Property::setComment(const String &comment) noexcept
+String Config::Property::getTopCategory() const noexcept
 {
     if (isValid())
     {
-        data->comment = comment;
+        if(data->config)
+        {
+            for (auto &[category_name, category] : data->config->categories)
+            {
+                for (auto &[_, property] : category.properties)
+                {
+                    if (&property == this)
+                    {
+                        return category_name;
+                    }
+                }
+            }
+        }
+    }
+    
+    return String();
+}
+
+String Config::Property::getAbsoluteName() const
+{
+    if (isValid())
+    {
+        const Property *this_parent = this;
+        StringArray full_path(data->name);
+        
+        while ((this_parent = this_parent->data->parent))
+        {
+            full_path.insert(0, this_parent->data->name);
+        }
+        
+        if (data->config)
+        {
+            full_path.insert(0, getTopCategory());
+        }
+        
+        return full_path.joinIntoString(".");
+    }
+    
+    return String();
+}
+
+String Config::Property::getComment() const noexcept
+{
+    return isValid() ? data->comment : String();
+}
+
+void Config::Property::setComment(const String &commentText) noexcept
+{
+    if (isValid())
+    {
+        data->comment = commentText;
     }
 }
 
-void Config::Property::setValue(const var &value) noexcept
+void Config::Property::setValue(const var &newValue, NotificationType notification) noexcept
 {
-    if (isValid() && value != data->value)
+    if (isValid() && data->value != newValue)
     {
-        var old_value = data->value;
-
+        var &value = data->value;
+        
         /**
-            Always make sure that the value you are passing has the same object type than the stored value.
-            This design decision makes type conversion a lot easier to maintain and thus, helps in
-            parsing with multiple configuration languages.
+         *  Always make sure that the value you are passing has the same object type than the stored value.
+         *  This design decision makes type conversion a lot easier to maintain and thus, helps in parsing with multiple
+         *  configuration languages.
          */
-        jassert(old_value.hasSameTypeAs(value));
-
-        data->value = value;
-        postValueChangedListener(data->name, old_value, value);
-
-        if (data->eventConfig)
+        jassert(value.hasSameTypeAs(newValue) || value.isVoid() || newValue.isVoid());
+        
+        const var old_value = std::exchange(value, newValue);
+        
+        if (notification != dontSendNotification)
         {
-            String category;
-            String name      = data->name;
-            Property *parent = data->parent;
-
-            if(parent)
-            {
-                for(;;)
-                {
-                    name = parent->data->name + "." + name;
-
-                    if(!parent->data->parent)
-                    {
-                        break;
-                    }
-
-                    parent = parent->data->parent;
-                }
-            }
+            ValueChangedHandler handler = ValueChanged;
+            handler(data->name, old_value, value);
             
-            for(auto &cat : data->eventConfig->categories)
+            if (data->config)
             {
-                if(cat.first.equalsIgnoreCase(parent->data->name))
-                {
-                    category = cat.first;
-                    break;
-                }
+                ValueChangedHandler cfg_handler = data->config->ValueChanged;
+                cfg_handler(getAbsoluteName(), old_value, value);
             }
-
-            data->eventConfig->postValueChangedListener(category + "." + name, old_value, value);
         }
     }
 }
 
 const var &Config::Property::getValue() const noexcept
 {
-    static var empty;
-    return isValid() ? data->value : empty;
+    return isValid() ? data->value : ::emptyValue;
 }
 
-void Config::Property::reset(bool recursive) noexcept
+void Config::Property::reset(bool recursive, NotificationType notification) noexcept
 {
-    if(!isValid())
+    if(isValid())
     {
-        return;
-    }
-
-    setValue(data->defaultValue);
-
-    if(recursive)
-    {
-        for(auto &[key, property] : *this)
+        setValue(data->defaultValue, notification);
+    
+        if(recursive)
         {
-            if(property.isValid())
+            for(auto &[_, property] : *this)
             {
-                property.reset(true);
+                property.reset(true, notification);
             }
         }
     }
 }
 
 //======================================================================================================================
-const String Config::Property::toString() const noexcept
+String Config::Property::toString() const noexcept
 {
     return getValue().toString();
 }
 
 //======================================================================================================================
-Config::Property::t_Iterator Config::Property::begin() noexcept
+Config::Property::Iterator Config::Property::begin() noexcept
 {
-    return !isValid() ? t_Iterator() : data->properties.begin();
+    return isValid() ? data->properties.begin() : Iterator();
 }
 
-Config::Property::t_Iterator Config::Property::end() noexcept
+Config::Property::Iterator Config::Property::end() noexcept
 {
-    return !isValid() ? t_Iterator() : data->properties.end();
+    return isValid() ? data->properties.end() : Iterator();
 }
 
-Config::Property::t_CIterator Config::Property::begin() const noexcept
+Config::Property::ConstIterator Config::Property::begin() const noexcept
 {
-    return !isValid() ? t_CIterator() : data->properties.begin();
+    return isValid() ? data->properties.begin() : ConstIterator();
 }
 
-Config::Property::t_CIterator Config::Property::end() const noexcept
+Config::Property::ConstIterator Config::Property::end() const noexcept
 {
-    return !isValid() ? t_CIterator() : data->properties.end();
+    return isValid() ? data->properties.end() : ConstIterator();
 }
 
-Config::Property::t_CIterator Config::Property::cbegin() const noexcept
+Config::Property::ConstIterator Config::Property::cbegin() const noexcept
 {
-    return !isValid() ? t_CIterator() : data->properties.begin();
+    return isValid() ? data->properties.begin() : ConstIterator();
 }
 
-Config::Property::t_CIterator Config::Property::cend() const noexcept
+Config::Property::ConstIterator Config::Property::cend() const noexcept
 {
-    return !isValid() ? t_CIterator() : data->properties.end();
-}
-
-//======================================================================================================================
-void Config::Property::addListener(Listener *listener) noexcept
-{
-    if(isValid())
-    {
-        data->listeners.add(listener);
-    }
-}
-
-void Config::Property::removeListener(Listener *listener) noexcept
-{
-    if(isValid())
-    {
-        data->listeners.remove(listener);
-    }
+    return isValid() ? data->properties.end() : ConstIterator();
 }
 
 //======================================================================================================================
-void Config::Property::addConfig(Config *config) noexcept
+void Config::Property::setConfig(Config *config)
 {
     if(isValid())
     {
-        data->eventConfig = config;
-
-        if(hasValid())
+        data->config = config;
+        
+        for (auto &[_, property] : data->properties)
         {
-            for(auto property : *this)
-            {
-                property.second.addConfig(config);
-            }
+            property.setConfig(config);
         }
     }
 }
 
-void Config::Property::postAddedListener(Property prop) noexcept
+//======================================================================================================================
+Config::Property Config::Property::recurseChilds(StringArray &names, NotificationType notification)
 {
-    if(isValid())
+    if (!names.isEmpty())
     {
-        data->listeners.call([=, &prop](Listener &l)
+        const String name = names.strings.getReference(0);
+        const String id   = name.toLowerCase();
+        auto it = data->properties.find(id);
+        names.removeRange(0, 1);
+        
+        if (it != data->properties.end())
         {
-            l.onPropertyAdded(prop);
-        });
+            return it->second.recurseChilds(names, notification);
+        }
+        else
+        {
+            Property property(name, {});
+            property.data->parent = this;
+            property.data->config = data->config;
+            data->properties.emplace(id, property);
+    
+            if (notification != dontSendNotification)
+            {
+                PropertyAddedHandler handler = PropertyAdded;
+                handler(property);
+                
+                if (data->config)
+                {
+                    PropertyAddedHandler cfg_handler = data->config->PropertyAdded;
+                    cfg_handler(property);
+                }
+            }
+            
+            return property.recurseChilds(names, notification);
+        }
     }
+    
+    return *this;
 }
 
-void Config::Property::postValueChangedListener(const String &name, var oldValue, var newValue) noexcept
+const Config::Property Config::Property::recurseChilds(StringArray &names) const
 {
-    if(isValid())
+    if (!names.isEmpty())
     {
-        data->listeners.call([=, &name, &oldValue, &newValue](Listener &l)
+        const String name = names.strings.getReference(0);
+        const String id   = name.toLowerCase();
+        const auto it     = data->properties.find(id);
+        names.removeRange(0, 1);
+    
+        if (it != data->properties.end())
         {
-            l.onValueChanged(name, oldValue, newValue);
-        });
+            return it->second.recurseChilds(names);
+        }
+        
+        return {};
     }
+    
+    return *this;
 }
-#pragma endregion Property
-
-
-
-#pragma region Config
-Config::Options::Options() noexcept
-    : autoSave(false),
-      processSynced(false),
-      defaultCategory("general")
-{}
-
-
-
+// endregion Property
+// region Config
 /* ==================================================================================
  * =================================== Config =======================================
  * ================================================================================== */
-Config::Config(const String &root, const Options &options, std::unique_ptr<IConfigParser> configParser)
-    : autoSaveActive(true), lock(nullptr),
-      parser(configParser.release(), [](IConfigParser *parser) { delete parser; }), options(options)
-{
-    const String file_path = ::fixPathString(root + "/" + options.fileName);
-    File file(file_path);
 
+Config::Config(const String &root, Options options, std::unique_ptr<ConfigParserType> configParser)
+    : autoSaveActive(true), fullPath(std::move(::fixPathString(root + "/" + options.fileName))),
+      options(std::move(options)), parser(std::move(configParser))
+{
+    File file(fullPath);
+    
     /*
        If this error occurs then you know that
        you need to make sure the parent of the
@@ -427,60 +670,51 @@ Config::Config(const String &root, const Options &options, std::unique_ptr<IConf
        your config if not handled properly.
     */
     jassert(file.getParentDirectory().exists());
-
+    
     /*
        Don't save this file as a directory.
        This means that you probably didn't add any
        valid file extension to the config's filepath.
     */
     jassert(!file.isDirectory());
-
+    
     /*
      * The config can't work without a valid parser, make sure to supply one!
      */
     jassert(parser != nullptr);
-
-    fullPath = file_path;
-    ipMutex.reset(options.processSynced ? new InterProcessLock(file_path) : nullptr);
+    
+    options.defaultCategory = options.defaultCategory.removeCharacters(" ").toLowerCase();
+    ipMutex = options.processSynced ? std::make_unique<InterProcessLock>(fullPath) : nullptr;
     (void) categories[options.defaultCategory.trim().toLowerCase()];
 }
 
 Config::Config(Config &&other) noexcept
-    : autoSaveActive(std::move(other.autoSaveActive)),
+    : autoSaveActive(other.autoSaveActive),
       categories(std::move(other.categories)),
-      comments(std::move(other.comments)),
       fullPath(std::move(other.fullPath)),
       ipMutex(std::move(other.ipMutex)),
-      lock(std::move(other.lock)),
       parser(std::move(other.parser)),
       options(std::move(other.options))
 {
-    for(auto *listener : other.listeners.getListeners())
+    for(auto &[_, category] : categories)
     {
-        listeners.add(listener);
-    }
-
-    for(auto &[p0, category_map] : categories)
-    {
-        for(auto &[p1, property] : category_map)
+        for(auto &[_, property] : category.properties)
         {
-            property.addConfig(this);
+            property.setConfig(this);
         }
     }
-
-    other.lock    = nullptr;
+    
     other.parser  = nullptr;
     other.ipMutex = nullptr;
-    other.listeners.clear();
 }
 
 Config::~Config()
 {
-    for(auto &[p0, category_map] : categories)
+    for(auto &[_, category] : categories)
     {
-        for(auto &[p1, property] : category_map)
+        for(auto &[_, property] : category.properties)
         {
-            property.addConfig(nullptr);
+            property.setConfig(nullptr);
         }
     }
 }
@@ -489,63 +723,65 @@ Config::~Config()
 Config &Config::operator=(Config &&other) noexcept
 {
     swap(*this, other);
-
-    for(auto *listener : other.listeners.getListeners())
-    {
-        listeners.add(listener);
-    }
-
-    for(auto &[p0, category_map] : categories)
-    {
-        for(auto &[p1, property] : category_map)
-        {
-            property.addConfig(this);
-        }
-    }
-
-    other.lock    = nullptr;
     other.parser  = nullptr;
     other.ipMutex = nullptr;
-    other.listeners.clear();
+    
+    for(auto &[_, category] : categories)
+    {
+        for(auto &[_, property] : category.properties)
+        {
+            property.setConfig(this);
+        }
+    }
 
     return *this;
 }
 
 //======================================================================================================================
-const bool Config::load()
+OperationResult Config::load()
 {
-    File config(fullPath);
+    if (!parser)
+    {
+        return ErrorCodes::InvalidParser;
+    }
+    
+    const File config(fullPath);
 
     if (config.exists())
     {
         // Try to lock for no other threads and/or processes to modify the
         // file at the same time!
-        p_ProcessLock lock (createIpcLock());
+        ProcessLockGuardPtr lock(createIpcLock());
 
         if (lock && !lock->isLocked())
         {
-            return false;
+            return ErrorCodes::FileIsOpen;
         }
 
         return parser->parseConfig(config, getAllProperties());
     }
 
-    return false;
+    return ErrorCodes::FileNotFound;
 }
 
-const bool Config::save() const
+OperationResult Config::save() const
 {
-    File config (fullPath);
+    if (!parser)
+    {
+        return ErrorCodes::InvalidParser;
+    }
+    
+    const File config (fullPath);
 
     if (config.getParentDirectory().exists())
     {
         // Try to lock for no other threads and/or processes to modify the
         // file at the same time!
-        p_ProcessLock lock (createIpcLock());
+        ProcessLockGuardPtr lock(createIpcLock());
 
         if (lock && !lock->isLocked())
         {
-            return false;
+            return ErrorCodes::FileIsOpen;
         }
 
         // Saving the config file
@@ -558,61 +794,93 @@ const bool Config::save() const
 
         return parser->writeConfig(config, root);
     }
-
-    return false;
+    
+    return ErrorCodes::FileNotFound;
 }
 
 //======================================================================================================================
-const String Config::getConfigName(bool withoutExtension) const noexcept
+String Config::getConfigName(bool withoutExtension) const
 {
-    File config(fullPath);
-
+    const File config(fullPath);
+    
     if (config.getParentDirectory().exists())
     {
         return withoutExtension ? config.getFileNameWithoutExtension() : config.getFileName();
     }
 
-    return "";
+    return {};
 }
 
-Config::Property Config::getProperty(const String &name, const String &category) const noexcept
+Config::Property Config::getProperty(const String &name, const String &category)
 {
-    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
-                                               : options.defaultCategory.trim().toLowerCase();
-
+    const String category_name = ::getCategory(this, category);
+    
     if (categories.find(category_name) != categories.end())
     {
-        const t_PropertyMap &property_map = categories.at(category_name);
-        String property_id = name.trim().toLowerCase();
-
-        if (property_map.find(property_id) != property_map.end())
+        const PropertyMap &property_map = categories.at(category_name).properties;
+        
+        if (name.contains(".") && !name.startsWith("."))
         {
-            return property_map.at(property_id);
+            const auto it = property_map.find(name.upToFirstOccurrenceOf(".", false, false).toLowerCase());
+        
+            if (it != property_map.end())
+            {
+                return it->second.getProperty(name.fromFirstOccurrenceOf(".", false, false));
+            }
+        }
+        
+        const String property_id = name.trim().toLowerCase();
+        const auto it            = property_map.find(property_id);
+        
+        if (it != property_map.end())
+        {
+            return it->second;
         }
     }
+    
+    return {};
+}
 
-    return Property();
+const Config::Property Config::getProperty(const String &name, const String &category) const
+{
+    const String category_name = ::getCategory(this, category);
+    
+    if (categories.find(category_name) != categories.end())
+    {
+        const PropertyMap &property_map = categories.at(category_name).properties;
+    
+        if (name.contains(".") && !name.startsWith("."))
+        {
+            const auto it = property_map.find(name.upToFirstOccurrenceOf(".", false, false).toLowerCase());
+            
+            if (it != property_map.end())
+            {
+                return it->second.getProperty(name.fromFirstOccurrenceOf(".", false, false));
+            }
+        }
+    
+        const String property_id = name.trim().toLowerCase();
+        const auto it            = property_map.find(property_id);
+        
+        if (it != property_map.end())
+        {
+            return it->second;
+        }
+    }
+    
+    return {};
 }
 
 Config::Property Config::getAllProperties()
 {
     Property root("config", var());
 
-    for (auto &[name, category_map] : categories)
+    for (auto &[category_name, category] : categories)
     {
-        Property category(name, var());
-
-        if (comments.find(name) != comments.end())
-        {
-            category.setComment(comments.at(name));
-        }
-
-        for (auto &[p0, property] : category_map)
-        {
-            category.addProperty(property);
-        }
-
-        root.addProperty(category);
+        Property category_property(category_name, var());
+        category_property.setComment(category.comment);
+        category_property.data->properties = category.properties;
+        root.addProperty(category_property);
     }
 
     return root;
@@ -621,52 +889,47 @@ Config::Property Config::getAllProperties()
 const Config::Property Config::getAllProperties() const
 {
     Property root("config", var());
-
-    for (auto &[name, category_map] : categories)
+    
+    for (const auto &[category_name, category] : categories)
     {
-        Property category(name, var());
-
-        if (comments.find(name) != comments.end())
-        {
-            category.setComment(comments.at(name));
-        }
-
-        for (auto &[p0, property] : category_map)
-        {
-            category.addProperty(property);
-        }
-
-        root.addProperty(category);
+        Property category_property(category_name, var());
+        category_property.setComment(category.comment);
+        category_property.data->properties = category.properties;
+        root.addProperty(category_property);
     }
-
+    
     return root;
 }
 
-String Config::getCategoryComment(const String &category) const noexcept
+String Config::getCategoryComment(const String &category) const
 {
-    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
-                                               : options.defaultCategory.trim().toLowerCase();
-
-    if (category_name != options.defaultCategory && comments.find(category_name) != comments.end())
+    const String category_name = ::getCategory(this, category);
+    const auto it              = categories.find(category_name);
+    
+    if (it != categories.end())
     {
-        return comments.at(category_name);
+        return it->second.comment;
     }
 
-    return "";
+    return {};
 }
 
-void Config::setCategoryComment(const String &category, const String &comment) noexcept
+void Config::setCategoryComment(const String &category, const String &comment)
 {
-    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
-                                               : options.defaultCategory.trim().toLowerCase();
-
-    if (category_name != options.defaultCategory && comments.find(category_name) != comments.end())
+    const String category_name = ::getCategory(this, category);
+    
+    if (category_name != options.defaultCategory)
     {
-        comments.at(category_name) = comment;
+        const auto it = categories.find(category_name);
+        
+        if (it != categories.end())
+        {
+            it->second.comment = comment;
+        }
     }
 }
 
-const IConfigParser *Config::getParser() const noexcept
+const Config::ConfigParserType* Config::getParser() const noexcept
 {
     return parser.get();
 }
@@ -684,11 +947,10 @@ const Config::Options &Config::getOptions() const noexcept
 //======================================================================================================================
 Config::Property Config::createProperty(const String &name, const var &defaultValue, const String &category) noexcept
 {
-    Property property (name, defaultValue);
-    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
-                                               : options.defaultCategory.trim().toLowerCase();
-    String property_id = name.trim().toLowerCase();
-    bool was_added     = categories[category_name].emplace(property_id, property).second;
+    Property property(name, defaultValue);
+    const String category_name = ::getCategory(this, category);
+    const String property_id   = name.removeCharacters(" ").toLowerCase();
+    const bool was_added       = categories[category_name].properties.emplace(property_id, property).second;
 
     if (was_added)
     {
@@ -696,91 +958,80 @@ Config::Property Config::createProperty(const String &name, const var &defaultVa
         {
             (void) save();
         }
-
-        property.addConfig(this);
-        postAddedListener(property);
+        
+        property.setConfig(this);
+        
+        {
+            PropertyAddedHandler handler = PropertyAdded;
+            handler(property);
+        }
+        
+        return property;
     }
 
-    return property;
+    return categories.at(category_name).properties.at(property_id);
 }
 
-void Config::addProperty(Property property, const String &category) noexcept
+OperationResult Config::addProperty(Property property, const String &category) noexcept
 {
-    if(property.isValid() && property.data->eventConfig)
+    if(property.isValid() && property.data->config)
     {
-        return;
+        return ErrorCodes::PropertyOwned;
     }
-
-    String category_name = !category.isEmpty() ? category.trim().toLowerCase()
-                                               : options.defaultCategory.trim().toLowerCase();
-    String property_id   = property.getName().trim().toLowerCase();
-    bool was_added       = categories[category_name].emplace(property_id, property).second;
-
+    
+    const String category_name = ::getCategory(this, category);
+    const String property_id   = property.getName().removeCharacters(" ").toLowerCase();
+    const bool was_added       = categories[category_name].properties.emplace(property_id, property).second;
+    
     if (was_added)
     {
         if (shouldAutosave())
         {
             (void) save();
         }
-
-        property.addConfig(this);
-        postAddedListener(property);
+        
+        property.setConfig(this);
+        
+        {
+            PropertyAddedHandler handler = PropertyAdded;
+            handler(property);
+        }
+        
+        return true;
     }
+    
+    return ErrorCodes::PropertyExists;
 }
 
 void Config::resetCategory(const String &category) noexcept
 {
-    String catname = !category.isEmpty() ? category.trim().toLowerCase() : options.defaultCategory.trim().toLowerCase();
-    auto it        = categories.find(catname);
-
+    const String category_name = ::getCategory(this, category);
+    const auto it              = categories.find(category_name);
+    
     if(it != categories.end())
     {
-        for(auto proppair : it->second)
+        for(auto &[_, property] : it->second.properties)
         {
-            proppair.second.reset(true);
+            property.reset(true);
         }
     }
 }
 
 //======================================================================================================================
-void Config::addListener(Listener *listener) noexcept
+bool Config::shouldAutosave() noexcept
 {
-    if (listener)
+    if (!autoSaveActive)
     {
-        listeners.add(listener);
+        autoSaveActive = true;
+        return false;
     }
+    
+    return options.autoSave;
 }
 
-void Config::removeListener(Listener *listener) noexcept
+Config::ProcessLockGuard* Config::createIpcLock() const
 {
-    listeners.remove(listener);
-}
-
-//======================================================================================================================
-const bool Config::shouldAutosave() const noexcept
-{
-    return autoSaveActive && options.autoSave;
-}
-
-Config::t_ProcessLock *Config::createIpcLock() const
-{
-    return options.processSynced ? new t_ProcessLock(*ipMutex) : nullptr;
-}
-
-void Config::postAddedListener(Property prop) noexcept
-{
-    listeners.call([=, &prop](Listener &l)
-    {
-        l.onPropertyAdded(prop);
-    });
-}
-
-void Config::postValueChangedListener(const String &name, var oldValue, var newValue) noexcept
-{
-    listeners.call([=, &name, &oldValue, &newValue](Listener &l)
-    {
-        l.onValueChanged(name, oldValue, newValue);
-    });
+    return options.processSynced ? new ProcessLockGuard(*ipMutex) : nullptr;
 }
 #pragma endregion Config
 }

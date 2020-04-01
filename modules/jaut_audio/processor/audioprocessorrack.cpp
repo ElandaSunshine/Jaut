@@ -23,16 +23,15 @@
     ===============================================================
  */
 
-#include <jaut/processor/audioprocessorrack.h>
-#include <jaut/jaut_util/exception.h>
+#include "audioprocessorrack.h"
+
+using namespace juce;
 
 //region Namespace
 /* ================================================================================================================== */
 namespace
 {
-using namespace jaut;
-
-inline int hasProcessor(const AudioProcessorRack::ProcessorVector &rack, const String &id)
+inline int indexOf(const jaut::AudioProcessorRack::ProcessorVector &rack, const String &id)
 {
     for(int i = 0; i < rack.size(); ++i)
     {
@@ -53,39 +52,43 @@ namespace jaut
 {
 //region UndoHistory
 /* ================================================================================================================== */
-template<>
-class AudioProcessorRack::UndoableAddRemove<true> final : public UndoableAction
+class AudioProcessorRack::UndoableAdd final : public UndoableAction
 {
 public:
-    UndoableAddRemove(AudioProcessorRack *rack, String itemId)
-        : rack(rack), itemId(std::move(itemId))
+    UndoableAdd(AudioProcessorRack *rack, String itemId)
+        : rack(rack), itemId(std::move(itemId)),
+          previousIndex(-1)
     {}
 
     //==================================================================================================================
     bool perform() override
     {
-        if(!rack)
+        if(rack)
         {
-            const String id = itemId.removeCharacters(" ").toLowerCase();
+            CriticalSection::ScopedLockType lock(rack->sourceLock);
+            auto &source_vec = rack->source;
 
-            if(::hasProcessor(rack->source, id) == -1)
+            if(::indexOf(source_vec, itemId) == -1)
             {
-                if(auto new_processor = rack->initializerFunction(id))
+                if(auto new_processor = rack->initialisationCallback(itemId))
                 {
+                    // In case we previously undid adding a processor, we redo adding it with the previous state data.
                     if(data.isValid())
                     {
                         new_processor->readData(data);
                     }
-
+                    
                     new_processor->prepareToPlay(rack->getSampleRate(), rack->getBlockSize());
                     new_processor->setPlayHead(rack->getPlayHead());
-
+                    source_vec.emplace_back(new_processor);
+    
+                    if(previousIndex >= 0)
                     {
-                        SpinLock::ScopedLockType locker(rack->swapLock);
-                        rack->source.emplace_back(new_processor);
+                        rack->sourceIndex = std::exchange(previousIndex, -1);
                     }
-
-                    rack->sendSwapMessage();
+                    
+                    rack->send<MessageSwap>(source_vec, rack->sourceIndex);
+                    
                     return true;
                 }
             }
@@ -96,31 +99,31 @@ public:
 
     bool undo() override
     {
-        if(!rack)
+        if(rack)
         {
-            const String id           = itemId.removeCharacters(" ").toLowerCase();
-            const int processor_index = ::hasProcessor(rack->source, id);
+            CriticalSection::ScopedLockType lock(rack->sourceLock);
+            auto &source_vec          = rack->source;
+            const int processor_index = ::indexOf(source_vec, itemId);
 
             if(processor_index >= 0)
             {
                 data = ValueTree("Data");
-                rack->source.at(processor_index)->writeData(data);
-
+                source_vec.at(processor_index)->writeData(data); // save state in case we redo the undo
+                previousIndex = rack->sourceIndex;
+    
+                source_vec.erase(rack->source.begin() + processor_index);
+                
+                if(rack->sourceIndex >= source_vec.size())
                 {
-                    SpinLock::ScopedLockType locker(rack->swapLock);
-                    rack->source.erase(rack->source.begin() + processor_index);
+                    rack->sourceIndex = static_cast<int>(source_vec.size() - 1);
                 }
-
-                if(rack->getActiveIndex() >= rack->source.size())
-                {
-                    rack->activeIndex.store(rack->source.size() - 1);
-                }
-
-                rack->sendSwapMessage();
+                
+                rack->send<MessageSwap>(source_vec, rack->sourceIndex);
+                
                 return true;
             }
         }
-
+        
         return false;
     }
 
@@ -134,74 +137,78 @@ private:
     AudioProcessorRack *rack;
     String itemId;
     ValueTree data;
+    int previousIndex;
 };
 
-template<>
-class AudioProcessorRack::UndoableAddRemove<false> final : public UndoableAction
+class AudioProcessorRack::UndoableRemove final : public UndoableAction
 {
 public:
-    UndoableAddRemove(AudioProcessorRack *rack, String itemId)
-            : rack(rack), itemId(std::move(itemId)), data("Data")
+    UndoableRemove(AudioProcessorRack *rack, String itemId)
+        : rack(rack), itemId(std::move(itemId)), data("Data"),
+          previousIndex(-1)
     {}
 
     //==================================================================================================================
     bool perform() override
     {
-        if(!rack)
+        if(rack)
         {
-            const String id           = itemId.removeCharacters(" ").toLowerCase();
-            const int processor_index = ::hasProcessor(rack->source, id);
-
+            CriticalSection::ScopedLockType lock(rack->sourceLock);
+            auto &source_vec          = rack->source;
+            const int processor_index = ::indexOf(source_vec, itemId);
+            
             if(processor_index >= 0)
             {
-                rack->source.at(processor_index)->writeData(data);
-
+                source_vec.at(processor_index)->writeData(data);
+                previousIndex = rack->sourceIndex;
+                
+                source_vec.erase(source_vec.begin() + processor_index);
+                
+                if(rack->sourceIndex >= source_vec.size())
                 {
-                    SpinLock::ScopedLockType locker(rack->swapLock);
-                    rack->source.erase(rack->source.begin() + processor_index);
+                    rack->sourceIndex = static_cast<int>(source_vec.size() - 1);
                 }
-
-                if(rack->getActiveIndex() >= rack->source.size())
-                {
-                    rack->activeIndex.store(rack->source.size() - 1);
-                }
-
-                rack->sendSwapMessage();
+                
+                rack->send<MessageSwap>(source_vec, rack->sourceIndex);
+                
                 return true;
             }
         }
-
+        
         return false;
     }
-
+    
     bool undo() override
     {
-        if(!rack)
+        if(rack)
         {
-            const String id = itemId.removeCharacters(" ").toLowerCase();
-
-            if(::hasProcessor(rack->source, id) == -1)
+            CriticalSection::ScopedLockType lock(rack->sourceLock);
+            auto &source_vec = rack->source;
+            
+            if(::indexOf(source_vec, itemId) == -1)
             {
-                if(auto new_processor = rack->initializerFunction(id))
+                if(auto new_processor = rack->initialisationCallback(itemId))
                 {
                     new_processor->readData(data);
                     new_processor->prepareToPlay(rack->getSampleRate(), rack->getBlockSize());
                     new_processor->setPlayHead(rack->getPlayHead());
-
+                    rack->source.emplace_back(new_processor);
+                    
+                    if(previousIndex >= 0)
                     {
-                        SpinLock::ScopedLockType locker(rack->swapLock);
-                        rack->source.emplace_back(new_processor);
+                        rack->sourceIndex = std::exchange(previousIndex, -1);
                     }
-
-                    rack->sendSwapMessage();
+                    
+                    rack->send<MessageSwap>(source_vec, rack->sourceIndex);
+                    
                     return true;
                 }
             }
         }
-
+        
         return false;
     }
-
+    
     //==================================================================================================================
     int getSizeInUnits()  override
     {
@@ -212,46 +219,51 @@ private:
     AudioProcessorRack *rack;
     String itemId;
     ValueTree data;
+    int previousIndex;
 };
 
 class AudioProcessorRack::UndoableClear final : public UndoableAction
 {
 public:
     explicit UndoableClear(AudioProcessorRack *rack)
-        : rack(rack), data("Data")
+        : rack(rack), previousIndex(-1)
     {}
 
     //==================================================================================================================
     bool perform() override
     {
-        if(!rack && !rack->source.empty())
+        if(rack && !(rack->source.empty()))
         {
+            CriticalSection::ScopedLockType lock(rack->sourceLock);
+    
+            data          = ValueTree("Data");
+            previousIndex = rack->sourceIndex;
             rack->writeData(data);
-
-            {
-                SpinLock::ScopedLockType locker(rack->swapLock);
-                rack->source.clear();
-            }
-
-            rack->activeIndex.store(0);
-            rack->sendSwapMessage();
-
+            
+            rack->send<MessageSwap>(rack->source, (rack->sourceIndex = 0));
+            
             return true;
         }
-
+        
         return false;
     }
 
     bool undo() override
     {
-        if(!rack && data.isValid())
+        if(rack && data.isValid())
         {
+            CriticalSection::ScopedLockType lock(rack->sourceLock);
+            
+            rack->readData(data);
+            data = ValueTree();
+            
+            if(previousIndex >= 0)
             {
-                SpinLock::ScopedLockType locker(rack->swapLock);
-                rack->readData(data);
+                rack->sourceIndex = std::exchange(previousIndex, -1);
             }
-
-            rack->sendSwapMessage();
+            
+            rack->send<MessageSwap>(rack->source, rack->sourceIndex);
+            
             return true;
         }
 
@@ -267,6 +279,7 @@ public:
 private:
     AudioProcessorRack *rack;
     ValueTree data;
+    int previousIndex;
 };
 
 class AudioProcessorRack::UndoableMove final : public UndoableAction
@@ -279,43 +292,50 @@ public:
     //==================================================================================================================
     bool perform() override
     {
-        if(!rack)
+        if (rack)
         {
-            const String id           = itemId.removeCharacters(" ").toLowerCase();
-            const int processor_index = ::hasProcessor(rack->source, id);
-
-            if(processor_index >= 0 && processor_index != itemIndex &&
-               jaut::fit_s<int>(itemIndex, 0, rack->source.size()))
+            CriticalSection::ScopedLockType lock(rack->sourceLock);
+            
+            auto &source_vec          = rack->source;
+            const int processor_index = ::indexOf(source_vec, itemId);
+            
+            if (processor_index >= 0 && processor_index != itemIndex)
             {
+                makeRotation(processor_index, itemIndex);
+                
+                if (processor_index == rack->sourceIndex)
                 {
-                    SpinLock::ScopedLockType locker(rack->swapLock);
-                    makeRotation(processor_index, itemIndex);
+                    rack->sourceIndex = itemIndex;
                 }
-
+                
                 itemIndex = processor_index;
-                rack->sendSwapMessage();
-
+                rack->send<MessageSwap>(source_vec, rack->sourceIndex);
+                
                 return true;
             }
         }
-
+        
         return false;
     }
 
     bool undo() override
     {
-        if(!rack)
+        if (rack)
         {
-            const String id           = itemId.removeCharacters(" ").toLowerCase();
-            const int processor_index = ::hasProcessor(rack->source, id);
+            CriticalSection::ScopedLockType lock(rack->sourceLock);
+            
+            auto &source_vec          = rack->source;
+            const int processor_index = ::indexOf(source_vec, itemId);
 
+            makeRotation(processor_index, itemIndex);
+    
+            if (processor_index == rack->sourceIndex)
             {
-                SpinLock::ScopedLockType locker(rack->swapLock);
-                makeRotation(processor_index, itemIndex);
+                rack->sourceIndex = itemIndex;
             }
-
+            
             itemIndex = processor_index;
-            rack->sendSwapMessage();
+            rack->send<MessageSwap>(source_vec, rack->sourceIndex);
 
             return true;
         }
@@ -339,6 +359,15 @@ private:
     {
         ProcessorVector &vector = rack->source;
 
+        if(targetIndex < 0)
+        {
+            targetIndex = 0;
+        }
+        else if(targetIndex >= vector.size())
+        {
+            targetIndex = static_cast<int>(vector.size() - 1);
+        }
+        
         if(indexToMove < targetIndex)
         {
             for(int i = indexToMove; i < targetIndex; ++i)
@@ -355,192 +384,223 @@ private:
         }
     }
 };
+
+class AudioProcessorRack::UndoableSelect final : public UndoableAction
+{
+public:
+    UndoableSelect(AudioProcessorRack *rack, int index)
+        : rack(rack), itemIndex(index)
+    {}
+    
+    //==================================================================================================================
+    bool perform() override
+    {
+        if(!rack)
+        {
+            CriticalSection::ScopedLockType lock(rack->sourceLock);
+    
+            if(jaut::fit_s<int>(itemIndex, 0, rack->source.size()) && itemIndex != rack->sourceIndex)
+            {
+                rack->sendToAll<MessageSelect>(std::exchange(itemIndex, rack->sourceIndex));
+                return true;
+            }
+        }
+    
+        return false;
+    }
+    
+    bool undo() override
+    {
+        return perform();
+    }
+    
+    //==================================================================================================================
+    int getSizeInUnits()  override
+    {
+        return static_cast<int>(sizeof(*this));
+    }
+
+private:
+    AudioProcessorRack *rack;
+    int itemIndex;
+};
 //endregion UndoHistory
 //region Messages
 /* ================================================================================================================== */
 class AudioProcessorRack::MessageSwap final : public IMessage
 {
 public:
-    explicit MessageSwap(ProcessorVector source)
-        : sourceCopy(std::move(source))
+    MessageSwap(ProcessorVector source, int index)
+        : sourceCopy(std::move(source)),
+          index(index)
     {}
 
     //==================================================================================================================
     void handleMessage(IMessageHandler *context, MessageDirection messageDirection) override
     {
-        AudioProcessorRack &rack = *static_cast<AudioProcessorRack*>(context);
-
-        if(messageDirection == TargetThread)
-        {
-            if(rack.swapLock.tryEnter())
-            {
-                sourceCopy = rack.source;
-                rack.swapLock.exit();
-            }
-
-            std::swap(sourceCopy, rack.devices);
-        }
-        else
-        {
-            std::swap(rack.source, sourceCopy);
-        }
+        AudioProcessorRack &rack = *static_cast<AudioProcessorRack*>(context); // NOLINT
+        std::swap(sourceCopy, rack.devices);
+        rack.deviceIndex = index;
     }
 
 private:
     ProcessorVector sourceCopy;
+    int index;
+};
+
+class AudioProcessorRack::MessageSelect final : public IMessage
+{
+public:
+    explicit MessageSelect(int newIndex)
+        : index(newIndex)
+    {}
+    
+    //==================================================================================================================
+    void handleMessage(IMessageHandler *context, MessageDirection messageDirection) override
+    {
+        AudioProcessorRack &rack = *static_cast<AudioProcessorRack*>(context); // NOLINT
+        
+        if(messageDirection == MessageThread)
+        {
+            rack.sourceIndex = index;
+        }
+        else
+        {
+            rack.deviceIndex = index;
+        }
+    }
+
+private:
+    int index;
 };
 //endregion Messages
 //region AudioProcessorRack
 /* ==================================================================================
  * =============================== AudioProcessorRack ===============================
  * ================================================================================== */
-AudioProcessorRack::AudioProcessorRack(AudioProcessor &processor, ProcessingMode mode,
-                                       AudioProcessorValueTreeState &vts, InitializerFunc processorInitializer,
+AudioProcessorRack::AudioProcessorRack(ProcessingMode mode, InitCallback initCallback,
                                        UndoManager *undoManager) noexcept
-    : parent(processor), parameters(vts), undoManager(undoManager), initializerFunction(processorInitializer),
-      mode(mode), activeIndex(0), previousIndex(0)
+    : initialisationCallback(std::move(initCallback)), mode(mode),
+      undoManager(undoManager), deviceIndex(0), sourceIndex(0)
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
+    JAUT_ENSURE_MESSAGE_THREAD;
 }
 
 //======================================================================================================================
-bool AudioProcessorRack::addDevice(const String &deviceId)
+bool AudioProcessorRack::addProcessor(const String &processorId)
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return undoManager ? undoManager->perform(new UndoableAddRemove<true>(this, deviceId)) :
-                         UndoableAddRemove<true>(this, deviceId).perform();
+    JAUT_ENSURE_MESSAGE_THREAD;
+    const String id = processorId.removeCharacters(" ").trim();
+    return undoManager ? undoManager->perform(new UndoableAdd(this, id)) : UndoableAdd(this, id).perform();
 }
 
-bool AudioProcessorRack::removeDevice(const String &deviceId)
+bool AudioProcessorRack::removeProcessor(const String &processorId)
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return undoManager ? undoManager->perform(new UndoableAddRemove<false>(this, deviceId)) :
-                         UndoableAddRemove<false>(this, deviceId).perform();
+    JAUT_ENSURE_MESSAGE_THREAD;
+    const String id = processorId.removeCharacters(" ").trim();
+    return undoManager ? undoManager->perform(new UndoableRemove(this, id)) : UndoableRemove(this, id).perform();
 }
 
-bool AudioProcessorRack::moveDevice(const String &deviceId, int index)
+bool AudioProcessorRack::moveProcessor(const String &processorId, int index)
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return undoManager ? undoManager->perform(new UndoableMove(this, deviceId, index)) :
-                         UndoableMove(this, deviceId, index).perform();
+    JAUT_ENSURE_MESSAGE_THREAD;
+    const String id = processorId.removeCharacters(" ").trim();
+    return undoManager ? undoManager->perform(new UndoableMove(this, id, index)) :
+                         UndoableMove(this, id, index).perform();
 }
 
 bool AudioProcessorRack::clear()
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
+    JAUT_ENSURE_MESSAGE_THREAD;
     return undoManager ? undoManager->perform(new UndoableClear(this)) : UndoableClear(this).perform();
 }
 
 //======================================================================================================================
-const String AudioProcessorRack::getName() const
+const String AudioProcessorRack::getName() const // NOLINT
 {
     return "AudioProcessorRack";
 }
 
-int AudioProcessorRack::getNumDevices() const noexcept
+int AudioProcessorRack::getNumProcessors() const noexcept
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
+    JAUT_ENSURE_MESSAGE_THREAD;
     return source.size();
 }
 
 //==================================================================================================================
-AudioProcessorRack::Processor AudioProcessorRack::getDevice(int index) noexcept
+AudioProcessorRack::Processor* AudioProcessorRack::getProcessor(int index) noexcept
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return jaut::fit_s(index, 0, getNumDevices()) ? source.at(index).get() : nullptr;
+    JAUT_ENSURE_MESSAGE_THREAD;
+    return jaut::fit_s(index, 0, getNumProcessors()) ? source.at(index).get() : nullptr;
 }
 
-AudioProcessorRack::Processor AudioProcessorRack::getDevice(const String &deviceId) noexcept
+AudioProcessorRack::Processor* AudioProcessorRack::getProcessor(const String &processorId) noexcept
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
+    JAUT_ENSURE_MESSAGE_THREAD;
 
-    const String id = deviceId.removeCharacters(" ").toLowerCase();
-    int index       = ::hasProcessor(source, id);
-
+    const String id = processorId.removeCharacters(" ").toLowerCase();
+    const int index = ::indexOf(source, id);
     return index >= 0 ? source.at(index).get() : nullptr;
 }
 
-AudioProcessorRack::Processor AudioProcessorRack::getDevice(int index) const noexcept
+const AudioProcessorRack::Processor* AudioProcessorRack::getProcessor(int index) const noexcept
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return jaut::fit_s(index, 0, getNumDevices()) ? source.at(index).get() : nullptr;
+    JAUT_ENSURE_MESSAGE_THREAD;
+    return jaut::fit_s(index, 0, getNumProcessors()) ? source.at(index).get() : nullptr;
 }
 
-AudioProcessorRack::Processor AudioProcessorRack::getDevice(const String &deviceId) const noexcept
+const AudioProcessorRack::Processor* AudioProcessorRack::getProcessor(const String &processorId) const noexcept
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-
-    const String id = deviceId.removeCharacters(" ").toLowerCase();
-    int index       = ::hasProcessor(source, id);
-
+    JAUT_ENSURE_MESSAGE_THREAD;
+    
+    const String id = processorId.removeCharacters(" ").toLowerCase();
+    const int index = ::indexOf(source, id);
     return index >= 0 ? source.at(index).get() : nullptr;
 }
 
 //======================================================================================================================
-AudioProcessorRack::Processor AudioProcessorRack::getActivated()
+AudioProcessorRack::Processor* AudioProcessorRack::getActivated()
 {
-    if(mode == Serial)
-    {
-        return nullptr;
-    }
-
-    return source.at(getActiveIndex()).get();
+    JAUT_ENSURE_MESSAGE_THREAD;
+    return mode == Single && !source.empty() ? source.at(getActiveIndex()).get() : nullptr;
 }
 
 String AudioProcessorRack::getActivatedId() const
 {
-    if(mode == Serial)
-    {
-        return String();
-    }
-
-    return source.at(getActiveIndex())->getName().removeCharacters(" ").toLowerCase();
+    JAUT_ENSURE_MESSAGE_THREAD;
+    return mode == Single ? source.at(getActiveIndex())->getName().removeCharacters(" ").toLowerCase() : String();
 }
 
 int AudioProcessorRack::getActiveIndex() const
 {
-    return activeIndex.load();
+    JAUT_ENSURE_MESSAGE_THREAD;
+    return sourceIndex;
 }
 
 bool AudioProcessorRack::setActivated(int index)
 {
+    JAUT_ENSURE_MESSAGE_THREAD;
+    
     if(mode == Serial)
     {
         return false;
     }
-
-    const int active_index = getActiveIndex();
-
-    if(index != active_index && index >= 0 && index < source.size())
+    
+    if(index != sourceIndex && jaut::fit_s<int>(index, 0, source.size()))
     {
-        previousIndex = active_index;
-        activeIndex.store(index);
-
+        sendToAll<MessageSelect>(index);
         return true;
     }
 
     return false;
 }
 
-bool AudioProcessorRack::setActivated(const String &id)
+bool AudioProcessorRack::setActivated(const String &processorId)
 {
-    if(mode == Serial)
-    {
-        return false;
-    }
-
-    const int index        = ::hasProcessor(source, id.removeCharacters(" ").toLowerCase());
-    const int active_index = getActiveIndex();
-
-    if(index != active_index && index >= 0)
-    {
-        previousIndex = active_index;
-        activeIndex.store(index);
-
-        return true;
-    }
-
-    return false;
+    JAUT_ENSURE_MESSAGE_THREAD;
+    const String id = processorId.removeCharacters(" ").toLowerCase();
+    const int index = ::indexOf(source, id);
+    return setActivated(index);
 }
 
 //======================================================================================================================
@@ -563,15 +623,7 @@ void AudioProcessorRack::processBlock(AudioBuffer<float> &buffer, MidiBuffer &mi
             return;
         }
 
-        int devices_size = devices.size();
-        int index        = activeIndex.load();
-
-        if(index >= devices_size)
-        {
-            index = previousIndex < devices_size ? previousIndex : devices_size - 1;
-        }
-
-        devices.at(index)->processBlock(buffer, midiBuffer);
+        devices.at(sourceIndex)->processBlock(buffer, midiBuffer);
     }
 }
 
@@ -594,15 +646,7 @@ void AudioProcessorRack::processBlock(AudioBuffer<double> &buffer, MidiBuffer &m
             return;
         }
 
-        int devices_size = devices.size();
-        int index        = activeIndex.load();
-
-        if(index >= devices_size)
-        {
-            index = previousIndex < devices_size ? previousIndex : devices_size - 1;
-        }
-
-        devices.at(index)->processBlock(buffer, midiBuffer);
+        devices.at(sourceIndex)->processBlock(buffer, midiBuffer);
     }
 }
 
@@ -629,6 +673,8 @@ void AudioProcessorRack::releaseResources()
 void AudioProcessorRack::readData(const ValueTree data)
 {
     ProcessorVector data_vector;
+    const int selected_index = data.getProperty("ActiveIndex", 0);
+    
     data_vector.reserve(data.getNumChildren());
 
     for(const auto &child : data)
@@ -637,37 +683,41 @@ void AudioProcessorRack::readData(const ValueTree data)
         {
             const String id = child.getProperty("Id", "");
 
-            if(auto device = initializerFunction(id))
+            if(auto device = initialisationCallback(id))
             {
                 ValueTree device_data = child.getChild(0);
-
+                
                 if(device_data.isValid())
                 {
                     device->readData(device_data);
                 }
-
+                
                 device->setPlayHead(getPlayHead());
                 data_vector.emplace_back(device);
             }
         }
     }
-
+    
+    data_vector.shrink_to_fit();
+    
     if(MessageManager::getInstance()->isThisTheMessageThread())
     {
         std::swap(source, data_vector);
-        sendSwapMessage();
+        send<MessageSwap>(source, selected_index);
     }
     else
     {
+        if (!MessageManager::callAsync([this, data_vector, selected_index]() mutable {std::swap(source, data_vector);}))
         {
-            SpinLock::ScopedLockType locker(swapLock);
-            source = data_vector;
+            CriticalSection::ScopedLockType lock(sourceLock);
+            std::swap(source, data_vector);
         }
-
-        std::swap(devices, data_vector);
+        
+        {
+            CriticalSection::ScopedLockType lock(getCallbackLock());
+            std::swap(devices, data_vector);
+        }
     }
-
-    activeIndex.store(data.getProperty("ActiveIndex", 0));
 }
 
 void AudioProcessorRack::writeData(ValueTree data)
@@ -693,13 +743,6 @@ void AudioProcessorRack::writeData(ValueTree data)
             data.appendChild(device_state, nullptr);
         }
     }
-}
-
-//======================================================================================================================
-void AudioProcessorRack::sendSwapMessage()
-{
-    cancelPendingMessages();
-    send<MessageSwap>(source);
 }
 //endregion AudioProcessorRack
 }
