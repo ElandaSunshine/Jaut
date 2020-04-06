@@ -23,6 +23,8 @@
     ===============================================================
  */
 
+#include <juce_data_structures/juce_data_structures.h>
+
 namespace
 {
 using namespace jaut;
@@ -130,48 +132,20 @@ namespace jaut
  * ================================== Directory =====================================
  * ================================================================================== */
 
-AppData::Directory::Directory(const String &name, const String &baseDir) noexcept
-    : file(baseDir + "/" + name)
+AppData::Directory::Directory(const String &name, const String &baseDir)
+    : dirPath(baseDir + "/" + name)
 {}
 
-AppData::Directory::~Directory() {}
-
-//==============================================================================
-AppData::Directory AppData::Directory::operator[](const String &dirName) noexcept
-{
-    if (dirName.containsAnyOf("/\\"))
-    {
-        StringArray dir_list;
-        generateSubDirList(dir_list, dirName);
-
-        if (dir_list.size() > 0)
-        {
-            if (hasSubDirectory(dirName))
-            {
-                return recursivelySearchForDesiredDirectory(data->subDirectories.at(dirName.trim().toLowerCase()),
-                                                            dir_list, 1);
-            }
-        }
-
-        return Directory();
-    }
-
-    if (!hasSubDirectory(dirName))
-    {
-        (void) withSubFolder(dirName);
-    }
-
-    return data->subDirectories.at(dirName.trim().toLowerCase());
-}
-
+//======================================================================================================================
 bool AppData::Directory::operator==(const Directory &dir) const noexcept
 {
-    return data && data.get() == dir.data.get();
+    juce::ValueTree
+    return dirPath == dir.dirPath;
 }
 
 bool AppData::Directory::operator!=(const Directory &dir) const noexcept
 {
-    return !data || data.get() != dir.data.get();
+    return dirPath != dir.dirPath;
 }
 
 bool AppData::Directory::operator>(const Directory &dir) const noexcept

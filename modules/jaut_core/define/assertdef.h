@@ -29,5 +29,5 @@
   #define JAUT_ASSERT_EVENT_NOT_A_HANDLER "Event has invalid template parameter, "\
                                           "parameter 'Handler' must be of type EventHandler."
                                         
-  #define JAUT_ASSERT_INTEGRAL_TYPE_NOT_NUMERIC "The specified template parameter is not an integral type."
+  #define JAUT_ASSERT_INTEGRAL_TYPE_NOT_NUMERIC "The specified template parameter is not a numeric type."
 #endif

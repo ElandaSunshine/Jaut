@@ -126,15 +126,15 @@
 #include <jaut_core/util/operationresult.h>
 
 //======================================================================================================================
+// Signaling handlers
+#include <jaut_core/signal/event/event.h>
+
+//======================================================================================================================
 // Math utils
-#include <jaut_core/math/integral.h>
+#include <jaut_core/math/numeric.h>
 
 //======================================================================================================================
 // Text utils
 #include <jaut_core/text/alphabetiterator.h>
 #include <jaut_core/text/expansion/expandables.h>
 #include <jaut_core/text/expansion/expansionunit.h>
-
-//======================================================================================================================
-// Signaling handlers
-#include <jaut_core/signal/event/event.h>
