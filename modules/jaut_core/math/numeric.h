@@ -115,7 +115,7 @@ struct JAUT_API Numeric
     virtual Numeric &operator%=(NumericType value) { return modifyValue(numericValue % value); }
     
     //==================================================================================================================
-    virtual Numeric &operator++() noexcept
+    virtual Numeric &operator++()
     {
         ++numericValue;
         postChangeEvent();
@@ -123,7 +123,7 @@ struct JAUT_API Numeric
         return *this;
     }
     
-    virtual Numeric operator++(int) noexcept
+    virtual Numeric operator++(int)
     {
         const Numeric old = *this;
         
@@ -133,7 +133,7 @@ struct JAUT_API Numeric
         return old;
     }
     
-    virtual Numeric &operator--() noexcept
+    virtual Numeric &operator--()
     {
         --numericValue;
         postChangeEvent();
@@ -141,7 +141,7 @@ struct JAUT_API Numeric
         return *this;
     }
     
-    virtual Numeric operator--(int) noexcept
+    virtual Numeric operator--(int)
     {
         const Numeric old = *this;
         
@@ -152,35 +152,12 @@ struct JAUT_API Numeric
     }
     
     //==================================================================================================================
-    virtual bool operator==(const Numeric &right) const noexcept
-    {
-        return numericValue == right.integral;
-    }
-    
-    virtual bool operator!=(const Numeric &right) const noexcept
-    {
-        return numericValue != right.integral;
-    }
-    
-    virtual bool operator>(const Numeric &right) const noexcept
-    {
-        return numericValue > right.integral;
-    }
-    
-    virtual bool operator<(const Numeric &right) const noexcept
-    {
-        return numericValue < right.integral;
-    }
-    
-    virtual bool operator>=(const Numeric &right) const noexcept
-    {
-        return (*this) > right || (*this) == right;
-    }
-    
-    virtual bool operator<=(const Numeric &right) const noexcept
-    {
-        return (*this) < right || (*this) == right;
-    }
+    virtual bool operator==(const Numeric &right) const noexcept { return numericValue == right.integral; }
+    virtual bool operator!=(const Numeric &right) const noexcept { return numericValue != right.integral; }
+    virtual bool operator>(const Numeric &right)  const noexcept { return numericValue > right.integral; }
+    virtual bool operator<(const Numeric &right)  const noexcept { return numericValue < right.integral; }
+    virtual bool operator>=(const Numeric &right) const noexcept { return (*this) > right || (*this) == right; }
+    virtual bool operator<=(const Numeric &right) const noexcept { return (*this) < right || (*this) == right; }
     
     //==================================================================================================================
     friend void swap(Numeric &left, Numeric &right)
