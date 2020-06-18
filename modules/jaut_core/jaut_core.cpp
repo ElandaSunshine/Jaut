@@ -25,12 +25,10 @@
 
 #include <jaut_core/jaut_core.h>
 
-using namespace juce;
-
 #include <jaut_core/text/alphabetiterator.cpp>
 #include <jaut_core/text/expansion/expandables.cpp>
 #include <jaut_core/text/expansion/expansionunit.cpp>
 
-#if JAUT_STRICT_THREAD_EXCLUSION
+#if JAUT_STRICT_THREAD_EXCLUSION && JUCE_DEBUG && !DOXYGEN
 namespace jaut::internal { bool ThreadexIsEnabled = true; }
 #endif

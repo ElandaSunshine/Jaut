@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   exception.h
     @date   19, August 2019
     
@@ -26,13 +26,14 @@
 #pragma once
 
 #define JAUT_CREATE_EXCEPTION(NAME, ERROR_MSG) \
-             class JAUT_API x final : public jaut::Exception { \
-             public: NAME() noexcept : jaut::Exception(juce::String(ERROR_MSG)) {}}
+             class JAUT_API NAME final : public jaut::Exception { \
+             public: NAME() noexcept \
+             : jaut::Exception("Encountered " + juce::String(#NAME) + ": " + juce::String(ERROR_MSG)) {}}
 
 #define JAUT_CREATE_EXCEPTION_WITH_STRING(NAME, ERROR_MSG_TITLE) \
-             class JAUT_API x final : public jaut::Exception { \
+             class JAUT_API NAME final : public jaut::Exception { \
              public: explicit NAME(const juce::String &message) noexcept \
-             : jaut::Exception(juce::String(ERROR_MSG_TITLE) + message) {}}
+             : jaut::Exception("Encountered " + juce::String(#NAME) + ": " + juce::String(ERROR_MSG_TITLE) + message) {}}
 
 namespace jaut
 {
@@ -52,4 +53,9 @@ public:
 private:
     juce::String message;
 };
+
+namespace exception
+{
+JAUT_CREATE_EXCEPTION_WITH_STRING(InvalidVersionFormatException, "");
+}
 }

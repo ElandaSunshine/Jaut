@@ -12,42 +12,35 @@
 
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
-
+    
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
+    
+    @author Elanda
+    @file   jaut_gui.h
+    @date   18, June 2020
+    
+    ===============================================================
+    BEGIN_JUCE_MODULE_DECLARATION
 
-    @author Elanda (elanda@elandasunshine.xyz)
-    @file   mathhelper.h
-    @date   04, March 2020
+    ID:                 jaut_gui
+    vendor:             ElandaOfficial
+    version:            0.1.0
+    name:               JAUT Gui Tools
+    description:        Gui related utils.
+    website:            https://github.com/elandasunshine/jaut
+    license:            AGPL v3
+    minimumCppStandard: 17
+    dependencies:       juce_gui_extra
 
+    END_JUCE_MODULE_DECLARATION
     ===============================================================
  */
-
+ 
 #pragma once
 
-namespace jaut
-{
-template <class ValueType>
-JAUT_API inline constexpr bool fit_s(ValueType test, ValueType lower, ValueType upper) noexcept
-{
-    return test >= lower && test < upper;
-}
+// Dependencies
+#include <juce_gui_extra/juce_gui_extra.h>
 
-template <class ValueType>
-JAUT_API inline constexpr bool fit_e(ValueType test, ValueType lower, ValueType upper) noexcept
-{
-    return test > lower && test <= upper;
-}
-
-template <class ValueType>
-JAUT_API inline constexpr bool fit_b(ValueType test, ValueType lower, ValueType upper) noexcept
-{
-    return test > lower && test < upper;
-}
-
-template <class ValueType>
-JAUT_API inline constexpr bool fit_a(ValueType test, ValueType lower, ValueType upper) noexcept
-{
-    return test >= lower && test <= upper;
-}
-}
+// Includes
+#include <jaut_gui/text/fontformat.h>

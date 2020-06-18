@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   iconfigparser.h
     @date   04, May 2019
     
@@ -29,29 +29,41 @@ namespace jaut
 {
 
 /**
-    An interfaces to provide the bones for a new parser class to use in the Config class.
-    You can also use the parser your own way, this is just an interfaces.
+ *  An interfaces to provide the bones for a new parser class to use in the Config class.
+ *  You can also use the parser your own way, this is just an interfaces.
+ *
+ *  @tparam Property      The property type of the config to write to
+ *  @tparam ConstProperty The property type of the config to read from
  */
-template<class Property>
+template<class Property, class ConstProperty>
 class JAUT_API IConfigParser
 {
 public:
+    /** The type of the property to write to. */
+    using PropertyType = Property;
+    
+    /** The type of the property to read from. */
+    using ConstPropertyType = ConstProperty;
+    
+    //==================================================================================================================
     virtual ~IConfigParser() = default;
     
     /**
-        Parse the config from a config file.
-        
-        @param configFile The path to the config file
-        @param root       A property containing all the data of the config file
+     *  Parse the config from a config file.
+     *
+     *  @param configFile The path to the config file
+     *  @param root       A property containing all the data of the config file
+     *  @return The result of this operation
      */
-    virtual OperationResult parseConfig(const File &configFile, Property root) const = 0;
+    virtual OperationResult parseConfig(const juce::File &configFile, Property root) const = 0;
 
     /**
-        Writes the config to a file.
-
-        @param configFile The path to the config file
-        @param root       A property containing all the data of the config file
+     *  Writes the config to a file.
+     *
+     *  @param configFile The path to the config file
+     *  @param root       A property containing all the data of the config file
+     *  @return The result of this operation
      */
-    virtual OperationResult writeConfig(const File &configFile, const Property root) const = 0;
+    virtual OperationResult writeConfig(const juce::File &configFile, ConstProperty root) const = 0;
 };
 }

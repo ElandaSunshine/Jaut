@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   configparser.h
     @date   04, May 2019
     
@@ -25,7 +25,7 @@
 
 #pragma once
 
-#if 1//__has_include(<yaml-cpp/yaml.h>)
+#if __has_include(<yaml-cpp/yaml.h>)
 #   include <yaml-cpp/yaml.h>
 #endif
 
@@ -35,7 +35,7 @@ namespace jaut
     The XmlParser is an in-built parser for the Config class used for parsing Xml style config files.
     You may use it for yourself too though.
  */
-class JAUT_API XmlParser final : public IConfigParser<Config::Property>
+class JAUT_API XmlParser final : public jaut::Config::ConfigParserType
 {
 public:
     struct JAUT_API ErrorCodes final
@@ -57,25 +57,25 @@ public:
     };
     
     //=================================================================================================================
-    explicit XmlParser(const String &defaultCategory, const String &tagSettingId = "Setting",
-                       const String &tagIntroId = "Config", const String &tagCategoryId = "Category") noexcept;
+    explicit XmlParser(const juce::String &tagSettingId  = "Setting",
+                       const juce::String &tagIntroId    = "Config",
+                       const juce::String &tagCategoryId = "Category") noexcept;
 
     //=================================================================================================================
-    OperationResult parseConfig(const File &configFile, Config::Property root) const override;
-    OperationResult writeConfig(const File &configFile, const Config::Property root) const override;
+    OperationResult parseConfig(const juce::File &configFile, PropertyType root) const override;
+    OperationResult writeConfig(const juce::File &configFile, ConstPropertyType root) const override;
 
 private:
-    String defaultCategory;
-    String tagSetting;
-    String tagIntro;
-    String tagCategory;
+    juce::String tagSetting;
+    juce::String tagIntro;
+    juce::String tagCategory;
 };
 
 /**
     The JsonParser is an in-built parser for the Config class used for parsing Json style config files.
     You may use it for yourself too though.
  */
-class JAUT_API JsonParser final : public IConfigParser<Config::Property>
+class JAUT_API JsonParser final : public Config::ConfigParserType
 {
 public:
     struct JAUT_API ErrorCodes final
@@ -97,14 +97,14 @@ public:
     };
     
     //==================================================================================================================
-    explicit JsonParser(const String &noticeId = "NOTICE") noexcept;
+    explicit JsonParser(const juce::String &noticeId = "NOTICE") noexcept;
 
     //==================================================================================================================
-    OperationResult parseConfig(const File &configFile, Config::Property root) const override;
-    OperationResult writeConfig(const File &configFile, const Config::Property root) const override;
+    OperationResult parseConfig(const juce::File &configFile, PropertyType root) const override;
+    OperationResult writeConfig(const juce::File &configFile, ConstPropertyType root) const override;
 
 private:
-    String noticeId;
+    juce::String noticeId;
 };
 
 #ifdef YAML_CPP_API
@@ -112,7 +112,7 @@ private:
     The YamlParser is an in-built parser for the Config class used for parsing Yaml style config files.
     You may use it for yourself too though.
  */
-class JAUT_API YamlParser final : public IConfigParser<Config::Property>
+class JAUT_API YamlParser final : public Config::ConfigParserType
 {
 public:
     struct JAUT_API ErrorCodes final
@@ -134,8 +134,8 @@ public:
     };
     
     //==================================================================================================================
-    OperationResult parseConfig(const File &configFile, Config::Property root) const override;
-    OperationResult writeConfig(const File &configFile, const Config::Property root) const override;
+    OperationResult parseConfig(const juce::File &configFile, PropertyType root) const override;
+    OperationResult writeConfig(const juce::File &configFile, ConstPropertyType root) const override;
 };
 #endif
 }

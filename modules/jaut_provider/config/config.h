@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   config.h
     @date   04, May 2019
     
@@ -39,9 +39,9 @@ namespace jaut
  */
 class JAUT_API Config final
 {
-    //==================================================================================================================
+private:
     class PropertyCategory;
-    
+
 public:
     class Property;
     
@@ -50,39 +50,39 @@ public:
     using ValueChangedHandler = EventHandler<juce::String, juce::var, juce::var>;
     
     /** The event handler, handling property addition events */
-    using PropertyAddedHandler = EventHandler<Property>;
+    using PropertyAddedHandler = EventHandler<Config::Property>;
+    
+    /** The map type containing the root properties. */
+    using PropertyMap = std::map<juce::String, Config::Property>;
+    
+    /** The map type containing the categories. */
+    using CategoryMap = std::unordered_map<juce::String, Config::PropertyCategory>;
+    
+    /** The return type of const member functions returning a Property object */
+    using ConstProperty = ConstProxy<jaut::Config::Property>;
+    
+    /** The type of config parser. */
+    using ConfigParserType = IConfigParser<Config::Property, Config::ConstProperty>;
     
     //==================================================================================================================
     struct JAUT_API ErrorCodes final
     {
-        /**
-         *  The child property already existed.
-         */
+        /** The child property already existed. */
         static constexpr int PropertyExists = 0x0001;
     
-        /**
-         *  This property or the child property was invalid.
-         */
+        /** This property or the child property was invalid. */
         static constexpr int PropertyInvalid = 0x0002;
     
-        /**
-         *  The property is already owned by a config.
-         */
+        /** The property is already owned by a config. */
         static constexpr int PropertyOwned = 0x0003;
     
-        /**
-         *  The config file is already getting modified by another program.
-         */
+        /** The config file is already getting modified by another program. */
         static constexpr int FileIsOpen = 0x0004;
     
-        /**
-         *  The config file to read-from/write-to was not found.
-         */
+        /** The config file to read-from/write-to was not found. */
         static constexpr int FileNotFound = 0x0005;
         
-        /**
-         *  The parser was invalid and couldn't be used.
-         */
+        /** The config's parser was invalid and couldn't be used. */
         static constexpr int InvalidParser = 0x0006;
     };
     
@@ -91,7 +91,7 @@ public:
      *  Every property can contain child properties, by that means, you can nest properties.
      *  @see Config
      */
-    class JAUT_API Property final
+    class JAUT_API Property
     {
     public:
         //==============================================================================================================
@@ -115,7 +115,7 @@ public:
         /**
          *  Constructs an invalid property.
          */
-        Property() noexcept = default;
+        Property() = default;
     
         /**
          *  Constructs a new property.
@@ -137,7 +137,6 @@ public:
          *  to the map. (invalid property)
          *
          *  If you don't want a default child property to be added if it doesn't exist, check out getProperty()!
-         *
          *  You can resolve child properties with the period character if enabled.
          *
          *  <b>For example:</b>
@@ -157,22 +156,29 @@ public:
          *
          *  @param name         The name of the new child property
          *  @param defaultValue (Optional) The default value the child property should have
+         *  @param notification Whether to send the change to all listeners
          *  @returns The newly created/Existing child property
          */
         Property createProperty(const juce::String &name, const juce::var &defaultValue = juce::var(),
-                                NotificationType notification = sendNotification);
+                                juce::NotificationType notification = juce::sendNotification);
         
         /**
          *  Adds a child property to this property.
-         *
+         *  
+         *  The error-codes this function may produce are:
+         *  <ul>
+         *      <li>Config::ErrorCodes::PropertyExists</li>
+         *      <li>Config::ErrorCodes::PropertyOwned</li>
+         *  </ul>
+         * 
          *  @param property The property to add
+         *  @param notification Whether to send the change to all listeners
          *  @return The result of this operation
          */
-        OperationResult addProperty(Property property, NotificationType notification = sendNotification);
+        OperationResult addProperty(Property property, juce::NotificationType notification = juce::sendNotification);
         
         /**
          *  Gets a child property from the property map or an invalid if no such was found.
-         *
          *  You can resolve child properties with the period character.
          *
          *  <b>For example:</b>
@@ -196,7 +202,7 @@ public:
          *  @param name The name of the child property
          *  @returns The child property if it exists, else an invalid property will be returned
          */
-        const Property getProperty(const juce::String &name) const;
+        ConstProperty getProperty(const juce::String &name) const;
         
         //==============================================================================================================
         /**
@@ -266,7 +272,7 @@ public:
          *  Sets a new value for this property.
          *  @param value The new value of the property
          */
-        void setValue(const juce::var &value, NotificationType notification = sendNotification) noexcept;
+        void setValue(const juce::var &value, juce::NotificationType notification = juce::sendNotification) noexcept;
 
         /**
          *  Gets the current value of this property.
@@ -278,7 +284,7 @@ public:
          *  Resets the properties current value, and alternatively its child's, to default.
          *  @param recurse If this is true, all child properties will be reset too
          */
-        void reset(bool recurse = false, NotificationType notification = sendNotification) noexcept;
+        void reset(bool recurse = false, juce::NotificationType notification = juce::sendNotification) noexcept;
 
         //==============================================================================================================
         /**
@@ -312,23 +318,13 @@ public:
         void setConfig(Config *config);
         
         //==============================================================================================================
-        Property recurseChilds(StringArray &names, NotificationType);
-        const Property recurseChilds(StringArray &names) const;
+        Property recurseChilds(juce::StringArray &names, bool add,juce::NotificationType);
+        ConstProperty recurseChilds(juce::StringArray &names) const;
     };
-
-    /** This struct provides basic options the config file uses and needs to operate as it should. */
+    
+    /** This struct provides basic options the config file uses and needs to operate as supposed to. */
     struct JAUT_API Options final
     {
-        /** Whether the config should be auto-saved whenever a change has happened. */
-        bool autoSave { false };
-
-        /**
-         *  Determines whether the config file should be locked whenever it reads or writes to the config file.
-         *  This way, when another instance of this app tries to read or write to the file, it has to wait until the
-         *  owning process/thread releases the lock.
-         */
-        bool processSynced { false };
-
         /**
          *  A brief summary or notice which should be, dependent on the parser,
          *  prepended in the config file.
@@ -339,24 +335,24 @@ public:
         juce::String defaultCategory { "general" };
 
         /** The name of the config file. (including extension if desired) */
-        juce::String fileName = { "settings.conf" };
-    };
+        juce::String fileName { "settings.conf" };
 
-    //==================================================================================================================
-    /** The map type containing the root properties. */
-    using PropertyMap = std::map<juce::String, Property>;
-    
-    /** The map type containing the categories. */
-    using CategoryMap = std::unordered_map<juce::String, PropertyCategory>;
-    
-    /** The type of config parser. */
-    using ConfigParserType = IConfigParser<Config::Property>;
+        /** Whether the config should be auto-saved whenever a change has happened. */
+        bool autoSave { false };
+
+        /**
+         *  Determines whether the config file should be locked whenever it reads or writes to the config file.
+         *  This way, when another instance of this app tries to read or write to the file, it has to wait until the
+         *  owning process/thread releases the lock.
+         */
+        bool processSynced { false };
+    };
     
     //==============================================================================================================
-    /** Posts an event when the value of any child property was changed. */
+    /** Event when the value of any child property was changed. */
     Event<ValueChangedHandler> ValueChanged;
     
-    /** Posts an event when a new property was added to the config. */
+    /** Event when a new property was added to the config. */
     Event<PropertyAddedHandler> PropertyAdded;
     
     //==============================================================================================================
@@ -376,17 +372,33 @@ public:
     ~Config();
 
     //==================================================================================================================
-    Config &operator=(Config &&other) noexcept;
+    Config& operator=(Config &&other) noexcept;
 
     //==================================================================================================================
     /**
      *  Tries to load data from the config file stored on your local file system.
+     *  
+     *  The error-codes this function may produce are:
+     *  <ul>
+     *      <li>Config::ErrorCodes::InvalidParser</li>
+     *      <li>Config::ErrorCodes::FileIsOpen</li>
+     *      <li>Config::ErrorCodes::FileNotFound</li>
+     *  </ul>
+     * 
      *  @returns The result of this operation
      */
     OperationResult load();
 
     /**
      *  Tries to write data to the config file stored on your local file system.
+     * 
+     *  The error-codes this function may produce are:
+     *  <ul>
+     *      <li>Config::ErrorCodes::InvalidParser</li>
+     *      <li>Config::ErrorCodes::FileIsOpen</li>
+     *      <li>Config::ErrorCodes::FileNotFound</li>
+     *  </ul>
+     * 
      *  @returns The result of this operation
      */
     OperationResult save() const;
@@ -416,7 +428,7 @@ public:
      *  @param category The name of the category the property is in
      *  @returns The property if it exists or an invalid property
      */
-    const Property getProperty(const juce::String &name, const juce::String &category = juce::String()) const;
+    ConstProperty getProperty(const juce::String &name, const juce::String &category = juce::String()) const;
 
     /**
      *  Gathers all properties into one root property and creates properties for the various categories.
@@ -428,7 +440,7 @@ public:
      *  Gathers all properties into one root property and creates properties for the various categories.
      *  @returns The root Property object containing all categories and subsequent Property objects
      */
-    const Property getAllProperties() const;
+    ConstProperty getAllProperties() const;
 
     /**
      *  Gets the comment of a category.
@@ -454,6 +466,9 @@ public:
 
     /**
      *  You can disable auto save for a moment when you don't want the config to auto save.
+     *  On the next call to auto save this will be reset to its default save, so you will need to call this again
+     *  to preven auto-saving one more time.
+     *
      *  @param bypass True if auto save should be disabled, false if not
      */
     void bypassAutosave(bool bypass) noexcept;
@@ -462,12 +477,18 @@ public:
      *  Gets the options for this config object.
      *  @return The options object
      */
-    const Options &getOptions() const noexcept;
+    const Options& getOptions() const noexcept;
 
     //==================================================================================================================
     /**
      *  Adds a property to the config if it doesn't exist already.
-     *
+     *  
+     *  The error-codes this function may produce are:
+     *  <ul>
+     *      <li>Config::ErrorCodes::PropertyExists</li>
+     *      <li>Config::ErrorCodes::PropertyOwned</li>
+     *  </ul>
+     * 
      *  @param prop     The property to add to the config
      *  @param category The category the property should belong to
      *  @return The result of the operation
@@ -486,11 +507,16 @@ public:
                             const juce::String &category = juce::String()) noexcept;
 
     /**
-     *  Resets a whole category's property values.
-     *  @param category The category to clear
+     *  Resets a whole category's property values to their defaults.
+     *  @param category The category to reset
      */
-    void resetCategory(const juce::String &category = juce::String()) noexcept;
-
+    void resetCategory(const juce::String &category = juce::String());
+    
+    /**
+     *  Resets all category's property values to their defaults.
+     */
+    void resetAll();
+    
     //==================================================================================================================
     friend void swap(Config &left, Config &right)
     {
@@ -508,8 +534,8 @@ private:
     //==================================================================================================================
     struct PropertyCategory final
     {
-        String comment;
         PropertyMap properties;
+        juce::String comment;
     };
     
     //==================================================================================================================
@@ -518,22 +544,20 @@ private:
     using ProcessLockGuardPtr = std::unique_ptr<ProcessLockGuard>;
     
     //==================================================================================================================
-    // General
-    bool autoSaveActive;
-    juce::String fullPath;
     Options options;
-    std::unique_ptr<ConfigParserType> parser;
-    
-    // Data
     CategoryMap categories;
-    
-    // Misc
+    juce::String fullPath;
+    std::unique_ptr<ConfigParserType> parser;
     ProcessLockPtr ipMutex;
+    bool autoSaveActive { false };
 
     //==================================================================================================================
     bool shouldAutosave() noexcept;
     ProcessLockGuard* createIpcLock() const;
-
+    
+    //==================================================================================================================
+    Property getAllPropertiesPseudoConst() const;
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Config)
 };
 }

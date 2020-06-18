@@ -25,43 +25,34 @@
 
 #pragma once
 
-#if JAUT_STRICT_THREAD_EXCLUSION
+#if (JAUT_STRICT_THREAD_EXCLUSION && JUCE_DEBUG) || DOXYGEN
   
-  /**
-   *  This will make sure that certain functions, specified to only be called on the message-thread can only
-   *  be called on the message thread.
-   *  This will have no effect in release builds.
-   */
-  #define JAUT_ENSURE_MESSAGE_THREAD JAUT_DEBUGGING(JUCE_BLOCK_WITH_FORCED_SEMICOLON  \
-                                     ( \
-                                         if (jaut::internal::ThreadexIsEnabled) \
-                                         { \
-                                             jassert(juce::MessageManager::getInstance()->isThisTheMessageThread());\
-                                         } \
-                                     ))
-  
-  /**
-   *  Disables the Threadex until it is turned back on with JAUT_ENABLED_THREADEX.
-   */
-  #define JAUT_DISABLE_THREADEX jaut::internal::ThreadexIsEnabled = false
-  
-  /**
-   *  Re-enables the Threadex after it was turned off.
-   */
-  #define JAUT_ENABLE_THREADEX  jaut::internal::ThreadexIsEnabled = true
+    /**
+     *  This will make sure that certain functions, specified to only be called on the message-thread can only
+     *  be called on the message thread.
+     *
+     *  This will have no effects on a release builds.
+     */
+#   define JAUT_ENSURE_MESSAGE_THREAD() JUCE_BLOCK_WITH_FORCED_SEMICOLON \
+                                        ( \
+                                            if (jaut::internal::ThreadexIsEnabled) \
+                                            { \
+                                                jassert(juce::MessageManager::getInstance()->isThisTheMessageThread()); \
+                                            } \
+                                        )
 
-namespace jaut
-{
-namespace internal
-{
-    extern bool ThreadexIsEnabled;
-}
-}
+    /** Disables the Threadex until it is turned back on with JAUT_ENABLED_THREADEX. */
+#   define JAUT_THREADEX_DISABLE() jaut::internal::ThreadexIsEnabled = false
+  
+    /** Re-enables the Threadex after it was turned off. */
+#   define JAUT_THREADEX_ENABLE()  jaut::internal::ThreadexIsEnabled = true
+
+namespace jaut::internal { extern bool ThreadexIsEnabled; }
 
 #else
-  #define JAUT_DISABLE_THREADEX
-  #define JAUT_ENSURE_MESSAGE_THREAD
-  #define JAUT_ENABLE_THREADEX
+#   define JAUT_ENSURE_MESSAGE_THREAD()  do {} while(false)
+#   define JAUT_THREADEX_DISABLE()       do {} while(false)
+#   define JAUT_THREADEX_ENABLE()        do {} while(false)
 #endif
 
 namespace jaut
@@ -71,9 +62,9 @@ namespace jaut
  *  the current build is a debug build, else this will do nothing.
  *  This should always be preferred over the clumsy macro definitions.
  */
-class JAUT_API ThreadexSwitch final
+class JAUT_API ThreadexSwitch
 {
-    ThreadexSwitch() noexcept { JAUT_DISABLE_THREADEX; }
-    ~ThreadexSwitch() { JAUT_ENABLE_THREADEX;  }
+    ThreadexSwitch() noexcept { JAUT_THREADEX_DISABLE(); }
+    ~ThreadexSwitch() { JAUT_THREADEX_ENABLE();  }
 };
 }

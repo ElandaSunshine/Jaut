@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   configparser.cpp
     @date   04, May 2019
     
@@ -24,14 +24,18 @@
  */
 
 #ifdef YAML_CPP_API
-#include <regex>
+#   include <regex>
 #endif
 
+namespace jaut
+{
+//**********************************************************************************************************************
 // region Namespace
+//======================================================================================================================
 namespace
 {
-using namespace jaut;
-String getCommaOrNot(Config::Property::ConstIterator begin, const Config::Property::ConstIterator &end)
+juce::String getCommaOrNot(jaut::Config::Property::ConstIterator begin,
+                           const jaut::Config::Property::ConstIterator &end)
 {
     for (++begin; begin != end; ++begin)
     {
@@ -44,7 +48,7 @@ String getCommaOrNot(Config::Property::ConstIterator begin, const Config::Proper
     return "";
 }
 
-bool exceedsMaxLength(String::CharPointerType charPtr, int currentLength, int maxLength)
+bool exceedsMaxLength(juce::String::CharPointerType charPtr, int currentLength, int maxLength)
 {
     for (;;)
     {
@@ -72,13 +76,13 @@ bool exceedsMaxLength(String::CharPointerType charPtr, int currentLength, int ma
     return false;
 }
 
-String prepareCommentJson(const String &comment, const String &indentation)
+juce::String prepareCommentJson(const juce::String &comment, const juce::String &indentation)
 {
     const int max_length = 80;
-    String::CharPointerType char_ptr = comment.getCharPointer();
+    juce::String::CharPointerType char_ptr = comment.getCharPointer();
     int counter = 1;
     bool is_current_next_line = false;
-    String result;
+    juce::String result;
     
     for (;;)
     {
@@ -111,7 +115,7 @@ String prepareCommentJson(const String &comment, const String &indentation)
     return result;
 }
 
-String getVarVal(const var &value) noexcept
+juce::String getVarVal(const juce::var &value) noexcept
 {
     if (value.isVoid())
     {
@@ -122,19 +126,20 @@ String getVarVal(const var &value) noexcept
                              : "\"" + value.toString() + "\"";
 }
 
-String appendSubPropertiesXml(const Config::Property parent, int level, const String &tagSetting) noexcept
+juce::String appendSubPropertiesXml(const jaut::Config::Property &parent, int level,
+                                    const juce::String &tagSetting) noexcept
 {
-    String output;
+    juce::String output;
     
     for (const auto &[name, setting_property] : parent)
     {
-        const var value = setting_property.getValue();
+        const juce::var value = setting_property.getValue();
         const bool has_valid_sub_properties = setting_property.hasValid();
         
         if (setting_property.isValid() && (!value.isVoid() || has_valid_sub_properties))
         {
-            const String comment = setting_property.getComment();
-            String indentation;
+            const juce::String comment = setting_property.getComment();
+            juce::String indentation;
             
             for (int i = 0; i < level; ++i)
             {
@@ -168,7 +173,8 @@ String appendSubPropertiesXml(const Config::Property parent, int level, const St
     return output;
 }
 
-bool readPropertiesXml(const XmlElement *const xml, Config::Property parent, const String &tagSetting) noexcept
+bool readPropertiesXml(const juce::XmlElement *const xml, jaut::Config::Property parent,
+                       const juce::String &tagSetting) noexcept
 {
     const int num_childs = xml->getNumChildElements();
     
@@ -190,19 +196,19 @@ bool readPropertiesXml(const XmlElement *const xml, Config::Property parent, con
     return true;
 }
 
-String appendSubPropertiesJson(const Config::Property parent, int level) noexcept
+juce::String appendSubPropertiesJson(const jaut::Config::Property &parent, int level) noexcept
 {
-    String output;
+    juce::String output;
     
     for (auto it = parent.begin(); it != parent.end(); ++it)
     {
-        const Config::Property property = it->second;
-        const var &value                = property.getValue();
+        const jaut::Config::Property property = it->second;
+        const juce::var &value                = property.getValue();
         
         if (property.isValid())
         {
-            const String comment = property.getComment();
-            String indentation;
+            const juce::String comment = property.getComment();
+            juce::String indentation;
             
             for (int i = 0; i < level; ++i)
             {
@@ -238,9 +244,9 @@ String appendSubPropertiesJson(const Config::Property parent, int level) noexcep
     return output;
 }
 
-bool readPropertiesJson(const var &json, Config::Property parent) noexcept
+bool readPropertiesJson(const juce::var &json, jaut::Config::Property parent) noexcept
 {
-    DynamicObject *const setting_obj = json.getDynamicObject();
+    juce::DynamicObject *const setting_obj = json.getDynamicObject();
     
     if (!setting_obj)
     {
@@ -261,7 +267,7 @@ bool readPropertiesJson(const var &json, Config::Property parent) noexcept
             continue;
         }
         
-        Config::Property property = parent.getProperty(name.toString());
+        jaut::Config::Property property = parent.getProperty(name.toString());
         
         if (property.isValid())
         {
@@ -273,11 +279,11 @@ bool readPropertiesJson(const var &json, Config::Property parent) noexcept
 }
 
 #ifdef YAML_CPP_API
-String getVarValYaml(const var &value, const String &indentation) noexcept
+juce::String getVarValYaml(const juce::var &value, const juce::String &indentation) noexcept
 {
     if (value.isDouble())
     {
-        String double_value = value.toString();
+        juce::String double_value = value.toString();
         
         if (!double_value.containsChar('.'))
         {
@@ -297,9 +303,9 @@ String getVarValYaml(const var &value, const String &indentation) noexcept
     }
     else if (value.isArray())
     {
-        String output;
+        juce::String output;
         
-        for (const var &entry : *value.getArray())
+        for (const juce::var &entry : *value.getArray())
         {
             output << "\n" << indentation << "- " + entry.toString();
         }
@@ -308,13 +314,13 @@ String getVarValYaml(const var &value, const String &indentation) noexcept
     }
     else if (value.isString())
     {
-        String output = value.toString();
+        juce::String output = value.toString();
         
         if (output.containsChar('\n'))
         {
-            String::CharPointerType char_ptr = output.getCharPointer();
-            String result = "|\n" + indentation + "  ";
-            juce_wchar current_char;
+            juce::String::CharPointerType char_ptr = output.getCharPointer();
+            juce::String result = "|\n" + indentation + "  ";
+            juce::juce_wchar current_char;
             
             for (;;)
             {
@@ -338,10 +344,10 @@ String getVarValYaml(const var &value, const String &indentation) noexcept
         }
         else if(output.length() > 80 && output.containsChar(' '))
         {
-            String::CharPointerType char_ptr = output.getCharPointer();
-            String result = ">\n" + indentation + "  ";
-            int counter   = 1;
-            juce_wchar current_char;
+            juce::String::CharPointerType char_ptr = output.getCharPointer();
+            juce::String result = ">\n" + indentation + "  ";
+            int counter         = 1;
+            juce::juce_wchar current_char;
             
             for (;;)
             {
@@ -372,13 +378,13 @@ String getVarValYaml(const var &value, const String &indentation) noexcept
     return value.toString();
 }
 
-String prepareCommentYaml(const String &comment, const String &indentation)
+juce::String prepareCommentYaml(const juce::String &comment, const juce::String &indentation)
 {
-    const int max_length = 80;
-    String::CharPointerType char_ptr = comment.getCharPointer();
-    bool is_current_next_line        = false;
-    int counter   = 1;
-    String result = "";
+    constexpr int max_length = 80;
+    juce::String::CharPointerType char_ptr = comment.getCharPointer();
+    bool is_current_next_line = false;
+    int counter               = 1;
+    juce::String result       = "";
     
     for (;;)
     {
@@ -394,7 +400,7 @@ String prepareCommentYaml(const String &comment, const String &indentation)
         
         if (counter == max_length || exceedsMaxLength(char_ptr, counter, max_length) || is_current_next_line)
         {
-            if(CharacterFunctions::isWhitespace(result.getLastCharacter()))
+            if(juce::CharacterFunctions::isWhitespace(result.getLastCharacter()))
             {
                 result = result.dropLastCharacters(1);
             }
@@ -416,20 +422,20 @@ String prepareCommentYaml(const String &comment, const String &indentation)
     return indentation + "# " + result + "\n";
 }
 
-String appendSubPropertiesYaml(const Config::Property parent, int level) noexcept
+juce::String appendSubPropertiesYaml(const jaut::Config::Property &parent, int level) noexcept
 {
-    String output;
+    juce::String output;
     bool is_first = true;
     
     for (const auto &it : parent)
     {
-        const Config::Property property = it.second;
-        const var &value                = property.getValue();
+        const jaut::Config::Property property = it.second;
+        const juce::var &value                = property.getValue();
         
         if (property.isValid())
         {
-            String comment = property.getComment();
-            String indentation;
+            juce::String comment = property.getComment();
+            juce::String indentation;
             
             for (int i = 0; i < level; ++i)
             {
@@ -473,7 +479,7 @@ String appendSubPropertiesYaml(const Config::Property parent, int level) noexcep
     return output;
 }
 
-bool readPropertiesYaml(YAML::Node node, Config::Property parent) noexcept
+bool readPropertiesYaml(YAML::Node node, jaut::Config::Property parent) noexcept
 {
     if (!parent.isValid() || !node)
     {
@@ -501,7 +507,7 @@ bool readPropertiesYaml(YAML::Node node, Config::Property parent) noexcept
     }
     else if(!parent.getValue().isVoid())
     {
-        var value = parent.getValue();
+        juce::var value = parent.getValue();
         
         if (value.isArray())
         {
@@ -509,12 +515,12 @@ bool readPropertiesYaml(YAML::Node node, Config::Property parent) noexcept
             {
                 return false;
             }
-            
-            Array<var> node_array;
+    
+            juce::Array<juce::var> node_array;
             
             for (auto &&i : node)
             {
-                node_array.add(String(i.as<std::string>()));
+                node_array.add(juce::String(i.as<std::string>()));
             }
             
             value = node_array;
@@ -526,7 +532,7 @@ bool readPropertiesYaml(YAML::Node node, Config::Property parent) noexcept
                 return false;
             }
             
-            const String data = node.as<std::string>();
+            const juce::String data = node.as<std::string>();
             const std::regex regex("[-+]?([0-9]*\\.[0-9]+|[0-9]+)");
             
             if (!data.isEmpty() && std::regex_match(data.toStdString(), regex))
@@ -552,7 +558,7 @@ bool readPropertiesYaml(YAML::Node node, Config::Property parent) noexcept
                 return false;
             }
             
-            const String data = node.as<std::string>();
+            const juce::String data = node.as<std::string>();
             
             if (!data.isEmpty())
             {
@@ -573,7 +579,7 @@ bool readPropertiesYaml(YAML::Node node, Config::Property parent) noexcept
                 return false;
             }
             
-            const String data = node.as<std::string>();
+            const juce::String data = node.as<std::string>();
             
             if (!data.isEmpty())
             {
@@ -588,29 +594,25 @@ bool readPropertiesYaml(YAML::Node node, Config::Property parent) noexcept
 }
 #endif
 }
+//======================================================================================================================
 // endregion Namespace
-
-namespace jaut
-{
+//**********************************************************************************************************************
 // region XmlParser
-/* ==================================================================================
- * ================================== XmlParser =====================================
- * ================================================================================== */
-XmlParser::XmlParser(const String &defaultCategory, const String &tagSettingId, const String &tagIntroId,
-                     const String &tagCategoryId) noexcept
-    : defaultCategory(defaultCategory.trim()),
-      tagSetting(tagSettingId.trim()),
+//======================================================================================================================
+XmlParser::XmlParser(const juce::String &tagSettingId, const juce::String &tagIntroId,
+                     const juce::String &tagCategoryId) noexcept
+    : tagSetting(tagSettingId.trim()),
       tagIntro(tagIntroId.trim()),
       tagCategory(tagCategoryId.trim())
 {}
 
 //======================================================================================================================
-OperationResult XmlParser::parseConfig(const File &configFile, Config::Property root) const
+OperationResult XmlParser::parseConfig(const juce::File &configFile, PropertyType root) const
 {
     if (!root.isValid())
     {
-        jassertfalse;
         DBG("Root node is invalid.");
+        jassertfalse;
         return ErrorCodes::InvalidRootNote;
     }
 
@@ -620,8 +622,7 @@ OperationResult XmlParser::parseConfig(const File &configFile, Config::Property 
         return ErrorCodes::FileNotFound;
     }
     
-    XmlDocument document(configFile);
-    std::unique_ptr<XmlElement> config(document.getDocumentElement());
+    const std::unique_ptr<juce::XmlElement> config = juce::XmlDocument(configFile).getDocumentElement();
     
     if (!config || !config->hasTagName(tagIntro))
     {
@@ -629,27 +630,20 @@ OperationResult XmlParser::parseConfig(const File &configFile, Config::Property 
         return ErrorCodes::InvalidConfig;
     }
     
-    Config::Property default_category_property = root.getProperty(defaultCategory);
-    
     forEachXmlChildElement(*config, xml_category)
     {
-        if (xml_category->hasTagName(tagSetting))
+        if (xml_category->hasTagName(tagCategory))
         {
-            const String category_name = xml_category->getStringAttribute("name");
-            (void) ::readPropertiesXml(xml_category, default_category_property.getProperty(category_name),
-                                           tagSetting);
-        }
-        else if (xml_category->hasTagName(tagCategory))
-        {
-            const String category_name     = xml_category->getStringAttribute("name");
-            Config::Property prop_category = root.getProperty(category_name);
+            const juce::String category_name     = xml_category->getStringAttribute("name");
+            const Config::Property prop_category = root.getProperty(category_name);
             
             if (prop_category.isValid())
             {
                 forEachXmlChildElementWithTagName(*xml_category, xml_setting, tagSetting)
                 {
-                    const String setting_name = xml_setting->getStringAttribute("name");
-                    (void) ::readPropertiesXml(xml_setting, prop_category.getProperty(setting_name), tagSetting);
+                    const juce::String setting_name = xml_setting->getStringAttribute("name");
+                    (void) jaut::readPropertiesXml(xml_setting, prop_category.getProperty(setting_name).getObject(),
+                                               tagSetting);
                 }
             }
         }
@@ -658,12 +652,14 @@ OperationResult XmlParser::parseConfig(const File &configFile, Config::Property 
     return true;
 }
 
-OperationResult XmlParser::writeConfig(const File &configFile, const Config::Property root) const
+OperationResult XmlParser::writeConfig(const juce::File &configFile, ConstPropertyType root) const
 {
-    if (!root.isValid())
+    const PropertyType &root_prop = root.getObject();
+    
+    if (!root_prop.isValid())
     {
-        jassertfalse;
         DBG("Root node is invalid.");
+        jassertfalse;
         return ErrorCodes::InvalidRootNote;
     }
     
@@ -673,43 +669,34 @@ OperationResult XmlParser::writeConfig(const File &configFile, const Config::Pro
         return ErrorCodes::FileNotFound;
     }
 
-    const Config::Property default_category_property = root.getProperty(defaultCategory);
-    String comment = root.getComment();
-    String tag;
+    juce::String comment = root_prop.getComment();
+    juce::String tag;
     
     configFile.replaceWithText("");
-
+    
     if (!comment.isEmpty())
     {
         tag = "<!-- " + comment + " -->\n\n";
     }
-
+    
     tag << "<" << tagIntro << ">\n";
-
-    if (default_category_property.isValid())
+    
+    for (const auto &[name, property] : root_prop)
     {
-        tag << ::appendSubPropertiesXml(default_category_property, 1, tagSetting);
-    }
-
-    for (const auto &[name, property] : root)
-    {
-        if (name.equalsIgnoreCase(defaultCategory))
-        {
-            continue;
-        }
-
         if (property.hasValid())
         {
-            const String category_comment = property.getComment();
-
+            const juce::String category_comment = property.getComment();
+            
             if (!category_comment.isEmpty())
             {
+                // <!-- Comment -->
                 tag << "\n    <!-- " << category_comment << " -->\n";
             }
-
-            tag << "    <" << tagCategory << " Name=\"" << property.getName() << "\">\n"
-                << ::appendSubPropertiesXml(property, 2, tagSetting)
-                << "    </" << tagCategory << ">\n";
+            
+            
+            tag /* <Category>  */ << "    <" << tagCategory << " Name=\"" << property.getName() << "\">\n"
+                /*     <Setting>   */ << jaut::appendSubPropertiesXml(property, 2, tagSetting)
+                /* </Category> */ << "    </" << tagCategory << ">\n";
         }
     }
 
@@ -718,21 +705,22 @@ OperationResult XmlParser::writeConfig(const File &configFile, const Config::Pro
 
     return true;
 }
+//======================================================================================================================
 // endregion XmlParser
+//**********************************************************************************************************************
 // region JsonParser
-/* ==================================================================================
- * ================================= JsonParser =====================================
- * ================================================================================== */
-JsonParser::JsonParser(const String &noticeId) noexcept
+//======================================================================================================================
+JsonParser::JsonParser(const juce::String &noticeId) noexcept
     : noticeId(noticeId.trim())
 {}
 
-OperationResult JsonParser::parseConfig(const File &configFile, Config::Property root) const
+//======================================================================================================================
+OperationResult JsonParser::parseConfig(const juce::File &configFile, PropertyType root) const
 {
     if (!root.isValid())
     {
-        jassertfalse;
         DBG("Root node is invalid.");
+        jassertfalse;
         return ErrorCodes::InvalidRootNote;
     }
     
@@ -742,11 +730,11 @@ OperationResult JsonParser::parseConfig(const File &configFile, Config::Property
         return ErrorCodes::FileNotFound;
     }
 
-    var json;
+    juce::var json;
 
-    if (JSON::parse(configFile.loadFileAsString(), json).wasOk())
+    if (juce::JSON::parse(configFile.loadFileAsString(), json).wasOk())
     {
-        DynamicObject *const obj_root = json.getDynamicObject();
+        juce::DynamicObject *const obj_root = json.getDynamicObject();
 
         if (!obj_root)
         {
@@ -761,8 +749,8 @@ OperationResult JsonParser::parseConfig(const File &configFile, Config::Property
                 continue;
             }
     
-            DynamicObject *const obj_category  = json_category.getDynamicObject();
-            Config::Property property_category = root.getProperty(category_name.toString());
+            juce::DynamicObject *const obj_category = json_category.getDynamicObject();
+            Config::Property property_category      = root.getProperty(category_name.toString());
 
             if (!property_category.hasValid() || !obj_category)
             {
@@ -783,7 +771,7 @@ OperationResult JsonParser::parseConfig(const File &configFile, Config::Property
                     continue;
                 }
 
-                (void) ::readPropertiesJson(json_settings, property_setting);
+                (void) jaut::readPropertiesJson(json_settings, property_setting);
             }
         }
     }
@@ -791,12 +779,14 @@ OperationResult JsonParser::parseConfig(const File &configFile, Config::Property
     return true;
 }
 
-OperationResult JsonParser::writeConfig(const File &configFile, const Config::Property root) const
+OperationResult JsonParser::writeConfig(const juce::File &configFile, ConstPropertyType root) const
 {
-    if (!root.isValid())
+    const Config::Property &root_prop = root.getObject();
+    
+    if (!root_prop.isValid())
     {
-        jassertfalse;
         DBG("Root node is invalid.");
+        jassertfalse;
         return ErrorCodes::InvalidRootNote;
     }
     
@@ -806,16 +796,16 @@ OperationResult JsonParser::writeConfig(const File &configFile, const Config::Pr
         return ErrorCodes::FileNotFound;
     }
 
-    const String comment = root.getComment();
-    String tag = "{\n";
+    const juce::String comment = root_prop.getComment();
+    juce::String tag = "{\n";
     
     configFile.replaceWithText("");
     
     if (!comment.isEmpty())
     {
-        String::CharPointerType char_ptr = comment.getCharPointer();
+        juce::String::CharPointerType char_ptr = comment.getCharPointer();
         int counter = 1;
-        String new_text = "";
+        juce::String new_text = "";
         bool is_current_next_line = false;
 
         for (;;)
@@ -849,22 +839,22 @@ OperationResult JsonParser::writeConfig(const File &configFile, const Config::Pr
         tag << "    \"" << noticeId << "\": \"" << new_text << "\",\n\n\n";
     }
 
-    for (auto it = root.begin(); it != root.end(); ++it)
+    for (auto it = root_prop.begin(); it != root_prop.end(); ++it)
     {
         const Config::Property property_category = it->second;
 
         if (property_category.hasValid())
         {
-            const String category_comment = property_category.getComment();
+            const juce::String category_comment = property_category.getComment();
             
             if (!category_comment.isEmpty())
             {
-                tag << "\n    \"//\": \"" << ::prepareCommentJson(category_comment, "    ") << "\",\n";
+                tag << "\n    \"//\": \"" << jaut::prepareCommentJson(category_comment, "    ") << "\",\n";
             }
 
             tag << "    \"" << property_category.getName() << "\": {\n"
-                << ::appendSubPropertiesJson(property_category, 2)
-                << "\n    }" << ::getCommaOrNot(it, root.end());
+                << jaut::appendSubPropertiesJson(property_category, 2)
+                << "\n    }" << jaut::getCommaOrNot(it, root_prop.end());
         }
     }
 
@@ -873,18 +863,18 @@ OperationResult JsonParser::writeConfig(const File &configFile, const Config::Pr
 
     return true;
 }
+//======================================================================================================================
 // endregion JsonParser
+//**********************************************************************************************************************
 // region YamlParser
+//======================================================================================================================
 #ifdef YAML_CPP_API
-/* ==================================================================================
- * ================================= YamlParser =====================================
- * ================================================================================== */
-OperationResult YamlParser::parseConfig(const File &configFile, Config::Property root) const
+OperationResult YamlParser::parseConfig(const juce::File &configFile, PropertyType root) const
 {
     if (!root.isValid())
     {
-        jassertfalse;
         DBG("Root node is invalid.");
+        jassertfalse;
         return ErrorCodes::InvalidRootNote;
     }
     
@@ -939,7 +929,7 @@ OperationResult YamlParser::parseConfig(const File &configFile, Config::Property
                     continue;
                 }
 
-                if (::readPropertiesYaml(node_setting, property_setting))
+                if (jaut::readPropertiesYaml(node_setting, property_setting))
                 {
                     error_code = 0;
                 }
@@ -950,9 +940,11 @@ OperationResult YamlParser::parseConfig(const File &configFile, Config::Property
     return error_code;
 }
 
-OperationResult YamlParser::writeConfig(const File &configFile, const Config::Property root) const
+OperationResult YamlParser::writeConfig(const juce::File &configFile, ConstPropertyType root) const
 {
-    if (!root.isValid())
+    const Config::Property &root_prop = root.getObject();
+    
+    if (!root_prop.isValid())
     {
         jassertfalse;
         DBG("Root node is invalid.");
@@ -965,17 +957,17 @@ OperationResult YamlParser::writeConfig(const File &configFile, const Config::Pr
         return ErrorCodes::FileNotFound;
     }
 
-    const String comment = root.getComment();
-    String tag;
+    const juce::String comment = root_prop.getComment();
+    juce::String tag;
     
     configFile.replaceWithText("");
 
     if (!comment.isEmpty())
     {
         const int max_length = 80;
-        String::CharPointerType char_ptr = comment.getCharPointer();
+        juce::String::CharPointerType char_ptr = comment.getCharPointer();
         int counter = 1;
-        String result = "";
+        juce::String result = "";
         bool is_current_next_line = false;
 
         for (;;)
@@ -990,7 +982,7 @@ OperationResult YamlParser::writeConfig(const File &configFile, const Config::Pr
                 is_current_next_line = true;
             }
 
-            if (counter == max_length || ::exceedsMaxLength(char_ptr, counter, max_length) || is_current_next_line)
+            if (counter == max_length || jaut::exceedsMaxLength(char_ptr, counter, max_length) || is_current_next_line)
             {
                 result << "\n# ";
                 counter = 0;
@@ -1009,23 +1001,22 @@ OperationResult YamlParser::writeConfig(const File &configFile, const Config::Pr
         tag << "# " << result << "\n\n";
     }
     
-    for (auto it = root.begin(); it != root.end(); ++it)
+    for (auto it = root_prop.begin(); it != root_prop.end(); ++it)
     {
         const Config::Property property_category = it->second;
         
         if (property_category.hasValid())
         {
-            const String category_comment = property_category.getComment();
+            const juce::String category_comment = property_category.getComment();
 
             if (!category_comment.isEmpty())
             {
-                tag << ::prepareCommentYaml(category_comment, "");
+                tag << jaut::prepareCommentYaml(category_comment, "");
             }
 
-            tag << property_category.getName() << ":\n"
-                << ::appendSubPropertiesYaml(property_category, 1);
+            tag << property_category.getName() << ":\n" << jaut::appendSubPropertiesYaml(property_category, 1);
 
-            if (std::distance(root.begin(), it) < (root.size() - 1))
+            if (std::distance(root_prop.begin(), it) < (root_prop.size() - 1))
             {
                 tag << "\n";
             }
@@ -1033,9 +1024,10 @@ OperationResult YamlParser::writeConfig(const File &configFile, const Config::Pr
     }
 
     configFile.replaceWithText(tag);
-    
     return true;
 }
 #endif
+//======================================================================================================================
 // endregion YamlParser
+//**********************************************************************************************************************
 }

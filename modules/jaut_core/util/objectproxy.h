@@ -12,49 +12,53 @@
 
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
-
+    
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
-
+    
     @author Elanda
-    @file   scopedcursor.h
-    @date   29, February 2020
-
+    @file   constproxy.h
+    @date   12, June 2020
+    
     ===============================================================
  */
+
+#pragma once
 
 namespace jaut
 {
-/** A little utility that sets a mouse cursor and resets it to another once this object leaves the scope it is in. */
-class JAUT_API ScopedCursor
+template<class T>
+class ObjectProxy
 {
 public:
-    /**
-     *  Creates a new ScopedCursor instance.
-     *
-     *  @param cursor      The cursor to set
-     *  @param resetCursor The cursor to reset once this object leaves its current scope
-     */
-    explicit ScopedCursor(const MouseCursor &cursor, MouseCursor resetCursor = MouseCursor::NormalCursor)
-        : resetCursor(std::move(resetCursor))
+    using ObjectType = std::remove_reference_t<T>;
+    using ValueType  = std::decay_t<T>;
+    
+    //==================================================================================================================
+    template<class ...Args>
+    ObjectProxy(Args &&...args) noexcept
+        : object(std::forward<Args>(args)...)
+    {}
+    
+    //==================================================================================================================
+    ObjectType& getObject() noexcept
     {
-        Desktop::getInstance().getMainMouseSource().showMouseCursor(cursor);
+        return object;
     }
-
-    ~ScopedCursor()
+    
+    const ObjectType& getObject() const noexcept
     {
-        Desktop::getInstance().getMainMouseSource().showMouseCursor(resetCursor);
+        return object;
     }
     
 private:
-    const MouseCursor resetCursor;
+    T object;
 };
 
 /**
- *  Sets the current cursor to the wait cursor and resets it back to the normal one.
+ *  A type helper for objects that need to be returned by-const-val.
+ *  @tparam T The const proxy type
  */
-struct ScopedCursorWait : ScopedCursor
-{
-    ScopedCursorWait() : ScopedCursor(MouseCursor::WaitCursor) {}
-};
-};
+template<class T>
+using ConstProxy = ObjectProxy<const T>;
+}

@@ -25,16 +25,14 @@
 
 #pragma once
 
-#include <jaut/expo.h>
-
 namespace jaut
 {
 /**
- * The ChatFormat class helps you to format text directly through text instead of creating a new font
- * over and over again.
- * You can change the colour and font style, like making it bold or italic.
+ *  The ChatFormat class helps you to format text directly through text instead of creating a new font
+ *  over and over again.
+ *  You can change the colour and font style, like making it bold or italic.
  *
- * The default terminator is '$' followed by a number or character to identify the format applied to the text.
+ *  The default terminator is '$' followed by a number or character to identify the format applied to the text.
  */
 
 class JAUT_API CharFormat final
@@ -43,137 +41,134 @@ public:
     struct JAUT_API Options final
     {
         /**
-         * The terminator character defines when a formatted sequence should begin.
-         * e.g. "$xThis is a test" <- This will make the text bold
+         *  The terminator character defines when a formatted sequence should begin.
+         *  e.g. "$xThis is a test" <- This will make the text bold
          */
         juce::juce_wchar terminator = '$';
 
-        /**
-         * The default colour to use when there was a problem finding a colour.
-         */
-        juce::Colour defaultColour = Colours::transparentBlack;
+        /** The default colour to use when there was a problem finding a colour. */
+        juce::Colour defaultColour = juce::Colours::transparentBlack;
     };
 
-    /**
-     * The list of colours applicable for formatting.
-     */
+    /** The list of colours applicable for formatting. */
     enum JAUT_API ColourIds
     {
-        ColourFormat0Id = JAUT_COLOUR_ID <4>,
-        ColourFormat1Id = JAUT_COLOUR_ID <5>,
-        ColourFormat2Id = JAUT_COLOUR_ID <6>,
-        ColourFormat3Id = JAUT_COLOUR_ID <7>,
-        ColourFormat4Id = JAUT_COLOUR_ID <8>,
-        ColourFormat5Id = JAUT_COLOUR_ID <9>,
-        ColourFormat6Id = JAUT_COLOUR_ID<10>,
-        ColourFormat7Id = JAUT_COLOUR_ID<11>,
-        ColourFormat8Id = JAUT_COLOUR_ID<12>,
-        ColourFormat9Id = JAUT_COLOUR_ID<13>,
-        ColourFormatAId = JAUT_COLOUR_ID<14>,
-        ColourFormatBId = JAUT_COLOUR_ID<15>,
-        ColourFormatCId = JAUT_COLOUR_ID<16>,
-        ColourFormatDId = JAUT_COLOUR_ID<17>,
-        ColourFormatEId = JAUT_COLOUR_ID<18>,
-        ColourFormatFId = JAUT_COLOUR_ID<19>
+        ColourFormat0Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormat1Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormat2Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormat3Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormat4Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormat5Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormat6Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormat7Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormat8Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormat9Id = JAUT_NEXT_COLOUR_ID,
+        ColourFormatAId = JAUT_NEXT_COLOUR_ID,
+        ColourFormatBId = JAUT_NEXT_COLOUR_ID,
+        ColourFormatCId = JAUT_NEXT_COLOUR_ID,
+        ColourFormatDId = JAUT_NEXT_COLOUR_ID,
+        ColourFormatEId = JAUT_NEXT_COLOUR_ID,
+        ColourFormatFId = JAUT_NEXT_COLOUR_ID
     };
 
     //==================================================================================================================
     /**
-     * Creates a new default instance of the CharFormat class.
+     *  Creates a new default instance of the CharFormat class.
      */
     CharFormat() noexcept;
 
     /**
-     * Creates a new instance of the CharFormat class with all colours white.
-     * @param terminator The character determining when a new formatting sequence begins
+     *  Creates a new instance of the CharFormat class with all colours white.
+     *  @param terminator The character determining when a new formatting sequence begins
      */
     explicit CharFormat(const Options &options) noexcept;
 
     //==================================================================================================================
     /**
-     * Draws the formatted text to screen.
-     * @param g             The graphics context
-     * @param text          The text to draw
-     * @param destRectangle The destination rectangle
-     * @param justification The justification to apply to the text
+     *  Draws the formatted text to screen.
+     *
+     *  @param g             The graphics context
+     *  @param text          The text to draw
+     *  @param destRectangle The destination rectangle
+     *  @param justification The justification to apply to the text
      */
-    void drawText(Graphics &g, const String &text, Rectangle<float> destRectangle,
-                  Justification justification) const noexcept;
+    void drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> destRectangle,
+                  juce::Justification justification) const noexcept;
 
     /**
-     * Draws the formatted text to screen.
-     * @param g             The graphics context
-     * @param text          The text to draw
-     * @param x             The x coordinate of the text
-     * @param y             The y coordinate of the text
-     * @param width         The max width the text should be able to occupy
-     * @param height        The max height the text should be able to occupy
-     * @param justification The justification to apply to the text
+     *  Draws the formatted text to screen.
+     *
+     *  @param g             The graphics context
+     *  @param text          The text to draw
+     *  @param x             The x coordinate of the text
+     *  @param y             The y coordinate of the text
+     *  @param width         The max width the text should be able to occupy
+     *  @param height        The max height the text should be able to occupy
+     *  @param justification The justification to apply to the text
      */
-    void drawText(Graphics &g, const String &text, float x, float y, float width, float height,
-                  Justification justification) const noexcept;
+    void drawText(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
+                  juce::Justification justification) const noexcept;
 
     /**
-     * Draws the formatted text to screen.
-     * @param g             The graphics context
-     * @param text          The text to draw
-     * @param x             The x coordinate of the text
-     * @param y             The y coordinate of the text
-     * @param width         The max width the text should be able to occupy
-     * @param height        The max height the text should be able to occupy
-     * @param justification The justification to apply to the text
+     *  Draws the formatted text to screen.
+     *
+     *  @param g             The graphics context
+     *  @param text          The text to draw
+     *  @param x             The x coordinate of the text
+     *  @param y             The y coordinate of the text
+     *  @param width         The max width the text should be able to occupy
+     *  @param height        The max height the text should be able to occupy
+     *  @param justification The justification to apply to the text
      */
-    void drawText(Graphics &g, const String &text, int x, int y, int width, int height,
-                  Justification justification) const noexcept;
+    void drawText(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
+                  juce::Justification justification) const noexcept;
 
     //=================================================================================================================
     /**
-     * Sets this formatters LookAndFeel object.
-     * This is majorly used for colours this formatter should use.
+     *  Sets this formatters LookAndFeel object.
+     *  This is majorly used for colours this formatter should use.
      * 
-     * If this is nullptr, the default LookAndFeel will be used!
-     * @param lookAndFeel A pointer to a LookAndFeel object which should be used
+     *  If this is nullptr, the default LookAndFeel will be used!
+     *
+     *  @param lookAndFeel A pointer to a LookAndFeel object which should be used
      */
     
-    void setLookAndFeel(LookAndFeel *lookAndFeel) noexcept;
+    void setLookAndFeel(juce::LookAndFeel *lookAndFeel) noexcept;
 
     /**
-        Gets the current set LookAndFeel object.
-        @returns The LookAndFeel object
+     *  Gets the current set LookAndFeel object.
+     *  @returns The LookAndFeel object
      */
-    LookAndFeel &getLookAndFeel() const noexcept;
+    juce::LookAndFeel &getLookAndFeel() const noexcept;
 
     /**
-        Sets the default and fallback colour for the renderer.
-
-        @param colour The colour
+     *  Sets the default and fallback colour for the renderer.
+     *  @param colour The colour
      */
-    void setColour(const Colour &colour) noexcept;
+    void setColour(const juce::Colour &colour) noexcept;
     
     /**
-        Gets a specific colour for a particular colour code.
-
-        @param colourCode The colour code ranging from 0-9 and A-F
-        @return The colour to that colour code or else a default colour
+     *  Gets a specific colour for a particular colour code.
+     *
+     *  @param colourCode The colour code ranging from 0-9 and A-F
+     *  @return The colour to that colour code or else a default colour
      */
-    Colour getColour(juce_wchar colourCode) const noexcept;
+    juce::Colour getColour(juce::juce_wchar colourCode) const noexcept;
 
     /**
-        Gets the current formatting character.
-
-        @return The character
+     *  Gets the current formatting character.
+     *  @return The character
      */
-    const juce_wchar getFormattingCharacter() const noexcept;
+    const juce::juce_wchar getFormattingCharacter() const noexcept;
 
     /**
-        Gets this' formatters options.
-        
-        @return The Options object
+     *  Gets this' formatters options.
+     *  @return The Options object
      */
     const Options &getOptions() const noexcept;
 
 private:
-    LookAndFeel *lookAndFeel;
+    juce::LookAndFeel *lookAndFeel;
     Options options;
 };
 
@@ -188,28 +183,29 @@ public:
     };
 
     //=================================================================================================================
-    static void drawText(Graphics &g, const String &text, Rectangle<float> area, Colour colour,
-                         Justification justification, Formats formats = None,
+    static void drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area, juce::Colour colour,
+                         juce::Justification justification, Formats formats = None,
                          CharFormat *charFormat = nullptr) noexcept;
-    static void drawText(Graphics &g, const String &text, float x, float y, float width, float height,
-                         Colour colour,  Justification justification, Formats formats = None,
+    static void drawText(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
+                         juce::Colour colour, juce::Justification justification, Formats formats = None,
                          CharFormat *charFormat = nullptr) noexcept;
-    static void drawText(Graphics &g, const String &text, int x, int y, int width, int height,
-                         Colour colour,  Justification justification, Formats formats = None,
+    static void drawText(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
+                         juce::Colour colour,  juce::Justification justification, Formats formats = None,
                          CharFormat *charFormat = nullptr) noexcept;
-    static void drawSmallCaps(Graphics &g, const String &text, Rectangle<float> area,
-                              Justification justification) noexcept;
-    static void drawSmallCaps(Graphics &g, const String &text, float x, float y, float width, float height,
-                              Justification justification) noexcept;
-    static void drawSmallCaps(Graphics &g, const String &text, int x, int y, int width, int height,
-                              Justification justification) noexcept;
-    static void drawFormattedString(Graphics &g, const String &text, Rectangle<float> area, Colour colour,
-                                    Justification justification, CharFormat *charFormat = nullptr) noexcept;
-    static void drawFormattedString(Graphics &g, const String &text, float x, float y, float width, float height,
-                                    Colour colour, Justification justification,
+    static void drawSmallCaps(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
+                              juce::Justification justification) noexcept;
+    static void drawSmallCaps(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
+                              juce::Justification justification) noexcept;
+    static void drawSmallCaps(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
+                              juce::Justification justification) noexcept;
+    static void drawFormattedString(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
+                                    juce::Colour colour, juce::Justification justification,
                                     CharFormat *charFormat = nullptr) noexcept;
-    static void drawFormattedString(Graphics &g, const String &text, int x, int y, int width, int height,
-                                    Colour colour, Justification justification,
+    static void drawFormattedString(juce::Graphics &g, const juce::String &text, float x, float y, float width,
+                                    float height, juce::Colour colour, juce::Justification justification,
+                                    CharFormat *charFormat = nullptr) noexcept;
+    static void drawFormattedString(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
+                                    juce::Colour colour, juce::Justification justification,
                                     CharFormat *charFormat = nullptr) noexcept;
 };
 }

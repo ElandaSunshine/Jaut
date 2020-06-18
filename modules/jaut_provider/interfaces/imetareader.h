@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   imetareader.h
     @date   27, July 2019
     
@@ -27,13 +27,19 @@
 
 namespace jaut
 {
-
-class IMetadata;
-
+/** This interface provides the base structure for the theme data reader of your themes-system. */
 class IMetaReader
 {
 public:
-    virtual ~IMetaReader() {}
-    virtual IMetadata *parseMetadata(InputStream &stream) = 0;
+    virtual ~IMetaReader() = default;
+    
+    //==================================================================================================================
+    /**
+     *  Reads a metadata file and returns new memory for it.
+     *
+     *  @param stream The stream to read the metadata from
+     *  @return The metadata object
+     */
+    virtual IMetadata* parseMetadata(juce::InputStream &stream) = 0;
 };
 }

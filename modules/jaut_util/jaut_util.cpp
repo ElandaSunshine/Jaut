@@ -12,21 +12,13 @@
 
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
-    
+
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
-    
+
     @author Elanda
-    @file   config.cpp
-    @date   20, March 2020
-    
+    @file   jaut_util.cpp
+    @date   16, June 2020
+
     ===============================================================
  */
-
-#include <jaut_provider/jaut_provider.h>
-
-#include <jaut_provider/config/config.cpp>
-#include <jaut_provider/config/configparser.cpp>
-#include <jaut_provider/lang/localisation.cpp>
-#include <jaut_provider/util/metadatautil.cpp>
-#include <jaut_provider/theme/thememanager.cpp>

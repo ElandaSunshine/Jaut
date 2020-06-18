@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   ithemedefinition.h
     @date   04, May 2019
     
@@ -29,123 +29,114 @@ namespace jaut
 {
 
 /**
-    The IThemeDefinition interfaces provides a collection of useful methods to implement your own
-    theme package system.
-
-    Optionally, you can use the ResourceManager together with this class if you want.
+ *  The IThemeDefinition interfaces provides a collection of useful methods to implement your own
+ *  theme package system.
+ *
+ *  Optionally, you can use the ResourceManager together with this class if you want.
  */
-
-class IMetadata;
 
 class JAUT_API IThemeDefinition
 {
 public:
-    virtual ~IThemeDefinition() {}
+    virtual ~IThemeDefinition() = default;
 
     //=================================================================================================================
     /**
-        Gets a file relative to the root folder of this theme package.
-
-        @param filePath The relative path to the file
-        @return The file
+     *  Gets a file relative to the root folder of this theme package.
+     *
+     *  @param filePath The relative path to the file
+     *  @return The file
      */
-    virtual File getFile(const String &filePath) const = 0;
+    virtual juce::File getFile(const juce::String &filePath) const = 0;
 
     /**
-        Gets an image relative to the root folder of this theme package.
-
-        @param imageName The name of the image to search for  (without extension)
-        @return The image object
+     *  Gets an image relative to the root folder of this theme package.
+     *
+     *  @param imageName The name of the image to search for  (without extension)
+     *  @return The image object
      */
-    virtual juce::Image getImage(const String &imageName) const = 0;
+    virtual juce::Image getImage(const juce::String &imageName) const = 0;
 
     /**
-        Gets the missing image if a certain image wasn't found.
-
-        @return The image object
+     *  Gets the missing image if a certain image wasn't found.
+     *  @return The image object
      */
     virtual juce::Image getMissingImage() const = 0;
 
     /**
-        Gets a colour from the colour-map map if implemented.
-
-        @param The name of the color in the map
-        @return The colour or a substitute if none such colour was found
+     *  Gets a colour from the colour-map map if implemented.
+     *
+     *  @param The name of the color in the map
+     *  @return The colour or a substitute if none such colour was found
      */
-    virtual juce::Colour getThemeColour(const String &colorMappingKey) const = 0;
+    virtual juce::Colour getThemeColour(const juce::String &colorMappingKey) const = 0;
 
     /**
-        Gets a colour directly from the colour-map image if implemented.
-
-        @param x The x coordinate of the pixel
-        @param y The y coordinate of the pixel
-        @return The colour or a substitute if none such colour was found
+     *  Gets a colour directly from the colour-map image if implemented.
+     *
+     *  @param x The x coordinate of the pixel
+     *  @param y The y coordinate of the pixel
+     *  @return The colour or a substitute if none such colour was found
      */
     virtual juce::Colour getThemeColourFromPixel(int x, int y) const = 0;
 
     /**
-        The font to use for the theme package.
-
-        @return The font object
+     *  The font to use for the theme package.
+     *  @return The font object
      */
     virtual juce::Font getThemeFont() const = 0;
 
     /**
-        The thumbnail image of the theme package if implemented.
-
-        @return The image object
+     *  The thumbnail image of the theme package if implemented.
+     *  @return The image object
      */
     virtual juce::Image getThemeThumbnail() const = 0;
 
     /**
-        Gets whether a file at a specific relative path starting from the theme package's root exists or not.
-
-        @param filePath The path to the file
-        @return True if the file exists, false if not
+     *  Gets whether a file at a specific relative path starting from the theme package's root exists or not.
+     *
+     *  @param filePath The path to the file
+     *  @return True if the file exists, false if not
      */
-    virtual const bool fileExists(const String &filePath) const = 0;
+    virtual const bool fileExists(const juce::String &filePath) const = 0;
 
     /**
-        Gets whether an image exists or not.
-
-        @param imageName The name of the image (without extension)
-        @return True if the image exists, false if not
+     *  Gets whether an image exists or not.
+     *
+     *  @param imageName The name of the image (without extension)
+     *  @return True if the image exists, false if not
      */
-    virtual const bool imageExists(const String &imageName) const = 0;
+    virtual const bool imageExists(const juce::String &imageName) const = 0;
 
     /**
-        Gets whether the given image is not null and contains image data.
-
-        @param image The image to check
-        @param True if the image is valid, false if not
+     *  Gets whether the given image is not null and contains image data.
+     *
+     *  @param image The image to check
+     *  @param True if the image is valid, false if not
      */
     virtual const bool isImageValid(const juce::Image &image) const = 0;
 
     /**
-        Gets whether this theme package is valid or not.
-
-        @return True if the theme package is valid, false if not
+     *  Gets whether this theme package is valid or not.
+     *  @return True if the theme package is valid, false if not
      */
     virtual const bool isValid() const = 0;
 
     /**
-        Gets the theme package's metadata containing name, description, author ect..
-
-        @return A pointer to the metadata from this theme package
+     *  Gets the theme package's metadata containing name, description, author ect..
+     *  @return A pointer to the metadata from this theme package
      */
-    virtual const IMetadata *getThemeMeta() const = 0;
+    virtual const IMetadata* getThemeMeta() const = 0;
 
     /**
-        Gets the file extension of the images used for this application.
-
-        @return The extension
+     *  Gets the file extension of the images used for this application.
+     *  @return The extension
      */
     virtual const juce::String getImageExtension() const = 0;
 
     /**
-        Gets the absolute path of the root directory of this theme package.
-
-        @return The root path of the theme package
+     *  Gets the absolute path of the root directory of this theme package.
+     *  @return The root path of the theme package
      */
     virtual const juce::String getThemeRootPath() const = 0;
 

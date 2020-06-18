@@ -30,8 +30,8 @@
     description:        Core functionality of jaut.
     website:            https://github.com/elandasunshine/jaut
     license:            AGPL v3
-    minimumCppStandard: C++17
-    dependencies:       juce_core, juce_events
+    minimumCppStandard: 17
+    dependencies:       juce_core juce_events
 
     END_JUCE_MODULE_DECLARATION
     ===============================================================
@@ -40,7 +40,6 @@
 #pragma once
 
 // Dependencies
-#include <juce_core/juce_core.h>
 #include <juce_events/juce_events.h>
 
 // Options
@@ -90,6 +89,7 @@
 #include <jaut_core/define/assertdef.h>
 #include <jaut_core/define/jautdef.h>
 #include <jaut_core/define/threadex.h>
+#include <jaut_core/define/utils.h>
 
 //======================================================================================================================
 // Preprocessor general
@@ -121,9 +121,11 @@
 //======================================================================================================================
 // Misc utils
 #include <jaut_core/util/exception.h>
-#include <jaut_core/util/mathhelper.h>
+#include <jaut_core/util/mathutil.h>
 #include <jaut_core/util/typetraits.h>
 #include <jaut_core/util/operationresult.h>
+#include <jaut_core/util/objectproxy.h>
+#include <jaut_core/util/version.h>
 
 //======================================================================================================================
 // Signaling handlers

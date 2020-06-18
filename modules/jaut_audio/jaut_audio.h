@@ -30,8 +30,8 @@
     description:        Various processing and dsp related classes.
     website:            https://github.com/elandasunshine/jaut
     license:            AGPL v3
-    minimumCppStandard: C++17
-    dependencies:       jaut_core, jaut_message, juce_core, juce_events, juce_audio_processors, juce_data_structures
+    minimumCppStandard: 17
+    dependencies:       jaut_message juce_audio_processors
 
     END_JUCE_MODULE_DECLARATION
     ===============================================================
@@ -39,11 +39,10 @@
 
 #pragma once
 
-#include <juce_audio_processors/juce_audio_processors.h>
-#include <juce_data_structures/juce_data_structures.h>
-#include <jaut_core/jaut_core.h>
 #include <jaut_message/jaut_message.h>
+#include <juce_audio_processors/juce_audio_processors.h>
 
+#include <jaut_audio/parameter/attachments.h>
 #include <jaut_audio/processor/serializableaudioprocessor.h>
 // TODO add this line when needed #include <jaut_audio/processor/audioprocessoreffect.h>
 #include <jaut_audio/processor/audioprocessorrack.h>

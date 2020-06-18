@@ -16,19 +16,23 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   config.cpp
     @date   04, May 2019
     
     ===============================================================
  */
 
+namespace jaut
+{
+//**********************************************************************************************************************
 // region Namespace
+//======================================================================================================================
 namespace
 {
-var emptyValue;
+juce::var emptyValue;
 
-inline String fixPathString(String currentPath)
+inline juce::String fixPathString(juce::String currentPath)
 {
     if (currentPath.isEmpty())
     {
@@ -41,9 +45,9 @@ inline String fixPathString(String currentPath)
 
         if (currentPath.contains("//"))
         {
-            CharPointer_UTF8 char_ptr = currentPath.getCharPointer();
-            juce_wchar curr_char; // NOLINT
-            String new_uri;
+            juce::CharPointer_UTF8 char_ptr = currentPath.getCharPointer();
+            juce::juce_wchar curr_char; // NOLINT
+            juce::String new_uri;
 
             for (;;)
             {
@@ -69,9 +73,9 @@ inline String fixPathString(String currentPath)
     return currentPath;
 }
 
-inline String trimAndValidate(const String &name, bool periodCheck)
+inline juce::String trimAndValidate(const juce::String &name, bool periodCheck)
 {
-    const String trimmed_name = name.removeCharacters(" ");
+    const juce::String trimmed_name = name.removeCharacters(" ");
 
     /**
      *  Always make sure the property's name is set!
@@ -94,36 +98,33 @@ inline String trimAndValidate(const String &name, bool periodCheck)
     return name;
 }
 
-inline String getCategory(const jaut::Config *config, const String &category)
+inline juce::String getCategory(const jaut::Config *config, const juce::String &category)
 {
     return category.isEmpty() ? config->getOptions().defaultCategory : category.removeCharacters(" ").toLowerCase();
 }
 }
+//======================================================================================================================
 // endregion Namespace
-
-namespace jaut
-{
+//**********************************************************************************************************************
 // region Property
-/* ==================================================================================
- * ================================== Property ======================================
- * ================================================================================== */
+//======================================================================================================================
 struct Config::Property::PropertyData final
 {
     // Main
-    String name;
-    var    defaultValue;
-    var    value;
+    juce::String name;
+    juce::var    defaultValue;
+    juce::var    value;
     
     // References
     Config   *config;
     Property *parent;
     
     // Optional
-    String   comment;
+    juce::String   comment;
     ChildMap properties;
     
     //==================================================================================================================
-    PropertyData(String name, var defaultValue)
+    PropertyData(juce::String name, juce::var defaultValue)
         : name(std::move(name)),
           defaultValue(defaultValue),
           value(std::move(defaultValue)),
@@ -132,8 +133,8 @@ struct Config::Property::PropertyData final
 };
 
 //======================================================================================================================
-Config::Property::Property(const String &name, const var &defaultValue)
-    : data(std::make_unique<PropertyData>(::trimAndValidate(name, true), defaultValue))
+Config::Property::Property(const juce::String &name, const juce::var &defaultValue)
+    : data(std::make_unique<PropertyData>(jaut::trimAndValidate(name, true), defaultValue))
 {}
 
 Config::Property::Property(const Property &other) noexcept
@@ -167,11 +168,11 @@ Config::Property &Config::Property::operator=(Property &&right) noexcept
 }
 
 //======================================================================================================================
-Config::Property Config::Property::operator[](const String &name)
+Config::Property Config::Property::operator[](const juce::String &name)
 {
     if (isValid())
     {
-        const String trimmed_name = ::trimAndValidate(name, false);
+        const juce::String trimmed_name = jaut::trimAndValidate(name, false);
         
         if (trimmed_name.contains("."))
         {
@@ -180,7 +181,7 @@ Config::Property Config::Property::operator[](const String &name)
                 return {};
             }
             
-            StringArray property_names;
+            juce::StringArray property_names;
             property_names.addTokens(name, ".", "\"");
             
             if (property_names.isEmpty())
@@ -196,12 +197,12 @@ Config::Property Config::Property::operator[](const String &name)
                 }
             }
             
-            return recurseChilds(property_names, sendNotification);
+            return recurseChilds(property_names, true, juce::sendNotification);
         }
 
-        const String property_id = trimmed_name.toLowerCase();
-        const auto property_it   = data->properties.find(property_id);
-        Property property        = property_it->second;
+        const juce::String property_id = trimmed_name.toLowerCase();
+        const auto property_it         = data->properties.find(property_id);
+        Property property              = property_it->second;
         
         if (property_it == data->properties.end())
         {
@@ -229,13 +230,13 @@ Config::Property Config::Property::operator[](const String &name)
 }
 
 //======================================================================================================================
-Config::Property Config::Property::createProperty(const String &name, const var &defaultValue,
-                                                  NotificationType notification)
+Config::Property Config::Property::createProperty(const juce::String &name, const juce::var &defaultValue,
+                                                  juce::NotificationType notification)
 {
     if (isValid())
     {
-        const String trimmed_name = ::trimAndValidate(name, true);
-        const String id           = trimmed_name.toLowerCase();
+        const juce::String trimmed_name = jaut::trimAndValidate(name, true);
+        const juce::String id           = trimmed_name.toLowerCase();
         const auto it             = data->properties.find(id);
         Property property         = it->second;
         
@@ -246,7 +247,7 @@ Config::Property Config::Property::createProperty(const String &name, const var 
             property.data->config = data->config;
             data->properties.emplace(id, property);
     
-            if (notification != dontSendNotification)
+            if (notification != juce::dontSendNotification)
             {
                 PropertyAddedHandler handler = PropertyAdded;
                 handler(property);
@@ -265,7 +266,7 @@ Config::Property Config::Property::createProperty(const String &name, const var 
     return {};
 }
 
-OperationResult Config::Property::addProperty(Property property, NotificationType notification)
+OperationResult Config::Property::addProperty(Property property, juce::NotificationType notification)
 {
     if (isValid() && property.isValid())
     {
@@ -274,7 +275,7 @@ OperationResult Config::Property::addProperty(Property property, NotificationTyp
             return ErrorCodes::PropertyOwned;
         }
         
-        const String id = property.getName().toLowerCase();
+        const juce::String id = property.getName().toLowerCase();
         
         if (data->properties.find(id) == data->properties.end())
         {
@@ -282,7 +283,7 @@ OperationResult Config::Property::addProperty(Property property, NotificationTyp
             property.setConfig(data->config);
             data->properties.emplace(id, property);
             
-            if (notification != dontSendNotification)
+            if (notification != juce::dontSendNotification)
             {
                 PropertyAddedHandler handler = PropertyAdded;
                 handler(property);
@@ -303,11 +304,11 @@ OperationResult Config::Property::addProperty(Property property, NotificationTyp
     return ErrorCodes::PropertyInvalid;
 }
 
-Config::Property Config::Property::getProperty(const String &name)
+Config::Property Config::Property::getProperty(const juce::String &name)
 {
     if (isValid())
     {
-        const String id = ::trimAndValidate(name, false).toLowerCase();
+        const juce::String id = jaut::trimAndValidate(name, false).toLowerCase();
         
         if(id.contains("."))
         {
@@ -316,7 +317,7 @@ Config::Property Config::Property::getProperty(const String &name)
                 return {};
             }
             
-            StringArray property_names;
+            juce::StringArray property_names;
             property_names.addTokens(name, ".", "\"");
             
             if(property_names.isEmpty())
@@ -332,7 +333,7 @@ Config::Property Config::Property::getProperty(const String &name)
                 }
             }
             
-            return recurseChilds(property_names);
+            return recurseChilds(property_names, false, juce::dontSendNotification);
         }
         
         const auto it = data->properties.find(id);
@@ -346,32 +347,32 @@ Config::Property Config::Property::getProperty(const String &name)
     return {};
 }
 
-const Config::Property Config::Property::getProperty(const String &name) const
+Config::ConstProperty Config::Property::getProperty(const juce::String &name) const
 {
     if (isValid())
     {
-        const String id = ::trimAndValidate(name, false).toLowerCase();
+        const juce::String id = jaut::trimAndValidate(name, false).toLowerCase();
         
         if(id.contains("."))
         {
             if(id.endsWithChar('.') || id.startsWithChar('.') || id.contains(".."))
             {
-                return {};
+                return ConstProperty();
             }
             
-            StringArray property_names;
+            juce::StringArray property_names;
             property_names.addTokens(name, ".", "\"");
             
             if(property_names.isEmpty())
             {
-                return {};
+                return ConstProperty();
             }
             
             for (auto &prop_name : property_names)
             {
                 if(prop_name.length() < 3 || prop_name.equalsIgnoreCase("value"))
                 {
-                    return {};
+                    return ConstProperty();
                 }
             }
             
@@ -416,19 +417,19 @@ bool Config::Property::isValid() const noexcept
     return data != nullptr;
 }
 
-bool Config::Property::hasProperty(const String &name) const
+bool Config::Property::hasProperty(const juce::String &name) const
 {
-    const String id = ::trimAndValidate(name, true).toLowerCase();
+    const juce::String id = jaut::trimAndValidate(name, true).toLowerCase();
     return data->properties.find(id) != data->properties.end();
 }
 
 //======================================================================================================================
-String Config::Property::getName() const noexcept
+juce::String Config::Property::getName() const noexcept
 {
-    return isValid() ? data->name : String();
+    return isValid() ? data->name : juce::String();
 }
 
-String Config::Property::getTopCategory() const noexcept
+juce::String Config::Property::getTopCategory() const noexcept
 {
     if (isValid())
     {
@@ -447,15 +448,15 @@ String Config::Property::getTopCategory() const noexcept
         }
     }
     
-    return String();
+    return juce::String();
 }
 
-String Config::Property::getAbsoluteName() const
+juce::String Config::Property::getAbsoluteName() const
 {
     if (isValid())
     {
         const Property *this_parent = this;
-        StringArray full_path(data->name);
+        juce::StringArray full_path(data->name);
         
         while ((this_parent = this_parent->data->parent))
         {
@@ -470,15 +471,15 @@ String Config::Property::getAbsoluteName() const
         return full_path.joinIntoString(".");
     }
     
-    return String();
+    return juce::String();
 }
 
-String Config::Property::getComment() const noexcept
+juce::String Config::Property::getComment() const noexcept
 {
-    return isValid() ? data->comment : String();
+    return isValid() ? data->comment : juce::String();
 }
 
-void Config::Property::setComment(const String &commentText) noexcept
+void Config::Property::setComment(const juce::String &commentText) noexcept
 {
     if (isValid())
     {
@@ -486,11 +487,11 @@ void Config::Property::setComment(const String &commentText) noexcept
     }
 }
 
-void Config::Property::setValue(const var &newValue, NotificationType notification) noexcept
+void Config::Property::setValue(const juce::var &newValue, juce::NotificationType notification) noexcept
 {
     if (isValid() && data->value != newValue)
     {
-        var &value = data->value;
+        juce::var &value = data->value;
         
         /**
          *  Always make sure that the value you are passing has the same object type than the stored value.
@@ -499,9 +500,9 @@ void Config::Property::setValue(const var &newValue, NotificationType notificati
          */
         jassert(value.hasSameTypeAs(newValue) || value.isVoid() || newValue.isVoid());
         
-        const var old_value = std::exchange(value, newValue);
+        const juce::var old_value = std::exchange(value, newValue);
         
-        if (notification != dontSendNotification)
+        if (notification != juce::dontSendNotification)
         {
             ValueChangedHandler handler = ValueChanged;
             handler(data->name, old_value, value);
@@ -515,12 +516,12 @@ void Config::Property::setValue(const var &newValue, NotificationType notificati
     }
 }
 
-const var &Config::Property::getValue() const noexcept
+const juce::var &Config::Property::getValue() const noexcept
 {
-    return isValid() ? data->value : ::emptyValue;
+    return isValid() ? data->value : jaut::emptyValue;
 }
 
-void Config::Property::reset(bool recursive, NotificationType notification) noexcept
+void Config::Property::reset(bool recursive, juce::NotificationType notification) noexcept
 {
     if(isValid())
     {
@@ -537,7 +538,7 @@ void Config::Property::reset(bool recursive, NotificationType notification) noex
 }
 
 //======================================================================================================================
-String Config::Property::toString() const noexcept
+juce::String Config::Property::toString() const noexcept
 {
     return getValue().toString();
 }
@@ -588,27 +589,28 @@ void Config::Property::setConfig(Config *config)
 }
 
 //======================================================================================================================
-Config::Property Config::Property::recurseChilds(StringArray &names, NotificationType notification)
+Config::Property Config::Property::recurseChilds(juce::StringArray &names, bool add,
+                                                 juce::NotificationType notification)
 {
     if (!names.isEmpty())
     {
-        const String name = names.strings.getReference(0);
-        const String id   = name.toLowerCase();
+        const juce::String name = names.strings.getReference(0);
+        const juce::String id   = name.toLowerCase();
         auto it = data->properties.find(id);
         names.removeRange(0, 1);
         
         if (it != data->properties.end())
         {
-            return it->second.recurseChilds(names, notification);
+            return it->second.recurseChilds(names, add, notification);
         }
-        else
+        else if (add)
         {
             Property property(name, {});
             property.data->parent = this;
             property.data->config = data->config;
             data->properties.emplace(id, property);
     
-            if (notification != dontSendNotification)
+            if (notification != juce::dontSendNotification)
             {
                 PropertyAddedHandler handler = PropertyAdded;
                 handler(property);
@@ -620,19 +622,21 @@ Config::Property Config::Property::recurseChilds(StringArray &names, Notificatio
                 }
             }
             
-            return property.recurseChilds(names, notification);
+            return property.recurseChilds(names, add, notification);
         }
+        
+        return {};
     }
     
     return *this;
 }
 
-const Config::Property Config::Property::recurseChilds(StringArray &names) const
+Config::ConstProperty Config::Property::recurseChilds(juce::StringArray &names) const
 {
     if (!names.isEmpty())
     {
-        const String name = names.strings.getReference(0);
-        const String id   = name.toLowerCase();
+        const juce::String name = names.strings.getReference(0);
+        const juce::String id   = name.toLowerCase();
         const auto it     = data->properties.find(id);
         names.removeRange(0, 1);
     
@@ -646,36 +650,36 @@ const Config::Property Config::Property::recurseChilds(StringArray &names) const
     
     return *this;
 }
+//======================================================================================================================
 // endregion Property
+//**********************************************************************************************************************
 // region Config
-/* ==================================================================================
- * =================================== Config =======================================
- * ================================================================================== */
-
-Config::Config(const String &root, Options options, std::unique_ptr<ConfigParserType> configParser)
-    : autoSaveActive(true), fullPath(std::move(::fixPathString(root + "/" + options.fileName))),
-      options(std::move(options)), parser(std::move(configParser))
+//======================================================================================================================
+Config::Config(const juce::String &root, Options options, std::unique_ptr<ConfigParserType> configParser)
+    : options(std::move(options)), 
+      fullPath(jaut::fixPathString(root + "/" + options.fileName)),
+      parser(std::move(configParser))
 {
-    File file(fullPath);
+    const juce::File file = fullPath;
     
     /*
-       If this error occurs then you know that
-       you need to make sure the parent of the
-       file exists.
-       (Where should you save the config else?)
-
-       Note:
-       Also, make sure that the parent directory of
-       the path never changes, as this will invalidate
-       your config if not handled properly.
-    */
+     * If this error occurs then you know that
+     * you need to make sure the parent of the
+     * file exists.
+     * (Where should you save the config else?)
+     *
+     * Note:
+     * Also, make sure that the parent directory of
+     * the path never changes, as this will invalidate
+     * your config if not handled properly.
+     */
     jassert(file.getParentDirectory().exists());
     
     /*
-       Don't save this file as a directory.
-       This means that you probably didn't add any
-       valid file extension to the config's filepath.
-    */
+     * Don't save this file as a directory.
+     * This means that you probably didn't add any
+     * valid file extension to the config's filepath.
+     */
     jassert(!file.isDirectory());
     
     /*
@@ -684,7 +688,7 @@ Config::Config(const String &root, Options options, std::unique_ptr<ConfigParser
     jassert(parser != nullptr);
     
     options.defaultCategory = options.defaultCategory.removeCharacters(" ").toLowerCase();
-    ipMutex = options.processSynced ? std::make_unique<InterProcessLock>(fullPath) : nullptr;
+    ipMutex = options.processSynced ? std::make_unique<juce::InterProcessLock>(fullPath) : nullptr;
     (void) categories[options.defaultCategory.trim().toLowerCase()];
 }
 
@@ -723,6 +727,7 @@ Config::~Config()
 Config &Config::operator=(Config &&other) noexcept
 {
     swap(*this, other);
+    
     other.parser  = nullptr;
     other.ipMutex = nullptr;
     
@@ -745,12 +750,11 @@ OperationResult Config::load()
         return ErrorCodes::InvalidParser;
     }
     
-    const File config(fullPath);
+    const juce::File config = fullPath;
 
     if (config.exists())
     {
-        // Try to lock for no other threads and/or processes to modify the
-        // file at the same time!
+        // Try to lock for no other threads and/or processes to modify the file at the same time!
         ProcessLockGuardPtr lock(createIpcLock());
 
         if (lock && !lock->isLocked())
@@ -771,12 +775,11 @@ OperationResult Config::save() const
         return ErrorCodes::InvalidParser;
     }
     
-    const File config (fullPath);
+    const juce::File config = fullPath;
 
     if (config.getParentDirectory().exists())
     {
-        // Try to lock for no other threads and/or processes to modify the
-        // file at the same time!
+        // Try to lock for no other threads and/or processes to modify the file at the same time!
         ProcessLockGuardPtr lock(createIpcLock());
 
         if (lock && !lock->isLocked())
@@ -785,12 +788,8 @@ OperationResult Config::save() const
         }
 
         // Saving the config file
-        Property root = getAllProperties();
-
-        if (!options.configNotice.isEmpty())
-        {
-            root.setComment(options.configNotice);
-        }
+        Property root = getAllPropertiesPseudoConst();
+        root.setComment(options.configNotice);
 
         return parser->writeConfig(config, root);
     }
@@ -799,25 +798,25 @@ OperationResult Config::save() const
 }
 
 //======================================================================================================================
-String Config::getConfigName(bool withoutExtension) const
+juce::String Config::getConfigName(bool withoutExtension) const
 {
-    const File config(fullPath);
+    const juce::File config = fullPath;
     
     if (config.getParentDirectory().exists())
     {
         return withoutExtension ? config.getFileNameWithoutExtension() : config.getFileName();
     }
-
+    
     return {};
 }
 
-Config::Property Config::getProperty(const String &name, const String &category)
+Config::Property Config::getProperty(const juce::String &name, const juce::String &category)
 {
-    const String category_name = ::getCategory(this, category);
+    const juce::String category_name = jaut::getCategory(this, category);
     
     if (categories.find(category_name) != categories.end())
     {
-        const PropertyMap &property_map = categories.at(category_name).properties;
+        PropertyMap &property_map = categories.at(category_name).properties;
         
         if (name.contains(".") && !name.startsWith("."))
         {
@@ -829,8 +828,8 @@ Config::Property Config::getProperty(const String &name, const String &category)
             }
         }
         
-        const String property_id = name.trim().toLowerCase();
-        const auto it            = property_map.find(property_id);
+        const juce::String property_id = name.trim().toLowerCase();
+        const auto it = property_map.find(property_id);
         
         if (it != property_map.end())
         {
@@ -841,9 +840,9 @@ Config::Property Config::getProperty(const String &name, const String &category)
     return {};
 }
 
-const Config::Property Config::getProperty(const String &name, const String &category) const
+Config::ConstProperty Config::getProperty(const juce::String &name, const juce::String &category) const
 {
-    const String category_name = ::getCategory(this, category);
+    const juce::String category_name = jaut::getCategory(this, category);
     
     if (categories.find(category_name) != categories.end())
     {
@@ -859,8 +858,8 @@ const Config::Property Config::getProperty(const String &name, const String &cat
             }
         }
     
-        const String property_id = name.trim().toLowerCase();
-        const auto it            = property_map.find(property_id);
+        const juce::String property_id = name.trim().toLowerCase();
+        const auto it = property_map.find(property_id);
         
         if (it != property_map.end())
         {
@@ -873,11 +872,11 @@ const Config::Property Config::getProperty(const String &name, const String &cat
 
 Config::Property Config::getAllProperties()
 {
-    Property root("config", var());
+    Property root("config", juce::var());
 
     for (auto &[category_name, category] : categories)
     {
-        Property category_property(category_name, var());
+        Property category_property(category_name, juce::var());
         category_property.setComment(category.comment);
         category_property.data->properties = category.properties;
         root.addProperty(category_property);
@@ -886,13 +885,13 @@ Config::Property Config::getAllProperties()
     return root;
 }
 
-const Config::Property Config::getAllProperties() const
+Config::ConstProperty Config::getAllProperties() const
 {
-    Property root("config", var());
+    Property root("config", juce::var());
     
     for (const auto &[category_name, category] : categories)
     {
-        Property category_property(category_name, var());
+        Property category_property(category_name, juce::var());
         category_property.setComment(category.comment);
         category_property.data->properties = category.properties;
         root.addProperty(category_property);
@@ -901,9 +900,9 @@ const Config::Property Config::getAllProperties() const
     return root;
 }
 
-String Config::getCategoryComment(const String &category) const
+juce::String Config::getCategoryComment(const juce::String &category) const
 {
-    const String category_name = ::getCategory(this, category);
+    const juce::String category_name = jaut::getCategory(this, category);
     const auto it              = categories.find(category_name);
     
     if (it != categories.end())
@@ -914,9 +913,9 @@ String Config::getCategoryComment(const String &category) const
     return {};
 }
 
-void Config::setCategoryComment(const String &category, const String &comment)
+void Config::setCategoryComment(const juce::String &category, const juce::String &comment)
 {
-    const String category_name = ::getCategory(this, category);
+    const juce::String category_name = jaut::getCategory(this, category);
     
     if (category_name != options.defaultCategory)
     {
@@ -945,11 +944,11 @@ const Config::Options &Config::getOptions() const noexcept
 }
 
 //======================================================================================================================
-Config::Property Config::createProperty(const String &name, const var &defaultValue, const String &category) noexcept
+Config::Property Config::createProperty(const juce::String &name, const juce::var &defaultValue, const juce::String &category) noexcept
 {
     Property property(name, defaultValue);
-    const String category_name = ::getCategory(this, category);
-    const String property_id   = name.removeCharacters(" ").toLowerCase();
+    const juce::String category_name = jaut::getCategory(this, category);
+    const juce::String property_id   = name.removeCharacters(" ").toLowerCase();
     const bool was_added       = categories[category_name].properties.emplace(property_id, property).second;
 
     if (was_added)
@@ -972,16 +971,16 @@ Config::Property Config::createProperty(const String &name, const var &defaultVa
     return categories.at(category_name).properties.at(property_id);
 }
 
-OperationResult Config::addProperty(Property property, const String &category) noexcept
+OperationResult Config::addProperty(Property property, const juce::String &category) noexcept
 {
     if(property.isValid() && property.data->config)
     {
         return ErrorCodes::PropertyOwned;
     }
     
-    const String category_name = ::getCategory(this, category);
-    const String property_id   = property.getName().removeCharacters(" ").toLowerCase();
-    const bool was_added       = categories[category_name].properties.emplace(property_id, property).second;
+    const juce::String category_name = jaut::getCategory(this, category);
+    const juce::String property_id   = property.getName().removeCharacters(" ").toLowerCase();
+    const bool was_added             = categories[category_name].properties.emplace(property_id, property).second;
     
     if (was_added)
     {
@@ -1003,14 +1002,25 @@ OperationResult Config::addProperty(Property property, const String &category) n
     return ErrorCodes::PropertyExists;
 }
 
-void Config::resetCategory(const String &category) noexcept
+void Config::resetCategory(const juce::String &category)
 {
-    const String category_name = ::getCategory(this, category);
-    const auto it              = categories.find(category_name);
+    const juce::String category_name = jaut::getCategory(this, category);
+    const auto it = categories.find(category_name);
     
     if(it != categories.end())
     {
         for(auto &[_, property] : it->second.properties)
+        {
+            property.reset(true);
+        }
+    }
+}
+
+void Config::resetAll()
+{
+    for(auto &[_c, category] : categories)
+    {
+        for(auto &[_p, property] : category.properties)
         {
             property.reset(true);
         }
@@ -1033,5 +1043,22 @@ Config::ProcessLockGuard* Config::createIpcLock() const
 {
     return options.processSynced ? new ProcessLockGuard(*ipMutex) : nullptr;
 }
-#pragma endregion Config
+
+Config::Property Config::getAllPropertiesPseudoConst() const
+{
+    Property root("config", juce::var());
+    
+    for (auto &[category_name, category] : categories)
+    {
+        Property category_property(category_name, juce::var());
+        category_property.setComment(category.comment);
+        category_property.data->properties = category.properties;
+        root.addProperty(category_property);
+    }
+    
+    return root;
+}
+//======================================================================================================================
+// endregion Config
+//**********************************************************************************************************************
 }

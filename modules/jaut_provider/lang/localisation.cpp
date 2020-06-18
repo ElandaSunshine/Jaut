@@ -16,24 +16,22 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   localisation.cpp
     @date   04, May 2019
     
     ===============================================================
  */
 
-#include <jaut/provider/localisation.h>
-
 namespace jaut
 {
-bool Localisation::isValidLanguageFile(const File &file)
+bool Localisation::isValidLanguageFile(const juce::File &file)
 {
     if(file.exists() && !file.isDirectory() && file.getFileName().matchesWildcard("??_??.lang", true))
     {
-        FileInputStream input_stream(file);
-        String language_name;
-        StringArray countries;
+        juce::FileInputStream input_stream(file);
+        juce::String language_name;
+        juce::StringArray countries;
 
         while(!input_stream.isExhausted())
         {
@@ -42,11 +40,11 @@ bool Localisation::isValidLanguageFile(const File &file)
                 return true;
             }
 
-            const String line = input_stream.readNextLine();
+            const juce::String line = input_stream.readNextLine();
 
             if(line.startsWith("language:"))
             {
-                const String definition = line.substring(9).trim();
+                const juce::String definition = line.substring(9).trim();
 
                 if(definition.containsNonWhitespaceChars() && definition.length() > 2)
                 {
@@ -56,7 +54,7 @@ bool Localisation::isValidLanguageFile(const File &file)
             }
             else if(line.startsWith("countries:"))
             {
-                const String definition = line.substring(10).trim();
+                const juce::String definition = line.substring(10).trim();
                 countries.addTokens(definition, true);
 
                 if(!countries.isEmpty())
@@ -76,15 +74,15 @@ bool Localisation::isValidLanguageFile(const File &file)
     return false;
 }
 
-std::pair<String, StringArray> Localisation::getLanguageFileData(const File &file)
+Localisation::LanguageHeader Localisation::getLanguageFileData(const juce::File &file)
 {
-    decltype(std::declval<Localisation>().getLanguageFileData(File())) result;
+    LanguageHeader result;
 
     if(file.exists() && !file.isDirectory())
     {
-        FileInputStream input_stream(file);
-        String language;
-        StringArray countries;
+        juce::FileInputStream input_stream(file);
+        juce::String language;
+        juce::StringArray countries;
 
         while(!input_stream.isExhausted())
         {
@@ -94,7 +92,7 @@ std::pair<String, StringArray> Localisation::getLanguageFileData(const File &fil
                 break;
             }
 
-            const String line = input_stream.readNextLine();
+            const juce::String line = input_stream.readNextLine();
 
             if(line.startsWith("language:") && language.isEmpty())
             {
@@ -103,7 +101,7 @@ std::pair<String, StringArray> Localisation::getLanguageFileData(const File &fil
             }
             else if(line.startsWith("countries:") && countries.size() == 0)
             {
-                const String countries_string = line.substring(10).trim().toUpperCase();
+                const juce::String countries_string = line.substring(10).trim().toUpperCase();
                 countries.addTokens(countries_string, true);
 
                 if(countries.isEmpty() && countries_string.containsNonWhitespaceChars()
@@ -127,8 +125,8 @@ std::pair<String, StringArray> Localisation::getLanguageFileData(const File &fil
 }
 
 //=====================================================================================================================
-Localisation::Localisation(const File &langRootDir, const LocalisedStrings &defaultLocale)
-    : rootDir(langRootDir), currentLocale(defaultLocale), defaultLocale(defaultLocale)
+Localisation::Localisation(juce::File langRootDir, const juce::LocalisedStrings &defaultLocale)
+    : rootDir(std::move(langRootDir)), currentLocale(defaultLocale), defaultLocale(defaultLocale)
 {}
 
 Localisation::Localisation(const Localisation &other)
@@ -161,39 +159,39 @@ Localisation &Localisation::operator=(Localisation &&other) noexcept
 }
 
 //=====================================================================================================================
-void Localisation::setDefault(const LocalisedStrings &fallbackLanguage) noexcept
+void Localisation::setDefault(const juce::LocalisedStrings &fallbackLanguage)
 {
     defaultLocale = fallbackLanguage;
 }
 
-void Localisation::setDefault(const String &languageStringUtf8)
+void Localisation::setDefault(const juce::String &languageStringUtf8)
 {
     if(languageStringUtf8.isEmpty())
     {
         return;
     }
 
-    defaultLocale = LocalisedStrings(languageStringUtf8, true);
+    defaultLocale = juce::LocalisedStrings(languageStringUtf8, true);
 }
 
-void Localisation::setDefault(InputStream &inputStream)
+void Localisation::setDefault(juce::InputStream &inputStream)
 {
     if(inputStream.isExhausted())
     {
         return;
     }
 
-    defaultLocale = LocalisedStrings(inputStream.readEntireStreamAsString(), true);
+    defaultLocale = juce::LocalisedStrings(inputStream.readEntireStreamAsString(), true);
 }
 
-bool Localisation::setCurrentLanguage(const String &language)
+bool Localisation::setCurrentLanguage(const juce::String &language)
 {
-    const File langfile = rootDir.getChildFile(language + ".lang");
+    const juce::File lang_file = rootDir.getChildFile(language + ".lang");
 
-    if(Localisation::isValidLanguageFile(langfile))
+    if(Localisation::isValidLanguageFile(lang_file))
     {
-        fileName      = langfile.getFileNameWithoutExtension();
-        currentLocale = LocalisedStrings(langfile.loadFileAsString(), true);
+        fileName      = lang_file.getFileNameWithoutExtension();
+        currentLocale = juce::LocalisedStrings(lang_file.loadFileAsString(), true);
         
         return true;
     }
@@ -201,37 +199,37 @@ bool Localisation::setCurrentLanguage(const String &language)
     return false;
 }
 
-void Localisation::setCurrentLanguage(const LocalisedStrings &localisedStrings) noexcept
+void Localisation::setCurrentLanguage(const juce::LocalisedStrings &localisedStrings)
 {
     currentLocale = localisedStrings;
     fileName      = "";
 }
 
-void Localisation::setCurrentLanguage(const Localisation &locale) noexcept
+void Localisation::setCurrentLanguage(const Localisation &locale)
 {
     currentLocale = locale.currentLocale;
     fileName      = locale.fileName;
 }
 
 //=====================================================================================================================
-File Localisation::getRootDirectory() const noexcept
+juce::File Localisation::getRootDirectory() const noexcept
 {
     return rootDir;
 }
 
-File Localisation::getLanguageFile() const noexcept
+juce::File Localisation::getLanguageFile() const
 {
-    return rootDir.exists() && !fileName.isEmpty() ? rootDir.getChildFile(fileName + ".lang") : File();
+    return rootDir.exists() && !fileName.isEmpty() ? rootDir.getChildFile(fileName + ".lang") : juce::File();
 }
 
 //=====================================================================================================================
-const LocalisedStrings &Localisation::getInternalLocalisation() const noexcept
+const juce::LocalisedStrings& Localisation::getInternalLocalisation() const noexcept
 {
     return currentLocale;
 }
 
 //======================================================================================================================
-const String Localisation::translate(const String &name) const noexcept
+const juce::String Localisation::translate(const juce::String &name) const
 {
     if(currentLocale.getMappings().containsKey(name))
     {
@@ -241,7 +239,7 @@ const String Localisation::translate(const String &name) const noexcept
     return defaultLocale.translate(name);
 }
 
-const String Localisation::translate(const String &name, const String &fallbackValue) const noexcept
+const juce::String Localisation::translate(const juce::String &name, const juce::String &fallbackValue) const
 {
     if(currentLocale.getMappings().containsKey(name))
     {

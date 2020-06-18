@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   operationresult.h
     @date   30, March 2020
     
@@ -28,9 +28,9 @@
 namespace jaut
 {
 /**
- *  A simple class for functions returning
+ *  A wrapper around a single int providing result information of an operation with a specific error code.
  */
-class JAUT_API OperationResult final
+class JAUT_API OperationResult
 {
 public:
     /**

@@ -12,21 +12,29 @@
 
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
-    
+
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
-    
+
     @author Elanda
-    @file   config.cpp
-    @date   20, March 2020
-    
+    @file   utils.h
+    @date   16, June 2020
+
     ===============================================================
  */
+ 
+#pragma once
 
-#include <jaut_provider/jaut_provider.h>
+#define JAUT_DECLARE_AUTOMATIC_STD_ARRAY(NAME, ...) \
+        std::array<std::decay_t<decltype(JAUT_UPP_ARGS_GET_AT(1, __VA_ARGS__))>, \
+                            JAUT_UPP_ARGS_GET_LENGTH(__VA_ARGS__)> NAME { __VA_ARGS__ }
 
-#include <jaut_provider/config/config.cpp>
-#include <jaut_provider/config/configparser.cpp>
-#include <jaut_provider/lang/localisation.cpp>
-#include <jaut_provider/util/metadatautil.cpp>
-#include <jaut_provider/theme/thememanager.cpp>
+#ifndef JAUT_COLOUR_ID_START
+#   define JAUT_COLOUR_ID_START 0x11100000
+#endif
+
+/**
+ *  A quick and dirty auto colour id counter.
+ *  @return The next colour id
+ */
+#define JAUT_NEXT_COLOUR_ID 0x11100000 + __COUNTER__

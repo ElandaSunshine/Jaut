@@ -17,16 +17,12 @@
     ===============================================================
     
     @author Elanda
-    @file   config.cpp
-    @date   20, March 2020
+    @file   jaut_gui.cpp
+    @date   18, June 2020
     
     ===============================================================
  */
 
-#include <jaut_provider/jaut_provider.h>
+#include <jaut_gui/jaut_gui.h>
 
-#include <jaut_provider/config/config.cpp>
-#include <jaut_provider/config/configparser.cpp>
-#include <jaut_provider/lang/localisation.cpp>
-#include <jaut_provider/util/metadatautil.cpp>
-#include <jaut_provider/theme/thememanager.cpp>
+#include <jaut_gui/text/fontformat.cpp>

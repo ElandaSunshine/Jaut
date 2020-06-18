@@ -1,3 +1,5 @@
+#include <utility>
+
 /**
     ===============================================================
     This program is free software: you can redistribute it and/or modify
@@ -16,32 +18,28 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   thememanager.cpp
     @date   19, August 2019
     
     ===============================================================
  */
 
-#include <jaut/provider/theme/thememanager.h>
-
-#include <jaut/jaut_util/exception.h>
-#include <jaut/provider/theme/interfaces/imetadata.h>
-#include <jaut/provider/theme/interfaces/imetareader.h>
-#include <jaut/interfaces/ithemedefinition.h>
-
 namespace jaut
 {
+//**********************************************************************************************************************
+// region Namespace
+//======================================================================================================================
 namespace
 {
-inline String toIdString(const String &stringToConvert)
+juce::String toIdString(const juce::String &stringToConvert)
 {
     return stringToConvert.removeCharacters(" ").toLowerCase();
 }
 
-inline IMetadata *getThemeMetadata(const File &metaFile, IMetaReader *reader)
+IMetadata *getThemeMetadata(const juce::File &metaFile, IMetaReader *reader)
 {
-    FileInputStream input_stream(metaFile);
+    juce::FileInputStream input_stream(metaFile);
 
     if(!input_stream.isExhausted())
     {
@@ -51,52 +49,24 @@ inline IMetadata *getThemeMetadata(const File &metaFile, IMetaReader *reader)
     return nullptr;
 }
 
-inline bool isDefaultValidAndEquals(const ThemeManager *themeManager, const String &stringToCompare) noexcept
+bool isDefaultValidAndEquals(const ThemeManager *themeManager, const juce::String &stringToCompare) noexcept
 {
     const ThemePointer &theme = themeManager->getOptions().defaultTheme;
     return theme.isValid() && theme.getId() == stringToCompare
                            || toIdString(theme->getThemeMeta()->getName()) == stringToCompare;
 }
 
-inline bool isHigherVersion(const String &expectedHigher, const String &expectedLower)
+inline juce::NamedValueSet peakThemeMeta(const juce::File &metaFile)
 {
-    if(!(expectedHigher.matchesWildcard("*.*", true) && expectedHigher.containsOnly("0123456789.") &&
-         expectedLower .matchesWildcard("*.*", true) && expectedLower .containsOnly("0123456789.")))
-    {
-        return false;
-    }
-
-    int major1 = 0;
-    int major2 = 0;
-    int minor1 = 0;
-    int minor2 = 0;
-
-    std::scanf(expectedHigher.toRawUTF8(), "%d.%d", &major1, &minor1);
-    std::scanf(expectedLower.toRawUTF8(),  "%d.%d", &major2, &minor2);
-
-    if(major2 < major1)
-    {
-        return true;
-    }
-    else if(minor2 < minor1)
-    {
-        return true;
-    }
-    
-    return false;
-}
-
-inline NamedValueSet peakThemeMeta(const File &metaFile)
-{
-    NamedValueSet data;
+    juce::NamedValueSet data;
 
     if(metaFile.exists())
     {
-        var json;
+        juce::var json;
 
-        if(JSON::parse(metaFile.loadFileAsString(), json).wasOk())
+        if(juce::JSON::parse(metaFile.loadFileAsString(), json).wasOk())
         {
-            DynamicObject *jsonroot = json.getDynamicObject();
+            juce::DynamicObject *jsonroot = json.getDynamicObject();
 
             if(!jsonroot)
             {
@@ -125,27 +95,25 @@ inline NamedValueSet peakThemeMeta(const File &metaFile)
     return data;
 }
 }
-
-
-
 //======================================================================================================================
-//=============================================== ThemePointer =========================================================
+// endregion Namespace
+//**********************************************************************************************************************
+// region ThemePointer
 //======================================================================================================================
-#pragma region ThemePointer
 struct ThemePointer::ThemeData
 {
+    juce::String id;
     ThemeManager *manager;
-    bool cached;
-    String id;
     std::unique_ptr<IThemeDefinition> theme;
+    bool cached;
 
     //==================================================================================================================
-    ThemeData(const String &id, IThemeDefinition *theme)
-        : manager(nullptr), cached(false), id(id),
-          theme(std::unique_ptr<IThemeDefinition>(theme))
+    ThemeData(juce::String id, IThemeDefinition *theme)
+        : manager(nullptr), cached(false),
+          id(std::move(id)), theme(theme)
     {}
 
-    ~ThemeData() {}
+    ~ThemeData() = default;
 };
 
 
@@ -153,33 +121,23 @@ struct ThemePointer::ThemeData
 //======================================================================================================================
 ThemePointer::ThemePointer(std::nullptr_t) noexcept {}
 
-ThemePointer::ThemePointer(const String &id, IThemeDefinition *theme)
+ThemePointer::ThemePointer(const juce::String &id, IThemeDefinition *theme)
     : data(!theme ? nullptr : new ThemeData(id.trim().toLowerCase(), theme))
 {
     jassert(theme != nullptr);
 }
 
-ThemePointer::~ThemePointer() {}
+ThemePointer::~ThemePointer() = default;
 
 //======================================================================================================================
 IThemeDefinition &ThemePointer::operator*() const
 {
-    if(data)
-    {
-        return *data->theme;
-    }
-
-    throw jaut::exception::NullDereference("ThemePointer '" + getId() + "' (*)");
+    return *data->theme;
 }
 
 IThemeDefinition *ThemePointer::operator->() const
 {
-    if(data)
-    {
-        return data->theme.get();
-    }
-
-    throw jaut::exception::NullDereference("ThemePointer '" + getId() + "' (->)");
+    return data->theme.get();
 }
 
 ThemePointer::operator bool() const noexcept
@@ -225,7 +183,7 @@ bool ThemePointer::isValid() const noexcept
 }
 
 //======================================================================================================================
-String ThemePointer::getId() const noexcept
+juce::String ThemePointer::getId() const noexcept
 {
     return data ? data->id : "";
 }
@@ -239,33 +197,24 @@ void ThemePointer::setThemeManager(ThemeManager *manager) noexcept
         data->cached  = manager;
     }
 }
-#pragma endregion
-
-
-
 //======================================================================================================================
-//=============================================== ThemeManager =========================================================
+// endregion ThemePointer
+//**********************************************************************************************************************
+// region ThemeManager
 //======================================================================================================================
-#pragma region ThemeManager
-ThemeManager::ThemeManager(const File &themeRoot, f_ThemeInit initializationCallback, p_MetaReader metadataReader,
-                           const Options &options)
-    : initFunc(initializationCallback), metadataReader(std::move(metadataReader)), options(options),
-      themeRoot(themeRoot)
+ThemeManager::ThemeManager(juce::File themeRoot, ThemeInitFunc initializationCallback, MetaReaderPtr metadataReader,
+                           Options options)
+    : options(std::move(options)), themeRoot(std::move(themeRoot)), initFunc(std::move(initializationCallback)),
+      metadataReader(std::move(metadataReader))
 {
-    /** 
-     *  You have to supply your own MetaReader, as themes need meta-information.
-     *  If you don't pass a valid MetaReader, themes can't be loaded.
-     */
+    // You have to supply your own MetaReader, as themes need meta-information.
+    // If you don't pass a valid MetaReader, themes can't be loaded.
     jassert(this->metadataReader != nullptr);
 
-    /**
-     *  Make sure the root directory of your theme-packs exists.
-     */
+    // Make sure the root directory of your theme-packs exists.
     jassert(themeRoot.exists());
 
-    /**
-     *  You have to define an initialization callback for it to work.
-     */
+    // You have to define an initialization callback for it to work.
     jassert(initFunc != nullptr);
 
     if(this->options.themeMetaId.length() < 3)
@@ -279,13 +228,17 @@ ThemeManager::ThemeManager(const File &themeRoot, f_ThemeInit initializationCall
     }
 }
 
+ThemeManager::ThemeManager(juce::File themeRoot, ThemeInitFunc initializationCallback, MetaReaderPtr metadataReader)
+    : ThemeManager(std::move(themeRoot), std::move(initializationCallback), std::move(metadataReader), {})
+{}
+
 ThemeManager::ThemeManager(ThemeManager &&other) noexcept
-    : currentThemeId(std::move(other.currentThemeId)),
-      initFunc      (std::move(other.initFunc)),
-      metadataReader(std::move(other.metadataReader)),
-      options       (std::move(other.options)),
+    : options       (std::move(other.options)),
       themeCache    (std::move(other.themeCache)),
-      themeRoot     (std::move(other.themeRoot))
+      currentThemeId(std::move(other.currentThemeId)),
+      themeRoot     (std::move(other.themeRoot)),
+      initFunc      (std::move(other.initFunc)),
+      metadataReader(std::move(other.metadataReader))
 {
     other.initFunc             = nullptr;
     other.metadataReader       = nullptr;
@@ -333,9 +286,9 @@ ThemePointer ThemeManager::getCurrentTheme() const
     return !theme.isValid() ? options.defaultTheme : theme;
 }
 
-bool ThemeManager::setCurrentTheme(const String &themeId, bool setToDefaultOnFail)
+bool ThemeManager::setCurrentTheme(const juce::String &themeId, bool setToDefaultOnFail)
 {
-    const String theme_id = jaut::toIdString(themeId);
+    const juce::String theme_id = jaut::toIdString(themeId);
 
     if(currentThemeId == theme_id)
     {
@@ -378,19 +331,20 @@ void ThemeManager::reloadThemes()
     {
         return;
     }
-
-    DirectoryIterator iterator (themeRoot, false, options.themePrefix + "*", File::findDirectories);
+    
+    const juce::RangedDirectoryIterator iterator(themeRoot, false, options.themePrefix + "*",
+                                                 juce::File::findDirectories);
     clearThemes();
 
-    while(iterator.next())
+    for (const auto &file : iterator)
     {
-        const File &theme_folder = iterator.getFile();
-        const File meta_file     = theme_folder.getChildFile(options.themeMetaId);
-        const auto theme_meta    = jaut::peakThemeMeta(meta_file);
+        const juce::File theme_folder = file.getFile();
+        const juce::File meta_file    = theme_folder.getChildFile(options.themeMetaId);
+        const auto theme_meta         = jaut::peakThemeMeta(meta_file);
 
         if(!theme_meta.isEmpty())
         {
-            String theme_id = jaut::toIdString(theme_meta["name"].toString());
+            juce::String theme_id = jaut::toIdString(theme_meta["name"].toString());
 
             if(jaut::isDefaultValidAndEquals(this, theme_id))
             {
@@ -400,49 +354,53 @@ void ThemeManager::reloadThemes()
             bool insert = true;
             const auto theme_iterator = themeCache.find(theme_id);
 
-            if(options.duplicateBehaviour != Options::KeepDuplicates && theme_iterator != themeCache.end())
+            if(options.duplicateBehaviour != Options::DuplicateMode::KeepDuplicates &&
+               theme_iterator != themeCache.end())
             {
-                if(options.duplicateBehaviour == Options::KeepLatest)
+                if (options.duplicateBehaviour == Options::DuplicateMode::KeepLatest)
                 {
-                    insert = jaut::isHigherVersion(theme_meta["version"].toString(), theme_iterator->second
-                                                                                     ->getThemeMeta()->getVersion());
+                    const Version newVersion(theme_meta["version"]);
+                    const Version oldVersion = theme_iterator->second->getThemeMeta()->getVersion();
+                    
+                    insert = newVersion > oldVersion;
                 }
                 else
                 {
-                    insert = options.duplicateBehaviour == Options::KeepLast;
+                    insert = options.duplicateBehaviour == Options::DuplicateMode::KeepLast;
                 }
             }
 
             if(insert)
             {
-                IMetadata *metadata = jaut::getThemeMetadata(meta_file, metadataReader.get());
-                auto *theme_def     = initFunc(theme_folder, std::unique_ptr<IMetadata>(metadata));
+                IMetadata *const metadata = jaut::getThemeMetadata(meta_file, metadataReader.get());
+                auto *const theme_def     = initFunc(theme_folder, std::unique_ptr<IMetadata>(metadata));
 
                 if(metadata && theme_def)
                 {
-                    if(theme_iterator != themeCache.end() && options.duplicateBehaviour == Options::KeepDuplicates)
+                    if(theme_iterator != themeCache.end() &&
+                       options.duplicateBehaviour == Options::DuplicateMode::KeepDuplicates)
                     {
                         bool ran_out_of_indices = true;
 
                         for(int i = 1; i < 100; ++i)
                         {
-                            const String new_id = theme_id + "_" + String(i);
+                            const juce::String new_id = theme_id + "_" + juce::String(i);
 
                             if(themeCache.find(new_id) == themeCache.end())
                             {
-                                theme_id = new_id;
+                                theme_id           = new_id;
                                 ran_out_of_indices = false;
                                 break;
                             }
                         }
-
+                        
                         if(ran_out_of_indices)
                         {
                             continue;
                         }
                     }
                     
-                    ThemePointer theme = ThemePointer(theme_id, theme_def);
+                    ThemePointer theme(theme_id, theme_def);
 
                     if(theme.isValid())
                     {
@@ -470,14 +428,14 @@ void ThemeManager::clearThemes()
     themeCache.clear();
 }
 
-void ThemeManager::reloadTheme(const String &themeId)
+void ThemeManager::reloadTheme(const juce::String &themeId)
 {
     if(!initFunc || !metadataReader || !options.cacheThemes)
     {
         return;
     }
-
-    String theme_id = jaut::toIdString(themeId);
+    
+    const juce::String theme_id = jaut::toIdString(themeId);
 
     if(jaut::isDefaultValidAndEquals(this, theme_id))
     {
@@ -505,46 +463,47 @@ void ThemeManager::reloadTheme(const String &themeId)
 }
 
 //======================================================================================================================
-ThemePointer ThemeManager::loadTheme(const String &themeId) const
+ThemePointer ThemeManager::loadTheme(const juce::String &themeId) const
 {
     if(!initFunc || !metadataReader)
     {
         return nullptr;
     }
 
-    const String needed_theme_id = jaut::toIdString(themeId);
+    const juce::String needed_theme_id = jaut::toIdString(themeId);
 
     if(jaut::isDefaultValidAndEquals(this, needed_theme_id))
     {
         return options.defaultTheme;
     }
+    
+    const juce::RangedDirectoryIterator iterator(themeRoot, false, options.themePrefix + "*",
+                                                 juce::File::findDirectories);
+    juce::File last_theme_file;
+    juce::String last_theme_version;
 
-    DirectoryIterator iterator (themeRoot, false, options.themePrefix + "*", File::findDirectories);
-    File last_theme_file;
-    String last_theme_version;
-
-    while(iterator.next())
+    for (auto &file : iterator)
     {
-        const File &theme_folder = iterator.getFile();
-        const auto theme_meta    = jaut::peakThemeMeta(theme_folder.getChildFile(options.themeMetaId));
+        const juce::File &theme_folder = file.getFile();
+        const auto theme_meta          = jaut::peakThemeMeta(theme_folder.getChildFile(options.themeMetaId));
 
         if(!theme_meta.isEmpty())
         {
-            String theme_id      = jaut::toIdString(theme_meta["name"].toString());
-            String theme_version = theme_meta["version"].toString();
+            const juce::String theme_id      = jaut::toIdString(theme_meta["name"].toString());
+            const juce::String theme_version = theme_meta["version"].toString();
 
-            if(theme_id != needed_theme_id || theme_version.isEmpty() ||
-               !theme_version.matchesWildcard("*.*", true) || !theme_version.containsOnly("0123456789."))
+            if(theme_id != needed_theme_id || theme_version.isEmpty() || !theme_version.matchesWildcard("*.*", true) ||
+               !theme_version.containsOnly("0123456789."))
             {
                 continue;
             }
-
-            bool end_search = options.duplicateBehaviour == Options::KeepFirstFound;
-
-            if(options.duplicateBehaviour == Options::KeepLatest)
+            
+            if(options.duplicateBehaviour == Options::DuplicateMode::KeepLatest)
             {
-                if(!last_theme_version.isEmpty() &&
-                   !jaut::isHigherVersion(theme_meta["version"].toString(), last_theme_version))
+                const Version newVersion(theme_meta["version"].toString());
+                const Version oldVersion(last_theme_version);
+                
+                if(!last_theme_version.isEmpty() && newVersion > oldVersion)
                 {
                     continue;
                 }
@@ -553,7 +512,7 @@ ThemePointer ThemeManager::loadTheme(const String &themeId) const
             last_theme_file    = theme_folder;
             last_theme_version = theme_version;
 
-            if(end_search)
+            if(options.duplicateBehaviour == Options::DuplicateMode::KeepFirstFound)
             {
                 break;
             }
@@ -573,7 +532,7 @@ ThemePointer ThemeManager::loadTheme(const String &themeId) const
     return nullptr;
 }
 
-ThemePointer ThemeManager::loadExternalTheme(const File &themeFolder) const
+ThemePointer ThemeManager::loadExternalTheme(const juce::File &themeFolder) const
 {
     if(!initFunc || !metadataReader || !themeFolder.isDirectory() ||
        !themeFolder.getFileName().startsWith(options.themePrefix))
@@ -581,16 +540,16 @@ ThemePointer ThemeManager::loadExternalTheme(const File &themeFolder) const
         return nullptr;
     }
 
-    const NamedValueSet peak_meta = jaut::peakThemeMeta(themeFolder);
+    const juce::NamedValueSet peak_meta = jaut::peakThemeMeta(themeFolder);
 
     if(!peak_meta.isEmpty())
     {
-        const String theme_id = jaut::toIdString(peak_meta["name"].toString());
+        const juce::String theme_id = jaut::toIdString(peak_meta["name"].toString());
 
-        if(IMetadata *metadata = jaut::getThemeMetadata(themeFolder.getChildFile(options.themeMetaId),
+        if(IMetadata *const metadata = jaut::getThemeMetadata(themeFolder.getChildFile(options.themeMetaId),
                                                                                  metadataReader.get()))
         {
-            IThemeDefinition *theme_def = initFunc(themeFolder, std::unique_ptr<IMetadata>(metadata));
+            IThemeDefinition *const theme_def = initFunc(themeFolder, std::unique_ptr<IMetadata>(metadata));
 
             if(theme_def)
             {
@@ -603,10 +562,10 @@ ThemePointer ThemeManager::loadExternalTheme(const File &themeFolder) const
     return nullptr;
 }
 
-ThemePointer ThemeManager::loadExternalTheme(const File &themeFolder, bool override)
+ThemePointer ThemeManager::loadExternalTheme(const juce::File &themeFolder, bool override)
 {
-    ThemePointer theme    = loadExternalTheme(themeFolder);
-    const String theme_id = theme.getId();
+    ThemePointer theme          = loadExternalTheme(themeFolder);
+    const juce::String theme_id = theme.getId();
 
     if(override && options.cacheThemes && theme.isValid())
     {
@@ -624,7 +583,7 @@ ThemePointer ThemeManager::loadExternalTheme(const File &themeFolder, bool overr
 }
 
 //======================================================================================================================
-ThemePointer ThemeManager::getTheme(const String &themeId) const
+ThemePointer ThemeManager::getTheme(const juce::String &themeId) const
 {
     if(!options.cacheThemes)
     {
@@ -635,8 +594,8 @@ ThemePointer ThemeManager::getTheme(const String &themeId) const
     {
         return options.defaultTheme;
     }
-
-    String theme_id = jaut::toIdString(themeId);
+    
+    const juce::String theme_id = jaut::toIdString(themeId);
 
     if(contains(theme_id))
     {
@@ -662,11 +621,12 @@ std::vector<ThemePointer> ThemeManager::getAllThemes() const
 
     if(!options.cacheThemes)
     {
-        DirectoryIterator it(themeRoot, false, options.themePrefix + "*", File::findDirectories);
+        const juce::RangedDirectoryIterator iterator(themeRoot, false, options.themePrefix + "*",
+                                                     juce::File::findDirectories);
 
-        while(it.next())
+        for(auto &file : iterator)
         {
-            const ThemePointer theme = loadExternalTheme(it.getFile());
+            const ThemePointer theme = loadExternalTheme(file.getFile());
             
             if(theme.isValid())
             {
@@ -691,7 +651,7 @@ const ThemeManager::Options &ThemeManager::getOptions() const noexcept
 }
 
 //==================================================================================================================
-bool ThemeManager::contains(const String &themeId) const
+bool ThemeManager::contains(const juce::String &themeId) const
 {
     return themeCache.find(themeId.trim().toLowerCase()) != themeCache.end();
 }
@@ -723,14 +683,16 @@ bool ThemeManager::contains(const IThemeDefinition &theme) const
 }
 
 //======================================================================================================================
-ThemeManager::t_ThemeIterator ThemeManager::begin() const noexcept
+ThemeManager::ThemeIterator ThemeManager::begin() const noexcept
 {
     return themeCache.cbegin();
 }
 
-ThemeManager::t_ThemeIterator ThemeManager::end() const noexcept
+ThemeManager::ThemeIterator ThemeManager::end() const noexcept
 {
     return themeCache.cend();
 }
-#pragma endregion
+//======================================================================================================================
+// endregion ThemeManager
+//**********************************************************************************************************************
 }

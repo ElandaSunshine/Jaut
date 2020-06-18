@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_message.h
     @date   29, February 2020
 
@@ -30,8 +30,8 @@
     description:        Defines classes for advanced data management like configurations and folder management.
     website:            https://github.com/elandasunshine/jaut
     license:            AGPL v3
-    minimumCppStandard: C++17
-    dependencies:       jaut_core, juce_core, juce_events, juce_graphics
+    minimumCppStandard: 17
+    dependencies:       jaut_core juce_core juce_events juce_graphics
 
     END_JUCE_MODULE_DECLARATION
     ===============================================================
@@ -55,5 +55,11 @@
 #include <jaut_provider/config/config.h>
 #include <jaut_provider/config/configparser.h>
 
-// File
-#include <jaut_provider/file/appdata.h>
+// Locale
+#include <jaut_provider/lang/localisation.h>
+
+// Themes
+#include <jaut_provider/theme/thememanager.h>
+
+// Util
+#include <jaut_provider/util/metadatautil.h>
