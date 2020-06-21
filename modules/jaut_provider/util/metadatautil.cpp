@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -54,11 +54,6 @@ inline juce::String findPlaceholderAndReplace(const juce::String &input)
     
     return output;
 }
-
-inline bool checkIfIsVersionString(const juce::String &version)
-{
-    return std::regex_match(version.toStdString(), std::regex(R"(^[0-9]+\.[0-9]+$)"));
-}
 }
 //======================================================================================================================
 // endregion Namespace
@@ -101,7 +96,7 @@ MetadataHelper::MetadataMap MetadataHelper::readMetaToMap(juce::InputStream &inp
             if(json_root->hasProperty("version"))
             {
                 const juce::String version_string = jaut::findPlaceholderAndReplace(json_root->getProperty("version"));
-                metadata["version"] = jaut::checkIfIsVersionString(version_string) ? version_string : "1.0";
+                metadata["version"] = jaut::findPlaceholderAndReplace(version_string);
             }
 
             if(json_root->hasProperty("description"))
@@ -123,7 +118,7 @@ MetadataHelper::MetadataMap MetadataHelper::readMetaToMap(juce::InputStream &inp
             if (json_root->hasProperty("license"))
             {
                 const juce::var &license = json_root->getProperty("license");
-
+                
                 if(license.isObject())
                 {
                     juce::Array<juce::var> license_array {
@@ -200,7 +195,7 @@ juce::NamedValueSet MetadataHelper::readMetaToNamedValueSet(juce::InputStream &i
             if(json_root->hasProperty("version"))
             {
                 const juce::String version_string = jaut::findPlaceholderAndReplace(json_root->getProperty("version"));
-                metadata.set("version", jaut::checkIfIsVersionString(version_string) ? version_string : "1.0");
+                metadata.set("version", jaut::findPlaceholderAndReplace(version_string));
             }
 
             if(json_root->hasProperty("description"))

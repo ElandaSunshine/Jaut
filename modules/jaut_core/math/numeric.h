@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -37,7 +37,7 @@ struct JAUT_API Numeric
 {
     //==================================================================================================================
     static_assert(std::is_integral_v<NumericType> || std::is_floating_point_v<NumericType>,
-                  JAUT_ASSERT_INTEGRAL_TYPE_NOT_NUMERIC);
+                  JAUT_ASSERT_NUMERIC_TYPE_NOT_NUMERIC);
     
     //==================================================================================================================
     using ValueChangedHandler = EventHandler<NumericType>;
@@ -77,45 +77,45 @@ struct JAUT_API Numeric
     }
     
     //==================================================================================================================
-    virtual Numeric &operator=(NumericType value) noexcept
+    Numeric &operator=(NumericType value) noexcept
     {
-        numericValue = std::move(value);
+        numericValue = value;
         return *this;
     }
     
-    explicit virtual operator NumericType() const noexcept
+    explicit operator NumericType() const noexcept
     {
         return numericValue;
     }
     
     //==================================================================================================================
-    virtual Numeric operator+(Numeric value) const noexcept { return numericValue + value.numericValue; }
-    virtual Numeric operator-(Numeric value) const noexcept { return numericValue - value.numericValue; }
-    virtual Numeric operator/(Numeric value) const noexcept { return numericValue / value.numericValue; }
-    virtual Numeric operator*(Numeric value) const noexcept { return numericValue * value.numericValue; }
-    virtual Numeric operator%(Numeric value) const noexcept { return numericValue % value.numericValue; }
+    Numeric operator+(Numeric value) const noexcept { return numericValue + value.numericValue; }
+    Numeric operator-(Numeric value) const noexcept { return numericValue - value.numericValue; }
+    Numeric operator/(Numeric value) const noexcept { return numericValue / value.numericValue; }
+    Numeric operator*(Numeric value) const noexcept { return numericValue * value.numericValue; }
+    Numeric operator%(Numeric value) const noexcept { return numericValue % value.numericValue; }
     
-    virtual Numeric operator+(NumericType value) const noexcept { return numericValue + value; }
-    virtual Numeric operator-(NumericType value) const noexcept { return numericValue - value; }
-    virtual Numeric operator/(NumericType value) const noexcept { return numericValue / value; }
-    virtual Numeric operator*(NumericType value) const noexcept { return numericValue * value; }
-    virtual Numeric operator%(NumericType value) const noexcept { return numericValue % value; }
-    
-    //==================================================================================================================
-    virtual Numeric &operator+=(Numeric value) { return modifyValue(numericValue + value.numericValue); }
-    virtual Numeric &operator-=(Numeric value) { return modifyValue(numericValue - value.numericValue); }
-    virtual Numeric &operator/=(Numeric value) { return modifyValue(numericValue / value.numericValue); }
-    virtual Numeric &operator*=(Numeric value) { return modifyValue(numericValue * value.numericValue); }
-    virtual Numeric &operator%=(Numeric value) { return modifyValue(numericValue % value.numericValue); }
-    
-    virtual Numeric &operator+=(NumericType value) { return modifyValue(numericValue + value); }
-    virtual Numeric &operator-=(NumericType value) { return modifyValue(numericValue - value); }
-    virtual Numeric &operator/=(NumericType value) { return modifyValue(numericValue / value); }
-    virtual Numeric &operator*=(NumericType value) { return modifyValue(numericValue * value); }
-    virtual Numeric &operator%=(NumericType value) { return modifyValue(numericValue % value); }
+    Numeric operator+(NumericType value) const noexcept { return numericValue + value; }
+    Numeric operator-(NumericType value) const noexcept { return numericValue - value; }
+    Numeric operator/(NumericType value) const noexcept { return numericValue / value; }
+    Numeric operator*(NumericType value) const noexcept { return numericValue * value; }
+    Numeric operator%(NumericType value) const noexcept { return numericValue % value; }
     
     //==================================================================================================================
-    virtual Numeric &operator++()
+    Numeric& operator+=(Numeric value) { return modifyValue(numericValue + value.numericValue); }
+    Numeric& operator-=(Numeric value) { return modifyValue(numericValue - value.numericValue); }
+    Numeric& operator/=(Numeric value) { return modifyValue(numericValue / value.numericValue); }
+    Numeric& operator*=(Numeric value) { return modifyValue(numericValue * value.numericValue); }
+    Numeric& operator%=(Numeric value) { return modifyValue(numericValue % value.numericValue); }
+    
+    Numeric& operator+=(NumericType value) { return modifyValue(numericValue + value); }
+    Numeric& operator-=(NumericType value) { return modifyValue(numericValue - value); }
+    Numeric& operator/=(NumericType value) { return modifyValue(numericValue / value); }
+    Numeric& operator*=(NumericType value) { return modifyValue(numericValue * value); }
+    Numeric& operator%=(NumericType value) { return modifyValue(numericValue % value); }
+    
+    //==================================================================================================================
+    Numeric& operator++()
     {
         ++numericValue;
         postChangeEvent();
@@ -123,7 +123,7 @@ struct JAUT_API Numeric
         return *this;
     }
     
-    virtual Numeric operator++(int)
+    Numeric operator++(int)
     {
         const Numeric old = *this;
         
@@ -133,7 +133,7 @@ struct JAUT_API Numeric
         return old;
     }
     
-    virtual Numeric &operator--()
+    Numeric& operator--()
     {
         --numericValue;
         postChangeEvent();
@@ -141,7 +141,7 @@ struct JAUT_API Numeric
         return *this;
     }
     
-    virtual Numeric operator--(int)
+    Numeric operator--(int)
     {
         const Numeric old = *this;
         
@@ -152,12 +152,12 @@ struct JAUT_API Numeric
     }
     
     //==================================================================================================================
-    virtual bool operator==(const Numeric &right) const noexcept { return numericValue == right.integral; }
-    virtual bool operator!=(const Numeric &right) const noexcept { return numericValue != right.integral; }
-    virtual bool operator>(const Numeric &right)  const noexcept { return numericValue > right.integral; }
-    virtual bool operator<(const Numeric &right)  const noexcept { return numericValue < right.integral; }
-    virtual bool operator>=(const Numeric &right) const noexcept { return (*this) > right || (*this) == right; }
-    virtual bool operator<=(const Numeric &right) const noexcept { return (*this) < right || (*this) == right; }
+    bool operator==(const Numeric &right) const noexcept { return numericValue == right.numericValue; }
+    bool operator!=(const Numeric &right) const noexcept { return numericValue != right.numericValue; }
+    bool operator>(const Numeric &right)  const noexcept { return numericValue > right.numericValue; }
+    bool operator<(const Numeric &right)  const noexcept { return numericValue < right.numericValue; }
+    bool operator>=(const Numeric &right) const noexcept { return (*this) > right || (*this) == right; }
+    bool operator<=(const Numeric &right) const noexcept { return (*this) < right || (*this) == right; }
     
     //==================================================================================================================
     friend void swap(Numeric &left, Numeric &right)

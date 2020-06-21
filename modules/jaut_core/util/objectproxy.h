@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -27,6 +27,10 @@
 
 namespace jaut
 {
+/**
+ *  The ObjectProxy class encapsulates any object inside and
+ *  @tparam T
+ */
 template<class T>
 class ObjectProxy
 {
@@ -41,15 +45,31 @@ public:
     {}
     
     //==================================================================================================================
-    ObjectType& getObject() noexcept
+    template<class U = T>
+    typename std::enable_if<std::is_class_v<U>, U>::type* operator->() const noexcept
+    {
+        return std::addressof(object);
+    }
+    
+    T &operator*() const noexcept
     {
         return object;
     }
     
-    const ObjectType& getObject() const noexcept
+    //==================================================================================================================
+#if JAUT_PROXY_OBJECT_OVERLOAD_ADDRESS_OF_OPERATOR
+    T *operator&() const noexcept
     {
-        return object;
+        DBG("Note: Your object proxy is overloading the address-of operator, this will give you the address of"
+            " the underlying object, not the ObjectProxy wrapper instance.");
+        return &object;
     }
+#else
+    T *addressOf() const noexcept
+    {
+        return &object;
+    }
+#endif
     
 private:
     T object;

@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,7 +31,7 @@
     website:            https://github.com/elandasunshine/jaut
     license:            AGPL v3
     minimumCppStandard: 17
-    dependencies:       juce_gui_extra
+    dependencies:       jaut_core juce_gui_extra
 
     END_JUCE_MODULE_DECLARATION
     ===============================================================
@@ -40,6 +40,7 @@
 #pragma once
 
 // Dependencies
+#include <jaut_core/jaut_core.h>
 #include <juce_gui_extra/juce_gui_extra.h>
 
 // Includes

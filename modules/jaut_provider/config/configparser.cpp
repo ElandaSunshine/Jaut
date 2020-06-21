@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -642,8 +642,7 @@ OperationResult XmlParser::parseConfig(const juce::File &configFile, PropertyTyp
                 forEachXmlChildElementWithTagName(*xml_category, xml_setting, tagSetting)
                 {
                     const juce::String setting_name = xml_setting->getStringAttribute("name");
-                    (void) jaut::readPropertiesXml(xml_setting, prop_category.getProperty(setting_name).getObject(),
-                                               tagSetting);
+                    (void) jaut::readPropertiesXml(xml_setting, *prop_category.getProperty(setting_name), tagSetting);
                 }
             }
         }
@@ -654,7 +653,7 @@ OperationResult XmlParser::parseConfig(const juce::File &configFile, PropertyTyp
 
 OperationResult XmlParser::writeConfig(const juce::File &configFile, ConstPropertyType root) const
 {
-    const PropertyType &root_prop = root.getObject();
+    const PropertyType &root_prop = *root;
     
     if (!root_prop.isValid())
     {
@@ -781,7 +780,7 @@ OperationResult JsonParser::parseConfig(const juce::File &configFile, PropertyTy
 
 OperationResult JsonParser::writeConfig(const juce::File &configFile, ConstPropertyType root) const
 {
-    const Config::Property &root_prop = root.getObject();
+    const Config::Property &root_prop = *root;
     
     if (!root_prop.isValid())
     {
@@ -942,7 +941,7 @@ OperationResult YamlParser::parseConfig(const juce::File &configFile, PropertyTy
 
 OperationResult YamlParser::writeConfig(const juce::File &configFile, ConstPropertyType root) const
 {
-    const Config::Property &root_prop = root.getObject();
+    const Config::Property &root_prop = *root;
     
     if (!root_prop.isValid())
     {

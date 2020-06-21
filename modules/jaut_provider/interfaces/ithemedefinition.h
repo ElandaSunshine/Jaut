@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -98,7 +98,7 @@ public:
      *  @param filePath The path to the file
      *  @return True if the file exists, false if not
      */
-    virtual const bool fileExists(const juce::String &filePath) const = 0;
+    virtual bool fileExists(const juce::String &filePath) const = 0;
 
     /**
      *  Gets whether an image exists or not.
@@ -106,7 +106,7 @@ public:
      *  @param imageName The name of the image (without extension)
      *  @return True if the image exists, false if not
      */
-    virtual const bool imageExists(const juce::String &imageName) const = 0;
+    virtual bool imageExists(const juce::String &imageName) const = 0;
 
     /**
      *  Gets whether the given image is not null and contains image data.
@@ -114,31 +114,31 @@ public:
      *  @param image The image to check
      *  @param True if the image is valid, false if not
      */
-    virtual const bool isImageValid(const juce::Image &image) const = 0;
+    virtual bool isImageValid(const juce::Image &image) const = 0;
 
     /**
      *  Gets whether this theme package is valid or not.
      *  @return True if the theme package is valid, false if not
      */
-    virtual const bool isValid() const = 0;
+    virtual bool isValid() const = 0;
 
     /**
      *  Gets the theme package's metadata containing name, description, author ect..
      *  @return A pointer to the metadata from this theme package
      */
-    virtual const IMetadata* getThemeMeta() const = 0;
+    virtual IMetadata* getThemeMeta() const = 0;
 
     /**
      *  Gets the file extension of the images used for this application.
      *  @return The extension
      */
-    virtual const juce::String getImageExtension() const = 0;
+    virtual juce::String getImageExtension() const = 0;
 
     /**
      *  Gets the absolute path of the root directory of this theme package.
      *  @return The root path of the theme package
      */
-    virtual const juce::String getThemeRootPath() const = 0;
+    virtual juce::String getThemeRootPath() const = 0;
 
 };
 }

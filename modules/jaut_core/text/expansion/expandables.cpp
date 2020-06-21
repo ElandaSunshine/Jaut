@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -23,38 +23,31 @@
     ===============================================================
  */
 
-
-#include "expandables.h"
-
-using namespace juce;
-
 namespace
 {
-using namespace jaut;
-
-enum EvaluationType
+enum class EvaluationType
 {
     Numeric,
     Alphabetic,
     Mismatch
 };
 
-inline bool isValidNumber(const String &input)
+inline bool isValidNumber(const juce::String &input)
 {
-    String::CharPointerType char_ptr = input.getCharPointer();
+    juce::String::CharPointerType char_ptr = input.getCharPointer();
     
     for(int i = 0; i < char_ptr.length(); ++i)
     {
-        const juce_wchar ch = char_ptr.getAndAdvance();
+        const juce::juce_wchar ch = char_ptr.getAndAdvance();
         
         if(i > 0)
         {
-            if(!CharacterFunctions::isDigit(ch))
+            if(!juce::CharacterFunctions::isDigit(ch))
             {
                 return false;
             }
         }
-        else if(!CharacterFunctions::isDigit(ch) && ch != '-')
+        else if(!juce::CharacterFunctions::isDigit(ch) && ch != '-')
         {
             return false;
         }
@@ -63,19 +56,19 @@ inline bool isValidNumber(const String &input)
     return true;
 }
 
-inline EvaluationType getEvaluationType(const String &start, const String &end)
+inline EvaluationType getEvaluationType(const juce::String &start, const juce::String &end)
 {
     if(isValidNumber(start) && isValidNumber(end))
     {
-        return Numeric;
+        return EvaluationType::Numeric;
     }
     else if(start.containsOnly("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") &&
             end.containsOnly  ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"))
     {
-        return Alphabetic;
+        return EvaluationType::Alphabetic;
     }
     
-    return Mismatch;
+    return EvaluationType::Mismatch;
 }
 }
 
@@ -105,7 +98,7 @@ juce::String ExpandableIterator::getRangeStartIfEmpty(const juce::String &value)
         return "0";
     }
     
-    return CharacterFunctions::isLowerCase(*(--value.getCharPointer().findTerminatingNull())) ? "a" : "A";
+    return juce::CharacterFunctions::isLowerCase(*(--value.getCharPointer().findTerminatingNull())) ? "a" : "A";
 }
 
 juce::String ExpandableIterator::getInstruction() const
@@ -117,11 +110,11 @@ std::size_t ExpandableIterator::getRangeSize(const juce::String &start, const ju
 {
     const EvaluationType type = ::getEvaluationType(start, end);
     
-    if(type == Numeric)
+    if(type == EvaluationType::Numeric)
     {
         return static_cast<int>(std::abs(start.getLargeIntValue() - end.getLargeIntValue()) + 1);
     }
-    else if(type == Alphabetic)
+    else if(type == EvaluationType::Alphabetic)
     {
         AlphabetIterator start_it(start);
         AlphabetIterator end_it(end);
@@ -134,7 +127,7 @@ std::size_t ExpandableIterator::getRangeSize(const juce::String &start, const ju
 //======================================================================================================================
 bool ExpandableIterator::inputMatches(const juce::String &start, const juce::String &end) const
 {
-    return ::getEvaluationType(start, end) != Mismatch;
+    return ::getEvaluationType(start, end) != EvaluationType::Mismatch;
 }
 
 //======================================================================================================================
@@ -150,9 +143,9 @@ juce::String ExpandableIterator::expand(std::size_t counter, const juce::String 
     const EvaluationType type = ::getEvaluationType(start, end);
     const bool reset = (behaviour == Reset);
     bool exhausted   = false;
-    String result;
+    juce::String result;
     
-    if(type == Numeric)
+    if(type == EvaluationType::Numeric)
     {
         const long long end_i   = end.getLargeIntValue();
         const long long start_i = start.getLargeIntValue();
@@ -169,9 +162,9 @@ juce::String ExpandableIterator::expand(std::size_t counter, const juce::String 
             exhausted = (result_i > end_i);
         }
     
-        result = String(result_i);
+        result = juce::String(result_i);
     }
-    else if(type == Alphabetic)
+    else if(type == EvaluationType::Alphabetic)
     {
         const std::size_t end_i   = AlphabetIterator::stringToDecimal(end);
         const std::size_t start_i = AlphabetIterator::stringToDecimal(start);
@@ -255,9 +248,9 @@ juce::String ExpandableMultiplier::expand(std::size_t counter, const juce::Strin
     const EvaluationType type = ::getEvaluationType(start, end);
     const bool reset = (behaviour == Reset);
     bool exhausted   = false;
-    StringArray result;
+    juce::StringArray result;
     
-    if(type == Numeric)
+    if(type == EvaluationType::Numeric)
     {
         const long long end_i   = end.getLargeIntValue();
         const long long start_i = start.getLargeIntValue();
@@ -269,7 +262,7 @@ juce::String ExpandableMultiplier::expand(std::size_t counter, const juce::Strin
         
             for (; result_i >= length; --result_i)
             {
-                result.add("%%prefx%%" + String(result_i) + "%%suffx%%");
+                result.add("%%prefx%%" + juce::String(result_i) + "%%suffx%%");
             }
     
             exhausted = (length < end_i);
@@ -280,13 +273,13 @@ juce::String ExpandableMultiplier::expand(std::size_t counter, const juce::Strin
         
             for (; result_i <= length; ++result_i)
             {
-                result.add("%%prefx%%" + String(result_i) + "%%suffx%%");
+                result.add("%%prefx%%" + juce::String(result_i) + "%%suffx%%");
             }
     
             exhausted = (length > end_i);
         }
     }
-    else if(type == Alphabetic)
+    else if(type == EvaluationType::Alphabetic)
     {
         const AlphabetIterator end_i  (end);
         const AlphabetIterator start_i(start);

@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -46,12 +46,11 @@ inline juce::String fixPathString(juce::String currentPath)
         if (currentPath.contains("//"))
         {
             juce::CharPointer_UTF8 char_ptr = currentPath.getCharPointer();
-            juce::juce_wchar curr_char; // NOLINT
             juce::String new_uri;
 
             for (;;)
             {
-                curr_char = char_ptr.getAndAdvance();
+                const juce::juce_wchar curr_char = char_ptr.getAndAdvance();
 
                 if (curr_char == 0)
                 {
@@ -77,21 +76,15 @@ inline juce::String trimAndValidate(const juce::String &name, bool periodCheck)
 {
     const juce::String trimmed_name = name.removeCharacters(" ");
 
-    /**
-     *  Always make sure the property's name is set!
-     */
+    // Always make sure the property's name is set!
     jassert(!trimmed_name.isEmpty());
 
-    /**
-     *  Properties can't have the name "value" as this may break internal routines.
-     */
+    // Properties can't have the name "value" as this may break internal routines.
     jassert(!trimmed_name.equalsIgnoreCase("value"));
 
     if(periodCheck)
     {
-        /**
-         *  Properties can't have dots in their names, as these are used to resolve child properties.
-         */
+        // Properties can't have dots in their names, as these are used to resolve child properties.
         jassert(!trimmed_name.contains("."));
     }
 
@@ -120,7 +113,7 @@ struct Config::Property::PropertyData final
     Property *parent;
     
     // Optional
-    juce::String   comment;
+    juce::String comment;
     ChildMap properties;
     
     //==================================================================================================================
@@ -147,10 +140,7 @@ Config::Property::Property(Property &&other) noexcept
     other.data = nullptr;
 }
 
-Config::Property::~Property()
-{
-    setConfig(nullptr);
-}
+Config::Property::~Property() = default;
 
 //======================================================================================================================
 Config::Property &Config::Property::operator=(const Property &right) noexcept
@@ -237,12 +227,12 @@ Config::Property Config::Property::createProperty(const juce::String &name, cons
     {
         const juce::String trimmed_name = jaut::trimAndValidate(name, true);
         const juce::String id           = trimmed_name.toLowerCase();
-        const auto it             = data->properties.find(id);
-        Property property         = it->second;
+        auto it                         = data->properties.find(id);
+        Property property               = it->second;
         
         if(it == data->properties.end())
         {
-            property = Property(name, {});
+            property = Property(name, defaultValue);
             property.data->parent = this;
             property.data->config = data->config;
             data->properties.emplace(id, property);
@@ -259,7 +249,7 @@ Config::Property Config::Property::createProperty(const juce::String &name, cons
                 }
             }
         }
-        
+    
         return property;
     }
     
@@ -656,7 +646,7 @@ Config::ConstProperty Config::Property::recurseChilds(juce::StringArray &names) 
 // region Config
 //======================================================================================================================
 Config::Config(const juce::String &root, Options options, std::unique_ptr<ConfigParserType> configParser)
-    : options(std::move(options)), 
+    : options(options),
       fullPath(jaut::fixPathString(root + "/" + options.fileName)),
       parser(std::move(configParser))
 {
@@ -944,12 +934,13 @@ const Config::Options &Config::getOptions() const noexcept
 }
 
 //======================================================================================================================
-Config::Property Config::createProperty(const juce::String &name, const juce::var &defaultValue, const juce::String &category) noexcept
+Config::Property Config::createProperty(const juce::String &name, const juce::var &defaultValue,
+                                        const juce::String &category) noexcept
 {
     Property property(name, defaultValue);
     const juce::String category_name = jaut::getCategory(this, category);
     const juce::String property_id   = name.removeCharacters(" ").toLowerCase();
-    const bool was_added       = categories[category_name].properties.emplace(property_id, property).second;
+    const bool was_added             = categories[category_name].properties.emplace(property_id, property).second;
 
     if (was_added)
     {

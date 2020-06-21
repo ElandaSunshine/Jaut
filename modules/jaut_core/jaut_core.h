@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -51,7 +51,7 @@
     this is advisable.
  */
 #ifndef JAUT_STRICT_MODE
-  #define JAUT_STRICT_MODE 1
+#   define JAUT_STRICT_MODE 1
 #endif
 
 #if JAUT_STRICT_MODE
@@ -60,25 +60,33 @@
       implementations will need to inherit from these interfaces to compile.
       Only enabled if JAUT_STRICT_MODE is enabled.
    */
-  #ifndef JAUT_STRICT_TEMPLATES
-    #define JAUT_STRICT_TEMPLATES 1
-  #endif
+#   ifndef JAUT_STRICT_TEMPLATES
+#       define JAUT_STRICT_TEMPLATES 1
+#   endif
 
   /** Config: JAUT_STRICT_THREAD_EXCLUSION
       If this is enabled, the library will assert if message-thread code was not executed from
       the message-thread.
       Only enabled if JAUT_STRICT_MODE is enabled.
    */
-  #ifndef JAUT_STRICT_THREAD_EXCLUSION
-    #define JAUT_STRICT_THREAD_EXCLUSION 1
-  #endif
+#   ifndef JAUT_STRICT_THREAD_EXCLUSION
+#       define JAUT_STRICT_THREAD_EXCLUSION 1
+#   endif
 #endif
 
 /** Config: JAUT_PREFER_JUCE_LISTENERS_OVER_EVENTS
     If this is enabled, all jaut classes will use JUCE listeners instead of jaut Events.
  */
 #ifndef JAUT_PREFER_JUCE_LISTENERS_OVER_EVENTS
-  #define JAUT_PREFER_JUCE_LISTENERS_OVER_EVENTS 0
+#   define JAUT_PREFER_JUCE_LISTENERS_OVER_EVENTS 0
+#endif
+
+/** Config: JAUT_PROXY_OBJECT_OVERLOAD_ADDRESS_OF_OPERATOR
+    If this is enabled, the jaut::ObjectProxy class will overload the address-of operator that when you acquire
+    the address of the proxy you will get the address of the underlying object instead.
+ */
+#ifndef JAUT_PROXY_OBJECT_OVERLOAD_ADDRESS_OF_OPERATOR
+#   define JAUT_PROXY_OBJECT_OVERLOAD_ADDRESS_OF_OPERATOR 0
 #endif
 
 // Module headers
@@ -98,9 +106,9 @@
 
 // Define
 #if !DOXYGEN
-  #include <jaut_core/preprocessor/define/arguments.def>
-  #include <jaut_core/preprocessor/define/collection.def>
-  #include <jaut_core/preprocessor/define/conditional.def>
+#   include <jaut_core/preprocessor/define/arguments.def>
+#   include <jaut_core/preprocessor/define/collection.def>
+#   include <jaut_core/preprocessor/define/conditional.def>
 #endif
 
 // Arguments

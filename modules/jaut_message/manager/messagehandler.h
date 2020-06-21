@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -74,7 +74,7 @@ public:
         : options(options), cancelUpdates(false),
           cancelCount(0)
     {
-        JAUT_ENSURE_MESSAGE_THREAD;
+        JAUT_ENSURE_MESSAGE_THREAD();
         
         static_assert(std::is_base_of_v<IMessageBuffer, MessageBuffer>, R"(Type-argument "MessageBuffer" must be )"
                                                                         R"(any type inheriting IMessageBuffer.)");
@@ -96,7 +96,7 @@ public:
      */
     void send(std::shared_ptr<IMessage> message)
     {
-        JAUT_ENSURE_MESSAGE_THREAD;
+        JAUT_ENSURE_MESSAGE_THREAD();
         
         if(!message)
         {

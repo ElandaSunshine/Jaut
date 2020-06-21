@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,19 +35,20 @@ public:
      *  @param cursor      The cursor to set
      *  @param resetCursor The cursor to reset once this object leaves its current scope
      */
-    explicit ScopedCursor(const MouseCursor &cursor, MouseCursor resetCursor = MouseCursor::NormalCursor)
+    explicit ScopedCursor(const juce::MouseCursor &cursor,
+                          juce::MouseCursor resetCursor = juce::MouseCursor::NormalCursor)
         : resetCursor(std::move(resetCursor))
     {
-        Desktop::getInstance().getMainMouseSource().showMouseCursor(cursor);
+        juce::Desktop::getInstance().getMainMouseSource().showMouseCursor(cursor);
     }
 
     ~ScopedCursor()
     {
-        Desktop::getInstance().getMainMouseSource().showMouseCursor(resetCursor);
+        juce::Desktop::getInstance().getMainMouseSource().showMouseCursor(resetCursor);
     }
     
 private:
-    const MouseCursor resetCursor;
+    const juce::MouseCursor resetCursor;
 };
 
 /**
@@ -55,6 +56,6 @@ private:
  */
 struct ScopedCursorWait : ScopedCursor
 {
-    ScopedCursorWait() : ScopedCursor(MouseCursor::WaitCursor) {}
+    ScopedCursorWait() : ScopedCursor(juce::MouseCursor::WaitCursor) {}
 };
 };

@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_format_layout.h
     @date   12, September 2019
     
@@ -24,8 +24,6 @@
  */
 
 #pragma once
-
-#include <jaut/expo.h>
 
 namespace jaut
 {
@@ -101,19 +99,19 @@ public:
     void createLayout (const FormatAttributes&, float maxWidth, float maxHeight);
     void createLayoutWithBalancedLineLengths (const FormatAttributes&, float maxWidth);
     void createLayoutWithBalancedLineLengths (const FormatAttributes&, float maxWidth, float maxHeight);
-    void draw (Graphics&, Rectangle<float> area) const;
+    void draw (juce::Graphics&, juce::Rectangle<float> area) const;
 
     //==============================================================================
     class JUCE_API  Glyph
     {
     public:
-        Glyph (int glyphCode, Point<float> anchor, float width) noexcept;
+        Glyph (int glyphCode, juce::Point<float> anchor, float width) noexcept;
         Glyph (const Glyph&) noexcept;
         Glyph& operator= (const Glyph&) noexcept;
         ~Glyph() noexcept;
 
         int glyphCode;
-        Point<float> anchor;
+        juce::Point<float> anchor;
         float width;
 
     private:
@@ -126,15 +124,15 @@ public:
     public:
         Run() noexcept;
         Run(const Run&);
-        Run(Range<int> stringRange, int numGlyphsToPreallocate, bool isUnderlined);
+        Run(juce::Range<int> stringRange, int numGlyphsToPreallocate, bool isUnderlined);
         ~Run() noexcept;
-
-        Range<float> getRunBoundsX() const noexcept;
-
-        Font font;
-        Colour colour;
-        Array<Glyph> glyphs;
-        Range<int> stringRange;
+    
+        juce::Range<float> getRunBoundsX() const noexcept;
+    
+        juce::Font font;
+        juce::Colour colour;
+        juce::Array<Glyph> glyphs;
+        juce::Range<int> stringRange;
         bool isUnderlined;
 
     private:
@@ -148,17 +146,17 @@ public:
     public:
         Line() noexcept;
         Line (const Line&);
-        Line (Range<int> stringRange, Point<float> lineOrigin,
+        Line (juce::Range<int> stringRange, juce::Point<float> lineOrigin,
               float ascent, float descent, float leading, int numRunsToPreallocate);
         ~Line() noexcept;
-
-        Range<float> getLineBoundsX() const noexcept;
-        Range<float> getLineBoundsY() const noexcept;
-        Rectangle<float> getLineBounds() const noexcept;
-
-        OwnedArray<Run> runs;
-        Range<int> stringRange;
-        Point<float> lineOrigin;
+    
+        juce::Range<float> getLineBoundsX() const noexcept;
+        juce::Range<float> getLineBoundsY() const noexcept;
+        juce::Rectangle<float> getLineBounds() const noexcept;
+    
+        juce::OwnedArray<Run> runs;
+        juce::Range<int> stringRange;
+        juce::Point<float> lineOrigin;
         float ascent, descent, leading;
 
     private:
@@ -186,9 +184,9 @@ public:
     void recalculateSize();
 
 private:
-    OwnedArray<Line> lines;
+    juce::OwnedArray<Line> lines;
     float width, height;
-    Justification justification;
+    juce::Justification justification;
 
     void createStandardLayout (const FormatAttributes&);
     bool createNativeLayout (const FormatAttributes&);

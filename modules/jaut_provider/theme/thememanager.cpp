@@ -5,7 +5,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -212,7 +212,7 @@ ThemeManager::ThemeManager(juce::File themeRoot, ThemeInitFunc initializationCal
     jassert(this->metadataReader != nullptr);
 
     // Make sure the root directory of your theme-packs exists.
-    jassert(themeRoot.exists());
+    jassert(this->themeRoot.exists());
 
     // You have to define an initialization callback for it to work.
     jassert(initFunc != nullptr);
@@ -345,8 +345,9 @@ void ThemeManager::reloadThemes()
         if(!theme_meta.isEmpty())
         {
             juce::String theme_id = jaut::toIdString(theme_meta["name"].toString());
-
-            if(jaut::isDefaultValidAndEquals(this, theme_id))
+            const juce::String version  = theme_meta["version"];
+            
+            if(jaut::isDefaultValidAndEquals(this, theme_id) || !Version::isValidVersionString(version))
             {
                 continue;
             }
@@ -359,7 +360,7 @@ void ThemeManager::reloadThemes()
             {
                 if (options.duplicateBehaviour == Options::DuplicateMode::KeepLatest)
                 {
-                    const Version newVersion(theme_meta["version"]);
+                    const Version newVersion(version);
                     const Version oldVersion = theme_iterator->second->getThemeMeta()->getVersion();
                     
                     insert = newVersion > oldVersion;
@@ -492,15 +493,14 @@ ThemePointer ThemeManager::loadTheme(const juce::String &themeId) const
             const juce::String theme_id      = jaut::toIdString(theme_meta["name"].toString());
             const juce::String theme_version = theme_meta["version"].toString();
 
-            if(theme_id != needed_theme_id || theme_version.isEmpty() || !theme_version.matchesWildcard("*.*", true) ||
-               !theme_version.containsOnly("0123456789."))
+            if(theme_id != needed_theme_id || !Version::isValidVersionString(theme_version))
             {
                 continue;
             }
             
             if(options.duplicateBehaviour == Options::DuplicateMode::KeepLatest)
             {
-                const Version newVersion(theme_meta["version"].toString());
+                const Version newVersion(theme_version);
                 const Version oldVersion(last_theme_version);
                 
                 if(!last_theme_version.isEmpty() && newVersion > oldVersion)

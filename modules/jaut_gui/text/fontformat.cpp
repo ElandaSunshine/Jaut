@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,49 +16,43 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   fontformat.cpp
     @date   30, May 2019
     
     ===============================================================
  */
 
-#include <jaut/util/fontformat.h>
-#include <set>
-
-#include "jaut_format_attributes.h"
-#include "jaut_format_layout.h"
-
 namespace
 {
-const int getColourCode(juce_wchar charCode) noexcept
+int getColourCode(juce::juce_wchar charCode) noexcept
 {
-    charCode = tolower(charCode);
+    charCode = std::tolower(charCode);
 
-    if(isdigit(charCode))
+    if(std::isdigit(charCode))
     {
-        return jaut::JAUT_COLOUR_ID<4> + static_cast<int>(charCode - '0');
+        return jaut::CharFormat::ColourIds::ColourFormat0Id + static_cast<int>(charCode - '0');
     }
     else if(charCode >= 'a' && charCode <= 'f')
     {
-        return jaut::JAUT_COLOUR_ID<14> + static_cast<int>(charCode - 'a');
+        return jaut::CharFormat::ColourIds::ColourFormatAId + static_cast<int>(charCode - 'a');
     }
 
     return 0;
 }
 
-const bool isCharValid(juce_wchar charCode) noexcept
+bool isCharValid(juce::juce_wchar charCode) noexcept
 {
-    charCode = tolower(charCode);
+    charCode = std::tolower(charCode);
 
     return charCode == 'r' || (charCode >= 'x' && charCode <= 'z') || isdigit(charCode) ||
            (charCode >= 'a' && charCode <= 'f');
 }
 
-void editFont(juce_wchar charCode, Font &font, Colour &colour, LookAndFeel &lookAndFeel,
-              const Colour &defaultColour) noexcept
+void editFont(juce::juce_wchar charCode, juce::Font &font, juce::Colour &colour, juce::LookAndFeel &lookAndFeel,
+              const juce::Colour &defaultColour) noexcept
 {
-    charCode = tolower(charCode);
+    charCode = std::tolower(charCode);
 
     if (charCode == 'r')
     {
@@ -75,29 +69,30 @@ void editFont(juce_wchar charCode, Font &font, Colour &colour, LookAndFeel &look
     }
 }
 
-jaut::FormatAttributes formatInput(const String &input, const Font &font, LookAndFeel &lookAndFeel,
+jaut::FormatAttributes formatInput(const juce::String &input, const juce::Font &font, juce::LookAndFeel &lookAndFeel,
                                    const jaut::CharFormat::Options &options) noexcept
 {
-    const Colour default_colour = options.defaultColour == Colour(0) || options.defaultColour == Colour(0x00ffffff)
-                                  ? lookAndFeel.findColour(jaut::CharFormat::ColourFormat0Id) : options.defaultColour;
-    Colour current_colour = default_colour;
-    Font current_font     = font;
-    String::CharPointerType charptr = input.getCharPointer();
-    String text;
+    const juce::Colour default_colour = options.defaultColour == juce::Colour(0) ||
+                                        options.defaultColour == juce::Colour(0x00ffffff)
+                                        ? lookAndFeel.findColour(jaut::CharFormat::ColourFormat0Id)
+                                        : options.defaultColour;
+    
+    juce::Colour current_colour = default_colour;
+    juce::Font   current_font   = font;
+    juce::String::CharPointerType char_ptr = input.getCharPointer();
+    juce::String text;
     jaut::FormatAttributes attributes;
-    juce_wchar current_char;
-    juce_wchar next_char;
 
     for (;;)
     {
-        current_char = charptr.getAndAdvance();
+        juce::juce_wchar current_char = char_ptr.getAndAdvance();
 
         if (current_char == 0)
         {
             break;
         }
-
-        next_char = *charptr;
+    
+        juce::juce_wchar next_char = *char_ptr;
 
         if (current_char == '\n')
         {
@@ -112,7 +107,7 @@ jaut::FormatAttributes formatInput(const String &input, const Font &font, LookAn
         else if (current_char == '\\' && next_char == options.terminator)
         {
             text += options.terminator;
-            ++charptr;
+            ++char_ptr;
         }
         else if (current_char == options.terminator)
         {
@@ -125,7 +120,7 @@ jaut::FormatAttributes formatInput(const String &input, const Font &font, LookAn
                 }
 
                 ::editFont(next_char, current_font, current_colour, lookAndFeel, default_colour);
-                ++charptr;
+                ++char_ptr;
             }
         }
         else
@@ -150,36 +145,36 @@ namespace jaut
  * ================================================================================== */
 
 CharFormat::CharFormat() noexcept
-    : lookAndFeel(&Desktop::getInstance().getDefaultLookAndFeel())
+    : lookAndFeel(&juce::Desktop::getInstance().getDefaultLookAndFeel())
 {}
 
 CharFormat::CharFormat(const Options &options) noexcept
-    : lookAndFeel(&Desktop::getInstance().getDefaultLookAndFeel()),
+    : lookAndFeel(&juce::Desktop::getInstance().getDefaultLookAndFeel()),
       options(options)
 {}
 
 //=====================================================================================================================
-void CharFormat::drawText(Graphics &g, const String &text, Rectangle<float> destRectangle,
-                          Justification justification) const noexcept
+void CharFormat::drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> destRectangle,
+                          juce::Justification justification) const noexcept
 {
-    Graphics::ScopedSaveState save_state (g);
-
-    FormatLayout text_layout;
-    auto attributes    = ::formatInput(text, g.getCurrentFont(), *lookAndFeel, options);
-    const Point origin = justification.appliedToRectangle({destRectangle.getWidth(), destRectangle.getHeight()},
+    juce::Graphics::ScopedSaveState save_state (g);
+    
+    jaut::FormatLayout text_layout;
+    auto attributes          = ::formatInput(text, g.getCurrentFont(), *lookAndFeel, options);
+    const juce::Point origin = justification.appliedToRectangle({destRectangle.getWidth(), destRectangle.getHeight()},
                                                           destRectangle).getPosition();
-    LowLevelGraphicsContext &context = g.getInternalContext();
-    const Rectangle<int> clip        = context.getClipBounds();
-    const float clip_top             = clip.getY() - origin.y;
-    const float clip_bottom          = clip.getBottom() - origin.y;
+    juce::LowLevelGraphicsContext &context = g.getInternalContext();
+    const juce::Rectangle<int> clip        = context.getClipBounds();
+    const float clip_top                   = clip.getY() - origin.y;
+    const float clip_bottom                = clip.getBottom() - origin.y;
 
     attributes.setJustification(justification);
     text_layout.createLayout(attributes, destRectangle.getWidth());
 
     for (int i = 0; i < text_layout.getNumLines(); ++i)
     {
-        const FormatLayout::Line &line  = text_layout.getLine(i);
-        const Range<float> line_range_y = line.getLineBoundsY();
+        const jaut::FormatLayout::Line &line  = text_layout.getLine(i);
+        const juce::Range<float> line_range_y = line.getLineBoundsY();
 
         if (line_range_y.getEnd() < clip_top)
         {
@@ -191,27 +186,27 @@ void CharFormat::drawText(Graphics &g, const String &text, Rectangle<float> dest
             break;
         }
 
-        const Point<float> line_origin = origin + line.lineOrigin;
+        const juce::Point<float> line_origin = origin + line.lineOrigin;
 
         for (int j = 0; j < line.runs.size(); ++j)
         {
-            FormatLayout::Run const * const run = line.runs.getUnchecked(j);
+            jaut::FormatLayout::Run const * const run = line.runs.getUnchecked(j);
             context.setFont(run->font);
             context.setFill(run->colour);
-
-            String text;
+    
+            juce::String text;
 
             for (auto &glyph : run->glyphs)
             {
-                context.drawGlyph(glyph.glyphCode, AffineTransform::translation(line_origin.x + glyph.anchor.x,
-                                                                                line_origin.y + glyph.anchor.y));
-                text += static_cast<juce_wchar>(glyph.glyphCode);
+                context.drawGlyph(glyph.glyphCode, juce::AffineTransform::translation(line_origin.x + glyph.anchor.x,
+                                                                                      line_origin.y + glyph.anchor.y));
+                text += static_cast<juce::juce_wchar>(glyph.glyphCode);
             }
 
             if (run->isUnderlined)
             {
-                const Range<float> run_extent = run->getRunBoundsX();
-                const float line_thickness    = run->font.getDescent() * 0.3f;
+                const juce::Range<float> run_extent = run->getRunBoundsX();
+                const float line_thickness          = run->font.getDescent() * 0.3f;
 
                 context.fillRect({run_extent.getStart() + line_origin.x, line_origin.y + line_thickness * 2.0f,
                                   run_extent.getLength(), line_thickness});
@@ -220,47 +215,47 @@ void CharFormat::drawText(Graphics &g, const String &text, Rectangle<float> dest
     }
 }
 
-void CharFormat::drawText(Graphics &g, const String &text, float x, float y, float width, float height,
-                          Justification justification) const noexcept
+void CharFormat::drawText(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
+                          juce::Justification justification) const noexcept
 {
     drawText(g, text, {x, y, width, height}, justification);
 }
 
-void CharFormat::drawText(Graphics &g, const String &text, int x, int y, int width, int height,
-                          Justification justification) const noexcept
+void CharFormat::drawText(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
+                          juce::Justification justification) const noexcept
 {
-    drawText(g, text, Rectangle<int>(x, y, width, height).toFloat(), justification);
+    drawText(g, text, juce::Rectangle<int>(x, y, width, height).toFloat(), justification);
 }
 
 //=====================================================================================================================
-void CharFormat::setLookAndFeel(LookAndFeel *lookAndFeel) noexcept
+void CharFormat::setLookAndFeel(juce::LookAndFeel *lookAndFeel) noexcept
 {
-    if(lookAndFeel)
+    if (lookAndFeel)
     {
         this->lookAndFeel = lookAndFeel;
         return;
     }
 
-    lookAndFeel = &Desktop::getInstance().getDefaultLookAndFeel();
+    this->lookAndFeel = &juce::Desktop::getInstance().getDefaultLookAndFeel();
 }
 
-LookAndFeel &CharFormat::getLookAndFeel() const noexcept
+juce::LookAndFeel &CharFormat::getLookAndFeel() const noexcept
 {
     return *lookAndFeel;
 }
 
-void CharFormat::setColour(const Colour &colour) noexcept
+void CharFormat::setColour(const juce::Colour &colour) noexcept
 {
     options.defaultColour = colour;
 }
 
-Colour CharFormat::getColour(juce_wchar colourCode) const noexcept
+juce::Colour CharFormat::getColour(juce::juce_wchar colourCode) const noexcept
 {
     const int colour_id = ::getColourCode(colourCode);
     return colour_id && lookAndFeel ? lookAndFeel->findColour(colour_id) : options.defaultColour;
 }
 
-const juce_wchar CharFormat::getFormattingCharacter() const noexcept
+juce::juce_wchar CharFormat::getFormattingCharacter() const noexcept
 {
     return options.terminator;
 }
@@ -276,29 +271,29 @@ const CharFormat::Options &CharFormat::getOptions() const noexcept
  * ================================= FontFormat =====================================
  * ================================================================================== */
 
-void FontFormat::drawText(Graphics &g, const String &text, Rectangle<float> area, Colour colour,
-                          Justification justification, Formats formats, CharFormat *charFormat) noexcept
+void FontFormat::drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
+                          juce::Justification justification, Formats formats, CharFormat *charFormat) noexcept
 {
     if ((formats & None) == None && (text.isEmpty() || g.clipRegionIntersects(area.getSmallestIntegerContainer())))
     {
         return;
     }
-
-    Graphics::ScopedSaveState save_state(g);
-
-    FormatLayout text_layout;
+    
+    juce::Graphics::ScopedSaveState save_state(g);
+    
+    jaut::FormatLayout text_layout;
     CharFormat format;
     const bool format_char  = (formats & Format)    == Format;
     const bool format_caps  = (formats & SmallCaps) == SmallCaps;
     CharFormat *char_format = format_char ? (charFormat ? charFormat : &format) : 0;
     auto attributes         = char_format ? FormatAttributes(formatInput(text, g.getCurrentFont(),
                                                              char_format->getLookAndFeel(), char_format->getOptions()))
-                                          : FormatAttributes(text);
-    const Point origin = justification.appliedToRectangle({area.getWidth(), area.getHeight()}, area).getPosition();
-    LowLevelGraphicsContext &context = g.getInternalContext();
-    const Rectangle clip             = context.getClipBounds();
-    const float clip_top             = clip.getY()      - origin.y;
-    const float clip_bottom          = clip.getBottom() - origin.y;
+                                          : jaut::FormatAttributes(text);
+    const juce::Point origin = justification.appliedToRectangle({area.getWidth(), area.getHeight()}, area).getPosition();
+    juce::LowLevelGraphicsContext &context = g.getInternalContext();
+    const juce::Rectangle clip             = context.getClipBounds();
+    const float clip_top                   = clip.getY()      - origin.y;
+    const float clip_bottom                = clip.getBottom() - origin.y;
 
 
     int last_char      = 0;
@@ -309,8 +304,8 @@ void FontFormat::drawText(Graphics &g, const String &text, Rectangle<float> area
 
     for (int i = 0; i < text_layout.getNumLines(); ++i)
     {
-        const FormatLayout::Line &line = text_layout.getLine(i);
-        const Range line_range_y       = line.getLineBoundsY();
+        const jaut::FormatLayout::Line &line = text_layout.getLine(i);
+        const juce::Range line_range_y       = line.getLineBoundsY();
 
         if (line_range_y.getEnd() < clip_top)
         {
@@ -322,12 +317,12 @@ void FontFormat::drawText(Graphics &g, const String &text, Rectangle<float> area
             break;
         }
 
-        const Point line_origin = origin + line.lineOrigin;
+        const juce::Point line_origin = origin + line.lineOrigin;
 
         for (auto *run : line.runs)
         {
-            const Font font_normal = run->font;
-            const Font font_caps   = run->font.withHeight(font_normal.getHeight() * 0.8f);
+            const juce::Font font_normal = run->font;
+            const juce::Font font_caps   = run->font.withHeight(font_normal.getHeight() * 0.8f);
 
             context.setFont(font_normal);
             context.setFill(run->colour);
@@ -349,16 +344,16 @@ void FontFormat::drawText(Graphics &g, const String &text, Rectangle<float> area
 
                 last_char = glyph.glyphCode;
                 context.drawGlyph(format_caps ? toupper(glyph.glyphCode) : glyph.glyphCode,
-                                  AffineTransform::translation(line_origin.x + glyph.anchor.x + fixed_indent,
-                                                               line_origin.y + glyph.anchor.y));
+                                  juce::AffineTransform::translation(line_origin.x + glyph.anchor.x + fixed_indent,
+                                                                     line_origin.y + glyph.anchor.y));
             }
 
             if (!format_char)
             {
                 if (run->font.isUnderlined())
                 {
-                    const Range run_extent     = run->getRunBoundsX();
-                    const float line_thickness = run->font.getDescent() * 0.3f;
+                    const juce::Range run_extent = run->getRunBoundsX();
+                    const float line_thickness   = run->font.getDescent() * 0.3f;
 
                     context.fillRect({run_extent.getStart() + line_origin.x, line_origin.y + line_thickness * 2.0f,
                                       run_extent.getLength(), line_thickness});
@@ -369,8 +364,8 @@ void FontFormat::drawText(Graphics &g, const String &text, Rectangle<float> area
 
             if (run->isUnderlined)
             {
-                const Range run_extent     = run->getRunBoundsX();
-                const float line_thickness = run->font.getDescent() * 0.3f;
+                const juce::Range run_extent = run->getRunBoundsX();
+                const float line_thickness   = run->font.getDescent() * 0.3f;
 
                 context.fillRect({run_extent.getStart() + line_origin.x, line_origin.y + line_thickness * 2.0f,
                                   run_extent.getLength(), line_thickness});
@@ -379,36 +374,36 @@ void FontFormat::drawText(Graphics &g, const String &text, Rectangle<float> area
     }
 }
 
-void FontFormat::drawText(Graphics &g, const String &text, float x, float y, float width, float height, Colour colour,
-                          Justification justification, Formats formats, CharFormat *charFormat) noexcept
+void FontFormat::drawText(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
+                          juce::Justification justification, Formats formats, CharFormat *charFormat) noexcept
 {
-    drawText(g, text, {x, y, width, height}, colour, justification, formats, charFormat);
+    drawText(g, text, {x, y, width, height}, justification, formats, charFormat);
 }
 
-void FontFormat::drawText(Graphics &g, const String &text, int x, int y, int width, int height, Colour colour,
-                          Justification justification, Formats formats, CharFormat *charFormat) noexcept
+void FontFormat::drawText(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
+                          juce::Justification justification, Formats formats, CharFormat *charFormat) noexcept
 {
-    drawText(g, text, Rectangle<int>(x, y, width, height).toFloat(), colour, justification, formats, charFormat);
+    drawText(g, text, juce::Rectangle<int>(x, y, width, height).toFloat(), justification, formats, charFormat);
 }
 
-void FontFormat::drawSmallCaps(Graphics &g, const String &text, Rectangle<float> area,
-                               Justification justification) noexcept
+void FontFormat::drawSmallCaps(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
+                               juce::Justification justification) noexcept
 {
     if (text.isEmpty() || !g.clipRegionIntersects(area.getSmallestIntegerContainer()))
     {
         return;
     }
+    
+    juce::Graphics::ScopedSaveState save_state(g);
 
-    Graphics::ScopedSaveState save_state(g);
-
-    const Font font_default              = g.getCurrentFont();
-    const Font font_small_caps           = font_default.withHeight(font_default.getHeight() * 0.8f);
-    String::CharPointerType current_char = text.getCharPointer();
-    String::CharPointerType last_char    = current_char;
+    const juce::Font font_default              = g.getCurrentFont();
+    const juce::Font font_small_caps           = font_default.withHeight(font_default.getHeight() * 0.8f);
+    juce::String::CharPointerType current_char = text.getCharPointer();
+    juce::String::CharPointerType last_char    = current_char;
     float fixed_indent = 0.0f;
-    GlyphArrangement output;
-    Array<int> glyphs;
-    Array<float> offsets;
+    juce::GlyphArrangement output;
+    juce::Array<int> glyphs;
+    juce::Array<float> offsets;
 
     font_default.getGlyphPositions(text.toUpperCase(), glyphs, offsets);
 
@@ -424,14 +419,14 @@ void FontFormat::drawSmallCaps(Graphics &g, const String &text, Rectangle<float>
             last_char = current_char;
         }
 
-        const float next_x       = offsets.getUnchecked(i + 1);
-        const float this_x       = offsets.getUnchecked(i) + fixed_indent;
-        const bool is_whitespace = current_char.isWhitespace();
-        const int glyph          = glyphs.getUnchecked(i);
-        const Font &font_to_use  = current_char.isUpperCase() ? font_default : font_small_caps;
+        const float next_x            = offsets.getUnchecked(i + 1);
+        const float this_x            = offsets.getUnchecked(i) + fixed_indent;
+        const bool is_whitespace      = current_char.isWhitespace();
+        const int glyph               = glyphs.getUnchecked(i);
+        const juce::Font &font_to_use = current_char.isUpperCase() ? font_default : font_small_caps;
 
-        output.addGlyph(PositionedGlyph(font_to_use, current_char.getAndAdvance(), glyph,
-                                        this_x, 0.0f, next_x - this_x, is_whitespace));
+        output.addGlyph(juce::PositionedGlyph(font_to_use, current_char.getAndAdvance(), glyph,
+                                              this_x, 0.0f, next_x - this_x, is_whitespace));
     }
 
     output.justifyGlyphs(0, output.getNumGlyphs(), area.getX(), area.getY(), area.getWidth(), area.getHeight(),
@@ -440,20 +435,21 @@ void FontFormat::drawSmallCaps(Graphics &g, const String &text, Rectangle<float>
     output.draw(g);
 }
 
-void FontFormat::drawSmallCaps(Graphics &g, const String &text, float x, float y, float width, float height,
-                               Justification justification) noexcept
+void FontFormat::drawSmallCaps(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
+                               juce::Justification justification) noexcept
 {
     drawSmallCaps(g, text, {x, y, width, height}, justification);
 }
 
-void FontFormat::drawSmallCaps(Graphics &g, const String &text, int x, int y, int width, int height,
-                               Justification justification) noexcept
+void FontFormat::drawSmallCaps(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
+                               juce::Justification justification) noexcept
 {
-    drawSmallCaps(g, text, Rectangle<int>(x, y, width, height).toFloat(), justification);
+    drawSmallCaps(g, text, juce::Rectangle<int>(x, y, width, height).toFloat(), justification);
 }
 
-void FontFormat::drawFormattedString(Graphics &g, const String &text, Rectangle<float> area, Colour colour,
-                                     Justification justification, CharFormat *charFormat) noexcept
+void FontFormat::drawFormattedString(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
+                                     juce::Colour colour, juce::Justification justification,
+                                     CharFormat *charFormat) noexcept
 {
     CharFormat::Options options;
 
@@ -466,15 +462,18 @@ void FontFormat::drawFormattedString(Graphics &g, const String &text, Rectangle<
     formatter.drawText(g, text, area, justification);
 }
 
-void FontFormat::drawFormattedString(Graphics &g, const String &text, float x, float y, float width, float height,
-                                     Colour colour, Justification justification, CharFormat *charFormat) noexcept
+void FontFormat::drawFormattedString(juce::Graphics &g, const juce::String &text, float x, float y, float width,
+                                     float height, juce::Colour colour, juce::Justification justification,
+                                     CharFormat *charFormat) noexcept
 {
     drawFormattedString(g, text, {x, y, width, height}, colour, justification, charFormat);
 }
 
-void FontFormat::drawFormattedString(Graphics &g, const String &text, int x, int y, int width, int height,
-                                     Colour colour, Justification justification, CharFormat *charFormat) noexcept
+void FontFormat::drawFormattedString(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
+                                     juce::Colour colour, juce::Justification justification,
+                                     CharFormat *charFormat) noexcept
 {
-    drawFormattedString(g, text, Rectangle<int>(x, y, width, height).toFloat(), colour, justification, charFormat);
+    drawFormattedString(g, text, juce::Rectangle<int>(x, y, width, height).toFloat(), colour, justification,
+                        charFormat);
 }
 }

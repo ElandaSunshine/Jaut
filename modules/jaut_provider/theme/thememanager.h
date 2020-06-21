@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -44,15 +44,15 @@ class JAUT_API ThemePointer final
 {
 public:
     ThemePointer() = default;
-    ThemePointer(std::nullptr_t) noexcept;
+    ThemePointer(std::nullptr_t) noexcept; // NOLINT
     ThemePointer(const juce::String &id, IThemeDefinition *theme);
     ~ThemePointer();
 
     //==============================================================================================================
-    IThemeDefinition &operator*() const;
-    IThemeDefinition *operator->() const;
+    IThemeDefinition& operator*() const;
+    IThemeDefinition* operator->() const;
 
-    operator bool() const noexcept;
+    operator bool() const noexcept; // NOLINT
     
     bool operator==(const ThemePointer &right) const noexcept;
     bool operator!=(const ThemePointer &right) const noexcept;
@@ -60,7 +60,7 @@ public:
     bool operator!=(const IThemeDefinition &right) const noexcept;
     
     //==============================================================================================================
-    IThemeDefinition *get() const noexcept;
+    IThemeDefinition* get() const noexcept;
 
     //==============================================================================================================
     bool isCached() const noexcept;
@@ -99,11 +99,11 @@ public:
         };
     
         //==============================================================================================================
-        juce::String themeMetaId { "packdata.json" };
-        juce::String themePrefix;
-        ThemePointer defaultTheme;
+        juce::String  themeMetaId { "packdata.json" };
+        juce::String  themePrefix;
+        ThemePointer  defaultTheme;
         DuplicateMode duplicateBehaviour { DuplicateMode::KeepLast };
-        bool cacheThemes { true };
+        bool          cacheThemes { true };
     };
 
     using SharedThemePtr = std::shared_ptr<IThemeDefinition>;
@@ -118,12 +118,11 @@ public:
     ThemeManager(juce::File themeRoot, ThemeInitFunc initializationCallback, MetaReaderPtr metadataReader,
                  Options options);
     ThemeManager(juce::File themeRoot, ThemeInitFunc initializationCallback, MetaReaderPtr metadataReader);
-    
     ThemeManager(ThemeManager &&other) noexcept;
     ~ThemeManager();
 
     //==================================================================================================================
-    ThemeManager &operator=(ThemeManager &&right) noexcept;
+    ThemeManager& operator=(ThemeManager &&right) noexcept;
 
     //==================================================================================================================
     ThemePointer getCurrentTheme() const;
@@ -138,17 +137,17 @@ public:
     void reloadTheme(const juce::String &themeId);
 
     //==================================================================================================================
-    ThemePointer loadTheme(const juce::String &themeId) const;
+    ThemePointer loadTheme(const juce::String &themeId)           const;
     ThemePointer loadExternalTheme(const juce::File &themeFolder) const;
     ThemePointer loadExternalTheme(const juce::File &themeFolder, bool override);
 
     //==================================================================================================================
-    ThemePointer getTheme(const juce::String &themeId) const;
-    ThemeVector getAllThemes() const;
-    const Options &getOptions() const noexcept;
+    ThemePointer   getTheme(const juce::String &themeId) const;
+    ThemeVector    getAllThemes()                        const;
+    const Options& getOptions()                          const noexcept;
 
     //==================================================================================================================
-    bool contains(const juce::String &themeId) const;
+    bool contains(const juce::String &themeId)      const;
     bool contains(const ThemePointer &themePointer) const;
     bool contains(const IThemeDefinition &theme)    const;
 

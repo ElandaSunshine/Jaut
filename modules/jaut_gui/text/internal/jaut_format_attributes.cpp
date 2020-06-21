@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,28 +16,23 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_format_attributes.cpp
     @date   11, September 2019
     
     ===============================================================
  */
 
-#include "jaut_format_attributes.h"
-#include "jaut_format_layout.h"
-
 namespace jaut
 {
-
 namespace
 {
-
-int getLength (const Array<FormatAttributes::Attribute>& atts) noexcept
+int getLength (const juce::Array<FormatAttributes::Attribute>& atts) noexcept
 {
     return atts.size() != 0 ? atts.getReference (atts.size() - 1).range.getEnd() : 0;
 }
 
-void splitAttributeRanges (Array<FormatAttributes::Attribute>& atts, int position)
+void splitAttributeRanges (juce::Array<FormatAttributes::Attribute>& atts, int position)
 {
     for (int i = atts.size(); --i >= 0;)
     {
@@ -58,7 +53,7 @@ void splitAttributeRanges (Array<FormatAttributes::Attribute>& atts, int positio
     }
 }
 
-Range<int> splitAttributeRanges (Array<FormatAttributes::Attribute>& atts, Range<int> newRange)
+juce::Range<int> splitAttributeRanges (juce::Array<FormatAttributes::Attribute>& atts, juce::Range<int> newRange)
 {
     newRange = newRange.getIntersectionWith ({ 0, getLength (atts) });
 
@@ -71,24 +66,24 @@ Range<int> splitAttributeRanges (Array<FormatAttributes::Attribute>& atts, Range
     return newRange;
 }
 
-void appendRange (Array<FormatAttributes::Attribute>& atts,
-                    int length, const Font* f, const Colour* c)
+void appendRange (juce::Array<FormatAttributes::Attribute>& atts,
+                    int length, const juce::Font* f, const juce::Colour* c)
 {
     if (atts.size() == 0)
     {
-        atts.add ({ Range<int> (0, length), f != nullptr ? *f : Font(), c != nullptr ? *c : Colour (0xff000000) });
+        atts.add ({ juce::Range<int> (0, length), f != nullptr ? *f : juce::Font(), c != nullptr ? *c : juce::Colour (0xff000000) });
     }
     else
     {
         auto start = getLength (atts);
-        atts.add ({ Range<int> (start, start + length),
+        atts.add ({ juce::Range<int> (start, start + length),
                     f != nullptr ? *f : atts.getReference (atts.size() - 1).font,
                     c != nullptr ? *c : atts.getReference (atts.size() - 1).colour });
     }
 }
 
-void applyFontAndColour (Array<FormatAttributes::Attribute>& atts,
-                            Range<int> range, const Font* f, const Colour* c)
+void applyFontAndColour (juce::Array<FormatAttributes::Attribute>& atts,
+                         juce::Range<int> range, const juce::Font* f, const juce::Colour* c)
 {
     range = splitAttributeRanges (atts, range);
 
@@ -105,7 +100,7 @@ void applyFontAndColour (Array<FormatAttributes::Attribute>& atts,
     }
 }
 
-void truncate (Array<FormatAttributes::Attribute>& atts, int newLength)
+void truncate (juce::Array<FormatAttributes::Attribute>& atts, int newLength)
 {
     splitAttributeRanges (atts, newLength);
 
@@ -117,12 +112,12 @@ void truncate (Array<FormatAttributes::Attribute>& atts, int newLength)
 }
 
 //======================================================================================================================
-FormatAttributes::Attribute::Attribute (Range<int> r, const Font& f, Colour c) noexcept
+FormatAttributes::Attribute::Attribute (juce::Range<int> r, const juce::Font& f, juce::Colour c) noexcept
     : range (r), font (f), colour (c), isUnderlined(f.isUnderlined())
 {}
 
 //======================================================================================================================
-void FormatAttributes::setText (const String& newText)
+void FormatAttributes::setText (const juce::String& newText)
 {
     auto newLength = newText.length();
     auto oldLength = getLength (attributes);
@@ -135,25 +130,25 @@ void FormatAttributes::setText (const String& newText)
     text = newText;
 }
 
-void FormatAttributes::append (const String& textToAppend)
+void FormatAttributes::append (const juce::String& textToAppend)
 {
     text += textToAppend;
     appendRange (attributes, textToAppend.length(), nullptr, nullptr);
 }
 
-void FormatAttributes::append (const String& textToAppend, const Font& font)
+void FormatAttributes::append (const juce::String& textToAppend, const juce::Font& font)
 {
     text += textToAppend;
     appendRange (attributes, textToAppend.length(), &font, nullptr);
 }
 
-void FormatAttributes::append (const String& textToAppend, Colour colour)
+void FormatAttributes::append (const juce::String& textToAppend, juce::Colour colour)
 {
     text += textToAppend;
     appendRange (attributes, textToAppend.length(), nullptr, &colour);
 }
 
-void FormatAttributes::append (const String& textToAppend, const Font& font, Colour colour)
+void FormatAttributes::append (const juce::String& textToAppend, const juce::Font& font, juce::Colour colour)
 {
     text += textToAppend;
     appendRange (attributes, textToAppend.length(), &font, &colour);
@@ -179,14 +174,14 @@ void FormatAttributes::clear()
 }
 
 //======================================================================================================================
-void FormatAttributes::draw(Graphics& g, const Rectangle<float>& area) const
+void FormatAttributes::draw(juce::Graphics& g, const juce::Rectangle<float>& area) const
 {
     ignoreUnused(g, area);
 }
 
 //======================================================================================================================
 
-void FormatAttributes::setJustification (Justification newJustification) noexcept
+void FormatAttributes::setJustification (juce::Justification newJustification) noexcept
 {
     justification = newJustification;
 }

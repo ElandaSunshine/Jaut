@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,24 +16,21 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_format_layout.cpp
     @date   12, September 2019
     
     ===============================================================
  */
 
-#include "jaut_format_layout.h"
-#include "jaut_format_attributes.h"
-
 namespace jaut
 {
-static String substring (const String& text, Range<int> range)
+static juce::String substring (const juce::String& text, juce::Range<int> range)
 {
     return text.substring (range.getStart(), range.getEnd());
 }
 
-FormatLayout::Glyph::Glyph (int glyph, Point<float> anch, float w) noexcept
+FormatLayout::Glyph::Glyph (int glyph, juce::Point<float> anch, float w) noexcept
     : glyphCode (glyph), anchor (anch), width (w)
 {}
 
@@ -49,7 +46,7 @@ FormatLayout::Glyph& FormatLayout::Glyph::operator= (const Glyph& other) noexcep
     return *this;
 }
 
-FormatLayout::Glyph::~Glyph() noexcept {}
+FormatLayout::Glyph::~Glyph() noexcept = default;
 
 //==============================================================================
 FormatLayout::Run::Run() noexcept
@@ -57,7 +54,7 @@ FormatLayout::Run::Run() noexcept
       isUnderlined(false)
 {}
 
-FormatLayout::Run::Run (Range<int> range, int numGlyphsToPreallocate, bool isUnderlined)
+FormatLayout::Run::Run(juce::Range<int> range, int numGlyphsToPreallocate, bool isUnderlined)
     : colour (0xff000000), stringRange (range), isUnderlined(isUnderlined)
 {
     glyphs.ensureStorageAllocated (numGlyphsToPreallocate);
@@ -71,16 +68,16 @@ FormatLayout::Run::Run (const Run& other)
       isUnderlined(other.isUnderlined)
 {}
 
-FormatLayout::Run::~Run() noexcept {}
+FormatLayout::Run::~Run() noexcept = default;
 
-Range<float> FormatLayout::Run::getRunBoundsX() const noexcept
+juce::Range<float> FormatLayout::Run::getRunBoundsX() const noexcept
 {
-    Range<float> range;
+    juce::Range<float> range;
     bool isFirst = true;
 
     for (auto& glyph : glyphs)
     {
-        Range<float> r (glyph.anchor.x, glyph.anchor.x + glyph.width);
+        juce::Range<float> r (glyph.anchor.x, glyph.anchor.x + glyph.width);
 
         if (isFirst)
         {
@@ -101,7 +98,7 @@ FormatLayout::Line::Line() noexcept
     : ascent (0.0f), descent (0.0f), leading (0.0f)
 {}
 
-FormatLayout::Line::Line (Range<int> range, Point<float> o, float asc, float desc,
+FormatLayout::Line::Line(juce::Range<int> range, juce::Point<float> o, float asc, float desc,
                         float lead, int numRunsToPreallocate)
     : stringRange (range), lineOrigin (o),
       ascent (asc), descent (desc), leading (lead)
@@ -119,9 +116,9 @@ FormatLayout::Line::Line (const Line& other)
 FormatLayout::Line::~Line() noexcept
 {}
 
-Range<float> FormatLayout::Line::getLineBoundsX() const noexcept
+juce::Range<float> FormatLayout::Line::getLineBoundsX() const noexcept
 {
-    Range<float> range;
+    juce::Range<float> range;
     bool isFirst = true;
 
     for (auto* run : runs)
@@ -142,13 +139,13 @@ Range<float> FormatLayout::Line::getLineBoundsX() const noexcept
     return range + lineOrigin.x;
 }
 
-Range<float> FormatLayout::Line::getLineBoundsY() const noexcept
+juce::Range<float> FormatLayout::Line::getLineBoundsY() const noexcept
 {
     return { lineOrigin.y - ascent,
              lineOrigin.y + descent };
 }
 
-Rectangle<float> FormatLayout::Line::getLineBounds() const noexcept
+juce::Rectangle<float> FormatLayout::Line::getLineBounds() const noexcept
 {
     auto x = getLineBoundsX();
     auto y = getLineBoundsY();
@@ -158,7 +155,7 @@ Rectangle<float> FormatLayout::Line::getLineBounds() const noexcept
 
 //==============================================================================
 FormatLayout::FormatLayout()
-    : width (0), height (0), justification (Justification::topLeft)
+    : width (0), height (0), justification (juce::Justification::topLeft)
 {}
 
 FormatLayout::FormatLayout (const FormatLayout& other)
@@ -211,9 +208,9 @@ void FormatLayout::addLine (std::unique_ptr<Line> line)
     lines.add (line.release());
 }
 
-void FormatLayout::draw (Graphics& g, Rectangle<float> area) const
+void FormatLayout::draw (juce::Graphics& g, juce::Rectangle<float> area) const
 {
-    auto origin = justification.appliedToRectangle (Rectangle<float> (width, getHeight()), area).getPosition();
+    auto origin = justification.appliedToRectangle (juce::Rectangle<float> (width, getHeight()), area).getPosition();
 
     auto& context   = g.getInternalContext();
     auto clip       = context.getClipBounds();
@@ -238,8 +235,8 @@ void FormatLayout::draw (Graphics& g, Rectangle<float> area) const
             context.setFill (run->colour);
 
             for (auto& glyph : run->glyphs)
-                context.drawGlyph (glyph.glyphCode, AffineTransform::translation (lineOrigin.x + glyph.anchor.x,
-                                                                                  lineOrigin.y + glyph.anchor.y));
+                context.drawGlyph (glyph.glyphCode, juce::AffineTransform::translation (lineOrigin.x + glyph.anchor.x,
+                                                                                        lineOrigin.y + glyph.anchor.y));
 
             if (run->isUnderlined)
             {
@@ -291,8 +288,8 @@ void FormatLayout::createLayoutWithBalancedLineLengths (const FormatAttributes& 
 
         auto line1 = lines.getUnchecked (lines.size() - 1)->getLineBoundsX().getLength();
         auto line2 = lines.getUnchecked (lines.size() - 2)->getLineBoundsX().getLength();
-        auto shortest = jmin (line1, line2);
-        auto longest  = jmax (line1, line2);
+        auto shortest = juce::jmin (line1, line2);
+        auto longest  = juce::jmax (line1, line2);
         auto prop = shortest > 0 ? longest / shortest : 1.0f;
 
         if (prop > 0.9f && prop < 1.1f)
@@ -316,7 +313,7 @@ namespace FormatLayoutHelpers
 {
     struct Token
     {
-        Token (const String& t, const Font& f, Colour c, bool whitespace, bool underlined)
+        Token (const juce::String& t, const juce::Font& f, juce::Colour c, bool whitespace, bool underlined)
             : text (t), font (f), colour (c),
               area (font.getStringWidthFloat (t), f.getHeight()),
               isWhitespace (whitespace),
@@ -324,10 +321,10 @@ namespace FormatLayoutHelpers
               isUnderlined(underlined)
         {}
 
-        const String text;
-        const Font font;
-        const Colour colour;
-        Rectangle<float> area;
+        const juce::String text;
+        const juce::Font font;
+        const juce::Colour colour;
+        juce::Rectangle<float> area;
         int line;
         float lineHeight;
         const bool isWhitespace, isNewLine;
@@ -359,9 +356,9 @@ namespace FormatLayoutHelpers
             for (int i = 0; i < tokens.size(); ++i)
             {
                 auto& t = *tokens.getUnchecked (i);
-
-                Array<int> newGlyphs;
-                Array<float> xOffsets;
+    
+                juce::Array<int> newGlyphs;
+                juce::Array<float> xOffsets;
                 t.font.getGlyphPositions (getTrimmedEndIfNotAllWhitespace (t.text), newGlyphs, xOffsets);
 
                 if (currentRun == nullptr)  currentRun  = std::make_unique<FormatLayout::Run>();
@@ -431,10 +428,10 @@ namespace FormatLayoutHelpers
                 }
             }
 
-            if ((text.getJustification().getFlags() & (Justification::right | Justification::horizontallyCentred)) != 0)
+            if ((text.getJustification().getFlags() & (juce::Justification::right | juce::Justification::horizontallyCentred)) != 0)
             {
                 auto totalW = layout.getWidth();
-                bool isCentred = (text.getJustification().getFlags() & Justification::horizontallyCentred) != 0;
+                bool isCentred = (text.getJustification().getFlags() & juce::Justification::horizontallyCentred) != 0;
 
                 for (auto& line : layout)
                 {
@@ -456,24 +453,24 @@ namespace FormatLayoutHelpers
             glyphRun->font         = t.font;
             glyphRun->colour       = t.colour;
             glyphRun->isUnderlined = t.isUnderlined;
-            glyphLine.ascent       = jmax (glyphLine.ascent,  t.font.getAscent());
-            glyphLine.descent      = jmax (glyphLine.descent, t.font.getDescent());
+            glyphLine.ascent       = juce::jmax (glyphLine.ascent,  t.font.getAscent());
+            glyphLine.descent      = juce::jmax (glyphLine.descent, t.font.getDescent());
             
             glyphLine.runs.add (glyphRun);
         }
 
-        static int getCharacterType (juce_wchar c) noexcept
+        static int getCharacterType (juce::juce_wchar c) noexcept
         {
             if (c == '\r' || c == '\n')
                 return 0;
 
-            return CharacterFunctions::isWhitespace (c) ? 2 : 1;
+            return juce::CharacterFunctions::isWhitespace (c) ? 2 : 1;
         }
 
-        void appendText (const String& stringText, const Font& font, Colour colour, bool underline)
+        void appendText (const juce::String& stringText, const juce::Font& font, juce::Colour colour, bool underline)
         {
             auto t = stringText.getCharPointer();
-            String currentString;
+            juce::String currentString;
             int lastCharType = 0;
 
             for (;;)
@@ -491,7 +488,7 @@ namespace FormatLayoutHelpers
                         tokens.add (new Token (currentString, font, colour,
                                                lastCharType == 2 || lastCharType == 0, underline));
 
-                    currentString = String::charToString (c);
+                    currentString = juce::String::charToString (c);
 
                     if (c == '\r' && *t == '\n')
                         currentString += t.getAndAdvance();
@@ -519,7 +516,7 @@ namespace FormatLayoutHelpers
                 t.area.setPosition (x, y);
                 t.line = totalLines;
                 x += t.area.getWidth();
-                h = jmax (h, t.area.getHeight() + extraLineSpacing);
+                h = juce::jmax (h, t.area.getHeight() + extraLineSpacing);
 
                 auto* nextTok = tokens[i + 1];
 
@@ -538,7 +535,7 @@ namespace FormatLayoutHelpers
                 }
             }
 
-            setLastLineHeight (jmin (i + 1, tokens.size()), h);
+            setLastLineHeight (juce::jmin (i + 1, tokens.size()), h);
             ++totalLines;
         }
 
@@ -558,7 +555,7 @@ namespace FormatLayoutHelpers
         void addTextRuns (const FormatAttributes& text)
         {
             auto numAttributes = text.getNumAttributes();
-            tokens.ensureStorageAllocated (jmax (64, numAttributes));
+            tokens.ensureStorageAllocated (juce::jmax (64, numAttributes));
 
             for (int i = 0; i < numAttributes; ++i)
             {
@@ -569,7 +566,7 @@ namespace FormatLayoutHelpers
             }
         }
 
-        static String getTrimmedEndIfNotAllWhitespace (const String& s)
+        static juce::String getTrimmedEndIfNotAllWhitespace (const juce::String& s)
         {
             auto trimmed = s.trimEnd();
 
@@ -578,8 +575,8 @@ namespace FormatLayoutHelpers
 
             return trimmed;
         }
-
-        OwnedArray<Token> tokens;
+    
+        juce::OwnedArray<Token> tokens;
         int totalLines = 0;
 
         JUCE_DECLARE_NON_COPYABLE (TokenList)

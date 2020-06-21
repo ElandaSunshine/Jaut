@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   fontformat.h
     @date   30, May 2019
     
@@ -34,11 +34,10 @@ namespace jaut
  *
  *  The default terminator is '$' followed by a number or character to identify the format applied to the text.
  */
-
-class JAUT_API CharFormat final
+class JAUT_API CharFormat
 {
 public:
-    struct JAUT_API Options final
+    struct JAUT_API Options
     {
         /**
          *  The terminator character defines when a formatted sequence should begin.
@@ -159,7 +158,7 @@ public:
      *  Gets the current formatting character.
      *  @return The character
      */
-    const juce::juce_wchar getFormattingCharacter() const noexcept;
+    juce::juce_wchar getFormattingCharacter() const noexcept;
 
     /**
      *  Gets this' formatters options.
@@ -183,14 +182,14 @@ public:
     };
 
     //=================================================================================================================
-    static void drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area, juce::Colour colour,
+    static void drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
                          juce::Justification justification, Formats formats = None,
                          CharFormat *charFormat = nullptr) noexcept;
     static void drawText(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
-                         juce::Colour colour, juce::Justification justification, Formats formats = None,
+                         juce::Justification justification, Formats formats = None,
                          CharFormat *charFormat = nullptr) noexcept;
     static void drawText(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
-                         juce::Colour colour,  juce::Justification justification, Formats formats = None,
+                         juce::Justification justification, Formats formats = None,
                          CharFormat *charFormat = nullptr) noexcept;
     static void drawSmallCaps(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
                               juce::Justification justification) noexcept;

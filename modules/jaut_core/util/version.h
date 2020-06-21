@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -73,8 +73,8 @@ public:
      */
     static bool isValidVersionString(const juce::String &version)
     {
-        if (version.containsOnly("0123456789.") ||
-            version.matchesWildcard("*.*.*", true) || version.matchesWildcard("*.*.*.*", true))
+        if (version.containsOnly("0123456789.") &&
+            (version.matchesWildcard("*.*.*", true) || version.matchesWildcard("*.*.*.*", true)))
         {
             juce::StringArray fractions;
             fractions.addTokens(version, ".", "\"");
@@ -105,13 +105,10 @@ public:
     Version(int major, int minor, int patch, int build = 0)
         : major(major), minor(minor), patch(patch), build(build)
     {
-        // Negative numbers are not allowed
-        jassert(major >= 0 && minor >= 0 && patch >= 0);
-        
-        if (major >= 0 && minor >= 0 && patch >= 0)
+        if (major < 0 || minor < 0 || patch < 0)
         {
-            throw exception::InvalidVersionFormatException("Negative numbers are not allowed in versions. "
-                                                           "(" + toString() + ")");
+            const juce::String error = "Negative numbers are not allowed in versions. (" + toString() + ")";
+            JAUT_THROWASSERT(error, exception::InvalidVersionFormatException);
         }
     }
     
@@ -121,8 +118,8 @@ public:
      */
     explicit Version(const juce::String &version)
     {
-        if (version.containsOnly("0123456789.") ||
-            version.matchesWildcard("*.*.*", true) || version.matchesWildcard("*.*.*.*", true))
+        if (version.containsOnly("0123456789.") &&
+            (version.matchesWildcard("*.*.*", false) || version.matchesWildcard("*.*.*.*", false)))
         {
             juce::StringArray fractions;
             fractions.addTokens(version, ".", "\"");
@@ -131,10 +128,12 @@ public:
             {
                 const juce::String fraction = fractions[i];
                 
-                if (fraction.startsWith("0"))
+                if (fraction.length() > 1 && fraction.startsWith("0"))
                 {
-                    const juce::String name = VersionNames.at(i);
-                    throw exception::InvalidVersionFormatException(name + " version starts with a 0, this is invalid.");
+                    const juce::String error = juce::String(VersionNames.at(static_cast<std::size_t>(i))) +
+                                                            " version starts with a 0, this is invalid. (" +
+                                                            version + ")";
+                    JAUT_THROWASSERT(error, exception::InvalidVersionFormatException);
                 }
             }
             
@@ -149,12 +148,9 @@ public:
         }
         else
         {
-            // The version format must be X.Y.Z.?BUILD
-            jassertfalse;
-            throw exception::InvalidVersionFormatException("Invalid version string, the format must meet the "
-                                                           "requirements 'X.Y.Z.?BUILD'. (where X, Y, Z only "
-                                                           "numbers with non leading zeros and where ?BUILD "
-                                                           "is optional)");
+            const juce::String error = "Invalid version string, the format must meet the requirements "
+                                       "'MAJOR.MINOR.PATCH.BUILD'. (" + version + ")";
+            JAUT_THROWASSERT(error, exception::InvalidVersionFormatException);
         }
     }
     
@@ -318,7 +314,7 @@ public:
      *  Returns the version this Version object holds in string representation.
      *  Note that if build equals 0, it will be omitted from the version string.
      *
-     *  @return
+     *  @return The version string
      */
     juce::String toString() const
     {
@@ -336,6 +332,7 @@ public:
 private:
     static constexpr std::array<const char*, 4> VersionNames { "Major", "Minor", "Patch", "Build" };
     
+    //==================================================================================================================
     int major;
     int minor;
     int patch;

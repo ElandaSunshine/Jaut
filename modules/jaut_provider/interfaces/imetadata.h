@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -35,61 +35,64 @@ namespace jaut
 class JAUT_API IMetadata
 {
 public:
-    virtual ~IMetadata() = default;
+    using License = std::pair<juce::String, juce::String>;
 
-    //=================================================================================================================
+    //==================================================================================================================
+    virtual ~IMetadata() = default;
+    
+    //==================================================================================================================
     /**
      *  The author of the theme package.
      *  @return The author name
      */
-    virtual const juce::String getAuthor() const = 0;
+    virtual juce::String getAuthor() const = 0;
 
     /**
      *  A list of additional authors also working on this theme package.
      *  @return The other authors' names
      */
-    virtual const juce::StringArray getAuthors() const = 0;
+    virtual juce::StringArray getAuthors() const = 0;
 
     /**
      *  A description of the theme package.
      *  @return The description text
      */
-    virtual const juce::String getDescription() const = 0;
+    virtual juce::String getDescription() const = 0;
 
     /**
      *  The relative paths of images which shouldn't be picked up by the theme pack.
      *  @return The array image paths
      */
-    virtual const juce::StringArray getExcludedImages() const = 0;
+    virtual juce::StringArray getExcludedImages() const = 0;
 
     /**
      *  A pair of strings containing the license name and url.
      *  @return A pair of url and name
      */
-    virtual const std::pair<juce::String, juce::String> getLicense() const = 0;
+    virtual License getLicense() const = 0;
 
     /**
      *  The name of the them package.
      *  @return The name
      */
-    virtual const juce::String getName() const = 0;
+    virtual juce::String getName() const = 0;
 
     /**
      *  An array of relative paths to images used as screenshots if supported.
      *  @param An array of paths to the images
      */
-    virtual const juce::StringArray getScreenshots() const = 0;
+    virtual juce::StringArray getScreenshots() const = 0;
 
     /**
      *  The version of this theme package.
      *  @return The version
      */
-    virtual const jaut::Version getVersion() const = 0;
+    virtual jaut::Version getVersion() const = 0;
 
     /**
      *  A link to the author's website if available.
      *  @return An url to the website
      */
-    virtual const juce::String getWebsite() const = 0;
+    virtual juce::String getWebsite() const = 0;
 };
 }

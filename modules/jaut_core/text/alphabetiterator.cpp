@@ -3,7 +3,7 @@
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
-    (at your option) any later version.
+    (at your option) any internal version.
 
     This program is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -31,15 +31,15 @@ std::size_t AlphabetIterator::stringToDecimal(const juce::String &valueString) n
     
     if(valueString.containsOnly("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") && !valueString.isEmpty())
     {
-        String::CharPointerType data_ptr = valueString.getCharPointer();
+        juce::String::CharPointerType data_ptr = valueString.getCharPointer();
         const int data_length = data_ptr.length();
         const int data_last   = data_length - 1;
         
         for(int i = 0; i < data_last; ++i)
         {
-            const juce_wchar current_char = data_ptr.getAndAdvance();
-            const std::size_t overflows    = (current_char - getStartChar(current_char)) + 1;
-            const std::size_t factor       = std::pow(26, data_last - i);
+            const juce::juce_wchar current_char = data_ptr.getAndAdvance();
+            const std::size_t overflows         = (current_char - getStartChar(current_char)) + 1;
+            const std::size_t factor            = std::pow(26, data_last - i);
             
             size += overflows * factor;
         }
@@ -65,39 +65,39 @@ AlphabetIterator::AlphabetIterator() noexcept
 {}
 
 AlphabetIterator::AlphabetIterator(const juce::String &startSequence) noexcept
-    : Integral(stringToDecimal(startSequence)),
+    : Numeric(stringToDecimal(startSequence)),
       previousSize(0), previousLength(0), dataTemplate(startSequence)
 {}
 
 AlphabetIterator::AlphabetIterator(std::size_t size) noexcept
-: Integral(size),
+    : Numeric(size),
 previousSize(0), previousLength(0)
 {}
 
 //======================================================================================================================
 AlphabetIterator& AlphabetIterator::operator=(const juce::String &data) noexcept
 {
-    integral = stringToDecimal(data);
+    numericValue = stringToDecimal(data);
     return *this;
 }
 
 //======================================================================================================================
 std::size_t AlphabetIterator::toDecimal() const noexcept
 {
-    return integral;
+    return numericValue;
 }
 
 int AlphabetIterator::length() const noexcept
 {
-    if(previousSize == integral)
+    if(previousSize == numericValue)
     {
         return previousLength;
     }
     
     int length = 0;
-    std::size_t size = integral - 1;
+    std::size_t size = numericValue - 1;
     
-    if(integral > 0)
+    if(numericValue > 0)
     {
         ++length;
         
@@ -113,12 +113,12 @@ int AlphabetIterator::length() const noexcept
 
 int AlphabetIterator::length() noexcept
 {
-    if(integral != previousSize)
+    if(numericValue != previousSize)
     {
         const AlphabetIterator &ait = *this;
         previousLength = ait.length();
         previousData   = std::move(ait.toString());
-        previousSize   = integral;
+        previousSize   = numericValue;
     }
     
     return previousLength;
@@ -127,23 +127,23 @@ int AlphabetIterator::length() noexcept
 //======================================================================================================================
 juce::String AlphabetIterator::toString() const
 {
-    if(integral == previousSize)
+    if(numericValue == previousSize)
     {
         return previousData;
     }
     
-    const int result_len    = length();
-    std::size_t result_size = integral - 1;
-    String result_templ     = getTemplate(result_len);
-    String::CharPointerType result_ptr   = result_templ.getCharPointer().findTerminatingNull();
+    const int result_len      = length();
+    std::size_t result_size   = numericValue - 1;
+    juce::String result_templ = getTemplate(result_len);
+    juce::String::CharPointerType result_ptr   = result_templ.getCharPointer().findTerminatingNull();
     
-    String result;
+    juce::String result;
     result.preallocateBytes(result_len);
     
     for(int i = 0; i < result_len; i++)
     {
-        const juce_wchar start_char = *(--result_ptr);
-        result = String::charToString(start_char + (result_size % 26)) + result;
+        const juce::juce_wchar start_char = *(--result_ptr);
+        result = juce::String::charToString(start_char + (result_size % 26)) + result;
         result_size = (result_size / 26) - 1;
     }
     
@@ -152,12 +152,12 @@ juce::String AlphabetIterator::toString() const
 
 juce::String AlphabetIterator::toString()
 {
-    if(integral != previousSize)
+    if(numericValue != previousSize)
     {
         const AlphabetIterator &ait = *this;
         previousLength = ait.length();
         previousData   = std::move(ait.toString());
-        previousSize   = integral;
+        previousSize   = numericValue;
     }
     
     return previousData;
@@ -172,21 +172,21 @@ void AlphabetIterator::setTemplate(juce::String templ) noexcept
 //======================================================================================================================
 juce::juce_wchar AlphabetIterator::getStartChar(juce::juce_wchar character) noexcept
 {
-    return CharacterFunctions::isLowerCase(character) ? 'a' : 'A';
+    return juce::CharacterFunctions::isLowerCase(character) ? 'a' : 'A';
 }
 
 //======================================================================================================================
 juce::String AlphabetIterator::getTemplate(int length) const
 {
     // Template data
-    const String::CharPointerType templ_ptr = dataTemplate.getCharPointer();
+    const juce::String::CharPointerType templ_ptr = dataTemplate.getCharPointer();
     const int templ_length = templ_ptr.length();
     const int templ_last   = templ_length - 1;
     
     // New data
-    String templ_result;
+    juce::String templ_result;
     const int new_last = length - 1;
-    juce_wchar prev_char    = 'A';
+    juce::juce_wchar prev_char    = 'A';
     
     templ_result.preallocateBytes(length);
     
@@ -194,12 +194,12 @@ juce::String AlphabetIterator::getTemplate(int length) const
     {
         const int templ_index = templ_last + new_last - i;
         
-        if(fit_s(templ_index, 0, templ_length))
+        if(fit(templ_index, 0, templ_length))
         {
             prev_char = getStartChar(*(templ_ptr + templ_index));
         }
         
-        templ_result = String::charToString(prev_char) + templ_result;
+        templ_result = juce::String::charToString(prev_char) + templ_result;
     }
     
     return templ_result;
