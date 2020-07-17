@@ -51,11 +51,9 @@ private:
     const juce::MouseCursor resetCursor;
 };
 
-/**
- *  Sets the current cursor to the wait cursor and resets it back to the normal one.
- */
-struct ScopedCursorWait : ScopedCursor
+/** Sets the current cursor to the wait cursor and resets it back to the normal one. */
+struct JAUT_API ScopedCursorWait : ScopedCursor
 {
     ScopedCursorWait() : ScopedCursor(juce::MouseCursor::WaitCursor) {}
 };
-};
+}

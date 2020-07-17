@@ -64,6 +64,7 @@ namespace jaut
  */
 class JAUT_API ThreadexSwitch
 {
+public:
     ThreadexSwitch() noexcept { JAUT_THREADEX_DISABLE(); }
     ~ThreadexSwitch() { JAUT_THREADEX_ENABLE();  }
 };

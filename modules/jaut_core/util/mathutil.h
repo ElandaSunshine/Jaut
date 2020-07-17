@@ -45,8 +45,8 @@ enum JAUT_API FitMode
 /**
  *  Tests whether a given number fits the given bound requirements according to the specified mode.
  *
- *  @tparam ValueType The type of the parameters
  *  @tparam Mode      The test mode
+ *  @tparam ValueType The type of the parameters
  *  @param test       The number to test
  *  @param lower      The lower bound of the checked range
  *  @param upper      The upper bound of the checked range

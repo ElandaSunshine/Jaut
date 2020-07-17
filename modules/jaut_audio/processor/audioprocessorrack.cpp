@@ -16,26 +16,24 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   audioprocessorrack.cpp
     @date   29, December 2019
     
     ===============================================================
  */
 
-#include "audioprocessorrack.h"
-
 //region Namespace
-/* ================================================================================================================== */
+//======================================================================================================================
 namespace
 {
 inline int indexOf(const jaut::AudioProcessorRack::ProcessorVector &rack, const juce::String &id)
 {
-    for(int i = 0; i < rack.size(); ++i)
+    for (int i = 0; i < static_cast<int>(rack.size()); ++i)
     {
-        const auto device = rack.at(i);
+        const auto device = rack.at(static_cast<jaut::SizeTypes::Vector>(i));
 
-        if(device->getName().removeCharacters(" ").toLowerCase() == id)
+        if (device->getName().trim().equalsIgnoreCase(id))
         {
             return i;
         }
@@ -44,80 +42,36 @@ inline int indexOf(const jaut::AudioProcessorRack::ProcessorVector &rack, const 
     return -1;
 }
 }
+//======================================================================================================================
 //endregion Namespace
 
 namespace jaut
 {
-//region UndoHistory
-/* ================================================================================================================== */
+//**********************************************************************************************************************
+// region UndoHistory
+//======================================================================================================================
 class AudioProcessorRack::UndoableAdd final : public juce::UndoableAction
 {
 public:
     UndoableAdd(AudioProcessorRack *rack, juce::String itemId)
-        : rack(rack), itemId(std::move(itemId)),
-          previousIndex(-1)
+        : rack(rack), itemId(std::move(itemId)), data("Data")
     {}
 
     //==================================================================================================================
     bool perform() override
     {
-        if(rack)
+        if (rack)
         {
             juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
             auto &source_vec = rack->source;
-
-            if(::indexOf(source_vec, itemId) == -1)
+            
+            if (auto new_processor = rack->initialisationCallback(itemId))
             {
-                if(auto new_processor = rack->initialisationCallback(itemId))
-                {
-                    // In case we previously undid adding a processor, we redo adding it with the previous state data.
-                    if(data.isValid())
-                    {
-                        new_processor->readData(data);
-                    }
-                    
-                    new_processor->prepareToPlay(rack->getSampleRate(), rack->getBlockSize());
-                    new_processor->setPlayHead(rack->getPlayHead());
-                    source_vec.emplace_back(new_processor);
-    
-                    if(previousIndex >= 0)
-                    {
-                        rack->sourceIndex = std::exchange(previousIndex, -1);
-                    }
-                    
-                    rack->send<MessageSwap>(source_vec, rack->sourceIndex);
-                    
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    bool undo() override
-    {
-        if(rack)
-        {
-            juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
-            auto &source_vec          = rack->source;
-            const int processor_index = ::indexOf(source_vec, itemId);
-
-            if(processor_index >= 0)
-            {
-                data = juce::ValueTree("Data");
-                source_vec.at(processor_index)->writeData(data); // save state in case we redo the undo
-                previousIndex = rack->sourceIndex;
-    
-                source_vec.erase(rack->source.begin() + processor_index);
+                (void) source_vec.emplace_back(new_processor);
+                new_processor->prepare(rack->processSpec);
+                new_processor->readData(data);
                 
-                if(rack->sourceIndex >= source_vec.size())
-                {
-                    rack->sourceIndex = static_cast<int>(source_vec.size() - 1);
-                }
-                
-                rack->send<MessageSwap>(source_vec, rack->sourceIndex);
-                
+                rack->send<MessageSwap>(source_vec);
                 return true;
             }
         }
@@ -125,8 +79,25 @@ public:
         return false;
     }
 
+    bool undo() override
+    {
+        if (rack)
+        {
+            juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
+            auto &source_vec = rack->source;
+    
+            source_vec.back()->writeData(data);
+            source_vec.pop_back();
+            
+            rack->send<MessageSwap>(source_vec);
+            return true;
+        }
+        
+        return false;
+    }
+
     //==================================================================================================================
-    int getSizeInUnits()  override
+    int getSizeInUnits() override
     {
         return static_cast<int>(sizeof(*this));
     }
@@ -135,42 +106,30 @@ private:
     AudioProcessorRack *rack;
     juce::String itemId;
     juce::ValueTree data;
-    int previousIndex;
 };
 
 class AudioProcessorRack::UndoableRemove final : public juce::UndoableAction
 {
 public:
-    UndoableRemove(AudioProcessorRack *rack, juce::String itemId)
-        : rack(rack), itemId(std::move(itemId)), data("Data"),
-          previousIndex(-1)
+    UndoableRemove(AudioProcessorRack *rack, int itemIndex, juce::String itemId)
+        : rack(rack), data("Data"), itemId(std::move(itemId)),
+          itemIndex(itemIndex)
     {}
 
     //==================================================================================================================
     bool perform() override
     {
-        if(rack)
+        if (rack)
         {
             juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
-            auto &source_vec          = rack->source;
-            const int processor_index = ::indexOf(source_vec, itemId);
+            auto &source_vec = rack->source;
             
-            if(processor_index >= 0)
-            {
-                source_vec.at(processor_index)->writeData(data);
-                previousIndex = rack->sourceIndex;
-                
-                source_vec.erase(source_vec.begin() + processor_index);
-                
-                if(rack->sourceIndex >= source_vec.size())
-                {
-                    rack->sourceIndex = static_cast<int>(source_vec.size() - 1);
-                }
-                
-                rack->send<MessageSwap>(source_vec, rack->sourceIndex);
-                
-                return true;
-            }
+            auto it = source_vec.begin() + itemIndex;
+            it->get()->writeData(data);
+            (void) source_vec.erase(it);
+            rack->send<MessageSwap>(source_vec);
+            
+            return true;
         }
         
         return false;
@@ -178,29 +137,20 @@ public:
     
     bool undo() override
     {
-        if(rack)
+        if (rack)
         {
             juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
             auto &source_vec = rack->source;
             
-            if(::indexOf(source_vec, itemId) == -1)
+            if (auto new_processor = rack->initialisationCallback(itemId))
             {
-                if(auto new_processor = rack->initialisationCallback(itemId))
-                {
-                    new_processor->readData(data);
-                    new_processor->prepareToPlay(rack->getSampleRate(), rack->getBlockSize());
-                    new_processor->setPlayHead(rack->getPlayHead());
-                    rack->source.emplace_back(new_processor);
-                    
-                    if(previousIndex >= 0)
-                    {
-                        rack->sourceIndex = std::exchange(previousIndex, -1);
-                    }
-                    
-                    rack->send<MessageSwap>(source_vec, rack->sourceIndex);
-                    
-                    return true;
-                }
+                new_processor->readData(data);
+                new_processor->prepare(rack->processSpec);
+                
+                (void) rack->source.insert(source_vec.begin() + itemIndex, new_processor);
+                rack->send<MessageSwap>(source_vec);
+                
+                return true;
             }
         }
         
@@ -215,30 +165,30 @@ public:
 
 private:
     AudioProcessorRack *rack;
-    juce::String itemId;
     juce::ValueTree data;
-    int previousIndex;
+    juce::String itemId;
+    int itemIndex;
 };
 
 class AudioProcessorRack::UndoableClear final : public juce::UndoableAction
 {
 public:
     explicit UndoableClear(AudioProcessorRack *rack)
-        : rack(rack), previousIndex(-1)
+        : rack(rack), data("Data")
     {}
 
     //==================================================================================================================
     bool perform() override
     {
-        if(rack && !(rack->source.empty()))
+        if (rack)
         {
             juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
     
-            data          = juce::ValueTree("Data");
-            previousIndex = rack->sourceIndex;
-            rack->writeData(data);
-            
-            rack->send<MessageSwap>(rack->source, (rack->sourceIndex = 0));
+            if (!rack->source.empty())
+            {
+                rack->writeData(data);
+                rack->send<MessageSwap>(rack->source);
+            }
             
             return true;
         }
@@ -248,19 +198,11 @@ public:
 
     bool undo() override
     {
-        if(rack && data.isValid())
+        if (rack)
         {
             juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
-            
             rack->readData(data);
-            data = juce::ValueTree();
-            
-            if(previousIndex >= 0)
-            {
-                rack->sourceIndex = std::exchange(previousIndex, -1);
-            }
-            
-            rack->send<MessageSwap>(rack->source, rack->sourceIndex);
+            rack->send<MessageSwap>(rack->source);
             
             return true;
         }
@@ -277,14 +219,13 @@ public:
 private:
     AudioProcessorRack *rack;
     juce::ValueTree data;
-    int previousIndex;
 };
 
 class AudioProcessorRack::UndoableMove final : public juce::UndoableAction
 {
 public:
-    UndoableMove(AudioProcessorRack *rack, juce::String id, int index)
-        : rack(rack), itemId(std::move(id)), itemIndex(index)
+    UndoableMove(AudioProcessorRack *rack, int from, int to)
+        : rack(rack), newIndex(to), oldIndex(from)
     {}
 
     //==================================================================================================================
@@ -294,23 +235,11 @@ public:
         {
             juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
             
-            auto &source_vec          = rack->source;
-            const int processor_index = ::indexOf(source_vec, itemId);
+            auto &source_vec = rack->source;
+            makeRotation(oldIndex, newIndex);
+            rack->send<MessageSwap>(source_vec);
             
-            if (processor_index >= 0 && processor_index != itemIndex)
-            {
-                makeRotation(processor_index, itemIndex);
-                
-                if (processor_index == rack->sourceIndex)
-                {
-                    rack->sourceIndex = itemIndex;
-                }
-                
-                itemIndex = processor_index;
-                rack->send<MessageSwap>(source_vec, rack->sourceIndex);
-                
-                return true;
-            }
+            return true;
         }
         
         return false;
@@ -322,18 +251,9 @@ public:
         {
             juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
             
-            auto &source_vec          = rack->source;
-            const int processor_index = ::indexOf(source_vec, itemId);
-
-            makeRotation(processor_index, itemIndex);
-    
-            if (processor_index == rack->sourceIndex)
-            {
-                rack->sourceIndex = itemIndex;
-            }
-            
-            itemIndex = processor_index;
-            rack->send<MessageSwap>(source_vec, rack->sourceIndex);
+            auto &source_vec = rack->source;
+            makeRotation(newIndex, oldIndex);
+            rack->send<MessageSwap>(source_vec);
 
             return true;
         }
@@ -349,321 +269,156 @@ public:
 
 private:
     AudioProcessorRack *rack;
-    juce::String itemId;
-    int itemIndex;
+    int newIndex;
+    int oldIndex;
 
     //==================================================================================================================
     void makeRotation(int indexToMove, int targetIndex)
     {
         ProcessorVector &vector = rack->source;
 
-        if(targetIndex < 0)
+        if (targetIndex < 0)
         {
             targetIndex = 0;
         }
-        else if(targetIndex >= vector.size())
+        else if (targetIndex >= static_cast<int>(vector.size()))
         {
             targetIndex = static_cast<int>(vector.size() - 1);
         }
         
-        if(indexToMove < targetIndex)
+        if (indexToMove < targetIndex)
         {
-            for(int i = indexToMove; i < targetIndex; ++i)
+            for (int i = indexToMove; i < targetIndex; ++i)
             {
-                std::swap(vector.at(i), vector.at(i + 1));
+                std::swap(vector.at(static_cast<SizeTypes::Vector>(i)),
+                          vector.at(static_cast<SizeTypes::Vector>(i + 1)));
             }
         }
         else
         {
-            for(int i = indexToMove; i > targetIndex; --i)
+            for (int i = indexToMove; i > targetIndex; --i)
             {
-                std::swap(vector.at(i), vector.at(i - 1));
+                std::swap(vector.at(static_cast<SizeTypes::Vector>(i)),
+                          vector.at(static_cast<SizeTypes::Vector>(i - 1)));
             }
         }
     }
 };
-
-class AudioProcessorRack::UndoableSelect final : public juce::UndoableAction
-{
-public:
-    UndoableSelect(AudioProcessorRack *rack, int index)
-        : rack(rack), itemIndex(index)
-    {}
-    
-    //==================================================================================================================
-    bool perform() override
-    {
-        if(!rack)
-        {
-            juce::CriticalSection::ScopedLockType lock(rack->sourceLock);
-    
-            if(fit<int>(itemIndex, 0, rack->source.size()) && itemIndex != rack->sourceIndex)
-            {
-                rack->sendToAll<MessageSelect>(std::exchange(itemIndex, rack->sourceIndex));
-                return true;
-            }
-        }
-    
-        return false;
-    }
-    
-    bool undo() override
-    {
-        return perform();
-    }
-    
-    //==================================================================================================================
-    int getSizeInUnits()  override
-    {
-        return static_cast<int>(sizeof(*this));
-    }
-
-private:
-    AudioProcessorRack *rack;
-    int itemIndex;
-};
-//endregion UndoHistory
-//region Messages
-/* ================================================================================================================== */
+//======================================================================================================================
+// endregion UndoHistory
+//**********************************************************************************************************************
+// region Messages
+//======================================================================================================================
 class AudioProcessorRack::MessageSwap final : public IMessage
 {
 public:
-    MessageSwap(ProcessorVector source, int index)
-        : sourceCopy(std::move(source)),
-          index(index)
+    explicit MessageSwap(ProcessorVector source) noexcept
+        : sourceCopy(std::move(source))
     {}
 
     //==================================================================================================================
     void handleMessage(IMessageHandler *context, MessageDirection messageDirection) override
     {
-        AudioProcessorRack &rack = *static_cast<AudioProcessorRack*>(context); // NOLINT
+        AudioProcessorRack &rack = *static_cast<AudioProcessorRack*>(context);
         std::swap(sourceCopy, rack.devices);
-        rack.deviceIndex = index;
     }
 
 private:
     ProcessorVector sourceCopy;
-    int index;
 };
-
-class AudioProcessorRack::MessageSelect final : public IMessage
-{
-public:
-    explicit MessageSelect(int newIndex)
-        : index(newIndex)
-    {}
-    
-    //==================================================================================================================
-    void handleMessage(IMessageHandler *context, MessageDirection messageDirection) override
-    {
-        AudioProcessorRack &rack = *static_cast<AudioProcessorRack*>(context); // NOLINT
-        
-        if(messageDirection == MessageThread)
-        {
-            rack.sourceIndex = index;
-        }
-        else
-        {
-            rack.deviceIndex = index;
-        }
-    }
-
-private:
-    int index;
-};
-//endregion Messages
-//region AudioProcessorRack
-/* ==================================================================================
- * =============================== AudioProcessorRack ===============================
- * ================================================================================== */
-AudioProcessorRack::AudioProcessorRack(ProcessingMode mode, InitCallback initCallback,
-                                       juce::UndoManager *undoManager) noexcept
-    : initialisationCallback(std::move(initCallback)), mode(mode),
-      undoManager(undoManager), deviceIndex(0), sourceIndex(0)
-{
-    JAUT_ENSURE_MESSAGE_THREAD();
-}
+//======================================================================================================================
+// endregion Messages
+//**********************************************************************************************************************
+// region AudioProcessorRack
+//======================================================================================================================
+AudioProcessorRack::AudioProcessorRack(InitCallback initCallback, juce::UndoManager *undoManager) noexcept
+    : initialisationCallback(std::move(initCallback)), undoManager(undoManager)
+{}
 
 //======================================================================================================================
 bool AudioProcessorRack::addProcessor(const juce::String &processorId)
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    const juce::String id = processorId.removeCharacters(" ").trim();
+    const juce::String id = processorId.trim().toLowerCase();
     return undoManager ? undoManager->perform(new UndoableAdd(this, id)) : UndoableAdd(this, id).perform();
 }
 
-bool AudioProcessorRack::removeProcessor(const juce::String &processorId)
+bool AudioProcessorRack::removeProcessor(int index)
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    const juce::String id = processorId.removeCharacters(" ").trim();
-    return undoManager ? undoManager->perform(new UndoableRemove(this, id)) : UndoableRemove(this, id).perform();
+    const int adjusted_index = std::clamp<int>(index, 0, source.size() - 1);
+    const juce::String id    = source.at(static_cast<SizeTypes::Vector>(adjusted_index))->getName()
+                                     .trim().toLowerCase();
+    
+    return undoManager ? undoManager->perform(new UndoableRemove(this, adjusted_index, id))
+                       : UndoableRemove(this, adjusted_index, id).perform();
 }
 
-bool AudioProcessorRack::moveProcessor(const juce::String &processorId, int index)
+bool AudioProcessorRack::moveProcessor(int from, int to)
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    const juce::String id = processorId.removeCharacters(" ").trim();
-    return undoManager ? undoManager->perform(new UndoableMove(this, id, index)) :
-                         UndoableMove(this, id, index).perform();
+    const int vec_end       = getNumProcessors() - 1;
+    const int adjusted_from = std::clamp<int>(from, 0, vec_end);
+    const int adjusted_to   = std::clamp<int>(to,   0, vec_end);
+    
+    return undoManager ? undoManager->perform(new UndoableMove(this, adjusted_from, adjusted_to))
+                       : UndoableMove(this, adjusted_from, adjusted_to).perform();
 }
 
 bool AudioProcessorRack::clear()
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
     return undoManager ? undoManager->perform(new UndoableClear(this)) : UndoableClear(this).perform();
 }
 
 //======================================================================================================================
-const juce::String AudioProcessorRack::getName() const // NOLINT
-{
-    return "AudioProcessorRack";
-}
-
 int AudioProcessorRack::getNumProcessors() const noexcept
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
     return source.size();
 }
 
 //==================================================================================================================
 AudioProcessorRack::Processor* AudioProcessorRack::getProcessor(int index) noexcept
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return fit(index, 0, getNumProcessors()) ? source.at(index).get() : nullptr;
+    return fit(index, 0, getNumProcessors()) ? source.at(static_cast<SizeTypes::Vector>(index)).get() : nullptr;
 }
-
-AudioProcessorRack::Processor* AudioProcessorRack::getProcessor(const juce::String &processorId) noexcept
-{
-    JAUT_ENSURE_MESSAGE_THREAD();
-
-    const juce::String id = processorId.removeCharacters(" ").toLowerCase();
-    const int index = ::indexOf(source, id);
-    return index >= 0 ? source.at(index).get() : nullptr;
-}
-
 const AudioProcessorRack::Processor* AudioProcessorRack::getProcessor(int index) const noexcept
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return jaut::fit(index, 0, getNumProcessors()) ? source.at(index).get() : nullptr;
-}
-
-const AudioProcessorRack::Processor* AudioProcessorRack::getProcessor(const juce::String &processorId) const noexcept
-{
-    JAUT_ENSURE_MESSAGE_THREAD();
-    
-    const juce::String id = processorId.removeCharacters(" ").toLowerCase();
-    const int index       = ::indexOf(source, id);
-    return index >= 0 ? source.at(index).get() : nullptr;
+    return jaut::fit(index, 0, getNumProcessors()) ? source.at(static_cast<SizeTypes::Vector>(index)).get() : nullptr;
 }
 
 //======================================================================================================================
-AudioProcessorRack::Processor* AudioProcessorRack::getActivated()
+void AudioProcessorRack::process(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiBuffer)
 {
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return mode == Single && !source.empty() ? source.at(getActiveIndex()).get() : nullptr;
-}
-
-juce::String AudioProcessorRack::getActivatedId() const
-{
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return mode == Single ? source.at(getActiveIndex())->getName().removeCharacters(" ").toLowerCase() : juce::String();
-}
-
-int AudioProcessorRack::getActiveIndex() const
-{
-    JAUT_ENSURE_MESSAGE_THREAD();
-    return sourceIndex;
-}
-
-bool AudioProcessorRack::setActivated(int index)
-{
-    JAUT_ENSURE_MESSAGE_THREAD();
+    processNextMessage();
     
-    if(mode == Serial)
+    for (auto &device : devices)
     {
-        return false;
+        device->process(buffer, midiBuffer);
     }
-    
-    if(index != sourceIndex && fit<int>(index, 0, source.size()))
-    {
-        sendToAll<MessageSelect>(index);
-        return true;
-    }
-
-    return false;
 }
 
-bool AudioProcessorRack::setActivated(const juce::String &processorId)
-{
-    JAUT_ENSURE_MESSAGE_THREAD();
-    const juce::String id = processorId.removeCharacters(" ").toLowerCase();
-    const int index       = ::indexOf(source, id);
-    return setActivated(index);
-}
-
-//======================================================================================================================
-void AudioProcessorRack::processBlock(juce::AudioBuffer<float> &buffer, juce::MidiBuffer &midiBuffer)
+void AudioProcessorRack::process(juce::AudioBuffer<double> &buffer, juce::MidiBuffer &midiBuffer)
 {
     processNextMessage();
 
-    // Process
-    if(mode == Serial)
-    {
-        for(auto &device : devices)
-        {
-            device->processBlock(buffer, midiBuffer);
-        }
-    }
-    else
-    {
-        if(devices.empty())
-        {
-            return;
-        }
-
-        devices.at(sourceIndex)->processBlock(buffer, midiBuffer);
-    }
-}
-
-void AudioProcessorRack::processBlock(juce::AudioBuffer<double> &buffer, juce::MidiBuffer &midiBuffer)
-{
-    processNextMessage();
-
-    // Process
-    if(mode == Serial)
-    {
-        for(auto &device : devices)
-        {
-            device->processBlock(buffer, midiBuffer);
-        }
-    }
-    else
-    {
-        if(devices.empty())
-        {
-            return;
-        }
-
-        devices.at(sourceIndex)->processBlock(buffer, midiBuffer);
-    }
-}
-
-void AudioProcessorRack::prepareToPlay(double sampleRate, int maxBlockSamples)
-{
-    setRateAndBufferSizeDetails(sampleRate, maxBlockSamples);
-
     for (auto &device : devices)
     {
-        device->setRateAndBufferSizeDetails(sampleRate, maxBlockSamples);
-        device->prepareToPlay(sampleRate, maxBlockSamples);
+        device->process(buffer, midiBuffer);
     }
 }
 
-void AudioProcessorRack::releaseResources()
+void AudioProcessorRack::prepare(ProcessSpec spec)
 {
     for (auto &device : devices)
     {
-        device->releaseResources();
+        device->prepare(spec);
+    }
+    
+    std::swap(processSpec, spec);
+}
+
+void AudioProcessorRack::release()
+{
+    for (auto &device : devices)
+    {
+        device->release();
     }
 }
 
@@ -671,26 +426,21 @@ void AudioProcessorRack::releaseResources()
 void AudioProcessorRack::readData(const juce::ValueTree data)
 {
     ProcessorVector data_vector;
-    const int selected_index = data.getProperty("ActiveIndex", 0);
+    data_vector.reserve(static_cast<SizeTypes::Vector>(data.getNumChildren()));
     
-    data_vector.reserve(data.getNumChildren());
-
-    for(const auto &child : data)
+    for (const auto &child : data)
     {
-        if(child.hasType("RackDevice"))
+        if (child.hasType("RackDevice"))
         {
             const juce::String id = child.getProperty("Id", "");
 
-            if(auto device = initialisationCallback(id))
+            if (auto device = initialisationCallback(id))
             {
-                juce::ValueTree device_data = child.getChild(0);
-                
-                if(device_data.isValid())
+                if (juce::ValueTree device_data = child.getChild(0); device_data.isValid())
                 {
                     device->readData(device_data);
                 }
                 
-                device->setPlayHead(getPlayHead());
                 data_vector.emplace_back(device);
             }
         }
@@ -698,37 +448,52 @@ void AudioProcessorRack::readData(const juce::ValueTree data)
     
     data_vector.shrink_to_fit();
     
-    if(juce::MessageManager::getInstance()->isThisTheMessageThread())
+    if (juce::MessageManager::getInstance()->isThisTheMessageThread())
     {
         std::swap(source, data_vector);
-        send<MessageSwap>(source, selected_index);
+        send<MessageSwap>(source);
     }
     else
     {
-        if (!juce::MessageManager::callAsync([this, data_vector, selected_index]() mutable
-                                             {std::swap(source, data_vector);}))
+        if (!juce::MessageManager::callAsync
+             (
+                 [this, data_vector]() mutable
+                 {
+                     std::swap(source, data_vector);
+                     send<MessageSwap>(source);
+                 }
+             ))
         {
             juce::CriticalSection::ScopedLockType lock(sourceLock);
             std::swap(source, data_vector);
-        }
-        
-        {
-            juce::CriticalSection::ScopedLockType lock(getCallbackLock());
-            std::swap(devices, data_vector);
+    
+            {
+                ThreadexSwitch threadex;
+                send<MessageSwap>(source);
+            }
         }
     }
 }
 
 void AudioProcessorRack::writeData(juce::ValueTree data)
 {
-    ProcessorVector data_vector(source);
-
-    if(data.isValid())
+    ProcessorVector data_vector;
+    
+    if (juce::MessageManager::getInstance()->isThisTheMessageThread())
+    {
+        data_vector = source;
+    }
+    else
+    {
+        juce::CriticalSection::ScopedLockType lock(sourceLock);
+        data_vector = source;
+    }
+    
+    if (data.isValid())
     {
         data.removeAllChildren(nullptr);
-        data.setProperty("ActiveIndex", getActiveIndex(), nullptr);
-
-        for(auto &device : data_vector)
+        
+        for (auto &device : data_vector)
         {
             const juce::String id = device->getName().removeCharacters(" ").toLowerCase();
     
@@ -743,5 +508,7 @@ void AudioProcessorRack::writeData(juce::ValueTree data)
         }
     }
 }
+//======================================================================================================================
 //endregion AudioProcessorRack
+//**********************************************************************************************************************
 }

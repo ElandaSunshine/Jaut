@@ -117,10 +117,10 @@ FormatAttributes::Attribute::Attribute (juce::Range<int> r, const juce::Font& f,
 {}
 
 //======================================================================================================================
-void FormatAttributes::setText (const juce::String& newText)
+void FormatAttributes::setText (const juce::String &newText)
 {
     auto newLength = newText.length();
-    auto oldLength = getLength (attributes);
+    auto oldLength = jaut::getLength(attributes);
 
     if (newLength > oldLength)
         appendRange (attributes, newLength - oldLength, nullptr, nullptr);
@@ -156,7 +156,7 @@ void FormatAttributes::append (const juce::String& textToAppend, const juce::Fon
 
 void FormatAttributes::append (const FormatAttributes& other)
 {
-    auto originalLength = getLength (attributes);
+    auto originalLength = jaut::getLength(attributes);
     auto originalNumAtts = attributes.size();
     text += other.text;
     attributes.addArray (other.attributes);

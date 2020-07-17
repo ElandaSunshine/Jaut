@@ -136,7 +136,6 @@ public:
          *  MessageType must be of type IMessage.
          */
         jassert((std::is_base_of_v<IMessage, MessageType>));
-
         send(std::make_shared<MessageType>(std::forward<Args>(args)...));
     }
 

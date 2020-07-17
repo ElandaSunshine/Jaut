@@ -47,41 +47,45 @@ public:
     ThemePointer(std::nullptr_t) noexcept; // NOLINT
     ThemePointer(const juce::String &id, IThemeDefinition *theme);
     ~ThemePointer();
-
-    //==============================================================================================================
+    
+    //==================================================================================================================
     IThemeDefinition& operator*() const;
     IThemeDefinition* operator->() const;
-
+    
+    //==================================================================================================================
     operator bool() const noexcept; // NOLINT
     
+    //==================================================================================================================
     bool operator==(const ThemePointer &right) const noexcept;
     bool operator!=(const ThemePointer &right) const noexcept;
     bool operator==(const IThemeDefinition &right) const noexcept;
     bool operator!=(const IThemeDefinition &right) const noexcept;
     
-    //==============================================================================================================
+    //==================================================================================================================
     IThemeDefinition* get() const noexcept;
-
-    //==============================================================================================================
+    
+    //==================================================================================================================
     bool isCached() const noexcept;
     bool isValid() const noexcept;
-
-    //==============================================================================================================
+    
+    //==================================================================================================================
     juce::String getId() const noexcept;
-
-    //==============================================================================================================
+    
+    //==================================================================================================================
     friend void swap(ThemePointer &left, ThemePointer &right) noexcept
     {
-        left.data.swap(right.data);
+        using std::swap;
+        swap(left.data, right.data);
     }
 
 private:
     friend class ThemeManager;
     
+    //==================================================================================================================
     struct ThemeData;
     std::shared_ptr<ThemeData> data;
-
-    //==============================================================================================================
+    
+    //==================================================================================================================
     void setThemeManager(ThemeManager *manager) noexcept;
 };
 
@@ -158,12 +162,14 @@ public:
     //==================================================================================================================
     friend void swap(ThemeManager &left, ThemeManager &right) noexcept
     {
-        std::swap(left.currentThemeId, right.currentThemeId);
-        std::swap(left.initFunc, right.initFunc);
-        std::swap(left.themeRoot, right.themeRoot);
-        std::swap(left.options, right.options);
-        left.metadataReader.swap(right.metadataReader);
-        left.themeCache.swap(right.themeCache);
+        using std::swap;
+        
+        swap(left.currentThemeId, right.currentThemeId);
+        swap(left.initFunc,       right.initFunc);
+        swap(left.themeRoot,      right.themeRoot);
+        swap(left.options,        right.options);
+        swap(left.metadataReader, right.metadataReader);
+        swap(left.themeCache,     right.themeCache);
     }
 
 private:

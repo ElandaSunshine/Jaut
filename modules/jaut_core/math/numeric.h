@@ -57,8 +57,10 @@ struct JAUT_API Numeric
     {}
     
     Numeric(Numeric &&other) noexcept
-        : numericValue(std::move(other.numericValue))
-    {}
+        : Numeric()
+    {
+        std::move(*this, other);
+    }
     
     virtual ~Numeric() = default;
     
@@ -72,7 +74,8 @@ struct JAUT_API Numeric
     
     Numeric &operator=(Numeric &&right) noexcept
     {
-        swap(*this, right);
+        Numeric temp(std::move(right));
+        swap(*this, temp);
         return *this;
     }
     
@@ -162,7 +165,8 @@ struct JAUT_API Numeric
     //==================================================================================================================
     friend void swap(Numeric &left, Numeric &right)
     {
-        std::swap(left.numericValue, right.numericValue);
+        using std::swap;
+        swap(left.numericValue, right.numericValue);
     }
     
 private:

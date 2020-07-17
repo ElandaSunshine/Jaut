@@ -40,7 +40,7 @@ namespace jaut
 class JAUT_API Config final
 {
 private:
-    class PropertyCategory;
+    struct PropertyCategory;
 
 public:
     class Property;
@@ -304,7 +304,8 @@ public:
         //==============================================================================================================
         friend void swap(Property &left, Property &right) noexcept
         {
-            std::swap(left.data, right.data);
+            using std::swap;
+            swap(left.data, right.data);
         }
 
     private:
@@ -520,12 +521,14 @@ public:
     //==================================================================================================================
     friend void swap(Config &left, Config &right)
     {
-        std::swap(left.autoSaveActive, right.autoSaveActive);
-        std::swap(left.fullPath, right.fullPath);
-        std::swap(left.options, right.options);
-        std::swap(left.parser, right.parser);
-        std::swap(left.categories, right.categories);
-        std::swap(left.ipMutex, right.ipMutex);
+        using std::swap;
+        
+        swap(left.autoSaveActive, right.autoSaveActive);
+        swap(left.fullPath,       right.fullPath);
+        swap(left.options,        right.options);
+        swap(left.parser,         right.parser);
+        swap(left.categories,     right.categories);
+        swap(left.ipMutex,        right.ipMutex);
     }
 
 private:

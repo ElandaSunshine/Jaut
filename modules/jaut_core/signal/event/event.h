@@ -32,8 +32,6 @@
 //======================================================================================================================
 namespace jaut
 {
-template<class Handler> class Event;
-
 /**
  *  The EventHandler class stores a callback to a function and makes it invokable and storeable in an Event object.
  *  An EventHandler can have 3 different types of callable, member functions, free functions and lambdas.
@@ -41,11 +39,6 @@ template<class Handler> class Event;
  *  Since member functions are handled differently than free functions, this will keep a pointer to the member
  *  function internally and also the class object to which it belongs.
  *  This makes sure that different classes with the same function pointer don't equal to functions of other classes.
- *
- *  There are two major types of event handlers, the callback-handler and the control-handler.
- *  The callback-handler holds a pointer to a function and calls back to it when invoked, whereas the
- *  control-handler invokes an Event.
- *  Control-handler can only be acquired by assigning an event to the handler.
  *
  *  Due to how lambdas are handled, they are not supported yet unfortunately.
  *
@@ -78,12 +71,10 @@ public:
      *  @param callback The function or lambda
      */
     explicit EventHandler(FunctionCallbackType callback) noexcept
-        : owner(nullptr), event(nullptr),
-          isLambda(!(callback.template target<GlobalCallbackType>())),
-          callback(callback)
+        : callback(callback), owner(nullptr)
     {
-        // For the time being, lambdas are not entirely supported yet.
-        jassert(!isLambda);
+        // For the time being, lambdas are not supported yet
+        jassert(!(callback.template target<GlobalCallbackType>()));
     }
     
     /**
@@ -95,80 +86,36 @@ public:
      */
     template<class Owner>
     EventHandler(MemberCallbackType<Owner> callback, Owner &owner) noexcept
-        : owner(&owner), event(nullptr), isLambda(false),
-          memberData(getRelativeFunctionID(callback)),
-          callback([&owner, callback](EventArgs...args) mutable
+        : callback([&owner, callback](EventArgs ...args) mutable
                    {
-                       (owner.*callback)(std::forward<EventArgs>(args)...);
-                   })
+                       (owner.*callback)(args...);
+                   }),
+          owner(&owner), memberData(getRelativeFunctionID(callback))
     {}
     
-    /**
-     *  Constructs a new control-handler.
-     *  @param event The event to control with this handler
-     */
-    EventHandler(Event<EventHandler> &eventObject) // NOLINT: Allow assignment construction
-        : event(&eventObject), isLambda(false),
-          owner(nullptr),
-          callback([this](EventArgs... args) mutable
-          {
-              for (auto &handler : event->handlers)
-              {
-                  handler(std::forward<EventArgs>(args)...);
-              }
-          })
-    {
-        event->controlHandlers.emplace_back(this);
-    }
-    
     EventHandler(EventHandler &&other) noexcept
-        : event(std::move(other.event)),
-          owner(std::move(other.owner)),
-          memberData(std::move(other.memberData)),
-          isLambda(std::move(other.isLambda)),
-          callback(std::move(other.callback))
     {
-        other.event    = nullptr;
-        other.owner    = nullptr;
-        other.callback = nullptr;
-    }
-    
-    ~EventHandler()
-    {
-        if (event)
-        {
-            const auto it = std::find(event->controlHandlers.begin(), event->controlHandlers.end(), this);
-            
-            if (it != event->controlHandlers.end())
-            {
-                event->controlHandlers.erase(it);
-            }
-        }
+        swap(*this, other);
     }
     
     //==================================================================================================================
-    EventHandler &operator=(Event<EventHandler> &eventObject) = delete;
-    EventHandler &operator=(EventHandler &&right)             = delete;
+    EventHandler &operator=(EventHandler &&right) noexcept
+    {
+        auto temp(std::move(right));
+        swap(*this, temp);
+        return *this;
+    }
     
     //==================================================================================================================
     /**
      *  Calls the stored callback.
      *  This does not do a null-check, so be sure to check it yourself before calling it.
+     *
      *  @param args The arguments to pass to the callback
      */
-    void operator()(EventArgs... args) const
+    void operator()(EventArgs ...args) const
     {
-        callback(std::forward<EventArgs>(args)...);
-    }
-    
-    //==================================================================================================================
-    /**
-     *  Checks whether the stored callback is valid.
-     *  @return True if the callback is valid, false if not
-     */
-    explicit operator bool() const noexcept
-    {
-        return callback != nullptr;
+        callback(args...);
     }
     
     //==================================================================================================================
@@ -180,13 +127,12 @@ public:
      */
     bool operator==(const EventHandler &handler) const noexcept
     {
-        if(isMemberFunction())
+        if (isMemberFunction())
         {
             return owner == handler.owner && memberData == handler.memberData;
         }
         
-        return !isLambdaFunction() && ((*callback.template target<GlobalCallbackType>()) ==
-                                      (*handler.callback.template target<GlobalCallbackType>()));
+        return *callback.template target<GlobalCallbackType>() == *handler.callback.template target<GlobalCallbackType>();
     }
     
     /**
@@ -198,43 +144,6 @@ public:
     bool operator!=(const EventHandler &handler) const noexcept
     {
         return !((*this) == handler);
-    }
-    
-    /**
-     *  Checks whether the stored callback is null.
-     *  @return True if the callback is null, false if not
-     */
-    bool operator==(std::nullptr_t) const noexcept
-    {
-        return callback == nullptr;
-    }
-    
-    /**
-     *  Checks whether the stored callback is not null.
-     *  @return True if the callback is not null, false if it is
-     */
-    bool operator!=(std::nullptr_t) const noexcept
-    {
-        return callback != nullptr;
-    }
-    
-    //==================================================================================================================
-    /**
-     *  Determines whether this handler object is a callback-handler.
-     *  @return True if this handler is a callback-handler, false if not
-     */
-    bool isCallbackHandler() const noexcept
-    {
-        return !isControlHandler();
-    }
-    
-    /**
-     *  Determines whether this handler object is a control-handler.
-     *  @return True if this handler is a control-handler, false if not
-     */
-    bool isControlHandler() const noexcept
-    {
-        return event != nullptr;
     }
     
     //==================================================================================================================
@@ -253,22 +162,20 @@ public:
      */
     bool isFreeFunction() const noexcept
     {
-        return !event && !owner && !isLambda;
+        return !owner;
     }
     
-    /**
-     *  Determines whether the function this handler is holding is a lambda.
-     *  @return True if it is a lambda, false if not
-     */
-    bool isLambdaFunction() const noexcept
+    //==================================================================================================================
+    friend void swap(EventHandler &left, EventHandler &right)
     {
-        return isLambda;
+        using std::swap;
+        
+        swap(left.callback,   right.callback);
+        swap(left.owner,      right.owner);
+        swap(left.memberData, right.memberData);
     }
     
 private:
-    friend class Event<EventHandler>;
-    
-    //==================================================================================================================
     template<typename Return, typename Type, typename... Args>
     static juce::String getRelativeFunctionID(Return(Type::*function)(Args...))
     {
@@ -289,11 +196,9 @@ private:
     }
     
     //==================================================================================================================
-    Event<EventHandler> *event;
-    void *owner;
+    FunctionCallbackType callback { nullptr };
+    void *owner { nullptr };
     juce::String memberData;
-    bool isLambda;
-    FunctionCallbackType callback;
     
     JUCE_DECLARE_NON_COPYABLE(EventHandler)
 };
@@ -332,24 +237,24 @@ private:
  *  // It is our duty to raise the event inside the class holding it
  *  void raiseEvent()
  *  {
- *      // First we need to get a new control-handler by assigning an event to a new handler object
- *      AnIntHandler control_handler = SomethingHappened;
+ *      // Either via functor
+ *      SomethingHappened(420);
  *
- *      // Then we can simply post it by calling it with all the needed parameters
- *      control_handler(420);
+ *      // Or via invoke
+ *      SomethingHappened.invoke(420);
  *  }
  *  @endcode
  *
  *  @tparam Handler The handler type this event is defined by
  */
-template<class Handler>
+template<class Handler, class CriticalSection = juce::DummyCriticalSection>
 class JAUT_API Event final
 {
 public:
-    static_assert(is_of_templated_type<EventHandler, Handler>::value, JAUT_ASSERT_EVENT_NOT_A_HANDLER);
+    static_assert(sameTypeIgnoreTemplate_v<EventHandler, Handler>, JAUT_ASSERT_EVENT_NOT_A_HANDLER);
     
     //==================================================================================================================
-    // The type of callback for additional actions when adding or removing a handler
+    /** The type of callback for additional actions when adding or removing a handler. */
     using AddRemoveCallback = std::function<void(const Handler&)>;
     
     //==================================================================================================================
@@ -359,18 +264,10 @@ public:
      *  @param add    The callback to call before a new handler is subscribed
      *  @param remove The callback to call before a handler is unsubscribed
      */
-    explicit constexpr Event(AddRemoveCallback add = nullptr, AddRemoveCallback remove = nullptr) noexcept
-        : addCallback(add ? add : [](const Handler&){}), removeCallback(remove ? remove : [](const Handler&){})
+    explicit Event(AddRemoveCallback add    = [](const Handler&){},
+                   AddRemoveCallback remove = [](const Handler&){}) noexcept
+        : addCallback(add), removeCallback(remove)
     {}
-    
-    ~Event()
-    {
-        for (auto &handler : controlHandlers)
-        {
-            handler->event    = nullptr;
-            handler->callback = nullptr;
-        }
-    }
     
     //==================================================================================================================
     /**
@@ -379,17 +276,17 @@ public:
      *  @param handler The handler to subscribe
      *  @return This event object
      */
-    Event &operator+=(Handler &&handler)
+    Event& operator+=(Handler &&handler)
     {
-        if(handler && !handler.isControlHandler())
         {
-            if(std::find(handlers.begin(), handlers.end(), handler) == handlers.end())
+            typename CriticalSection::ScopedLockType lock(criticalSection);
+            
+            if (std::find(handlers.begin(), handlers.end(), handler) == handlers.end())
             {
-                add(handler);
+                addCallback(handler);
                 handlers.emplace_back(std::move(handler));
             }
         }
-        
         return *this;
     }
     
@@ -399,15 +296,16 @@ public:
      *  @param handler The handler to unsubscribe
      *  @return This event object
      */
-    Event &operator-=(Handler &&handler)
+    Event& operator-=(Handler &&handler)
     {
-        if(handler && !handler.isControlHandler())
+        auto temp(std::move(handler));
+    
         {
-            const auto it = std::find(handlers.begin(), handlers.end(), handler);
+            typename CriticalSection::ScopedLockType lock(criticalSection);
             
-            if(it != handlers.end())
+            if (const auto it = std::find(handlers.begin(), handlers.end(), temp); it != handlers.end())
             {
-                remove(handler);
+                removeCallback(temp);
                 handlers.erase(it);
             }
         }
@@ -415,14 +313,32 @@ public:
         return *this;
     }
     
+    //==================================================================================================================
+    template<class ...Args>
+    void invoke(Args &&...args)
+    {
+        for (auto &handler : handlers)
+        {
+            handler(std::forward<Args>(args)...);
+        }
+    }
+    
+    template<class ...Args>
+    void operator()(Args &&...args)
+    {
+        typename CriticalSection::ScopedLockType lock(criticalSection);
+        invoke(std::forward<Args>(args)...);
+    }
+    
 private:
-    template<class...>
-    friend class EventHandler;
+    template<class...> friend class EventHandler;
     
     //==================================================================================================================
+    CriticalSection criticalSection;
     AddRemoveCallback addCallback, removeCallback;
     std::vector<Handler> handlers;
     std::vector<Handler*> controlHandlers;
+    
     JUCE_DECLARE_NON_COPYABLE(Event)
 };
 
@@ -435,7 +351,7 @@ private:
  *  @param owner    An instance of the class holding the member function
  *  @return The new handler object
  */
-template<class Owner, class...Args>
+template<class Owner, class ...Args>
 JAUT_API inline auto make_handler(void(Owner::*function)(Args...), Owner &owner)
 {
     return EventHandler<Args...>(function, owner);
@@ -450,7 +366,7 @@ JAUT_API inline auto make_handler(void(Owner::*function)(Args...), Owner &owner)
  *  @param owner    An instance of the class holding the member function
  *  @return The new handler object
  */
-template<class Owner, class...Args>
+template<class Owner, class ...Args>
 JAUT_API inline auto make_handler(void(Owner::*function)(Args...), Owner *owner)
 {
     // Owner of the member function must point to a valid memory location
@@ -465,7 +381,7 @@ JAUT_API inline auto make_handler(void(Owner::*function)(Args...), Owner *owner)
  *  @param function The function to link
  *  @return The new handler object
  */
-template<class...Args>
+template<class ...Args>
 JAUT_API inline auto make_handler(void(*function)(Args...))
 {
     return EventHandler<Args...>(function);

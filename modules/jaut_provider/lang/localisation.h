@@ -27,86 +27,103 @@
 
 namespace jaut
 {
-/** The Localisation class is a quick and dirty wrapper around JUCEs' inbuilt LocalisedStrings class. */
+/**
+ *  The localisation class parses language files and maps them to their key values.
+ *  A language file consists of per-line translations which keys and values are seperated by an '='.
+ *  The strings are unquoted, case-insensitive and can be dotted if needed.
+ *  Lines that are not correctly formatted will be ignored but comments start with a '#'.
+ */
 class JAUT_API Localisation final
 {
 public:
-    using LanguageHeader = std::pair<juce::String, juce::StringArray>;
+    static Localisation fromStream(juce::InputStream &stream);
+    static juce::String getSingleTranslation(const juce::File &file, const juce::String &transKey);
+    static juce::String getSingleTranslation(juce::InputStream &inputStream, const juce::String &transKey);
+    static juce::String getSingleTranslation(const juce::File &file, const juce::String &transKey,
+                                             const juce::String &defaultValue);
+    static juce::String getSingleTranslation(juce::InputStream &inputStream, const juce::String &transKey,
+                                             const juce::String &defaultValue);
     
-    //==================================================================================================================
-    /**
-     *  Gets whether the given file is a valid localised file.
-     *
-     *  @param file The file to check
-     *  @return Return true if the given file is a valid language file
-     */
-    static bool isValidLanguageFile(const juce::File &file);
-    
-    /**
-     *  Returns a pair with the language name and a list of countries it applies to.
-     *
-     *  @param file The file to parse
-     *  @return The pair containing the language name and country list
-     */
-    static LanguageHeader getLanguageFileData(const juce::File &file);
-
     //==================================================================================================================
     /**
      *  Creates a new instance of the Localisation class.
-     *  @param langRootDir   The root directory of the language files
-     *  @param defaultLocale The default language object to fallback to if a key wasn't found in the current set one
+     *
+     *  @param langOrRoot The root directory of the language files or the to be parsed language file
+     *  @param fallback   The default language object to fallback to if a key wasn't found in the current set one
      */
-    Localisation(juce::File langRootDir, const juce::LocalisedStrings &defaultLocale);
-    Localisation(const Localisation &other);
+    Localisation(const juce::File &langOrRoot, std::unique_ptr<Localisation> fallback);
+    
+    /**
+     *  Creates a new instance of the Localisation class.
+     *  @param langRootDir The root directory of the language files or the to be parsed language file
+     */
+    explicit Localisation(const juce::File &langOrRoot);
+
+    Localisation(const Localisation &other) noexcept;
     Localisation(Localisation &&other) noexcept;
-
+    
     //==================================================================================================================
-    Localisation &operator=(const Localisation &other);
-    Localisation &operator=(Localisation &&other) noexcept;
-
+    Localisation &operator=(const Localisation &locale) noexcept;
+    Localisation &operator=(Localisation &&locale) noexcept;
+    
     //==================================================================================================================
     /**
      *  Sets the default fallback language.
-     *  @param defaultLanguage A pointer to a new created LocalisedStrings object, this must be dynamically allocated
+     *  @param newFallback A pointer to an exisitn Localisation object to copy the translations of or nullptr if no
+     *                     fallback Localisation should be used
      */
-    void setDefault(const juce::LocalisedStrings &defaultLanguage);
+    void setFallback(const Localisation *newFallback);
 
     /**
      *  Sets the default fallback language.
-     *  @param languageStringUtf8 A string containing all the language data to create the language object from
+     *  @param languageString A string containing all the language data to create the language object from
      */
-    void setDefault(const juce::String &languageStringUtf8);
+    void setFallback(const juce::String &languageString);
 
     /**
      *  Sets the default fallback language.
      *  @param inputStream An InputStream reading all the language data to create the language object from
      */
-    void setDefault(juce::InputStream &inputStream);
-
+    void setFallback(juce::InputStream &inputStream);
+    
     /**
      *  Sets the new current language of this object or does nothing if no file with that name was found.
      *
-     *  @param language The language to set. English in the UK for example: en_gb
-     *  @return True if setting the new language was successfull, false if not
+     *  @param languageName The name of the language file to parse
+     *  @return True if setting the new language was successful, false if not
      */
-    bool setCurrentLanguage(const juce::String &language);
-
+    bool setCurrentLanguageFromDirectory(const juce::String &languageName);
+    
     /**
      *  Sets the new current language from another LocalisedStrings object.
      *  This won't affect the default language!
      *
      *  @param localisedStrings The language object to set
      */
-    void setCurrentLanguage(const juce::LocalisedStrings &localisedStrings);
-
+    void setCurrentLanguage(const Localisation *newLocale);
+    
     /**
      *  Sets the new current language from another Localisation object.
      *  This won't affect the default language!
      *
-     *  @param localisedStrings The language object to set
+     *  @param languageString The string to read the language data from
      */
-    void setCurrentLanguage(const Localisation &locale);
-
+    void setCurrentLanguage(const juce::String &languageString);
+    
+    /**
+     *  Sets the new current language of this object or does nothing if no file with that name was found.
+     *
+     *  @param language The language to set. English in the UK for example: en_gb
+     *  @return True if setting the new language was successfull, false if not
+     */
+    void setCurrentLanguage(juce::InputStream &inputStream);
+    
+    /**
+     *  Sets this' Localisation object's fallback localisation to the current used one.
+     *  If no fallback was set, this won't do anything.
+     */
+    void setFallbackToCurrent();
+    
     //==================================================================================================================
     /**
      *  Gets the locale root directory.
@@ -122,10 +139,10 @@ public:
 
     //==================================================================================================================
     /**
-     *  Gets the internal LocalisedStrings object.
-     *  @return The current LocalisedString object
+     *  Gets the internal translation map.
+     *  @return The map containing all translations
      */
-    const juce::LocalisedStrings &getInternalLocalisation() const noexcept;
+    const auto &getTranslations() const noexcept { return translations; }
 
     //==================================================================================================================
     /**
@@ -134,32 +151,38 @@ public:
      *  If no such key was found the value of the default localisation will be returned and if that doesn't exist
      *  either the key itself will be returned.
      *
-     *  @param name The name of the localised element
+     *  @param key The name of the localised element
      *  @return The string mapped to that name
      */
-    const juce::String translate(const juce::String &name) const;
+    const juce::String &translate(const juce::String &key) const;
     
     /**
      *  Gets a translation value for a specific name if one exists.
      *  If no such key was found, fallbackValue will be returned.
      *
-     *  @param name          The name of the localised element
+     *  @param key           The name of the localised element
      *  @param fallbackValue The value to return if no such name was found in the current localisation
      *  @return The string mapped to that name
      */
-    const juce::String translate(const juce::String &name, const juce::String &fallbackValue) const;
-
+    const juce::String &translate(const juce::String &key, const juce::String &fallbackValue) const;
+    
     //==================================================================================================================
     friend void swap(Localisation &left, Localisation &right) noexcept
     {
-        std::swap(left.rootDir, right.rootDir);
-        std::swap(left.currentLocale, right.currentLocale);
-        std::swap(left.defaultLocale, right.defaultLocale);
+        using std::swap;
+        
+        swap(left.translations, right.translations);
+        swap(left.fallback,     right.fallback);
+        swap(left.fileName,     right.fileName);
+        swap(left.rootDir,      right.rootDir);
     }
-
+    
 private:
-    juce::LocalisedStrings currentLocale;
-    juce::LocalisedStrings defaultLocale;
+    Localisation() = default;
+    
+    //==================================================================================================================
+    std::unordered_map<juce::String, juce::String> translations;
+    std::unique_ptr<Localisation> fallback;
     juce::String fileName;
     juce::File rootDir;
 };

@@ -23,195 +23,334 @@
     ===============================================================
  */
 
+#include "localisation.h"
+
 namespace jaut
 {
-bool Localisation::isValidLanguageFile(const juce::File &file)
+//**********************************************************************************************************************
+// region Namespace
+//======================================================================================================================
+namespace
 {
-    if(file.exists() && !file.isDirectory() && file.getFileName().matchesWildcard("??_??.lang", true))
+constexpr const char *Pattern_Key = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789._-";
+
+//======================================================================================================================
+juce::String getStringWithOrWithoutQuotes(juce::String input)
+{
+    input = input.trim();
+    
+    if (input.startsWith("\"") && input.endsWith("\""))
     {
-        juce::FileInputStream input_stream(file);
-        juce::String language_name;
-        juce::StringArray countries;
-
-        while(!input_stream.isExhausted())
-        {
-            if(!language_name.isEmpty() && !countries.isEmpty())
-            {
-                return true;
-            }
-
-            const juce::String line = input_stream.readNextLine();
-
-            if(line.startsWith("language:"))
-            {
-                const juce::String definition = line.substring(9).trim();
-
-                if(definition.containsNonWhitespaceChars() && definition.length() > 2)
-                {
-                    language_name = definition;
-                    continue;
-                }
-            }
-            else if(line.startsWith("countries:"))
-            {
-                const juce::String definition = line.substring(10).trim();
-                countries.addTokens(definition, true);
-
-                if(!countries.isEmpty())
-                {
-                    continue;
-                }
-            }
-            else if(line.isEmpty())
-            {
-                continue;
-            }
-
-            break;
-        }
+        input = input.substring(1, input.length() - 1);
     }
-
-    return false;
+    
+    return input;
 }
 
-Localisation::LanguageHeader Localisation::getLanguageFileData(const juce::File &file)
+auto getLocaleData(const juce::String &filePath)
 {
-    LanguageHeader result;
-
-    if(file.exists() && !file.isDirectory())
+    const juce::File lang_file(filePath);
+    std::unordered_map<juce::String, juce::String> translations;
+    
+    if (lang_file.existsAsFile())
     {
-        juce::FileInputStream input_stream(file);
-        juce::String language;
-        juce::StringArray countries;
-
-        while(!input_stream.isExhausted())
+        juce::FileInputStream file_stream(lang_file);
+        
+        while (!file_stream.isExhausted())
         {
-            if(!language.isEmpty() && countries.size() > 0)
-            {
-                result = std::make_pair(language, countries);
-                break;
-            }
-
-            const juce::String line = input_stream.readNextLine();
-
-            if(line.startsWith("language:") && language.isEmpty())
-            {
-                language = line.substring(9).trim();
-                continue;
-            }
-            else if(line.startsWith("countries:") && countries.size() == 0)
-            {
-                const juce::String countries_string = line.substring(10).trim().toUpperCase();
-                countries.addTokens(countries_string, true);
-
-                if(countries.isEmpty() && countries_string.containsNonWhitespaceChars()
-                                       && countries_string.length() == 2)
-                {
-                    countries.add(countries_string);
-                }
-
-                continue;
-            }
-            else if(line.isEmpty())
+            const juce::String line = file_stream.readNextLine();
+    
+            if (line.startsWith("#") || !line.contains("="))
             {
                 continue;
             }
-
-            break;
+            
+            const juce::String key   = getStringWithOrWithoutQuotes(line.upToFirstOccurrenceOf("=", false, false));
+            const juce::String value = getStringWithOrWithoutQuotes(line.fromFirstOccurrenceOf("=", false, false));
+            
+            if (key.length() > 2 && key.containsOnly(Pattern_Key) && value.length() > 0)
+            {
+                translations.emplace(key.toLowerCase(), value);
+            }
         }
     }
-
-    return result;
+    
+    return translations;
 }
 
-//=====================================================================================================================
-Localisation::Localisation(juce::File langRootDir, const juce::LocalisedStrings &defaultLocale)
-    : rootDir(std::move(langRootDir)), currentLocale(defaultLocale), defaultLocale(defaultLocale)
-{}
+auto getLocaleDataFromString(const juce::String &languageString)
+{
+    std::unordered_map<juce::String, juce::String> translations;
+    
+    juce::StringArray lines;
+    lines.addLines(languageString);
+    
+    for (const auto &line : lines)
+    {
+        if (line.startsWith("#") || !line.contains("="))
+        {
+            continue;
+        }
+        
+        const juce::String key   = getStringWithOrWithoutQuotes(line.upToFirstOccurrenceOf("=", false, false));
+        const juce::String value = getStringWithOrWithoutQuotes(line.fromFirstOccurrenceOf("=", false, false));
+    
+        if (key.length() > 2 && key.containsOnly(Pattern_Key) && value.length() > 0)
+        {
+            translations.emplace(key.toLowerCase(), value);
+        }
+    }
+    
+    return translations;
+}
 
-Localisation::Localisation(const Localisation &other)
-    : rootDir(other.rootDir),
+auto getLocaleDataFromStream(juce::InputStream &inputStream)
+{
+    std::unordered_map<juce::String, juce::String> translations;
+    
+    while (!inputStream.isExhausted())
+    {
+        const juce::String line = inputStream.readNextLine();
+    
+        if (line.startsWith("#") || !line.contains("="))
+        {
+            continue;
+        }
+        
+        const juce::String key   = getStringWithOrWithoutQuotes(line.upToFirstOccurrenceOf("=", false, false));
+        const juce::String value = getStringWithOrWithoutQuotes(line.fromFirstOccurrenceOf("=", false, false));
+    
+        if (key.length() > 2 && key.containsOnly(Pattern_Key) && value.length() > 0)
+        {
+            translations.emplace(key.toLowerCase(), value);
+        }
+    }
+    
+    return translations;
+}
+}
+
+//======================================================================================================================
+// endregion Namespace
+//**********************************************************************************************************************
+// region Localisation
+//======================================================================================================================
+Localisation Localisation::fromStream(juce::InputStream &stream)
+{
+    Localisation locale;
+    
+    auto temp = jaut::getLocaleDataFromStream(stream);
+    std::swap(locale.translations, temp);
+    
+    return locale;
+}
+
+juce::String Localisation::getSingleTranslation(const juce::File &file, const juce::String &transKey)
+{
+    return getSingleTranslation(file, transKey, transKey);
+}
+
+juce::String Localisation::getSingleTranslation(juce::InputStream &inputStream, const juce::String &transKey)
+{
+    return getSingleTranslation(inputStream, transKey, transKey);
+}
+
+juce::String Localisation::getSingleTranslation(const juce::File &file, const juce::String &transKey,
+                                                const juce::String &defaultValue)
+{
+    juce::FileInputStream stream(file);
+    return getSingleTranslation(stream, transKey, defaultValue);
+}
+
+juce::String Localisation::getSingleTranslation(juce::InputStream &inputStream, const juce::String &transKey,
+                                                const juce::String &defaultValue)
+{
+    while (!inputStream.isExhausted())
+    {
+        const juce::String line = inputStream.readNextLine().trim();
+        
+        if (line.startsWith("#") || !line.contains("="))
+        {
+            continue;
+        }
+        
+        const juce::String key   = getStringWithOrWithoutQuotes(line.upToFirstOccurrenceOf("=", false, false));
+        const juce::String value = getStringWithOrWithoutQuotes(line.fromFirstOccurrenceOf("=", false, false));
+        
+        if (key.equalsIgnoreCase(transKey))
+        {
+            return value;
+        }
+    }
+    
+    return defaultValue;
+}
+
+//======================================================================================================================
+Localisation::Localisation(const juce::File &langOrRoot, std::unique_ptr<Localisation> fallback)
+    : fallback(std::move(fallback)),
+      fileName(langOrRoot.existsAsFile() ? langOrRoot.getFileNameWithoutExtension() : ""),
+      rootDir (langOrRoot.existsAsFile() ? langOrRoot.getParentDirectory()          : langOrRoot)
+{
+    if (!fileName.isEmpty())
+    {
+        auto temp = jaut::getLocaleData(langOrRoot.getFullPathName());
+        std::swap(translations, temp);
+    }
+}
+
+Localisation::Localisation(const juce::File &langOrRoot)
+    : fileName(langOrRoot.existsAsFile() ? langOrRoot.getFileNameWithoutExtension() : ""),
+      rootDir (langOrRoot.existsAsFile() ? langOrRoot.getParentDirectory()          : langOrRoot)
+{
+    if (!fileName.isEmpty())
+    {
+        auto temp = jaut::getLocaleData(langOrRoot.getFullPathName());
+        std::swap(translations, temp);
+    }
+}
+
+Localisation::Localisation(const Localisation &other) noexcept
+    : translations(other.translations),
+      fallback(other.fallback ? std::make_unique<Localisation>(*other.fallback) : nullptr),
       fileName(other.fileName),
-      currentLocale(other.currentLocale),
-      defaultLocale(other.defaultLocale)
+      rootDir(other.rootDir)
 {}
 
 Localisation::Localisation(Localisation &&other) noexcept
-    : rootDir(std::move(other.rootDir)),
-      fileName(std::move(other.fileName)),
-      currentLocale(std::move(other.currentLocale)),
-      defaultLocale(std::move(other.defaultLocale))
-{}
-
-//=====================================================================================================================
-Localisation &Localisation::operator=(const Localisation &other)
-{
-    Localisation temp(other);
-    swap(*this, temp);
-
-    return *this;
-}
-
-Localisation &Localisation::operator=(Localisation &&other) noexcept
+    : Localisation()
 {
     swap(*this, other);
+}
+
+//======================================================================================================================
+Localisation &Localisation::operator=(const Localisation &locale) noexcept
+{
+    auto temp(locale);
+    swap(*this, temp);
     return *this;
 }
 
-//=====================================================================================================================
-void Localisation::setDefault(const juce::LocalisedStrings &fallbackLanguage)
+Localisation &Localisation::operator=(Localisation &&locale) noexcept
 {
-    defaultLocale = fallbackLanguage;
+    auto temp(std::move(locale));
+    swap(*this, temp);
+    return *this;
 }
 
-void Localisation::setDefault(const juce::String &languageStringUtf8)
+//======================================================================================================================
+void Localisation::setFallback(const Localisation *newFallback)
 {
-    if(languageStringUtf8.isEmpty())
+    if (!newFallback)
+    {
+        fallback.reset();
+        return;
+    }
+    
+    if (!fallback)
+    {
+        fallback.reset(new Localisation);
+    }
+    
+    auto temp = newFallback->translations;
+    std::swap(fallback->translations, temp);
+}
+
+void Localisation::setFallback(const juce::String &languageString)
+{
+    if (languageString.isEmpty())
     {
         return;
     }
-
-    defaultLocale = juce::LocalisedStrings(languageStringUtf8, true);
+    
+    if (!fallback)
+    {
+        fallback.reset(new Localisation);
+    }
+    
+    auto temp = jaut::getLocaleDataFromString(languageString);
+    std::swap(fallback->translations, temp);
 }
 
-void Localisation::setDefault(juce::InputStream &inputStream)
+void Localisation::setFallback(juce::InputStream &inputStream)
 {
-    if(inputStream.isExhausted())
+    if (inputStream.isExhausted())
     {
         return;
     }
-
-    defaultLocale = juce::LocalisedStrings(inputStream.readEntireStreamAsString(), true);
+    
+    if (!fallback)
+    {
+        fallback.reset(new Localisation);
+    }
+    
+    auto temp = jaut::getLocaleDataFromStream(inputStream);
+    std::swap(fallback->translations, temp);
 }
 
-bool Localisation::setCurrentLanguage(const juce::String &language)
+bool Localisation::setCurrentLanguageFromDirectory(const juce::String &languageName)
 {
-    const juce::File lang_file = rootDir.getChildFile(language + ".lang");
-
-    if(Localisation::isValidLanguageFile(lang_file))
+    if (!rootDir.isDirectory())
     {
-        fileName      = lang_file.getFileNameWithoutExtension();
-        currentLocale = juce::LocalisedStrings(lang_file.loadFileAsString(), true);
+        // Must be a valid directory
+        jassertfalse;
+        return false;
+    }
+    
+    juce::String lang_id = languageName.removeCharacters(" ").toLowerCase();
+    const juce::File lang_file = rootDir.getChildFile(lang_id + ".lang");
+    
+    if (lang_file.existsAsFile())
+    {
+        auto temp = jaut::getLocaleData(lang_file.getFullPathName());
+        std::swap(translations, temp);
+        std::swap(fileName, lang_id);
         
         return true;
     }
-
+    
     return false;
 }
 
-void Localisation::setCurrentLanguage(const juce::LocalisedStrings &localisedStrings)
+void Localisation::setCurrentLanguage(const Localisation *newLocale)
 {
-    currentLocale = localisedStrings;
-    fileName      = "";
+    if (!newLocale)
+    {
+        translations.clear();
+        return;
+    }
+    
+    auto temp = newLocale->translations;
+    std::swap(translations, temp);
+    fileName = newLocale->fileName;
 }
 
-void Localisation::setCurrentLanguage(const Localisation &locale)
+void Localisation::setCurrentLanguage(const juce::String &languageString)
 {
-    currentLocale = locale.currentLocale;
-    fileName      = locale.fileName;
+    auto temp = jaut::getLocaleDataFromString(languageString);
+    std::swap(translations, temp);
+    fileName = "";
 }
 
-//=====================================================================================================================
+void Localisation::setCurrentLanguage(juce::InputStream &inputStream)
+{
+    auto temp = jaut::getLocaleDataFromStream(inputStream);
+    std::swap(translations, temp);
+    fileName = "";
+}
+
+void Localisation::setFallbackToCurrent()
+{
+    if (!fallback)
+    {
+        return;
+    }
+    
+    auto temp = fallback->translations;
+    std::swap(translations, temp);
+}
+
+//======================================================================================================================
 juce::File Localisation::getRootDirectory() const noexcept
 {
     return rootDir;
@@ -222,30 +361,42 @@ juce::File Localisation::getLanguageFile() const
     return rootDir.exists() && !fileName.isEmpty() ? rootDir.getChildFile(fileName + ".lang") : juce::File();
 }
 
-//=====================================================================================================================
-const juce::LocalisedStrings& Localisation::getInternalLocalisation() const noexcept
-{
-    return currentLocale;
-}
-
 //======================================================================================================================
-const juce::String Localisation::translate(const juce::String &name) const
+const juce::String &Localisation::translate(const juce::String &key) const
 {
-    if(currentLocale.getMappings().containsKey(name))
+    const juce::String key_id = key.removeCharacters(" ").toLowerCase();
+    const auto it = translations.find(key_id);
+    
+    if (it != translations.end())
     {
-        return currentLocale.translate(name);
+        return it->second;
     }
-
-    return defaultLocale.translate(name);
+    else if (fallback)
+    {
+        const auto it_f = fallback->translations.find(key_id);
+        
+        if (it_f != fallback->translations.end())
+        {
+            return it_f->second;
+        }
+    }
+    
+    return key;
 }
 
-const juce::String Localisation::translate(const juce::String &name, const juce::String &fallbackValue) const
+const juce::String &Localisation::translate(const juce::String &name, const juce::String &fallbackValue) const
 {
-    if(currentLocale.getMappings().containsKey(name))
+    const juce::String key_id = name.removeCharacters(" ").toLowerCase();
+    const auto it = translations.find(key_id);
+    
+    if (it != translations.end())
     {
-        return currentLocale.translate(name);
+        return it->second;
     }
-
-    return defaultLocale.translate(name, fallbackValue);
+    
+    return fallbackValue;
 }
+//======================================================================================================================
+// endregion Localisation
+//**********************************************************************************************************************
 }

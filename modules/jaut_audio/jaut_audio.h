@@ -16,7 +16,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_audio.h
     @date   29, February 2020
 
@@ -43,6 +43,9 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #include <jaut_audio/parameter/attachments.h>
-#include <jaut_audio/processor/serializableaudioprocessor.h>
-// TODO add this line when needed #include <jaut_audio/processor/audioprocessoreffect.h>
+#include <jaut_audio/parameter/virtualparameter.h>
+
+#include <jaut_audio/processor/processspec.h>
+#include <jaut_audio/processor/serialisableaudioprocessor.h>
 #include <jaut_audio/processor/audioprocessorrack.h>
+#include <jaut_audio/processor/audioprocessorset.h>

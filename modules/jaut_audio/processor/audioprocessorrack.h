@@ -66,65 +66,37 @@ namespace jaut
  *  }
  *  @endcode
  */
-class JAUT_API AudioProcessorRack final : public SerializableAudioProcessor, public MessageHandler<16>
+class JAUT_API AudioProcessorRack final : public SerialisableAudioProcessor, public MessageHandler<2>
 {
 public:
-    /**
-     *  The processing mode determines whether to play all processors in sequence or if only one should
-     *  be played which is determined by index.
-     */
-    enum JAUT_API ProcessingMode
-    {
-        /**
-         *  Play all processor in series
-         */
-        Serial,
-        
-        /**
-         *  Play only the selected processor
-         */
-        Single
-    };
-
-    //==================================================================================================================
-    /**
-     *  The type of the child processors
-     */
-    using Processor = SerializableAudioProcessor;
+    /** The type of the child processors. */
+    using Processor = ISerialisableAudioProcessor;
     
-    /**
-     *  The type of the pointer of the type of the child processors
-     */
+    /** The type of the pointer of the type of the child processors. */
     using ProcessorPointer = std::shared_ptr<Processor>;
     
-    /**
-     *  The type of the vector containing the type of the pointer of the type of the child processors
-     */
+    /** The type of the vector containing the type of the pointer of the type of the child processors. */
     using ProcessorVector = std::vector<ProcessorPointer>;
     
-    /**
-     *  The type of function to initialize the processors with
-     */
+    /** The type of function to initialize the processors with. */
     using InitCallback = std::function<ProcessorPointer(const juce::String&)>;
 
     //==================================================================================================================
     /**
      *  Creates a new AudioProcessorRack instance.
      *
-     *  @param mode         The processing mode of this processor
-     *  @param initCallback The child processor initialisation function
+     *  @param initCallback The child processor initialisation function should be generated
      *  @param undoManager  The UndoManager to use or nullptr if non should be used
      */
-    AudioProcessorRack(ProcessingMode mode, InitCallback initCallback,
-                       juce::UndoManager *undoManager = nullptr) noexcept;
-
+    explicit AudioProcessorRack(InitCallback initCallback, juce::UndoManager *undoManager = nullptr) noexcept;
+    
     //==================================================================================================================
     /**
      *  Calls the initialisation function and creates the new processors if the id was defined.
      *  If no such id was defined or the rack already has an instance of the processor, then this will do nothing
      *  and return false.
      *
-     *  Note that this should only be called on the message thread. (or disable threadex)
+     *  Note that this should only be called on the message thread.
      *
      *  @param processorId The id of the processor to initialise and add (case-insensitive)
      *  @return True if the processor was successfully added, false if not
@@ -132,13 +104,13 @@ public:
     bool addProcessor(const juce::String &processorId);
     
     /**
-     *  Removes a processor from the rack if there was one with this id, else will do nothing and return false.
-     *  Note that this should only be called on the message thread. (or disable threadex)
+     *  Removes a processor from the rack if there was one with this index, else will do nothing and return false.
+     *  Note that this should only be called on the message thread.
      *
-     *  @param processorId The id of the processor to remove (case-insensitive)
+     *  @param index The position of the processor to remove (case-insensitive)
      *  @return True if the processor was successfully removed, false if not
      */
-    bool removeProcessor(const juce::String &processorId);
+    bool removeProcessor(int index);
     
     /**
      *  Tries to move a processor from one index to another if this id was found.
@@ -148,30 +120,29 @@ public:
      *  If the index is bigger than the rack size, this device will be moved to the end and if it is smaller than
      *  zero it will be moved to the beginning.
      *
-     *  Note that this should only be called on the message thread. (or disable threadex)
+     *  Note that this should only be called on the message thread.
      *
-     *  @param processorId The processor to move (case-insensitive)
-     *  @param index       The index to move the processor to
+     *  @param from The processor's old position
+     *  @param to The processor's new position
      *  @return True if the processor was moved, false if not
      */
-    bool moveProcessor(const juce::String &processorId, int index);
+    bool moveProcessor(int from, int to);
     
     /**
      *  Clears all processors from the rack.
-     *  Note that this should only be called on the message thread. (or disable threadex)
+     *  Note that this should only be called on the message thread.
      *
      *  @return True if there were any processors in the rack, false if it was empty
      */
     bool clear();
 
     //==================================================================================================================
-    const juce::String getName() const override;
-    bool hasEditor() const override { return false; }
+    juce::String getName() const override { return "AudioProcessorRack"; }
 
     //==================================================================================================================
     /**
      *  Gets the amount of processors in the rack.
-     *  Note that this should only be called on the message thread. (or disable threadex)
+     *  Note that this should only be called on the message thread.
      *
      *  @return The amount of processors
      */
@@ -182,7 +153,7 @@ public:
      *  Gets a processor at a specified index.
      *  If the index is out of bounds, this will return a nullptr.
      *
-     *  Note that this should only be called on the message thread. (or disable threadex)
+     *  Note that this should only be called on the message thread.
      *
      *  @param index The index of the processor
      *  @return The processor at the specified index, or nullptr if index was out of bounds
@@ -190,114 +161,41 @@ public:
     Processor* getProcessor(int index) noexcept;
     
     /**
-     *  Gets a processor by its id.
-     *  If the id is not found, this will return a nullptr.
-     *
-     *  Note that this should only be called on the message thread. (or disable threadex)
-     *
-     *  @param processorId The id of the processor
-     *  @return The processor with the specified id, or nullptr if there was no such id
-     */
-    Processor* getProcessor(const juce::String &processorId) noexcept;
-    
-    /**
      *  Gets a processor at a specified index.
      *  If the index is out of bounds, this will return a nullptr.
      *
-     *  Note that this should only be called on the message thread. (or disable threadex)
+     *  Note that this should only be called on the message thread.
      *
      *  @param index The index of the processor
      *  @return The processor at the specified index, or nullptr if index was out of bounds
      */
     const Processor* getProcessor(int index) const noexcept;
-    
-    /**
-     *  Gets a processor by its id.
-     *  If the id is not found, this will return a nullptr.
-     *
-     *  Note that this should only be called on the message thread. (or disable threadex)
-     *
-     *  @param processorId The id of the processor
-     *  @return The processor with the specified id, or nullptr if there was no such id
-     */
-    const Processor* getProcessor(const juce::String &processorId) const noexcept;
 
     //==================================================================================================================
-    /**
-     *  Gets the current selected processor.
-     *  If set to serial mode or the rack is empty, this will return nullptr.
-     *
-     *  Note that this should only be called on the message thread. (or disable threadex)
-     *
-     *  @return The processor
-     */
-    Processor* getActivated();
-    
-    /**
-     *  Gets the id of the current selected processor.
-     *  If set to serial mode or the rack is empty, this will return an empty String.
-     *
-     *  Note that this should only be called on the message thread. (or disable threadex)
-     *
-     *  @return The id of the processor
-     */
-    juce::String getActivatedId() const;
-    
-    /**
-     *  Gets the index of the current selected processor.
-     *  If set to serial mode or the rack is empty, this will return 0.
-     *
-     *  Note that this should only be called on the message thread. (or disable threadex)
-     *
-     *  @return The index of the processor
-     */
-    int getActiveIndex() const;
-    
-    /**
-     *  In single mode, this will change the current selected processor.
-     *  Note that this should only be called on the message thread. (or disable threadex)
-     *
-     *  @param index The new index
-     *  @return True if a new processor was selected, false if not
-     */
-    bool setActivated(int index);
-    
-    /**
-     *  In single mode, this will change the current selected processor.
-     *  Note that this should only be called on the message thread. (or disable threadex)
-     *
-     *  @param processorId The id of the processor that should be selected
-     *  @return True if a new processor was selected, false if not
-     */
-    bool setActivated(const juce::String &processorId);
+    void process(juce::AudioBuffer<float> &buffer,  juce::MidiBuffer &midiBuffer) override;
+    void process(juce::AudioBuffer<double> &buffer, juce::MidiBuffer &midiBuffer) override;
+    void prepare(ProcessSpec spec) override;
+    void release() override;
 
     //==================================================================================================================
-    void processBlock(juce::AudioBuffer<float> &buffer,  juce::MidiBuffer &midiBuffer) override;
-    void processBlock(juce::AudioBuffer<double> &buffer, juce::MidiBuffer &midiBuffer) override;
-    void prepareToPlay(double sampleRate, int maxBlockSamples) override;
-    void releaseResources() override;
-
-    //==================================================================================================================
-    void readData(const juce::ValueTree data) override;
+    void readData (juce::ValueTree data) override;
     void writeData(juce::ValueTree data) override;
-
+    
 private:
     class UndoableAdd;
     class UndoableRemove;
     class UndoableClear;
     class UndoableMove;
-    class UndoableSelect;
-    
     class MessageSwap;
-    class MessageSelect;
     
     //==================================================================================================================
-    InitCallback initialisationCallback;
-    ProcessingMode mode;
-    juce::UndoManager *undoManager;
+    ProcessorVector devices;
+    ProcessorVector source;
     juce::CriticalSection sourceLock;
+    InitCallback initialisationCallback;
+    juce::UndoManager *undoManager;
+    ProcessSpec processSpec;
     
-    ProcessorVector devices, source;
-    int deviceIndex, sourceIndex;
+    JUCE_DECLARE_NON_COPYABLE(AudioProcessorRack)
 };
 }

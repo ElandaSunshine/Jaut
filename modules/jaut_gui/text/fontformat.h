@@ -52,22 +52,22 @@ public:
     /** The list of colours applicable for formatting. */
     enum JAUT_API ColourIds
     {
-        ColourFormat0Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormat1Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormat2Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormat3Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormat4Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormat5Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormat6Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormat7Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormat8Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormat9Id = JAUT_NEXT_COLOUR_ID,
-        ColourFormatAId = JAUT_NEXT_COLOUR_ID,
-        ColourFormatBId = JAUT_NEXT_COLOUR_ID,
-        ColourFormatCId = JAUT_NEXT_COLOUR_ID,
-        ColourFormatDId = JAUT_NEXT_COLOUR_ID,
-        ColourFormatEId = JAUT_NEXT_COLOUR_ID,
-        ColourFormatFId = JAUT_NEXT_COLOUR_ID
+        ColourFormat0Id = nextColourId< 0>,
+        ColourFormat1Id = nextColourId< 1>,
+        ColourFormat2Id = nextColourId< 2>,
+        ColourFormat3Id = nextColourId< 3>,
+        ColourFormat4Id = nextColourId< 4>,
+        ColourFormat5Id = nextColourId< 5>,
+        ColourFormat6Id = nextColourId< 6>,
+        ColourFormat7Id = nextColourId< 7>,
+        ColourFormat8Id = nextColourId< 8>,
+        ColourFormat9Id = nextColourId< 9>,
+        ColourFormatAId = nextColourId<10>,
+        ColourFormatBId = nextColourId<11>,
+        ColourFormatCId = nextColourId<12>,
+        ColourFormatDId = nextColourId<13>,
+        ColourFormatEId = nextColourId<14>,
+        ColourFormatFId = nextColourId<15>
     };
 
     //==================================================================================================================

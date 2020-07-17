@@ -131,6 +131,8 @@
 #include <jaut_core/util/exception.h>
 #include <jaut_core/util/mathutil.h>
 #include <jaut_core/util/typetraits.h>
+#include <jaut_core/util/evaluator.h>
+#include <jaut_core/util/typecontainer.h>
 #include <jaut_core/util/operationresult.h>
 #include <jaut_core/util/objectproxy.h>
 #include <jaut_core/util/version.h>

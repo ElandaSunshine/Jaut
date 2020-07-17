@@ -52,8 +52,8 @@ IMetadata *getThemeMetadata(const juce::File &metaFile, IMetaReader *reader)
 bool isDefaultValidAndEquals(const ThemeManager *themeManager, const juce::String &stringToCompare) noexcept
 {
     const ThemePointer &theme = themeManager->getOptions().defaultTheme;
-    return theme.isValid() && theme.getId() == stringToCompare
-                           || toIdString(theme->getThemeMeta()->getName()) == stringToCompare;
+    return theme.isValid() &&
+           (theme.getId() == stringToCompare || toIdString(theme->getThemeMeta()->getName()) == stringToCompare);
 }
 
 inline juce::NamedValueSet peakThemeMeta(const juce::File &metaFile)
@@ -109,14 +109,12 @@ struct ThemePointer::ThemeData
 
     //==================================================================================================================
     ThemeData(juce::String id, IThemeDefinition *theme)
-        : manager(nullptr), cached(false),
-          id(std::move(id)), theme(theme)
+        : id(std::move(id)), manager(nullptr),
+          theme(theme), cached(false)
     {}
 
     ~ThemeData() = default;
 };
-
-
 
 //======================================================================================================================
 ThemePointer::ThemePointer(std::nullptr_t) noexcept {}
@@ -233,16 +231,8 @@ ThemeManager::ThemeManager(juce::File themeRoot, ThemeInitFunc initializationCal
 {}
 
 ThemeManager::ThemeManager(ThemeManager &&other) noexcept
-    : options       (std::move(other.options)),
-      themeCache    (std::move(other.themeCache)),
-      currentThemeId(std::move(other.currentThemeId)),
-      themeRoot     (std::move(other.themeRoot)),
-      initFunc      (std::move(other.initFunc)),
-      metadataReader(std::move(other.metadataReader))
 {
-    other.initFunc             = nullptr;
-    other.metadataReader       = nullptr;
-    other.options.defaultTheme = nullptr;
+    swap(*this, other);
 
     for(auto &[id, theme] : themeCache)
     {
@@ -261,7 +251,9 @@ ThemeManager::~ThemeManager()
 //======================================================================================================================
 ThemeManager& ThemeManager::operator=(ThemeManager &&right) noexcept
 {
-    swap(*this, right);
+    ThemeManager temp(std::move(right));
+    swap(*this, temp);
+    
     right.initFunc             = nullptr;
     right.metadataReader       = nullptr;
     right.options.defaultTheme = nullptr;
@@ -277,7 +269,7 @@ ThemeManager& ThemeManager::operator=(ThemeManager &&right) noexcept
 //======================================================================================================================
 ThemePointer ThemeManager::getCurrentTheme() const
 {
-    if(currentThemeId.isEmpty())
+    if (currentThemeId.isEmpty())
     {
         return options.defaultTheme;
     }

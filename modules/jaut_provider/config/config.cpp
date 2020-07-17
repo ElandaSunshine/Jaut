@@ -135,9 +135,9 @@ Config::Property::Property(const Property &other) noexcept
 {}
 
 Config::Property::Property(Property &&other) noexcept
-    : data(std::move(other.data))
+    : Property()
 {
-    other.data = nullptr;
+    swap(*this, other);
 }
 
 Config::Property::~Property() = default;
@@ -152,8 +152,8 @@ Config::Property &Config::Property::operator=(const Property &right) noexcept
 
 Config::Property &Config::Property::operator=(Property &&right) noexcept
 {
-    swap(*this, right);
-    right.data = nullptr;
+    Property temp(std::move(right));
+    swap(*this, temp);
     return *this;
 }
 
@@ -201,15 +201,11 @@ Config::Property Config::Property::operator[](const juce::String &name)
             property.data->config = data->config;
             data->properties.emplace(trimmed_name.toLowerCase(), property);
     
-            {
-                PropertyAddedHandler handler = PropertyAdded;
-                handler(property);
+            PropertyAdded(property);
                 
-                if (data->config)
-                {
-                    PropertyAddedHandler cfg_handler = data->config->PropertyAdded;
-                    cfg_handler(property);
-                }
+            if (data->config)
+            {
+                data->config->PropertyAdded(property);
             }
         }
         
@@ -239,13 +235,11 @@ Config::Property Config::Property::createProperty(const juce::String &name, cons
     
             if (notification != juce::dontSendNotification)
             {
-                PropertyAddedHandler handler = PropertyAdded;
-                handler(property);
-        
+                PropertyAdded(property);
+    
                 if (data->config)
                 {
-                    PropertyAddedHandler cfg_handler = data->config->PropertyAdded;
-                    cfg_handler(property);
+                    data->config->PropertyAdded(property);
                 }
             }
         }
@@ -275,13 +269,11 @@ OperationResult Config::Property::addProperty(Property property, juce::Notificat
             
             if (notification != juce::dontSendNotification)
             {
-                PropertyAddedHandler handler = PropertyAdded;
-                handler(property);
-                
+                PropertyAdded(property);
+    
                 if (data->config)
                 {
-                    PropertyAddedHandler cfg_handler = data->config->PropertyAdded;
-                    cfg_handler(property);
+                    data->config->PropertyAdded(property);
                 }
             }
             
@@ -494,13 +486,11 @@ void Config::Property::setValue(const juce::var &newValue, juce::NotificationTyp
         
         if (notification != juce::dontSendNotification)
         {
-            ValueChangedHandler handler = ValueChanged;
-            handler(data->name, old_value, value);
-            
+            ValueChanged(data->name, old_value, value);
+    
             if (data->config)
             {
-                ValueChangedHandler cfg_handler = data->config->ValueChanged;
-                cfg_handler(getAbsoluteName(), old_value, value);
+                data->config->ValueChanged(getAbsoluteName(), old_value, value);
             }
         }
     }
@@ -602,13 +592,11 @@ Config::Property Config::Property::recurseChilds(juce::StringArray &names, bool 
     
             if (notification != juce::dontSendNotification)
             {
-                PropertyAddedHandler handler = PropertyAdded;
-                handler(property);
-                
+                PropertyAdded(property);
+    
                 if (data->config)
                 {
-                    PropertyAddedHandler cfg_handler = data->config->PropertyAdded;
-                    cfg_handler(property);
+                    data->config->PropertyAdded(property);
                 }
             }
             
@@ -683,13 +671,9 @@ Config::Config(const juce::String &root, Options options, std::unique_ptr<Config
 }
 
 Config::Config(Config &&other) noexcept
-    : autoSaveActive(other.autoSaveActive),
-      categories(std::move(other.categories)),
-      fullPath(std::move(other.fullPath)),
-      ipMutex(std::move(other.ipMutex)),
-      parser(std::move(other.parser)),
-      options(std::move(other.options))
 {
+    swap(*this, other);
+    
     for(auto &[_, category] : categories)
     {
         for(auto &[_, property] : category.properties)
@@ -697,9 +681,6 @@ Config::Config(Config &&other) noexcept
             property.setConfig(this);
         }
     }
-    
-    other.parser  = nullptr;
-    other.ipMutex = nullptr;
 }
 
 Config::~Config()
@@ -716,10 +697,8 @@ Config::~Config()
 //======================================================================================================================
 Config &Config::operator=(Config &&other) noexcept
 {
-    swap(*this, other);
-    
-    other.parser  = nullptr;
-    other.ipMutex = nullptr;
+    Config temp(std::move(other));
+    swap(*this, temp);
     
     for(auto &[_, category] : categories)
     {
@@ -950,11 +929,7 @@ Config::Property Config::createProperty(const juce::String &name, const juce::va
         }
         
         property.setConfig(this);
-        
-        {
-            PropertyAddedHandler handler = PropertyAdded;
-            handler(property);
-        }
+        PropertyAdded(property);
         
         return property;
     }
@@ -981,11 +956,7 @@ OperationResult Config::addProperty(Property property, const juce::String &categ
         }
         
         property.setConfig(this);
-        
-        {
-            PropertyAddedHandler handler = PropertyAdded;
-            handler(property);
-        }
+        PropertyAdded(property);
         
         return true;
     }

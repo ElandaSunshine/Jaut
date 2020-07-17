@@ -33,12 +33,6 @@
 #   define JAUT_COLOUR_ID_START 0x11100000
 #endif
 
-/**
- *  A quick and dirty auto colour id counter.
- *  @return The next colour id
- */
-#define JAUT_NEXT_COLOUR_ID 0x11100000 + __COUNTER__
-
 namespace jaut
 {
 #if defined(_WIN32) || defined(WIN32)
@@ -46,4 +40,23 @@ inline constexpr char newLine = '\r\n';
 #else
 inline constexpr char newLine = '\n';
 #endif
+
+template<int Add>
+inline constexpr int nextColourId = JAUT_COLOUR_ID_START + Add; // FUTURE next start 16
+
+/** A dirty type previewer that will work in lots of IDEs. */
+template<class> struct TView;
+
+/** A dirty value previewer that will work in lots of IDEs. */
+template<auto> struct VView;
+
+struct JAUT_API SizeTypes
+{
+    using Array  = std::array        <void*, 0>    ::size_type;
+    using Vector = std::vector       <void*>       ::size_type;
+    using Map    = std::map          <void*, void*>::size_type;
+    using UMap   = std::unordered_map<void*, void*>::size_type;
+    using List   = std::list         <void*>       ::size_type;
+    using Deque  = std::deque        <void*>       ::size_type;
+};
 }
