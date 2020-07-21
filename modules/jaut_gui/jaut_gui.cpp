@@ -24,6 +24,15 @@
  */
 
 #include <jaut_gui/jaut_gui.h>
+#if !DOXYGEN
+#   define JAUT_IMPL_LAF(CLASS) \
+    void CLASS ::parentHierarchyChanged() { lookAndFeelChanged(); }\
+    void CLASS ::lookAndFeelChanged() \
+    { \
+        if (lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getLookAndFeel()); !lookAndFeel) \
+        { lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf(); } \
+    }
+#endif
 
 #include <jaut_gui/text/internal/jaut_format_attributes.h>
 #include <jaut_gui/text/internal/jaut_format_layout.h>
@@ -31,3 +40,6 @@
 #include <jaut_gui/text/internal/jaut_format_layout.cpp>
 
 #include <jaut_gui/text/fontformat.cpp>
+#include <jaut_gui/component/component.cpp>
+
+#undef JAUT_IMPL_LAF

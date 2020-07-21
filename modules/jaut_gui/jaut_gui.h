@@ -43,5 +43,35 @@
 #include <jaut_core/jaut_core.h>
 #include <juce_gui_extra/juce_gui_extra.h>
 
+namespace jaut
+{
+struct JAUT_API DefaultColours
+{
+    inline static const juce::Colour Colour_Background = juce::Colours::lightgrey;
+    inline static const juce::Colour Colour_Foreground = juce::Colours::grey;
+    inline static const juce::Colour Colour_Border     = juce::Colours::darkgrey;
+    inline static const juce::Colour Colour_Text       = juce::Colours::black;
+};
+
+class LookAndFeel_Jaut;
+}
+
+#if !DOXYGEN
+#   define JAUT_CREATE_LAF() \
+    LookAndFeel_Jaut *lookAndFeel { nullptr }; \
+    void parentHierarchyChanged() override; \
+    void lookAndFeelChanged() override;
+#endif
+
+// Components
+#include <jaut_gui/component/contentpane.h>
+#include <jaut_gui/component/splitcontainer.h>
+#include <jaut_gui/component/lookandfeel_jaut.h>
+
 // Includes
 #include <jaut_gui/text/fontformat.h>
+
+// Structure
+#include <jaut_gui/structure/sizestructs.h>
+
+#undef JAUT_CREATE_LAF

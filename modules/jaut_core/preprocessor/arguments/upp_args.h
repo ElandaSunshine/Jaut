@@ -121,7 +121,23 @@
                                                JAUT_UPP_ARGS_GET_LENGTH(__VA_ARGS__) \
                                            ) (E, __VA_ARGS__) \
                                        )
-                                  
+
+/**
+ *  Applies a macro to all elements in the argument list.
+ *  Other than JAUT_UPP_ARGS_FOR_EACH, this does not insert commas between each element.
+ *
+ *  @param E   The macro to apply to each argument
+ *  @param ... The arguments
+ */
+#define JAUT_UPP_ARGS_FOR_EACH_UNCO(E, ...) JAUT_UPP_MISC_EXPAND_VA_ARGS \
+                                            ( \
+                                                JAUT_INTERN_UPP_OVM_GLUE \
+                                                ( \
+                                                    JAUT_INTERN_UPP_FOR_UNCO, \
+                                                    JAUT_UPP_ARGS_GET_LENGTH(__VA_ARGS__) \
+                                                ) (E, __VA_ARGS__) \
+                                            )
+
 /**
  *  Applies a macro to n elements in the argument list.
  *  @param E   The macro to apply to each argument
@@ -210,7 +226,7 @@
  *  Prepends a comma to the arguments list if it is not empty.
  *  @param ... The arguments
  */
-#define JAUT_UPP_VA_OPT_B(...) , ##__VA_ARGS__
+#define JAUT_UPP_VA_OPT_B(...) ,##__VA_ARGS__
 
 /**
  *  Appends a comma to the arguments list if it is not empty.

@@ -24,6 +24,10 @@
  */
 #pragma once
 
+#if !DOXYGEN
+#   define JAUT_INTERN_UPP_EXPAND
+#endif
+
 /**
  *  This macro helps in concatenating macro arguments.
  *  This is mostly used because of the ## symbol preventing macro expansion.
@@ -54,7 +58,7 @@
  *
  *  @param The full expression containing your __VA_ARGS__
  */
-#define JAUT_UPP_MISC_EXPAND_VA_ARGS(X) X
+#define JAUT_UPP_MISC_EXPAND_VA_ARGS(...) __VA_ARGS__
 
 /**
  *  Gets the current line number as string.
@@ -71,3 +75,5 @@
  *  @param ... The arguments to nothingfy
  */
 #define JAUT_UPP_MISC_NOTHING(...)
+
+#define JAUT_UPP_MISC_UNPACK(X) JAUT_UPP_MISC_EXPAND_VA_ARGS X
