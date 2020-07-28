@@ -70,4 +70,10 @@ JAUT_API inline constexpr bool fit(ValueType test, ValueType lower, ValueType up
     
     return test >= lower && test <= upper;
 }
+
+template <class ValueType>
+JAUT_API inline constexpr ValueType compareAndGet(ValueType value, ValueType isNot, ValueType elseReturn) noexcept
+{
+    return value != isNot ? value : elseReturn;
+}
 }

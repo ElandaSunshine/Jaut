@@ -27,10 +27,16 @@
 
 namespace jaut
 {
+/**
+ *  A component that contains two components that can be resised with a seperator between those two.
+ *  You can pick between two types of orientation, horizontal and vertical, which specify the orientation of
+ *  the seperator.
+ */
 class JAUT_API SplitContainer : public juce::Component
 {
 public:
-    enum class JAUT_API Direction
+    /** The orientation of the seperator. */
+    enum class JAUT_API Orientation
     {
         Vertical,
         Horizontal
@@ -39,9 +45,10 @@ public:
     enum JAUT_API ColourIds
     {
         ColourBackgroundId = nextColourId<17>,
-        ColourSplitterId   = nextColourId<18>
+        ColourSeperatorId  = nextColourId<18>
     };
     
+    /** The side of the component to be inserted in. */
     enum class JAUT_API ComponentOrder
     {
         LeftOrTop,
@@ -50,22 +57,59 @@ public:
     
     struct JAUT_API LookAndFeelMethods
     {
-        virtual void drawSplitContainerBackground(juce::Graphics &g, SplitContainer &splitContainer,
-                                                  int width, int height) = 0;
+        /**
+         *  Draws the background of the SplitContainer.
+         *
+         *  @param g      The graphics context
+         *  @param bounds The local bounds of the SplitContainer
+         */
+        virtual void drawSplitContainerBackground(juce::Graphics &g, juce::Rectangle<int> bounds) = 0;
         
-        virtual void drawSplitContainerSplitter(juce::Graphics &g, SplitContainer &splitContainer,
-                                                int x, int y, int width, int height) = 0;
+        /**
+         *  Draws the seperator of the SplitContainer.
+         *
+         *  @param g           The graphics context
+         *  @param bounds      The relative bounds of the seperator.
+         *  @param orientation The orientation of the seperator
+         */
+        virtual void drawSplitContainerSeperator(juce::Graphics &g, juce::Rectangle<int> bounds,
+                                                 Orientation orientation) = 0;
     };
     
     //==================================================================================================================
-    explicit SplitContainer(Direction direction = Direction::Horizontal) noexcept;
+    using ComponentChangedHandler = EventHandler<juce::Component*, ComponentOrder>;
+    
+    /** Dispatched when a component changes on either side. */
+    Event<ComponentChangedHandler> ComponentChanged;
+    
+    //==================================================================================================================
+    /**
+     *  Constructs a new SplitContainer object with a default horizontal orientation.
+     *  @param orientation The orientation to be used
+     */
+    explicit SplitContainer(Orientation orientation = Orientation::Horizontal) noexcept;
     
     //==================================================================================================================
     void paint(juce::Graphics &g) override;
     void resized() override;
     
     //==================================================================================================================
-    void setComponent(juce::Component *component, ComponentOrder order);
+    /**
+     *  Sets a component to either one side or empties it if nullptr.
+     *
+     *  @param component The component to be set or null if should be emptied
+     *  @param order     The side of the component
+     *  @param owned     True if the component should be deleted automatically or false if not
+     */
+    void setComponent(juce::Component *component, ComponentOrder order, bool owned);
+    
+    /**
+     *  Sets a component to either one side.
+     *
+     *  @param component The component to be set
+     *  @param order     The side of the component
+     */
+    void setComponent(juce::Component &component, ComponentOrder order);
     
     //==================================================================================================================
     void mouseDown(const juce::MouseEvent &event) override;
@@ -75,24 +119,28 @@ public:
     void childBoundsChanged(Component *child) override;
     
     //==================================================================================================================
-    void setSplitterThickness(int thickness);
+    /**
+     *  Sets the thickness of the seperator.
+     *  @param thickness The thickness in pixels
+     */
+    void setSeperatorThickness(int thickness);
     
 private:
     struct LockedAxisConstrainer : juce::ComponentBoundsConstrainer
     {
         //==============================================================================================================
-        Direction direction;
+        Orientation orientation;
         
         //==============================================================================================================
-        explicit LockedAxisConstrainer(Direction direction) noexcept
-            : direction(direction)
+        explicit LockedAxisConstrainer(Orientation orientation) noexcept
+            : orientation(orientation)
         {}
         
         //==============================================================================================================
         void applyBoundsToComponent (Component &component, juce::Rectangle<int> bounds) override
         {
             auto parent_bounds = component.getParentComponent()->getLocalBounds();
-            component.setBounds(direction == Direction::Horizontal
+            component.setBounds(orientation == Orientation::Horizontal
                      ? bounds.withX(std::clamp(bounds.getX(), 0, parent_bounds.getWidth() - bounds.getWidth())).withY(0)
                      : bounds.withX(0)
                              .withY(std::clamp(bounds.getY(), 0, parent_bounds.getHeight() - bounds.getHeight())));
@@ -101,7 +149,7 @@ private:
     
     //==================================================================================================================
     juce::ComponentDragger dragger;
-    juce::Component splitter;
+    juce::Component seperator;
     
     LockedAxisConstrainer constrainer;
     
@@ -111,7 +159,7 @@ private:
     juce::Rectangle<int> prevSize;
     
     int thickness { 5 };
-    Direction direction;
+    Orientation orientation;
     bool initialised { false };
     
     JAUT_CREATE_LAF()

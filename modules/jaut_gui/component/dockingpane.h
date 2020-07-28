@@ -17,32 +17,21 @@
     ===============================================================
     
     @author Elanda
-    @file   jaut_gui.cpp
-    @date   18, June 2020
+    @file   dockingpane.h
+    @date   21, July 2020
     
     ===============================================================
  */
 
-#include <jaut_gui/jaut_gui.h>
+#pragma once
 
-#if !DOXYGEN
-#   define JAUT_IMPL_LAF(CLASS) \
-    void CLASS ::parentHierarchyChanged() { lookAndFeelChanged(); }\
-    void CLASS ::lookAndFeelChanged() \
-    { \
-        if (lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getLookAndFeel()); !lookAndFeel) \
-        { lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf(); } \
-    }
-#   define JAUT_INIT_LAF() lookAndFeelChanged();
-#endif
+namespace jaut
+{
+class JAUT_API DockingPane : public juce::Component
+{
+public:
 
-#include <jaut_gui/component/component.cpp>
+private:
 
-#include <jaut_gui/text/internal/jaut_format_attributes.h>
-#include <jaut_gui/text/internal/jaut_format_layout.h>
-#include <jaut_gui/text/internal/jaut_format_attributes.cpp>
-#include <jaut_gui/text/internal/jaut_format_layout.cpp>
-#include <jaut_gui/text/text.cpp>
-
-#undef JAUT_IMPL_LAF
-#undef JAUT_INIT_LAF
+};
+}

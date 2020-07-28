@@ -45,12 +45,16 @@
 
 namespace jaut
 {
-struct JAUT_API DefaultColours
+namespace DefaultColours
 {
-    inline static const juce::Colour Colour_Background = juce::Colours::lightgrey;
-    inline static const juce::Colour Colour_Foreground = juce::Colours::grey;
-    inline static const juce::Colour Colour_Border     = juce::Colours::darkgrey;
-    inline static const juce::Colour Colour_Text       = juce::Colours::black;
+    const juce::Colour Colour_Background { 0xff282828 };
+    const juce::Colour Colour_Border     { 0xccffffff };
+    const juce::Colour Colour_Text       { 0xccffffff };
+    
+    const juce::Colour Colour_Button     { 0xff282828 };
+    const juce::Colour Colour_ButtonText { 0xccffffff };
+    const juce::Colour Colour_ButtonDown = Colour_Button.brighter(0.2f);
+    const juce::Colour Colour_ButtonOver = Colour_Button.brighter(0.3f);
 };
 
 class LookAndFeel_Jaut;
@@ -58,20 +62,25 @@ class LookAndFeel_Jaut;
 
 #if !DOXYGEN
 #   define JAUT_CREATE_LAF() \
-    LookAndFeel_Jaut *lookAndFeel { nullptr }; \
-    void parentHierarchyChanged() override; \
-    void lookAndFeelChanged() override;
+           LookAndFeel_Jaut *lookAndFeel { nullptr }; \
+           void parentHierarchyChanged() final override; \
+           void lookAndFeelChanged() final override;
 #endif
+
+// Structure
+#include <jaut_gui/structure/sizestructs.h>
 
 // Components
 #include <jaut_gui/component/contentpane.h>
 #include <jaut_gui/component/splitcontainer.h>
-#include <jaut_gui/component/lookandfeel_jaut.h>
+#include <jaut_gui/component/multipagepane.h>
+#include <jaut_gui/component/dockingpane.h>
 
 // Includes
+#include <jaut_gui/text/charformat.h>
 #include <jaut_gui/text/fontformat.h>
 
-// Structure
-#include <jaut_gui/structure/sizestructs.h>
+// Laf
+#include <jaut_gui/component/lookandfeel_jaut.h>
 
 #undef JAUT_CREATE_LAF

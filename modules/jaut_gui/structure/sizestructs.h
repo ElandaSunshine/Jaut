@@ -30,12 +30,14 @@ namespace jaut
 template<class T>
 struct JAUT_API Distance
 {
-    T left;
-    T top;
-    T right;
-    T bottom;
+    T left   {};
+    T top    {};
+    T right  {};
+    T bottom {};
     
     //==================================================================================================================
+    constexpr Distance() noexcept = default;
+    
     constexpr Distance(T left, T top, T right, T bottom) noexcept
         : left(left), top(top), right(right), bottom(bottom)
     {}
@@ -51,6 +53,17 @@ struct JAUT_API Distance
     explicit constexpr Distance(T all) noexcept
         : Distance(all, all)
     {}
+    
+    //==================================================================================================================
+    bool operator==(const Distance &other) const noexcept
+    {
+        return other.left == left && other.top == top && other.right == right && other.bottom == bottom;
+    }
+    
+    bool operator!=(const Distance &other) const noexcept
+    {
+        return !operator==(other);
+    }
     
     //==================================================================================================================
     std::conditional_t<std::is_same_v<float, T>, Distance<float>&, Distance<float>> toFloat() const noexcept
@@ -75,6 +88,12 @@ struct JAUT_API Distance
         {
             return { juce::roundToInt(left), juce::roundToInt(top), juce::roundToInt(right), juce::roundToInt(bottom) };
         }
+    }
+    
+    //==================================================================================================================
+    juce::Rectangle<T> trimRectangle(juce::Rectangle<T> rect) const noexcept
+    {
+        return rect.withTrimmedLeft(left).withTrimmedTop(top).withTrimmedRight(right).withTrimmedBottom(bottom);
     }
 };
 
