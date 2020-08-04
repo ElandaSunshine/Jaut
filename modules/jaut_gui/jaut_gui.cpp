@@ -31,7 +31,7 @@
     void CLASS ::lookAndFeelChanged() \
     { \
         if (lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getLookAndFeel()); !lookAndFeel) \
-        { lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf(); } \
+        { lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf(); setLookAndFeel(lookAndFeel); } \
     }
 #   define JAUT_INIT_LAF() lookAndFeelChanged();
 #endif

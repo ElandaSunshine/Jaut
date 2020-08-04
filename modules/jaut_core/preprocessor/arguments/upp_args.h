@@ -222,11 +222,15 @@
                                                             S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S, S,\
                                                             S, S, S, S, S, S, S, S, S, S)
 
-/**
- *  Prepends a comma to the arguments list if it is not empty.
- *  @param ... The arguments
- */
-#define JAUT_UPP_VA_OPT_B(...) ,##__VA_ARGS__
+#ifdef __GNUG__
+   /**
+    *  Prepends a comma to the arguments list if it is not empty.
+    *  @param ... The arguments
+    */
+#   define JAUT_UPP_VA_OPT_B(...) ,##__VA_ARGS__
+#else
+#   define JAUT_UPP_VA_OPT_B(...) __VA_ARGS__
+#endif
 
 /**
  *  Appends a comma to the arguments list if it is not empty.

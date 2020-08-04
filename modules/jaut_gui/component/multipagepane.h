@@ -40,12 +40,15 @@ namespace jaut
  *
  *  You can also dynamically change style options about the component by using setStyle.
  */
-class JAUT_API MultiPagePane : public juce::Component, private juce::DragAndDropContainer
+class JAUT_API MultiPagePane : public juce::Component
 {
+private:
+    class InternalTabBar;
+
 public:
     /** The drag-and-drop identifier when using juce::DragAndDropContainer and juce::DragAndDropTarget */
     static constexpr const char *DragAndDrop_ID = "6d062147-33ef-4ea4-b9ec-04756959fe08";
-
+    
     //==================================================================================================================
     enum JAUT_API ColourIds
     {
@@ -58,7 +61,7 @@ public:
         ColourTabCloseButtonHighlightId = nextColourId<25>
     };
     
-    /** Defines several different style options which define what this component will or should look like. */
+    /** Defines what the component will look like, like distances between components and their sizes. */
     struct JAUT_API Style
     {
         /** Defines the position of the tab-bar. */
@@ -72,7 +75,7 @@ public:
             
             /** The tab-bar will appear on the left-side of the component, rotated 90 degrees counter-clockwise. */
             SideLeft,
-    
+            
             /** The tab-bar will appear on the right-side of the component, rotated 90 degrees clockwise. */
             SideRight
         };
@@ -93,32 +96,47 @@ public:
         /** The layout of the tab bar. */
         TabBarLayout tabBarLayout { TabBarLayout::Top };
         
-        /**
-         *  The height of the items inside tabs.
-         *
-         *  For buttons this will also determine their widths, images will have their width resized according to their
-         *  aspect ratio and text will be stretched to be at least fully contained.
-         *
-         *  If this is below zero, the size will be determined by tabBarHeight and the respective item
-         *  margin properties.
-         *
-         *  If this and tabBarHeight both are below zero, the LookAndFeel-set font-size will determine the items
-         *  heights.
-         */
-        int tabBarItemSize { -1 };
+        /** The height of the items on any tab-button. */
+        int tabButtonItemHeight { 20 };
         
-        /**
-         *  The tab height that will be used.
-         *  This is absolute which means this will, regardless tabBarItemSize, force the height onto the tab-bar or
-         *  in other words: If this is below tabBarItemSize but above negative, the tab will be sized regardless
-         *  the item height.
-         *
-         *  If below zero, this will automatically determine the tab height by the tab's layout-item margin properties
-         *  and tabBarItemSize.
-         *
-         *  This does not impact the height of the tab's items.
-         */
-        int tabBarHeight { 24 };
+        /** The height of any tab-button. */
+        int tabButtonHeight { 26 };
+    };
+    
+    /** Defines the behavious of the components of this class. */
+    struct JAUT_API Options
+    {
+        enum class JAUT_API PinBehaviour
+        {
+            /** Prevents pinned tabs from being closed when all others get closed at once. */
+            ClosingAllNoEffect = 1,
+            
+            /** Adds an extra tab-row above the normal one and puts the pinned tabs there. */
+            PutInExtraRow = 2
+        };
+    
+        //==============================================================================================================
+        friend PinBehaviour operator|(PinBehaviour left, PinBehaviour right) noexcept
+        {
+            return static_cast<PinBehaviour>(static_cast<unsigned>(left) | static_cast<unsigned>(right));
+        }
+    
+        friend PinBehaviour operator&(PinBehaviour left, PinBehaviour right) noexcept
+        {
+            return static_cast<PinBehaviour>(static_cast<unsigned>(left) & static_cast<unsigned>(right));
+        }
+        
+        friend PinBehaviour& operator|=(PinBehaviour &left, PinBehaviour right) noexcept
+        {
+            return (left = left | right);
+        }
+        
+        //==============================================================================================================
+        /** Defines the behaviour pinned tabs should have. */
+        PinBehaviour pinnedTabBehaviour { PinBehaviour::ClosingAllNoEffect };
+        
+        /** Defines whether you can reorder tabs by dragging them around. */
+        bool allowTabReordering { false };
     };
     
     /**
@@ -132,7 +150,9 @@ public:
      *  components mapped with ids.
      *
      *  Note that TabFactories are static, you cannot change them afterwards, so you may create your logic inside
-     *  the derived class.
+     *  your TabFactory implementation.
+     *
+     *  @see jaut::MultiPagePane::TabFactoryTemplates
      */
     struct JAUT_API TabFactory
     {
@@ -149,12 +169,15 @@ public:
             ItemCloseButton,
             
             /** A juce::ToggleButton indicating and managing the pin state of the corresponding tab */
-            ItemPinButton
+            ItemPinButton//,
+            
+            /** A component that will emulate a separator between other items. */
+            //ItemSeparator
         };
         
         /**
          *  Specifies the layout of an item the tab bar will consist of.
-         *  It basically tells the MultiPagePane which type of item to add with what distance to other items.
+         *  It basically tells the MultiPagePane which type of item to add with what bounds.
          */
         struct JAUT_API TabItemLayout
         {
@@ -164,26 +187,18 @@ public:
              */
             TabItem itemType;
             
-            /** The distance between the this item and another item or the tab itself. */
+            /** The margin of this item. */
             Margin itemMargin;
             
             //==========================================================================================================
             /**
-             *  Creates a new TabItemLayout object with the specified type and a default margin of 0 on all sides.
-             *  @param type The type of the item
-             */
-            explicit constexpr TabItemLayout(TabItem type) noexcept
-                : itemType(type)
-            {}
-    
-            /**
-             *  Creates a new TabItemLayout object with the specified type and a given margin.
+             *  Creates a new TabItemLayout object with the specified type and margin.
              *
-             *  @param type       The type of the item
-             *  @param itemMargin The margin between this item and other items or the tab bounds
+             *  @param type   The type of the item
+             *  @param margin The margin of the item
              */
-            constexpr TabItemLayout(TabItem type, Margin itemMargin) noexcept
-                : itemType(type), itemMargin(itemMargin)
+            constexpr TabItemLayout(TabItem type, Margin margin) noexcept
+                : itemType(type), itemMargin(margin)
             {}
         };
         
@@ -213,17 +228,32 @@ public:
          *  @param id The id of the image to create
          *  @return The image
          */
-        virtual juce::Image getImageForPage(const juce::String &id) { return {}; }
+        virtual juce::Image getImageForPage(const juce::String &id) const { juce::ignoreUnused(id); return {}; }
     };
     
     struct JAUT_API TabFactoryTemplates
     {
+        /**
+         *  The default TabFactory template.
+         *
+         *  This defines a basic layout with no images, a simple text for the tab and a close button to get rid
+         *  of open tabs when clicked.
+         *
+         *  All you need to do is to pass a lambda with ids and their mapped components that should be used
+         *  as page-component.
+         */
         class JAUT_API Default : public TabFactory
         {
         public:
             using PageAllocCallback = std::function<std::unique_ptr<juce::Component>(const juce::String &id)>;
             
             //==========================================================================================================
+            /**
+             *  Factory function that creates a new default TabFactory template.
+             *
+             *  @param pageAllocator The lambda that maps components to their ids
+             *  @return The new TabFactory object
+             */
             static std::unique_ptr<TabFactory> create(PageAllocCallback pageAllocator)
             {
                 return std::make_unique<Default>(std::move(pageAllocator));
@@ -234,8 +264,9 @@ public:
                 : pageCallback(std::move(pageAllocator))
             {
                 jassert(pageCallback != nullptr);
-                layouts.emplace_back(TabFactory::TabItem::ItemText,        Margin(10, 0, 7, 0));
-                layouts.emplace_back(TabFactory::TabItem::ItemCloseButton, Margin(0,  0, 4, 0));
+                layouts.emplace_back(TabFactory::TabItem::ItemText,        Margin(7,  4, 4, 0));
+                layouts.emplace_back(TabFactory::TabItem::ItemCloseButton, Margin(0,  4, 4, 0));
+                layouts.emplace_back(TabFactory::TabItem::ItemPinButton,   Margin(-8, 4, 4, 0));
             }
             
             //==========================================================================================================
@@ -255,8 +286,6 @@ public:
         };
     };
     
-    class InternalTabBar;
-    
     /**
      *  The button that will be displayed in the tab-bar of this component.
      *  A TabButton tracks its own state and tells you whether it is active or pinned and what its index is.
@@ -268,16 +297,16 @@ public:
     class JAUT_API TabButton : public juce::Button, juce::LookAndFeel_V4
     {
     public:
-        std::function<void(int)> onTabClicked;
-        std::function<void(int)> onClosing;
-        std::function<void(int, bool)> onPinning;
+        std::function<void(const TabButton&)>       onActivating;
+        std::function<void(const TabButton&)>       onClosing;
+        std::function<void(const TabButton&, bool)> onPinning;
         
         //==============================================================================================================
+        TabButton(const Style&, const TabFactory&, const juce::String&, const juce::String&);
         ~TabButton() override;
         
         //==============================================================================================================
         void paintButton(juce::Graphics&, bool, bool) override;
-        void resized() override;
         
         //==============================================================================================================
         void mouseDown(const juce::MouseEvent&) override;
@@ -308,33 +337,24 @@ public:
          *  @return The index of the tab
          */
         int getTabIndex() const noexcept;
-    
-        //==============================================================================================================
-        void triggerTabClick();
         
         //==============================================================================================================
-        void updateStyle(const Style &style);
+        void updateTabSize(int itemHeight);
+        void updateTabHeight(int tabHeight);
         
     private:
-        friend class InternalTabBar;
-        
-        //==============================================================================================================
         std::vector<std::unique_ptr<juce::Component>> layoutComponents;
-        TabFactory &factory;
+        const TabFactory &factory;
         
-        int tabHeight;
-        int itemHeight;
-        
-        int  tabIndex { 0 };
-        bool active { false };
-        bool pinned { false };
+        int tabWidth { 0 };
+        int tabIndex { 0 };
+        bool active  { false };
+        bool pinned  { false };
         
         //==============================================================================================================
-        TabButton(const Style&, TabFactory&, const juce::String&, const juce::String&);
-        
-        //==============================================================================================================
-        void drawButtonBackground(juce::Graphics&, Button&, const juce::Colour&, bool, bool) override;
-        void drawButtonText(juce:: Graphics&, juce::TextButton&, bool, bool) override {}
+        void drawToggleButton    (juce::Graphics&, juce::ToggleButton&,          bool, bool) override;
+        void drawButtonText      (juce::Graphics&, juce::TextButton&,            bool, bool) override;
+        void drawButtonBackground(juce::Graphics&, Button&, const juce::Colour&, bool, bool) override {}
         
         JAUT_CREATE_LAF()
     };
@@ -427,7 +447,6 @@ public:
     using TabOpenedHandler          = EventHandler<const juce::String&>;
     using TabChangedHandler         = EventHandler<const juce::String&>;
     using TabPinStateChangedHandler = EventHandler<const juce::String&, bool>;
-    using TabDetachedHandler        = EventHandler<const juce::String&>;
     
     /** Dispatched whenever the last tab was closed. */
     Event<LastTabClosingHandler> LastTabClosing;
@@ -444,23 +463,39 @@ public:
     /** Dispatched whenever a tab's pin state changed. */
     Event<TabPinStateChangedHandler> TabPinStateChanged;
     
-    /** Dispatched whenever a tab was dispatched from this MultiPagePane instance. */
-    Event<TabDetachedHandler> TabDetached;
-    
     //==================================================================================================================
     /**
-     *  Creates a new MultiPagePane instance.
+     *  Creates a new MultiPagePane instance with default options and default style.
      *  @param factory The TabFactory unique_ptr
      */
     explicit MultiPagePane(FactoryPtr factory);
+    
+    /**
+     *  Creates a new MultiPagePane instance with default options.
+     *
+     *  @param factory The TabFactory unique_ptr
+     *  @param style   The initial style
+     */
+    MultiPagePane(FactoryPtr factory, Style style);
+    
+    /**
+     *  Creates a new MultiPagePane instance with default style.
+     *
+     *  @param factory The TabFactory unique_ptr
+     *  @param options The initial options
+     */
+    MultiPagePane(FactoryPtr factory, Options options);
+    
     
     /**
      *  Creates a new MultiPagePane instance.
      *
      *  @param factory The TabFactory unique_ptr
      *  @param style   The initial style
+     *  @param options The initial options
      */
-    MultiPagePane(FactoryPtr factory, Style style);
+    MultiPagePane(FactoryPtr factory, Style style, Options options);
+    
     ~MultiPagePane() override;
     
     //==================================================================================================================
@@ -501,6 +536,17 @@ public:
      *  @param shouldBePinned Whether the page should be pinned
      */
     void pinPage(int index, bool shouldBePinned);
+    
+    /**
+     *  Closes all open tabs.
+     *
+     *  If TabFactory::getPinBehaviour contains the flag PinBehaviour::ClosingAllNoEffect and forcePinned is false,
+     *  pinned tabs won't be touched.
+     *  If this flag is not set, pinned tabs will be closed regardless.
+     *
+     *  @param forcePinned Force pinned tabs to be closed
+     */
+    void closeAllTabs(bool forcePinned);
     
     //==================================================================================================================
     /**
@@ -608,6 +654,18 @@ public:
      */
     const Style& getStyle() const noexcept;
     
+    /**
+     *  Sets the new options and updates this component.
+     *  @param options The new options to use
+     */
+    void setOptions(const Options &options);
+    
+    /**
+     *  Gets the current options of this component.
+     *  @return The current options
+     */
+    const Options& getOptions() const noexcept;
+    
     //==================================================================================================================
     /**
      *  Gets the rectangle the tab-bar resides in.
@@ -632,16 +690,16 @@ private:
     
     ContentPane contentPane;
     std::unique_ptr<InternalTabBar> tabBar;
-    FactoryPtr factory;
     
-    Style style;
+    FactoryPtr factory;
+    Style      style;
+    Options    options;
     
     juce::Rectangle<int> tabSpaceBounds;
     juce::Rectangle<int> pageSpaceBounds;
     
     //==================================================================================================================
     void updateSpaceBounds(Style::TabBarLayout);
-    void updateTabBarBounds();
     
     JAUT_CREATE_LAF()
 };

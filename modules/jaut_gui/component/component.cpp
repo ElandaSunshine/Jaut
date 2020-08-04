@@ -31,128 +31,11 @@ namespace
 /** The amount of difference on the x-axis between two tabs before swapping them. */
 inline constexpr int Const_TabSwapSensitivity = 25;
 
-template<class Fn>
-int internalWidthLoop(const jaut::MultiPagePane::TabFactory &factory, jaut::LookAndFeel_Jaut *laf,
-                      const jaut::MultiPagePane::TabButton &tab, Fn &&heightFunc)
+//======================================================================================================================
+bool hasPinFlag(const jaut::MultiPagePane::Options &options, jaut::MultiPagePane::Options::PinBehaviour flag)
 {
-    const auto &layouts = factory.getTabLayout();
-    int width           = 0;
-    
-    for (jaut::SizeTypes::Vector i = 0; i < layouts.size(); ++i)
-    {
-        const auto &layout         = layouts.at(i);
-        const jaut::Margin &margin = layout.itemMargin;
-        const int height           = std::forward<Fn>(heightFunc)(margin);
-
-        int item_width = height;
-
-        if (layout.itemType == jaut::MultiPagePane::TabFactory::TabItem::ItemText)
-        {
-            item_width = std::ceil(laf->getMultiTabPaneFont().getStringWidthFloat(tab.getButtonText()));
-        }
-        else if (layout.itemType == jaut::MultiPagePane::TabFactory::TabItem::ItemImage)
-        {
-            const juce::Image img = static_cast<juce::ImageComponent&>(*tab.getChildComponent(i)).getImage();
-            item_width = img.isNull() ? 0 : (img.getWidth() / img.getHeight()) * height;
-        }
-
-        width += margin.left + item_width + margin.right;
-    }
-
-    return width;
+    return (options.pinnedTabBehaviour & flag) == flag;
 }
-
-template<class Fn>
-void internalComponentLoop(const jaut::MultiPagePane::TabFactory &factory, jaut::LookAndFeel_Jaut *laf,
-                           const jaut::MultiPagePane::TabButton &tab, Fn &&heightFunc)
-{
-    const auto &layouts = factory.getTabLayout();
-    int last_right      = 0;
-
-    for (jaut::SizeTypes::Vector i = 0; i < layouts.size(); ++i)
-    {
-        const auto &layout         = layouts.at(i);
-        const jaut::Margin &margin = layout.itemMargin;
-        const int height           = std::forward<Fn>(heightFunc)(margin);
-        int item_width             = height;
-        juce::Component &cp        = *tab.getChildComponent(i);
-
-        if (layout.itemType == jaut::MultiPagePane::TabFactory::TabItem::ItemText)
-        {
-            item_width = std::ceil(laf->getMultiTabPaneFont().getStringWidthFloat(tab.getButtonText()));
-        }
-        else if (layout.itemType == jaut::MultiPagePane::TabFactory::TabItem::ItemImage)
-        {
-            const juce::Image img = static_cast<juce::ImageComponent&>(cp).getImage();
-            item_width = img.isNull() ? 0 : (img.getWidth() / img.getHeight()) * height;
-        }
-
-        cp.setBounds(last_right + margin.left, margin.top, item_width, height);
-        last_right += margin.left + item_width + margin.right;
-    }
-}
-
-int getTabWidth(const jaut::MultiPagePane::TabFactory &factory, const jaut::MultiPagePane::Style &style,
-                const jaut::MultiPagePane::TabButton  &tab,           jaut::LookAndFeel_Jaut     *laf)
-{
-    if (const int item_size = style.tabBarItemSize; item_size >= 0)
-    {
-        return internalWidthLoop(factory, laf, tab, [item_size](const jaut::Margin&) { return item_size; });
-    }
-    else
-    {
-        if (const int tab_height = style.tabBarHeight; tab_height >= 0)
-        {
-            return internalWidthLoop(factory, laf, tab, [tab_height](const jaut::Margin &margin)
-                                                        {
-                                                            return tab_height - margin.top - margin.bottom;
-                                                        });
-        }
-        else
-        {
-            const int font_size = std::ceil(laf->getMultiTabPaneFont().getHeight());
-            return internalWidthLoop(factory, laf, tab, [font_size](const jaut::Margin&) { return font_size; });
-        }
-    }
-}
-
-int getTabHeight(const jaut::MultiPagePane::TabFactory &factory, const jaut::MultiPagePane::Style &style,
-                 jaut::LookAndFeel_Jaut *laf)
-{
-    if (const int tab_height = style.tabBarHeight; tab_height >= 0)
-    {
-        return tab_height;
-    }
-    else
-    {
-        if (style.tabBarItemSize >= 0)
-        {
-            int max = 0;
-
-            for (const auto &layout : factory.getTabLayout())
-            {
-                const jaut::Margin margin = layout.itemMargin;
-                max = std::max(max, style.tabBarItemSize + margin.top + margin.bottom);
-            }
-
-            return max;
-        }
-        else
-        {
-            const int item_height = std::ceil(laf->getMultiTabPaneFont().getHeight());
-            int max = 0;
-
-            for (const auto &layout : factory.getTabLayout())
-            {
-                const jaut::Margin margin = layout.itemMargin;
-                max = std::max(max, item_height + margin.top + margin.bottom);
-            }
-
-            return max;
-        }
-    }
-}
-
 }
 //======================================================================================================================
 // endregion Namespace
@@ -163,14 +46,14 @@ namespace jaut
 //**********************************************************************************************************************
 // region ContentPane
 //======================================================================================================================
-ContentPane::ContentPane(juce::Component &content) noexcept
-    : content(content)
+ContentPane::ContentPane(juce::Component &parContent) noexcept
+    : content(parContent)
 {
     JAUT_INIT_LAF()
 }
 
-ContentPane::ContentPane(juce::Component *content, bool owned)
-    : content(content, owned)
+ContentPane::ContentPane(juce::Component *parContent, bool owned)
+    : content(parContent, owned)
 {
     JAUT_INIT_LAF()
 }
@@ -242,13 +125,18 @@ juce::Component* ContentPane::getCurrentComponent() noexcept
 {
     return content.get();
 }
+
+const juce::Component* ContentPane::getCurrentComponent() const noexcept
+{
+    return content.get();
+}
 //======================================================================================================================
 // endregion ContentPane
 //**********************************************************************************************************************
 // region SplitContainer
 //======================================================================================================================
-SplitContainer::SplitContainer(SplitContainer::Orientation orientation) noexcept
-    : constrainer(orientation), orientation(orientation)
+SplitContainer::SplitContainer(SplitContainer::Orientation parOrientation) noexcept
+    : constrainer(parOrientation), orientation(parOrientation)
 {
     JAUT_INIT_LAF()
 
@@ -278,13 +166,13 @@ void SplitContainer::resized()
 
         if (orientation == Orientation::Horizontal)
         {
-            seperator.setBounds(std::ceil(static_cast<float>(getWidth()) / 2.0f - h_thickness), 0,
-                               thickness, getHeight());
+            seperator.setBounds(static_cast<int>(std::ceil(static_cast<float>(getWidth()) / 2.0f - h_thickness)), 0,
+                                thickness, getHeight());
         }
         else
         {
-            seperator.setBounds(0, std::ceil(static_cast<float>(getHeight()) / 2.0f - h_thickness),
-                               getWidth(), thickness);
+            seperator.setBounds(0, static_cast<int>(std::ceil(static_cast<float>(getHeight()) / 2.0f - h_thickness)),
+                                getWidth(), thickness);
         }
 
         initialised = true;
@@ -312,7 +200,7 @@ void SplitContainer::resized()
 //======================================================================================================================
 void SplitContainer::setComponent(juce::Component *component, ComponentOrder order, bool owned)
 {
-    auto &pane = order == ComponentOrder::LeftOrTop ? firstComponent : secondComponent;
+    ContentPane &pane = order == ComponentOrder::LeftOrTop ? firstComponent : secondComponent;
 
     if (pane.resetComponent(component, owned))
     {
@@ -359,8 +247,8 @@ void SplitContainer::setSeperatorThickness(int val)
 {
     if (const int prev = std::exchange(thickness, val); prev != val)
     {
-        const int  diff = static_cast<int>(std::ceil(static_cast<float>(val - prev) / 2.0f));
-        const auto rect = seperator.getBounds();
+        const int diff             = static_cast<int>(std::ceil(static_cast<float>(val - prev) / 2.0f));
+        const juce::Rectangle rect = seperator.getBounds();
 
         if (orientation == Orientation::Horizontal)
         {
@@ -383,514 +271,689 @@ void SplitContainer::setSeperatorThickness(int val)
 //**********************************************************************************************************************
 // region InternalTabBar
 //======================================================================================================================
-class MultiPagePane::InternalTabBar final : public juce::Component, juce::LookAndFeel_V4
+class MultiPagePane::InternalTabBar final : public juce::Component, private juce::LookAndFeel_V4
 {
 public:
-    struct TabId
-    {
-        TabButton button;
-        juce::String id;
-
-        //==========================================================================================================
-        TabId(const Style &style, TabFactory &factory, juce::String id, const juce::String &name)
-            : button(style, factory, id, !name.isEmpty() ? name : id), id(std::move(id))
-        {}
-    };
-
     class TabStrip : public juce::Viewport
     {
     public:
-        class TabDragger : public juce::MouseListener
+        struct DragHelper : juce::MouseListener
         {
-        public:
-            class TabConstrainer : public juce::ComponentBoundsConstrainer
+            //==========================================================================================================
+            struct Constrainer : juce::ComponentBoundsConstrainer
             {
-                void applyBoundsToComponent(Component &component, juce::Rectangle<int> bounds) override
+                void applyBoundsToComponent(Component &tab, juce::Rectangle<int> bounds) override
                 {
-                    const int max_x = component.getParentWidth() - component.getWidth();
-                    component.setTopLeftPosition(std::clamp(bounds.getX(), 0, max_x), 0);
+                    juce::Component &parent = *tab.getParentComponent();
+                    tab.setBounds(bounds.constrainedWithin(parent.getBounds()));
                 }
             };
-
+            
             //==========================================================================================================
-            TabStrip &strip;
-
+            juce::ComponentDragger tabDragger;
+            Constrainer            dragConstrainer;
+            
+            TabStrip &tabStrip;
+            
+            TabButton *draggedTab { nullptr };
+            int        dragIndex  { 0 };
+            
+            bool enabled { false };
+            
             //==========================================================================================================
-            explicit TabDragger(TabStrip &strip) noexcept
-                : strip(strip)
+            explicit DragHelper(TabStrip &parTabStrip)
+                : tabStrip(parTabStrip)
             {}
-
+    
+            //==========================================================================================================
+            void enable(bool parEnabled) noexcept
+            {
+                enabled = parEnabled;
+            }
+            
             //==========================================================================================================
             void mouseDown(const juce::MouseEvent &e) override
             {
-                if (!e.mods.isLeftButtonDown())
+                if (!enabled || tabStrip.tabs.size() < 2)
                 {
                     return;
                 }
-
-                if (auto *comp = dynamic_cast<TabButton*>(e.eventComponent))
+                
+                if (auto *const tab = dynamic_cast<TabButton*>(e.eventComponent))
                 {
-                    int selected = -1;
-
-                    for (SizeTypes::Vector i = 0; i < strip.tabs.size(); ++i)
+                    tabDragger.startDraggingComponent(tab, e);
+                    draggedTab = tab;
+                    tab->toFront(false);
+            
+                    for (int i = 0; i < tabStrip.getNumTabs(); ++i)
                     {
-                        if (&strip.tabs.at(i)->button == comp)
+                        if (tab == tabStrip.tabs.at(static_cast<SizeTypes::Vector>(i)))
                         {
-                            selected = i;
+                            dragIndex = i;
                             break;
                         }
                     }
-
-                    if (selected >= 0)
-                    {
-                        comp->toFront(false);
-                        dragger.startDraggingComponent((button = comp), e);
-                        selectedIndex = selected;
-                    }
                 }
             }
-
+    
             void mouseDrag(const juce::MouseEvent &e) override
             {
-                if (button)
+                if (draggedTab)
                 {
-                    const TabButton *const prev = selectedIndex > 0
-                                             ? &strip.tabs.at(static_cast<SizeTypes::Vector>(selectedIndex) - 1)->button
-                                             : nullptr;
-                    const TabButton *const next = (selectedIndex + 1) < static_cast<int>(strip.tabs.size())
-                                             ? &strip.tabs.at(static_cast<SizeTypes::Vector>(selectedIndex) + 1)->button
-                                             : nullptr;
-
-                    dragger.dragComponent(button, e, &constrainer);
-
-                    const auto bounds = button->getBounds();
-
+                    tabDragger.dragComponent(draggedTab, e, &dragConstrainer);
+            
+                    TabButton *const prev = dragIndex > 0
+                                                      ? tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex) - 1)
+                                                      : nullptr;
+                    TabButton *const next = (dragIndex + 1) < tabStrip.getNumTabs()
+                                                      ? tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex) + 1)
+                                                      : nullptr;
+            
+                    const juce::Rectangle<int> bounds = draggedTab->getBounds();
+            
                     if (prev && bounds.getX() < (prev->getX() + Const_TabSwapSensitivity))
                     {
-                        const int prev_index = selectedIndex - 1;
-                        strip.swapTabs(prev_index, selectedIndex);
-                        rearrangeTabs();
-                        --selectedIndex;
+                        const auto prev_index  =   static_cast<SizeTypes::Vector>(dragIndex) - 1;
+                        std::swap(tabStrip.tabs.at(static_cast<SizeTypes::Vector>(prev_index)),
+                                  tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex)));
+                        
+                        const int new_right = prev->getX() + draggedTab->getWidth();
+                        prev->setTopLeftPosition(new_right, 0);
+                        
+                        --dragIndex;
                     }
                     else if (next && (bounds.getRight() > next->getRight() - Const_TabSwapSensitivity))
                     {
-                        const int next_index = selectedIndex + 1;
-                        strip.swapTabs(selectedIndex, next_index);
-                        rearrangeTabs();
-                        ++selectedIndex;
+                        const auto next_index  =   static_cast<SizeTypes::Vector>(dragIndex) + 1;
+                        std::swap(tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex)),
+                                  tabStrip.tabs.at(static_cast<SizeTypes::Vector>(next_index)));
+                        
+                        const int new_right = next->getX() - draggedTab->getWidth();
+                        next->setTopLeftPosition(new_right, 0);
+                        
+                        ++dragIndex;
                     }
                 }
             }
-
-            void mouseUp(const juce::MouseEvent &event) override
+    
+            void mouseUp(const juce::MouseEvent&) override
             {
-                if (button)
+                if (draggedTab)
                 {
-                    const int x = selectedIndex == 0 ? 0
-                                  : strip.tabs.at(static_cast<SizeTypes::Vector>(selectedIndex) - 1)->button.getRight();
-                    button->setTopLeftPosition(x, 0);
-                    button = nullptr;
+                    std::exchange(draggedTab, nullptr)->setTopLeftPosition(dragIndex == 0 ? 0
+                                      : tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex - 1))->getRight(), 0);
                 }
             }
-
-            void rearrangeTabs()
-            {
-                for (SizeTypes::Vector i = 0; i < strip.tabs.size(); ++i)
-                {
-                    auto &comp = strip.tabs.at(i)->button;
-
-                    if (&comp != button)
-                    {
-                        if (i == 0)
-                        {
-                            comp.setTopLeftPosition(0, 0);
-                        }
-                        else
-                        {
-                            auto &prev = strip.tabs.at(i - 1)->button;
-
-                            if (&prev != button)
-                            {
-                                comp.setTopLeftPosition(prev.getRight(), 0);
-                            }
-                            else
-                            {
-                                const int pre_w = prev.getWidth();
-                                const int x = i == 1 ? pre_w : strip.tabs.at(i - 2)->button.getRight() + pre_w;
-                                comp.setTopLeftPosition(x, 0);
-                            }
-                        }
-                    }
-                }
-            }
-
-        private:
-            TabConstrainer constrainer;
-            juce::ComponentDragger dragger;
-            int selectedIndex { 0 };
-            TabButton *button { nullptr };
         };
-
+        
         //==============================================================================================================
-        TabDragger dragger;
-        std::vector<std::unique_ptr<TabId>> tabs;
-        juce::Component container;
-
-        //==============================================================================================================
-        explicit TabStrip()
+        TabStrip()
             : dragger(*this)
         {
-            setViewedComponent(&container, false);
-            setScrollBarsShown(false, false);
+            setViewedComponent(&content, false);
         }
-
+    
         //==============================================================================================================
-        void addTab(std::unique_ptr<TabId> tabId)
+        void resized() override
         {
-            tabId->button.addMouseListener(&dragger, false);
-            container.addAndMakeVisible(tabId->button);
-            tabs.emplace_back(std::move(tabId));
-            rearrangeTabList(static_cast<int>(tabs.size()) - 1);
+            content.setSize(content.getWidth(), getHeight());
+            juce::Viewport::resized();
         }
-
-        void removeTab(int index)
-        {
-            container.removeChildComponent(&tabs.at(static_cast<SizeTypes::Vector>(index))->button);
-            tabs.erase(tabs.begin() + index);
-            rearrangeTabList(index);
-        }
-
+        
         //==============================================================================================================
-        int numTabs() const noexcept
+        void addTab(TabButton *tab)
         {
-            return tabs.size();
+            tab->addMouseListener(&dragger, false);
+            content.addAndMakeVisible(tab);
+            tabs.emplace_back(tab);
+            
+            tab->setTopLeftPosition(content.getWidth(), 0);
+            content.setSize(tab->getRight(), getHeight());
         }
-
-        void swapTabs(int tab1, int tab2)
+        
+        void removeTab(TabButton *tabToRemove)
         {
-            auto &p_comp = tabs.at(static_cast<SizeTypes::Vector>(tab1));
-            p_comp->button.setTabIndex(tab2);
-
-            auto &n_comp = tabs.at(static_cast<SizeTypes::Vector>(tab2));
-            n_comp->button.setTabIndex(tab1);
-
-            std::swap(p_comp, n_comp);
-
-            int &current_tab = reinterpret_cast<InternalTabBar*>(getParentComponent())->currentOpenTab;
-            current_tab      = (tab1 == current_tab ? tab2 : tab1);
-        }
-
-        //==============================================================================================================
-        void rearrangeTabList(int index)
-        {
-            auto start_index = static_cast<SizeTypes::Vector>(index);
-
-            if (index == 0 && !tabs.empty())
+            for (auto it = tabs.begin(); it != tabs.end(); ++it)
             {
-                ++start_index;
-
-                auto &tab_button = tabs.at(0)->button;
-                tab_button.setTopLeftPosition(0, 0);
-                tab_button.setTabIndex(0);
-            }
-
-            for (auto i = start_index; i < tabs.size(); ++i)
-            {
-                auto &tab_button = tabs.at(i)->button;
-                tab_button.setTopLeftPosition(tabs.at(i - 1)->button.getRight(), 0);
-                tab_button.setTabIndex(i);
-            }
-
-            if (!tabs.empty())
-            {
-                container.setSize(tabs.at(tabs.size() - 1)->button.getRight(), getHeight());
-            }
-            else
-            {
-                container.setSize(0, getHeight());
+                TabButton *const tab = *it;
+                
+                if (tab == tabToRemove)
+                {
+                    tab->removeMouseListener(&dragger);
+                    content.removeChildComponent(tab);
+                    tabs.erase(it);
+                    
+                    rearrangeTabs(static_cast<int>(std::distance(tabs.begin(), it)));
+    
+                    return;
+                }
             }
         }
-
-        //==========================================================================================================
-        void updateStyle(const Style &newStyle)
+    
+        void addAll(const std::vector<TabButton*> &parTabs)
+        {
+            if (parTabs.empty())
+            {
+                return;
+            }
+            
+            int last_right = content.getWidth();
+        
+            for (auto &tab : parTabs)
+            {
+                content.addAndMakeVisible(tab);
+                tab->addMouseListener(&dragger, false);
+                tab->setTopLeftPosition(last_right, 0);
+                last_right += tab->getWidth();
+            }
+        
+            tabs.insert(tabs.end(), parTabs.begin(), parTabs.end());
+            content.setSize(last_right, getHeight());
+        }
+        
+        std::vector<TabButton*> removeAndReturnAll()
         {
             for (auto &tab : tabs)
             {
-                tab->button.updateStyle(newStyle);
+                tab->removeMouseListener(&dragger);
             }
+            
+            auto vec = tabs;
+            tabs.clear();
+            content.removeAllChildren();
+            return vec;
         }
-
+        
         //==============================================================================================================
-        void mouseWheelMove(const juce::MouseEvent&e, const juce::MouseWheelDetails &wheel) override
+        void setNewTabHeight(int parTabHeight)
         {
-            const auto v_area = getViewArea();
-
-            if (!v_area.contains(container.getLocalBounds()))
+            content.setSize(content.getWidth(), parTabHeight);
+            
+            for (TabButton *tab : tabs)
             {
-                const int x = getViewPositionX() + static_cast<int>(wheel.deltaY * -50.0f);
-                setViewPosition(std::clamp(x, 0, container.getWidth() - getWidth()), 0);
+                tab->setSize(tab->getWidth(), parTabHeight);
             }
         }
-    };
-
-    //==================================================================================================================
-    std::function<void(const juce::String&)> onTabAdded;
-    std::function<void(const juce::String&)> onTabActivated;
-    std::function<void(const juce::String&)> onTabRemoved;
-    std::function<void(const juce::String&, bool)> onTabPinned;
-
-    //==================================================================================================================
-    explicit InternalTabBar(const Style &style, TabFactory &factory)
-        : style(style), factory(factory)
-    {
-        JAUT_INIT_LAF()
-
-        addAndMakeVisible(tabList);
-
-        menuButton.setLookAndFeel(this);
-        menuButton.onClick = [this]()
+        
+        void setCanReorder(bool canReorderTabs)
         {
-            juce::PopupMenu popup_menu;
-
-            for (const auto &tab : tabList.tabs)
-            {
-                if (!tabList.getViewArea().contains(tab->button.getBounds()))
-                {
-                    popup_menu.addItem(tab->button.getButtonText(), [this, &tab]()
-                    {
-                        const int tab_index = tab->button.getTabIndex();
-
-                        if (currentOpenTab != tab_index)
-                        {
-                            tab->button.triggerTabClick();
-                        }
-                        else
-                        {
-                            moveToTab(tab_index);
-                        }
-                    });
-                }
-            }
-
-            juce::PopupMenu::Options options;
-            options.withParentComponent(this);
-            popup_menu.showMenu(options);
-        };
-
-        addChildComponent(menuButton);
-    }
-
-    //==================================================================================================================
-    void resized() override
-    {
-        tabList.setSize(getWidth(), getHeight());
-        updateHiddenTabsMenu();
-
-        if (menuButton.isVisible())
-        {
-            tabList.setSize(getWidth() - getHeight(), getHeight());
-            menuButton.setBounds(style.moreTabsButtonMargin
-                                      .trimRectangle(getLocalBounds().removeFromRight(getHeight())));
+            dragger.enable(canReorderTabs);
         }
-
-        if (!tabList.tabs.empty())
+        
+        //==============================================================================================================
+        bool hasTabs() const noexcept
         {
-            const auto button_bounds = tabList.tabs.at(static_cast<SizeTypes::Vector>(currentOpenTab))
-                                                  ->button.getBounds();
-            const auto view_area     = tabList.getViewArea();
-
-            if (!view_area.contains(button_bounds))
+            return !tabs.empty();
+        }
+        
+        bool hasHiddenTabs() const noexcept
+        {
+            return !tabs.empty() && !getViewArea().contains(content.getBounds());
+        }
+    
+        //==============================================================================================================
+        int getNumTabs() const noexcept
+        {
+            return static_cast<int>(tabs.size());
+        }
+        
+        const std::vector<TabButton*>& getTabs() const noexcept
+        {
+            return tabs;
+        }
+    
+        //==============================================================================================================
+        void mouseWheelMove(const juce::MouseEvent&, const juce::MouseWheelDetails &wheel) override
+        {
+            setViewPosition(getViewPositionX() + static_cast<int>(wheel.deltaY * -50.0f), 0);
+        }
+        
+    private:
+        std::vector<TabButton*> tabs;
+        
+        juce::Component content;
+        DragHelper      dragger;
+        
+        //==============================================================================================================
+        void rearrangeTabs(int index)
+        {
+            if (!tabs.empty())
             {
-                if (button_bounds.getX() > view_area.getX() && view_area.getWidth() >= button_bounds.getWidth())
+                int last_right = 0;
+    
+                if (index == 0)
                 {
-                    tabList.setViewPosition(button_bounds.getRight() - tabList.getWidth(), 0);
+                    TabButton *const tab = tabs.at(0);
+                    tab->setTopLeftPosition(0, 0);
+                    last_right = tab->getWidth();
+                    ++index;
                 }
                 else
                 {
-                    tabList.setViewPosition(button_bounds.getX(), 0);
+                    last_right = tabs.at(static_cast<SizeTypes::Vector>(index) - 1)->getRight();
+                }
+    
+                for (int i = index; i < getNumTabs(); ++i)
+                {
+                    TabButton *tab = tabs.at(static_cast<SizeTypes::Vector>(i));
+                    tab->setTopLeftPosition(last_right, 0);
+                    last_right = tab->getRight();
+                }
+    
+                content.setSize(last_right, getHeight());
+            }
+            else
+            {
+                content.setSize(0, getHeight());
+            }
+        }
+    };
+    
+    //==================================================================================================================
+    using TabPointer = std::unique_ptr<TabButton>;
+    using TabVector  = std::vector<TabPointer>;
+    
+    //==================================================================================================================
+    std::function<void(const juce::String&)>       onTabClosed;
+    std::function<void(const juce::String&)>       onTabChanged;
+    std::function<void(const juce::String&, bool)> onTabPinned;
+    
+    //==================================================================================================================
+    explicit InternalTabBar()
+    {
+        lookAndFeelChanged();
+        
+        tabStripNormal.setScrollBarsShown(false, false);
+        addAndMakeVisible(tabStripNormal);
+        
+        tabStripPinned.setScrollBarsShown(false, false);
+        addAndMakeVisible(tabStripPinned);
+        
+        buttonHiddenTabs.setLookAndFeel(this);
+        buttonHiddenTabs.onClick = [this]()
+        {
+            juce::PopupMenu popup_menu;
+            
+            if (hasSeperateRow)
+            {
+                const bool has_hidden_tabs = tabStripNormal.hasHiddenTabs();
+                
+                if (tabStripPinned.hasHiddenTabs())
+                {
+                    for (const TabButton *tab : tabStripPinned.getTabs())
+                    {
+                        if (tab->getTabIndex() != activeTab && !tabStripPinned.getViewArea().contains(tab->getBounds()))
+                        {
+                            popup_menu.addItem(tab->getButtonText(), [this, tab]()
+                            {
+                                activateTab(tab->getTabIndex());
+                                moveToTab  (tab);
+                            });
+                        }
+                    }
+    
+                    if (has_hidden_tabs)
+                    {
+                        popup_menu.addSeparator();
+                    }
+                }
+                
+                if (has_hidden_tabs)
+                {
+                    for (const TabButton *tab : tabStripNormal.getTabs())
+                    {
+                        if (tab->getTabIndex() != activeTab && !tabStripNormal.getViewArea().contains(tab->getBounds()))
+                        {
+                            popup_menu.addItem(tab->getButtonText(), [this, tab]()
+                            {
+                                activateTab(tab->getTabIndex());
+                                moveToTab  (tab);
+                            });
+                        }
+                    }
+                }
+            }
+            else
+            {
+                for (const auto &tab : tabs)
+                {
+                    if (tab->getTabIndex() != activeTab && !tabStripNormal.getViewArea().contains(tab->getBounds()))
+                    {
+                        TabButton *const tab_button = tab.get();
+                        popup_menu.addItem(tab->getButtonText(), [this, tab_button]()
+                        {
+                            activateTab(tab_button->getTabIndex());
+                            moveToTab  (tab_button);
+                        });
+                    }
+                }
+            }
+    
+            juce::PopupMenu::Options popup_options;
+            popup_options.withParentComponent(this);
+            popup_menu.showMenu(popup_options);
+        };
+        addChildComponent(buttonHiddenTabs);
+    }
+    
+    //==================================================================================================================
+    void resized() override
+    {
+        juce::Rectangle<int> bounds = getLocalBounds();
+        
+        if (getRequiredWidth() > getWidth())
+        {
+            const int tab_half              = tabHeight / 2;
+            const juce::Rectangle<int> rect = bounds.removeFromRight(tabHeight);
+            buttonHiddenTabs.setVisible(true);
+            buttonHiddenTabs.setBounds(marginHiddenTabs.trimRectangle(rect.withPosition(rect.getCentreX() - tab_half,
+                                                                                        rect.getCentreY() - tab_half)
+                                                                          .withHeight(tabHeight)));
+        }
+        else
+        {
+            buttonHiddenTabs.setVisible(false);
+        }
+        
+        tabStripPinned.setBounds(bounds                    .withHeight(tabHeight * hasPinnedTabs()));
+        tabStripNormal.setBounds(tabStripPinned.getBounds().withHeight(tabHeight * hasNonPinnedTabs())
+                                                           .withY     (tabStripPinned.getBottom()));
+        
+        if (!tabs.empty())
+        {
+            const TabButton *const tab = tabs.at(static_cast<SizeTypes::Vector>(activeTab)).get();
+            const TabStrip &strip      = hasSeperateRow && tab->isPinned() ? tabStripPinned : tabStripNormal;
+    
+            if (!strip.getViewArea().contains(tab->getBounds()))
+            {
+                moveToTab(tab);
+            }
+        }
+    }
+    
+    //==================================================================================================================
+    void addTab(const Style &parStyle, const TabFactory &parFactory, const juce::String &id, const juce::String &name)
+    {
+        const int tab_index = static_cast<int>(tabs.size());
+        TabPointer tab      = std::make_unique<TabButton>(parStyle, parFactory, id, name);
+        tab->updateTabHeight(tabHeight);
+        tab->setTabIndex(tab_index);
+        tab->onActivating = [this](const TabButton &parTab)
+        {
+            tabs.at(static_cast<SizeTypes::Vector>(std::exchange(activeTab, parTab.getTabIndex())))->setActive(false);
+    
+            const TabStrip &strip = hasSeperateRow && parTab.isPinned() ? tabStripPinned : tabStripNormal;
+    
+            if (!strip.getViewArea().contains(parTab.getBounds()))
+            {
+                moveToTab(&parTab);
+            }
+    
+            onTabChanged(parTab.getName());
+        };
+        tab->onClosing = [this](const TabButton &parTab)
+        {
+            removeTab(parTab.getTabIndex());
+        };
+        tab->onPinning = [this](const TabButton &parTab, bool state)
+        {
+            pinTab(parTab.getTabIndex(), state);
+        };
+        
+        tabStripNormal.addTab(tab.get());
+        tabs.emplace_back(std::move(tab));
+        
+        activateTab(tab_index);
+    }
+    
+    void removeTab(int index)
+    {
+        TabPointer tab = std::move(tabs.at(static_cast<SizeTypes::Vector>(index)));
+    
+        if (hasSeperateRow && tab->isPinned())
+        {
+            tabStripPinned.removeTab(tab.get());
+        }
+        else
+        {
+            tabStripNormal.removeTab(tab.get());
+        }
+    
+        tabs.erase(tabs.begin() + index);
+        updateTabIndices(index);
+        
+        if (activeTab == index)
+        {
+            if (activeTab != 0)
+            {
+                --activeTab;
+            }
+        }
+        else if (activeTab > index)
+        {
+            --activeTab;
+        }
+    
+        if (!tabs.empty())
+        {
+            TabButton &ntab = *tabs.at(static_cast<SizeTypes::Vector>(activeTab));
+            ntab.setActive(true);
+        
+            const TabStrip &strip = hasSeperateRow && ntab.isPinned() ? tabStripPinned : tabStripNormal;
+        
+            if (!strip.getViewArea().contains(ntab.getBounds()))
+            {
+                moveToTab(&ntab);
+            }
+        
+            onTabChanged(ntab.getName());
+        }
+    
+        onTabClosed(tab->getName());
+    }
+    
+    void activateTab(int index)
+    {
+        TabButton &tab = *tabs.at(static_cast<SizeTypes::Vector>(index));
+        tabs.at(static_cast<SizeTypes::Vector>(std::exchange(activeTab, index)))->setActive(false);
+        tab.setActive(true);
+    
+        const TabStrip &strip = hasSeperateRow && tab.isPinned() ? tabStripPinned : tabStripNormal;
+    
+        if (!strip.getViewArea().contains(tab.getBounds()))
+        {
+            moveToTab(&tab);
+        }
+        
+        onTabChanged(tab.getName());
+    }
+    
+    void pinTab(int index, bool state)
+    {
+        TabButton *tab = tabs.at(static_cast<SizeTypes::Vector>(index)).get();
+        tab->setPinned(state);
+        
+        if (hasSeperateRow)
+        {
+            if (state)
+            {
+                tabStripNormal.removeTab(tab);
+                tabStripPinned.addTab   (tab);
+            }
+            else
+            {
+                tabStripPinned.removeTab(tab);
+                tabStripNormal.addTab   (tab);
+            }
+        }
+        
+        onTabPinned(tab->getName(), state);
+    }
+    
+    //==================================================================================================================
+    void setNewTabHeight(int parTabHeight)
+    {
+        tabHeight = parTabHeight;
+        tabStripPinned.setNewTabHeight(parTabHeight);
+        tabStripNormal.setNewTabHeight(parTabHeight);
+    }
+    
+    void setHiddenTabsMargin(Margin margin)
+    {
+        marginHiddenTabs = margin;
+    }
+    
+    void setNewItemHeight(int itemHeight)
+    {
+        for (TabPointer &tab : tabs)
+        {
+            tab->updateTabSize(itemHeight);
+            tab->setSize(tabHeight, tab->getWidth());
+        }
+    }
+    
+    void setPinBehaviour(bool separateTabs)
+    {
+        if ((hasSeperateRow = separateTabs))
+        {
+            for (TabPointer &tab : tabs)
+            {
+                if (tab->isPinned())
+                {
+                    tabStripNormal.removeTab(tab.get());
+                    tabStripPinned.addTab   (tab.get());
                 }
             }
         }
-    }
-
-    //==================================================================================================================
-    bool updateStyle(const Style &newStyle)
-    {
-        bool updated = false;
-
-        if (style.tabBarHeight != newStyle.tabBarHeight || style.tabBarItemSize != newStyle.tabBarItemSize)
+        else
         {
-            tabList.updateStyle(newStyle);
-
-            if (!tabList.tabs.empty())
-            {
-                tabList.getViewedComponent()->setSize(tabList.tabs.at(tabList.tabs.size() - 1)->button.getRight(),
-                                                      getHeight());
-            }
-            else
-            {
-                tabList.getViewedComponent()->setSize(0, getHeight());
-            }
-
-            updated = true;
-        }
-
-        if (menuButton.isVisible() && style.moreTabsButtonMargin != newStyle.moreTabsButtonMargin)
-        {
-            menuButton.setBounds(newStyle.moreTabsButtonMargin
-                                         .trimRectangle(getBounds().removeFromRight(getHeight())));
-            updated = true;
-        }
-        
-        style = newStyle;
-        return updated;
-    }
-
-    //==================================================================================================================
-    void addTab(const juce::String &id, const juce::String &name = juce::String())
-    {
-        auto tab = std::make_unique<TabId>(style, factory, id, name);
-        tab->button.onTabClicked = [this](int index) { activateTab(index); };
-        tab->button.onClosing    = [this](int index) { removeTab(index); };
-        tab->button.setSize(::getTabWidth(factory, style, tab->button, lookAndFeel), getHeight());
-        tabList.addTab(std::move(tab));
-        onTabAdded(id);
-    }
-
-    void removeTab(int index)
-    {
-        const juce::String id = getIdAt(index);
-        tabList.removeTab(index);
-
-        if (index == currentOpenTab)
-        {
-            if (index > 0)
-            {
-                --currentOpenTab;
-            }
-
-            if (tabList.numTabs() > 0)
-            {
-                tabList.tabs.at(static_cast<SizeTypes::Vector>(currentOpenTab))->button.setActive(true);
-                moveToTab(currentOpenTab);
-            }
-        }
-        else if (index < currentOpenTab)
-        {
-            --currentOpenTab;
-        }
-
-        onTabRemoved(id);
-    }
-
-    void activateTab(int index)
-    {
-        tabList.tabs.at(static_cast<SizeTypes::Vector>(std::exchange(currentOpenTab, index)))->button.setActive(false);
-        tabList.tabs.at(static_cast<SizeTypes::Vector>(currentOpenTab))                      ->button.setActive(true);
-        moveToTab(index);
-        onTabActivated(getIdAt(index));
-    }
-
-    void pinTab(int index, bool state)
-    {
-        tabList.tabs.at(static_cast<SizeTypes::Vector>(index))->button.setPinned(state);
-        onTabPinned(getIdAt(index), state);
-    }
-
-    //==================================================================================================================
-    const juce::String& getIdAt(int index) const noexcept
-    {
-        return tabList.tabs.at(static_cast<SizeTypes::Vector>(index))->id;
-    }
-
-    //==================================================================================================================
-    int getActiveTabIndex() const noexcept
-    {
-        return currentOpenTab;
-    }
-
-    const juce::String& getActiveId() const noexcept
-    {
-        return tabList.tabs.at(static_cast<SizeTypes::Vector>(currentOpenTab))->id;
-    }
-
-    const TabButton *getTabBy(const juce::String &id)
-    {
-        for (auto &tab : tabList.tabs)
-        {
-            if (id == tab->id)
-            {
-                return &tab->button;
-            }
-        }
-
-        return nullptr;
-    }
-
-    const TabButton &getTabAt(int index) const noexcept
-    {
-        return tabList.tabs.at(static_cast<SizeTypes::Vector>(index))->button;
-    }
-
-    //==================================================================================================================
-    void moveToTab(int index)
-    {
-        const auto &tab = tabList.tabs.at(static_cast<SizeTypes::Vector>(index));
-        const auto view_area = tabList.getViewArea();
-        
-        if (const auto bounds = tab->button.getBounds(); !view_area.contains(bounds))
-        {
-            if (bounds.getX() > tabList.getViewArea().getX() && view_area.getWidth() >= bounds.getWidth())
-            {
-                tabList.setViewPosition(bounds.getRight() - tabList.getWidth(), 0);
-            }
-            else
-            {
-                tabList.setViewPosition(bounds.getX(), 0);
-            }
+            tabStripNormal.addAll(tabStripPinned.removeAndReturnAll());
         }
     }
-
-    //==================================================================================================================
-    int getTotalRequiredWidth() const noexcept
+    
+    void setTabsReorderable(bool canReorder) noexcept
     {
-        return tabList.getViewedComponent()->getWidth() + (menuButton.isVisible() ? menuButton.getWidth() : 0);
+        tabStripNormal.setCanReorder(canReorder);
+        tabStripPinned.setCanReorder(canReorder);
     }
-
+    
+    //==================================================================================================================
+    bool hasTabs() const noexcept
+    {
+        return !tabs.empty();
+    }
+    
+    bool hasNonPinnedTabs() const noexcept
+    {
+        return tabStripNormal.hasTabs();
+    }
+    
+    bool hasPinnedTabs() const noexcept
+    {
+        return tabStripPinned.hasTabs();
+    }
+    
+    //==================================================================================================================
+    bool hasHiddenPinnedTabs() const noexcept
+    {
+        return tabStripPinned.hasHiddenTabs();
+    }
+    
+    bool hasHiddenNormalTabs() const noexcept
+    {
+        return tabStripNormal.hasHiddenTabs();
+    }
+    
+    bool hasHiddenTabs() const noexcept
+    {
+        return hasHiddenPinnedTabs() || hasHiddenNormalTabs();
+    }
+    
+    //==================================================================================================================
+    int getRequiredWidth() const noexcept
+    {
+        return std::max(tabStripPinned.getViewedComponent()->getWidth(),
+                        tabStripNormal.getViewedComponent()->getWidth());
+    }
+    
+    int getTabHeight() const noexcept
+    {
+        return tabHeight;
+    }
+    
+    //==================================================================================================================
+    const TabVector &getAllTabs() const noexcept
+    {
+        return tabs;
+    }
+    
+    int getActiveIndex() const noexcept
+    {
+        return activeTab;
+    }
+    
 private:
-    TabStrip tabList;
-    Style style;
-
-    juce::TextButton menuButton;
-    TabFactory &factory;
+    TabVector tabs;
+    
+    juce::TextButton buttonHiddenTabs;
+    
+    TabStrip tabStripNormal;
+    TabStrip tabStripPinned;
+    
+    Margin marginHiddenTabs;
+    
     LookAndFeel_Jaut *lookAndFeel { nullptr };
-
-    int currentOpenTab { 0 };
-
+    
+    int  activeTab      { 0 };
+    int  tabHeight      { 0 };
+    bool hasSeperateRow { false };
+    
     //==================================================================================================================
     void parentHierarchyChanged() override
     {
         lookAndFeelChanged();
     }
-
+    
     void lookAndFeelChanged() override
     {
         if (lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getLookAndFeel()); !lookAndFeel)
         {
             lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf();
+            setLookAndFeel(lookAndFeel);
         }
     }
-
+    
     //==================================================================================================================
-    void updateHiddenTabsMenu()
+    void updateTabIndices(int index)
     {
-        menuButton.setVisible(!tabList.getViewArea().contains(tabList.getViewedComponent()->getLocalBounds()));
+        for (int i = index; i < static_cast<int>(tabs.size()); ++i)
+        {
+            tabs.at(static_cast<SizeTypes::Vector>(i))->setTabIndex(i);
+        }
     }
-
-    //==================================================================================================================
-    void drawButtonBackground(juce::Graphics &g, juce::Button&, const juce::Colour&, bool isOver, bool isDown) override
+    
+    void moveToTab(const TabButton *tab)
     {
-        lookAndFeel->drawMultiTabPaneMoreTabsButton(g, menuButton, isOver, isDown);
+        const juce::Rectangle<int> bounds = tab->getBounds();
+        TabStrip &tab_strip               = hasSeperateRow && tab->isPinned() ? tabStripPinned : tabStripNormal;
+        const juce::Rectangle<int> view   = tab_strip.getViewArea();
+        
+        if (bounds.getX() > view.getX() && view.getWidth() >= bounds.getWidth())
+        {
+            tab_strip.setViewPosition(bounds.getRight() - tab_strip.getWidth(), 0);
+        }
+        else
+        {
+            tab_strip.setViewPosition(bounds.getX(), 0);
+        }
+    }
+    
+    //==================================================================================================================
+    void drawButtonBackground(juce::Graphics&, juce::Button&, const juce::Colour&, bool, bool) override {}
+    
+    void drawButtonText(juce::Graphics &g, juce::TextButton &button, bool isOver, bool isDown) override
+    {
+        lookAndFeel->drawMultiTabPaneMoreTabsButton(g, button, isOver, isDown);
     }
 };
 //======================================================================================================================
@@ -898,23 +961,33 @@ private:
 //**********************************************************************************************************************
 // region TabButton
 //======================================================================================================================
-MultiPagePane::TabButton::TabButton(const Style &style, TabFactory &factory, const juce::String &id,
-                                    const juce::String &name)
-    : juce::Button(name),
-      factory(factory), tabHeight(style.tabBarHeight), itemHeight(style.tabBarItemSize)
+MultiPagePane::TabButton::TabButton(const Style &parStyle, const TabFactory &parFactory, const juce::String &id,
+                                    const juce::String &parText)
+    : juce::Button(id),
+      factory(parFactory)
 {
     JAUT_INIT_LAF()
-    const auto &layouts = factory.getTabLayout();
+    const std::vector<TabFactory::TabItemLayout> &layouts = factory.getTabLayout();
 
-    for (const auto & layout : layouts)
+    for (const TabFactory::TabItemLayout &layout : layouts)
     {
         juce::Component *comp;
 
         switch (layout.itemType)
         {
+            case TabFactory::TabItem::ItemImage:
+            {
+                auto *img = new juce::ImageComponent("itemImage");
+                img->setImage(factory.getImageForPage(id));
+                img->setInterceptsMouseClicks(false, false);
+        
+                comp = img;
+                break;
+            }
+            
             case TabFactory::TabItem::ItemText:
             {
-                auto *label = new juce::Label("itemText", name);
+                auto *label = new juce::Label("itemText", parText);
                 label->setInterceptsMouseClicks(false, false);
                 label->setJustificationType(juce::Justification::centredLeft);
                 label->setBorderSize({});
@@ -923,20 +996,10 @@ MultiPagePane::TabButton::TabButton(const Style &style, TabFactory &factory, con
                 break;
             }
 
-            case TabFactory::TabItem::ItemImage:
-            {
-                auto *img = new juce::ImageComponent("itemImage");
-                img->setImage(factory.getImageForPage(id));
-                img->setInterceptsMouseClicks(false, false);
-
-                comp = img;
-                break;
-            }
-
             case TabFactory::TabItem::ItemCloseButton:
             {
                 auto *button    = new juce::TextButton("itemCloseButton");
-                button->onClick = [this]() { onClosing(tabIndex); };
+                button->onClick = [this]() { onClosing(*this); };
                 button->addMouseListener(this, false);
 
                 comp = button;
@@ -946,7 +1009,17 @@ MultiPagePane::TabButton::TabButton(const Style &style, TabFactory &factory, con
             case TabFactory::TabItem::ItemPinButton:
             {
                 auto *button          = new juce::ToggleButton("itemPinButton");
-                button->onStateChange = [this, button]() { onPinning(tabIndex, (pinned = button->getToggleState())); };
+                button->onStateChange = [this, button]()
+                {
+                    const bool state = button->getToggleState();
+                    
+                    if (state != pinned)
+                    {
+                        onPinning(*this, state);
+                    }
+                    
+                    setPinned(state);
+                };
                 button->addMouseListener(this, false);
 
                 comp = button;
@@ -958,6 +1031,9 @@ MultiPagePane::TabButton::TabButton(const Style &style, TabFactory &factory, con
         addAndMakeVisible(comp);
         layoutComponents.emplace_back(comp);
     }
+    
+    setButtonText(parText);
+    updateTabSize(parStyle.tabButtonItemHeight);
 }
 
 MultiPagePane::TabButton::~TabButton() = default;
@@ -968,44 +1044,27 @@ void MultiPagePane::TabButton::paintButton(juce::Graphics &g, bool mouseOver, bo
     lookAndFeel->drawMultiTabPaneTabBackground(g, *this, mouseOver, mouseDown);
 }
 
-void MultiPagePane::TabButton::resized()
-{
-    if (const int item_size = itemHeight; item_size >= 0)
-    {
-        internalComponentLoop(factory, lookAndFeel, *this, [item_size](const auto&) { return item_size; });
-    }
-    else
-    {
-        if (const int tab_height = tabHeight; tab_height >= 0)
-        {
-            internalComponentLoop(factory, lookAndFeel, *this, [tab_height](const auto &margin)
-            {
-                return tab_height - margin.top - margin.bottom;
-            });
-        }
-        else
-        {
-            const int font_size = std::ceil(lookAndFeel->getMultiTabPaneFont().getHeight());
-            internalComponentLoop(factory, lookAndFeel, *this, [font_size](const auto&) { return font_size; });
-        }
-    }
-}
-
 //======================================================================================================================
 void MultiPagePane::TabButton::mouseDown(const juce::MouseEvent &e)
 {
-    if (e.mods.isLeftButtonDown()
-     && e.eventComponent->getName() != "itemCloseButton" && e.eventComponent->getName() != "itemPinButton")
+    if (e.mods.isLeftButtonDown() && e.eventComponent == this)
     {
-        triggerTabClick();
+        if (!isActive())
+        {
+            onActivating(*this);
+        }
+
+        setActive(true);
     }
 }
 
 //======================================================================================================================
 void MultiPagePane::TabButton::setActive(bool shouldBeActive)
 {
-    active = shouldBeActive;
-    repaint();
+    if (std::exchange(active, shouldBeActive) != shouldBeActive)
+    {
+        repaint();
+    }
 }
 
 bool MultiPagePane::TabButton::isActive() const noexcept
@@ -1016,19 +1075,20 @@ bool MultiPagePane::TabButton::isActive() const noexcept
 //======================================================================================================================
 void MultiPagePane::TabButton::setPinned(bool pin)
 {
-    if (pin == pinned)
+    if (std::exchange(pinned, pin) != pin)
     {
-        return;
-    }
-
-    const auto &layouts = factory.getTabLayout();
-
-    for (SizeTypes::Vector i = 0; i < layouts.size(); ++i)
-    {
-        if (layouts.at(i).itemType == TabFactory::TabItem::ItemPinButton)
+        const auto &layouts = factory.getTabLayout();
+    
+        for (int i = 0; i < static_cast<int>(layouts.size()); ++i)
         {
-            static_cast<juce::ToggleButton*>(getChildComponent(i))->setToggleState(pin, juce::sendNotification);
+            if (layouts.at(static_cast<SizeTypes::Vector>(i)).itemType == TabFactory::TabItem::ItemPinButton)
+            {
+                // NOLINTNEXTLINE
+                static_cast<juce::ToggleButton*>(getChildComponent(i))->setToggleState(pin, juce::dontSendNotification);
+            }
         }
+        
+        repaint();
     }
 }
 
@@ -1049,32 +1109,62 @@ int MultiPagePane::TabButton::getTabIndex() const noexcept
 }
 
 //======================================================================================================================
-void MultiPagePane::TabButton::triggerTabClick()
+void MultiPagePane::TabButton::updateTabSize(int itemHeight)
 {
-    onTabClicked(tabIndex);
+    const std::vector<TabFactory::TabItemLayout> &layout = factory.getTabLayout();
+    int prev_right = 0;
+    
+    for (int i = 0; i < static_cast<int>(layout.size()); ++i)
+    {
+        const TabFactory::TabItemLayout &item = layout.at(static_cast<SizeTypes::Vector>(i));
+        juce::Component &component            = *getChildComponent(i);
+        int item_width;
+        
+        if (item.itemType == TabFactory::TabItem::ItemImage)
+        {
+            const juce::Image img = static_cast<juce::ImageComponent &>(component).getImage(); // NOLINT
+            item_width            = img.isValid() ? img.getWidth() / img.getHeight() * itemHeight : 0;
+        }
+        else if (item.itemType == TabFactory::TabItem::ItemText)
+        {
+            item_width = static_cast<int>(std::ceil(lookAndFeel->getMultiTabPaneFont()
+                                                                .getStringWidthFloat(getButtonText())));
+        }
+        else
+        {
+            item_width = itemHeight;
+        }
+        
+        const Margin &margin = item.itemMargin;
+        component.setBounds(margin.left + prev_right, margin.top, item_width, itemHeight);
+        prev_right = component.getRight() + margin.right;
+    }
+    
+    tabWidth = prev_right;
+}
+
+void MultiPagePane::TabButton::updateTabHeight(int tabHeight)
+{
+    setSize(tabWidth, tabHeight);
 }
 
 //======================================================================================================================
-void MultiPagePane::TabButton::updateStyle(const Style &newStyle)
-{
-    tabHeight  = newStyle.tabBarHeight;
-    itemHeight = newStyle.tabBarItemSize;
-    resized();
-}
-
-//======================================================================================================================
-void MultiPagePane::TabButton::drawButtonBackground(juce::Graphics &g, Button &button, const juce::Colour&,
-                                                    bool isOver, bool isDown)
+void MultiPagePane::TabButton::drawButtonText(juce::Graphics &g, juce::TextButton &button, bool isOver, bool isDown)
 {
     if (button.getName() == "itemCloseButton")
     {
-        lookAndFeel->drawMultiTabPaneTabCloseButton(g, *this, static_cast<juce::TextButton&>(button), isOver, isDown);
-    }
-    else if (button.getName() == "itemPinButton")
-    {
-        lookAndFeel->drawMultiTabPaneTabPinButton(g, *this, static_cast<juce::ToggleButton&>(button), isOver, isDown);
+        lookAndFeel->drawMultiTabPaneTabCloseButton(g, *this, button, isOver, isDown);
     }
 }
+
+void MultiPagePane::TabButton::drawToggleButton(juce::Graphics &g, juce::ToggleButton &button, bool isOver, bool isDown)
+{
+    if (button.getName() == "itemPinButton")
+    {
+        lookAndFeel->drawMultiTabPaneTabPinButton(g, *this, button, isOver, isDown);
+    }
+}
+
 //======================================================================================================================
 JAUT_IMPL_LAF(MultiPagePane::TabButton)
 //======================================================================================================================
@@ -1082,58 +1172,66 @@ JAUT_IMPL_LAF(MultiPagePane::TabButton)
 //**********************************************************************************************************************
 // region MultiPagePane
 //======================================================================================================================
-MultiPagePane::MultiPagePane(FactoryPtr factory)
-    : MultiPagePane(std::move(factory), {})
+MultiPagePane::MultiPagePane(FactoryPtr parFactory)
+    : MultiPagePane(std::move(parFactory), {}, {})
 {}
 
-MultiPagePane::MultiPagePane(FactoryPtr factory, Style style)
-    : tabBar(std::make_unique<InternalTabBar>(style, *factory)),
-      factory(std::move(factory)), style(style)
+MultiPagePane::MultiPagePane(FactoryPtr parFactory, Style parStyle)
+    : MultiPagePane(std::move(parFactory), parStyle, {})
+{}
+
+MultiPagePane::MultiPagePane(FactoryPtr parFactory, Options parOptions)
+    : MultiPagePane(std::move(parFactory), {}, parOptions)
+{}
+
+MultiPagePane::MultiPagePane(FactoryPtr parFactory, Style parStyle, Options parOptions)
+    : tabBar(std::make_unique<InternalTabBar>()), factory(std::move(parFactory)),
+      style(parStyle), options(parOptions)
 {
     JAUT_INIT_LAF()
-
+    
     // The TabFactory instance can't be null
     jassert(this->factory != nullptr);
-
-    tabBar->onTabActivated = [this](const juce::String &id)
+    // A tab's size-properties can't go below 0
+    jassert(parStyle.tabButtonHeight >= 0 && parStyle.tabButtonItemHeight >= 0);
+    
+    // Tab style
+    tabBar->setNewTabHeight    (parStyle.tabButtonHeight);
+    tabBar->setHiddenTabsMargin(parStyle.moreTabsButtonMargin);
+    
+    // Tab options
+    tabBar->setPinBehaviour   (::hasPinFlag(parOptions, Options::PinBehaviour::PutInExtraRow));
+    tabBar->setTabsReorderable(parOptions.allowTabReordering);
+    
+    // Tab callbacks
+    tabBar->onTabClosed = [this](const juce::String &pageId)
     {
-        contentPane.resetComponent(*pages.at(id).get());
-        TabChanged(id);
-    };
-    tabBar->onTabRemoved = [this](const juce::String &id)
-    {
-        if (pages.at(id).get() == contentPane.getCurrentComponent())
+        if (contentPane.getCurrentComponent()->getName() == pageId)
         {
             contentPane.resetComponent();
         }
-
-        if (pages.size() == 1)
-        {
-            LastTabClosing(id);
-        }
-
-        pages.erase(id);
-        TabClosed (id);
-        updateTabBarBounds();
-
-        if (!pages.empty())
-        {
-            const juce::String open_id = tabBar->getActiveId();
-            contentPane.resetComponent(*pages.at(open_id));
-            TabChanged(open_id);
-        }
+        
+        pages.erase(pageId);
+        TabClosed(pageId);
+        
+        resized(); // NOLINT
     };
-    tabBar->onTabAdded = [this](const juce::String &id)
+    tabBar->onTabChanged = [this](const juce::String &pageId)
     {
-        TabOpened (id);
-        updateTabBarBounds();
-        openPage(static_cast<int>(pages.size()) - 1);
+        contentPane.resetComponent(*pages.at(pageId));
+        TabChanged(pageId);
     };
-    tabBar->onTabPinned = [this](const juce::String &id, bool state)
+    tabBar->onTabPinned = [this](const juce::String &pageId, bool state)
     {
-        TabPinStateChanged(id, state);
+        TabPinStateChanged(pageId, state);
+        
+        if (::hasPinFlag(options, Options::PinBehaviour::PutInExtraRow))
+        {
+            resized(); // NOLINT
+        }
     };
-    tabBar->setSize(0, ::getTabHeight(*this->factory, style, lookAndFeel));
+    
+    // Add components
     addAndMakeVisible(*tabBar);
     addAndMakeVisible(contentPane);
 }
@@ -1148,9 +1246,8 @@ void MultiPagePane::paint(juce::Graphics &g)
 
 void MultiPagePane::resized()
 {
-    const auto prev_rect = tabBar->getBounds();
-    
-    const Style::TabBarLayout layout = style.tabBarLayout;
+    const juce::Rectangle<int> prev_bounds = tabBar->getBounds();
+    const Style::TabBarLayout layout       = style.tabBarLayout;
     updateSpaceBounds(layout);
     
     if (layout == Style::TabBarLayout::Top || layout == Style::TabBarLayout::Bottom)
@@ -1159,31 +1256,38 @@ void MultiPagePane::resized()
     }
     else
     {
+        constexpr float rot_up = juce::float_Pi * 1.5f;
+        constexpr float rot_dn = juce::float_Pi * 0.5f;
+        
         const Margin &tab_margin = style.tabBarMargin;
-        juce::Rectangle<int> tab_rect { tabSpaceBounds.getX()      + tab_margin.left, 0,
-                                        tabSpaceBounds.getHeight() - tab_margin.top  - tab_margin.bottom,
+        juce::Rectangle<int> tab_rect { tabSpaceBounds.getHeight() - tab_margin.top  - tab_margin.bottom,
                                         tabSpaceBounds.getWidth()  - tab_margin.left - tab_margin.right };
         
         if (layout == Style::TabBarLayout::SideLeft)
         {
-            if (const int req_width = tabBar->getTotalRequiredWidth(); req_width < tab_rect.getWidth())
+            tab_rect.setX(tabSpaceBounds.getX() + tab_margin.left);
+            
+            const int req_width = tabBar->getRequiredWidth();
+            
+            if (req_width > tab_rect.getWidth())
             {
-                tab_rect.setWidth(req_width);
+                tab_rect.setY(tabSpaceBounds.getY() + tab_margin.top + tab_rect.getWidth());
+            }
+            else
+            {
+                tab_rect.setY(tabSpaceBounds.getY() + tab_margin.top + req_width);
             }
             
-            tab_rect.setY(tabSpaceBounds.getY() + tab_rect.getWidth() + tab_margin.top);
-            tabBar->setTransform(juce::AffineTransform::rotation(juce::float_Pi * 1.5f,
-                                                                 static_cast<float>(tab_rect.getX()),
-                                                                 static_cast<float>(tab_rect.getY())));
+            tabBar->setTransform(juce::AffineTransform::rotation(rot_up, static_cast<float>(tab_rect.getX()),
+                                                                         static_cast<float>(tab_rect.getY())));
         }
         else
         {
             tab_rect.setX(tabSpaceBounds.getRight() - tab_margin.right);
             tab_rect.setY(tabSpaceBounds.getY()     + tab_margin.top);
     
-            tabBar->setTransform(juce::AffineTransform::rotation(juce::float_Pi * 0.5f,
-                                                                 static_cast<float>(tab_rect.getX()),
-                                                                 static_cast<float>(tab_rect.getY())));
+            tabBar->setTransform(juce::AffineTransform::rotation(rot_dn, static_cast<float>(tab_rect.getX()),
+                                                                         static_cast<float>(tab_rect.getY())));
         }
     
         tabBar->setBounds(tab_rect);
@@ -1191,7 +1295,7 @@ void MultiPagePane::resized()
 
     contentPane.setBounds(style.pageViewMargin.trimRectangle(pageSpaceBounds));
     
-    if (prev_rect == tabBar->getBounds())
+    if (prev_bounds == tabBar->getBounds())
     {
         tabBar->resized();
     }
@@ -1207,23 +1311,33 @@ void MultiPagePane::addPage(const juce::String &pageId, const juce::String &name
     {
         if (auto new_page = factory->createPageForId(id))
         {
+            new_page->setName(id);
             pages.emplace(id, std::move(new_page));
-            tabBar->addTab(id, name);
+            tabBar->addTab(style, *factory, id, !name.isEmpty() ? name : id);
+            
+            TabOpened(id);
+            
+            resized();
         }
     }
 }
 
 void MultiPagePane::closePage(int index)
 {
-    if (fit<int>(index, 0, pages.size()))
+    if (fit(index, 0, getNumPages()))
     {
+        if (pages.size() == 1)
+        {
+            LastTabClosing(getTab(index)->getName());
+        }
+        
         tabBar->removeTab(index);
     }
 }
 
 void MultiPagePane::openPage(int index)
 {
-    if (fit<int>(index, 0, pages.size()) && index != tabBar->getActiveTabIndex())
+    if (index != tabBar->getActiveIndex() && fit(index, 0, getNumPages()))
     {
         tabBar->activateTab(index);
     }
@@ -1231,18 +1345,39 @@ void MultiPagePane::openPage(int index)
 
 void MultiPagePane::pinPage(int index, bool shouldBePinned)
 {
-    auto &tab = tabBar->getTabAt(index);
-
-    if (fit<int>(index, 0, pages.size()) && getTab(index)->isPinned() != shouldBePinned)
+    if (fit(index, 0, getNumPages()) && getTab(index)->isPinned() != shouldBePinned)
     {
         tabBar->pinTab(index, shouldBePinned);
+    }
+}
+
+void MultiPagePane::closeAllTabs(bool forcePinned)
+{
+    if (!::hasPinFlag(options, Options::PinBehaviour::ClosingAllNoEffect) || forcePinned)
+    {
+        for (int i = 0; i < getNumPages(); ++i)
+        {
+            closePage(i);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < getNumPages(); ++i)
+        {
+            const auto &tab = getTab(i);
+        
+            if (!tab->isPinned())
+            {
+                closePage(i);
+            }
+        }
     }
 }
 
 //======================================================================================================================
 int MultiPagePane::getNumPages() const noexcept
 {
-    return pages.size();
+    return static_cast<int>(pages.size());
 }
 
 bool MultiPagePane::hasAnyPages() const noexcept
@@ -1253,94 +1388,142 @@ bool MultiPagePane::hasAnyPages() const noexcept
 //======================================================================================================================
 const MultiPagePane::TabButton* MultiPagePane::getTab(int index) const noexcept
 {
-    return hasAnyPages() ? &tabBar->getTabAt(index) : nullptr;
+    if (!fit(index, 0, getNumPages()))
+    {
+        return nullptr;
+    }
+    
+    return tabBar->getAllTabs().at(static_cast<SizeTypes::Vector>(index)).get();
 }
 
 juce::Component* MultiPagePane::getPage(int index) noexcept
 {
-    return hasAnyPages() ? pages.at(tabBar->getIdAt(index)).get() : nullptr;
+    if (!fit(index, 0, getNumPages()))
+    {
+        return nullptr;
+    }
+    
+    const juce::String id = tabBar->getAllTabs().at(static_cast<SizeTypes::Vector>(index))->getName();
+    return pages.at(id).get();
 }
 
 const juce::Component* MultiPagePane::getPage(int index) const noexcept
 {
-    return hasAnyPages() ? pages.at(tabBar->getIdAt(index)).get() : nullptr;
+    if (!fit(index, 0, getNumPages()))
+    {
+        return nullptr;
+    }
+    
+    const juce::String id = tabBar->getAllTabs().at(static_cast<SizeTypes::Vector>(index))->getName();
+    return pages.at(id).get();
 }
 
 const MultiPagePane::TabButton* MultiPagePane::getTab(const juce::String &pageId) const noexcept
 {
-    return tabBar->getTabBy(pageId.trim().toLowerCase());
+    for (auto &tab : tabBar->getAllTabs())
+    {
+        if (tab->getName().equalsIgnoreCase(pageId.trim()))
+        {
+            return tab.get();
+        }
+    }
+    
+    return nullptr;
 }
 
 juce::Component* MultiPagePane::getPage(const juce::String &pageId) noexcept
 {
-    auto it = pages.find(pageId.trim().toLowerCase());
+    const auto it = pages.find(pageId.trim().toLowerCase());
     return it != pages.end() ? it->second.get() : nullptr;
 }
 
 const juce::Component* MultiPagePane::getPage(const juce::String &pageId) const noexcept
 {
-    auto it = pages.find(pageId.trim().toLowerCase());
+    const auto it = pages.find(pageId.trim().toLowerCase());
     return it != pages.end() ? it->second.get() : nullptr;
 }
 
 //======================================================================================================================
 int MultiPagePane::getActiveIndex() const noexcept
 {
-    return hasAnyPages() ? tabBar->getActiveTabIndex() : -1;
+    return tabBar->getActiveIndex();
 }
 
 juce::String MultiPagePane::getActiveId() const noexcept
 {
-    return hasAnyPages() ? tabBar->getActiveId() : "";
+    const TabButton *tab = getTab(getActiveIndex());
+    return tab ? tab->getName() : juce::String();
 }
 
 const MultiPagePane::TabButton* MultiPagePane::getActiveTab() const noexcept
 {
-    return hasAnyPages() ? &tabBar->getTabAt(getActiveIndex()) : nullptr;
+    return getTab(getActiveIndex());
 }
 
 juce::Component* MultiPagePane::getActivePage() noexcept
 {
-    return hasAnyPages() ? pages.at(getActiveId()).get() : nullptr;
+    return hasAnyPages() ? contentPane.getCurrentComponent() : nullptr;
 }
 
 const juce::Component* MultiPagePane::getActivePage() const noexcept
 {
-    return hasAnyPages() ? pages.at(getActiveId()).get() : nullptr;
+    return hasAnyPages() ? contentPane.getCurrentComponent() : nullptr;
 }
 
 //======================================================================================================================
-void MultiPagePane::setStyle(const Style &newStyle)
+void MultiPagePane::setStyle(const Style &parStyle)
 {
-    if (tabBar->updateStyle(newStyle) || style.tabBarMargin != newStyle.tabBarMargin
-        || style.tabBarLayout != newStyle.tabBarLayout || style.componentPadding != newStyle.componentPadding)
+    const Style old_style = std::exchange(style, parStyle);
+    bool needs_resize     = false;
+    
+    if (old_style.tabBarMargin     != parStyle.tabBarMargin
+     || old_style.componentPadding != parStyle.componentPadding)
+    {
+        needs_resize = true;
+    }
+    
+    if (old_style.tabButtonItemHeight != parStyle.tabButtonItemHeight)
+    {
+        // A tab's size-properties can't go below 0
+        jassert(parStyle.tabButtonItemHeight >= 0);
+        
+        tabBar->setNewItemHeight(parStyle.tabButtonItemHeight);
+        needs_resize = true;
+    }
+    
+    if (old_style.tabButtonHeight != parStyle.tabButtonHeight)
+    {
+        // A tab's size-properties can't go below 0
+        jassert(parStyle.tabButtonHeight >= 0);
+        
+        tabBar->setNewTabHeight(parStyle.tabButtonHeight);
+        needs_resize = true;
+    }
+    
+    if (old_style.tabBarLayout != parStyle.tabBarLayout)
+    {
+        if (parStyle.tabBarLayout == Style::TabBarLayout::Top || parStyle.tabBarLayout == Style::TabBarLayout::Bottom)
+        {
+            tabBar->setTransform(juce::AffineTransform());
+        }
+    
+        needs_resize = true;
+    }
+    
+    if (old_style.moreTabsButtonMargin != parStyle.moreTabsButtonMargin)
+    {
+        tabBar->setHiddenTabsMargin(parStyle.moreTabsButtonMargin);
+        needs_resize = true;
+    }
+    
+    if (needs_resize)
     {
         resized();
     }
-
-    if (style.pageViewMargin != newStyle.pageViewMargin)
+    else if (old_style.pageViewMargin != parStyle.pageViewMargin)
     {
-        const auto layout      = style.tabBarLayout;
-        const auto tab_margin  = style.tabBarMargin;
-        juce::Rectangle<int> page_space;
-
-        if (layout == Style::TabBarLayout::Top || layout == Style::TabBarLayout::Bottom)
-        {
-            const int height = tab_margin.top + tab_margin.bottom + ::getTabHeight(*factory, style, lookAndFeel);
-            const int y      = layout == Style::TabBarLayout::Top ? height : 0;
-            page_space.setBounds(0, y, getWidth(), getHeight() - height);
-        }
-        else
-        {
-            const int width = tab_margin.left + tab_margin.right + ::getTabHeight(*factory, style, lookAndFeel);
-            const int x     = layout == Style::TabBarLayout::SideLeft ? width : 0;
-            page_space.setBounds(x, 0, getWidth() - width, getHeight());
-        }
-
-        contentPane.setBounds(style.pageViewMargin.trimRectangle(page_space));
+        contentPane.setBounds(parStyle.pageViewMargin.trimRectangle(pageSpaceBounds));
     }
-
-    style = newStyle;
 }
 
 const MultiPagePane::Style& MultiPagePane::getStyle() const noexcept
@@ -1348,6 +1531,29 @@ const MultiPagePane::Style& MultiPagePane::getStyle() const noexcept
     return style;
 }
 
+void MultiPagePane::setOptions(const Options &parOptions)
+{
+    const Options old_options = std::exchange(options, parOptions);
+    const bool pin_in_new_tab = ::hasPinFlag(parOptions,  Options::PinBehaviour::PutInExtraRow);
+    
+    if (::hasPinFlag(old_options, Options::PinBehaviour::PutInExtraRow) != pin_in_new_tab)
+    {
+        tabBar->setPinBehaviour(pin_in_new_tab);
+        resized();
+    }
+    
+    if (old_options.allowTabReordering != parOptions.allowTabReordering)
+    {
+        tabBar->setTabsReorderable(parOptions.allowTabReordering);
+    }
+}
+
+const MultiPagePane::Options& MultiPagePane::getOptions() const noexcept
+{
+    return options;
+}
+
+//======================================================================================================================
 juce::Rectangle<int> MultiPagePane::getTabSpaceBounds() const noexcept
 {
     return tabSpaceBounds;
@@ -1363,11 +1569,11 @@ void MultiPagePane::updateSpaceBounds(Style::TabBarLayout layout)
 {
     const Padding &top_padding = style.componentPadding;
     const Margin  &tab_margin  = style.tabBarMargin;
-    const int      tab_height  = ::getTabHeight(*factory, style, lookAndFeel);
+    const int tab_height       = style.tabButtonHeight * ((tabBar->hasPinnedTabs() && tabBar->hasNonPinnedTabs()) + 1);
 
     if (layout == Style::TabBarLayout::Top || layout == Style::TabBarLayout::Bottom)
     {
-        const int width  = getWidth() - top_padding.right - top_padding.left;
+        const int width  = getWidth()     - top_padding.right - top_padding.left;
         const int height = tab_margin.top + tab_margin.bottom + tab_height;
 
         tabSpaceBounds .setSize(width, height);
@@ -1387,8 +1593,8 @@ void MultiPagePane::updateSpaceBounds(Style::TabBarLayout layout)
     else
     {
         const int width  = tab_margin.left + tab_margin.right + tab_height;
-        const int height = getHeight() - top_padding.top - top_padding.bottom;
-
+        const int height = getHeight()     - top_padding.top  - top_padding.bottom;
+        
         tabSpaceBounds .setSize(width,                                                     height);
         pageSpaceBounds.setSize(getWidth() - width - top_padding.left - top_padding.right, height);
 
@@ -1404,32 +1610,6 @@ void MultiPagePane::updateSpaceBounds(Style::TabBarLayout layout)
         }
     }
 }
-
-void MultiPagePane::updateTabBarBounds()
-{
-    const auto prev_rect = tabBar->getBounds();
-
-    const Style::TabBarLayout layout = style.tabBarLayout;
-    const Margin &tab_margin         = style.tabBarMargin;
-    const int tab_height             = ::getTabHeight(*factory, style, lookAndFeel);
-
-    if (layout == Style::TabBarLayout::SideLeft)
-    {
-        const int total_width = std::min(tabBar->getTotalRequiredWidth(),
-                                         getHeight() - tab_margin.top - tab_margin.bottom);
-        const int rel_x = tab_margin.left;
-        const int rel_y = tab_margin.top + total_width;
-        tabBar->setTransform(juce::AffineTransform::rotation(juce::float_Pi * 1.5f, static_cast<float>(rel_x),
-                                                             static_cast<float>(rel_y)));
-        tabBar->setBounds(rel_x, rel_y, total_width, tab_height);
-    }
-
-    if (prev_rect == tabBar->getBounds())
-    {
-        tabBar->resized();
-    }
-}
-
 //======================================================================================================================
 // endregion MultiPagePane
 //**********************************************************************************************************************
@@ -1441,8 +1621,6 @@ void MultiPagePane::updateTabBarBounds()
 //======================================================================================================================
 LookAndFeel_Jaut::LookAndFeel_Jaut()
 {
-    const auto &currentColourScheme = getCurrentColourScheme();
-
     const juce::uint32 colours[] {
         CharFormat::ColourFormat0Id, juce::Colours::black                .getARGB(),
         CharFormat::ColourFormat1Id, juce::Colours::darkblue             .getARGB(),
@@ -1521,7 +1699,7 @@ void LookAndFeel_Jaut::drawMultiTabPaneMoreTabsButton(juce::Graphics &g, const j
     constexpr float h      = 5.0f;
     constexpr float half_w = w / 2.0f;
 
-    const juce::Rectangle<int> bounds = button.getLocalBounds();
+    const juce::Rectangle<float> bounds = button.getLocalBounds().toFloat();
 
     g.setColour(isMouseOver ? findColour(MultiPagePane::ColourTabHighlightId)
                             : isMouseDown ? findColour(MultiPagePane::ColourTabActiveId)
@@ -1539,7 +1717,7 @@ void LookAndFeel_Jaut::drawMultiTabPaneMoreTabsButton(juce::Graphics &g, const j
 }
 
 void LookAndFeel_Jaut::drawMultiTabPaneTabBackground(juce::Graphics &g, const MultiPagePane::TabButton &tabButton,
-                                                     bool isMouseOver, bool isMouseDown)
+                                                     bool isMouseOver, bool)
 {
     constexpr int bottom_line = 2;
 
@@ -1572,8 +1750,8 @@ void LookAndFeel_Jaut::drawMultiTabPaneTabCloseButton(juce::Graphics &g, const M
     constexpr float s =     7.0f;
     constexpr float c = s * 1.8f;
 
-    const juce::Colour &colour_text   = findColour(MultiPagePane::ColourTabTextId);
-    const juce::Rectangle<int> bounds = button.getLocalBounds();
+    const juce::Colour &colour_text     = findColour(MultiPagePane::ColourTabTextId);
+    const juce::Rectangle<float> bounds = button.getLocalBounds().toFloat();
 
     g.setColour(isMouseOver ? colour_text : findColour(MultiPagePane::ColourTabCloseButtonId));
     g.fillEllipse({ bounds.getWidth()  / 2.0f - c / 2.0f, bounds.getHeight() / 2.0f - c / 2.0f, c, c });
@@ -1588,36 +1766,42 @@ void LookAndFeel_Jaut::drawMultiTabPaneTabCloseButton(juce::Graphics &g, const M
     }
 
     juce::Path path_x;
-    path_x.addLineSegment({ 0.0f, 0.0f, s,    s }, 1.0f);
-    path_x.addLineSegment({ s,    0.0f, 0.0f, s }, 1.0f);
+    path_x.addLineSegment({ 0.0f, 0.0f, s,    s }, 1.5f);
+    path_x.addLineSegment({ s,    0.0f, 0.0f, s }, 1.5f);
 
     g.fillPath(path_x, juce::AffineTransform::translation(bounds.getWidth()  / 2.0f - s / 2.0f,
                                                           bounds.getHeight() / 2.0f - s / 2.0f));
 }
 
 void LookAndFeel_Jaut::drawMultiTabPaneTabPinButton(juce::Graphics &g, const MultiPagePane::TabButton &tabButton,
-                                                    const juce::ToggleButton &button, bool isMouseOver,
-                                                    bool isMouseDown)
+                                                    const juce::ToggleButton &button, bool isMouseOver, bool)
 {
     constexpr float s =     7.0f;
     constexpr float c = s * 1.8f;
 
-    const juce::Colour &colour_text    = findColour(MultiPagePane::ColourTabTextId);
-    const juce::Rectangle<int> bounds  = button.getLocalBounds();
+    const juce::Colour &colour_text     = findColour(MultiPagePane::ColourTabTextId);
+    const juce::Rectangle<float> bounds = button.getLocalBounds().toFloat();
     const juce::Rectangle<float> ellipse(bounds.getWidth() / 2.0f - c / 2.0f, bounds.getHeight() / 2.0f - c / 2.0f,
                                          c,                                   c);
     g.setColour(isMouseOver ? colour_text : findColour(MultiPagePane::ColourTabCloseButtonId));
     g.fillEllipse(ellipse);
-
-    g.setColour(findColour(MultiPagePane::ColourTabHighlightId));
-
+    
+    if (tabButton.isActive())
+    {
+        g.setColour(isMouseOver ? findColour(MultiPagePane::ColourTabActiveId) : colour_text);
+    }
+    else
+    {
+        g.setColour(isMouseOver ? findColour(MultiPagePane::ColourTabHighlightId) : colour_text);
+    }
+    
     if (tabButton.isPinned())
     {
         g.fillEllipse(ellipse.reduced(2.0f));
     }
     else
     {
-        g.drawEllipse(ellipse.reduced(2.0f), 2.0f);
+        g.drawEllipse(ellipse.reduced(2.0f), 1.5f);
     }
 }
 

@@ -38,20 +38,20 @@ struct JAUT_API Distance
     //==================================================================================================================
     constexpr Distance() noexcept = default;
     
-    constexpr Distance(T left, T top, T right, T bottom) noexcept
-        : left(left), top(top), right(right), bottom(bottom)
+    constexpr Distance(T leftDistance, T topDistance, T rightDistance, T bottomDistance) noexcept
+        : left(leftDistance), top(topDistance), right(rightDistance), bottom(bottomDistance)
     {}
     
-    constexpr Distance(T top, T leftAndRight, T bottom) noexcept
-        : Distance(leftAndRight, top, leftAndRight, bottom)
+    constexpr Distance(T topDistance, T leftAndRightDistance, T bottomDistance) noexcept
+        : Distance(leftAndRightDistance, topDistance, leftAndRightDistance, bottomDistance)
     {}
     
-    constexpr Distance(T leftAndRight, T topAndBottom) noexcept
-        : Distance(topAndBottom, leftAndRight, topAndBottom)
+    constexpr Distance(T leftAndRightDistance, T topAndBottomDistance) noexcept
+        : Distance(topAndBottomDistance, leftAndRightDistance, topAndBottomDistance)
     {}
     
-    explicit constexpr Distance(T all) noexcept
-        : Distance(all, all)
+    constexpr Distance(T allSides) noexcept // NOLINT
+        : Distance(allSides, allSides)
     {}
     
     //==================================================================================================================

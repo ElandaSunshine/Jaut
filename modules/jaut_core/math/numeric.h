@@ -32,7 +32,7 @@ namespace jaut
  *  An numeric base class for classes that need to be arithmetically operable.
  *  @tparam NumericType The numeric type this class is managing
  */
-template<class NumericType>
+template<class NumericType, juce::NotificationType DispatchEvent = juce::dontSendNotification>
 struct JAUT_API Numeric
 {
     //==================================================================================================================
@@ -44,10 +44,11 @@ struct JAUT_API Numeric
     Event<ValueChangedHandler> ValueChanged;
     
     //==================================================================================================================
-    NumericType numericValue {};
+    NumericType numericValue { };
     
     //==================================================================================================================
     constexpr Numeric() noexcept = default;
+    
     constexpr Numeric(NumericType value)
         : numericValue(std::move(value))
     {}
@@ -57,32 +58,31 @@ struct JAUT_API Numeric
     {}
     
     Numeric(Numeric &&other) noexcept
-        : Numeric()
-    {
-        std::move(*this, other);
-    }
+        : numericValue(other.numericValue)
+    {}
     
     virtual ~Numeric() = default;
     
     //==================================================================================================================
     Numeric &operator=(const Numeric &right) noexcept
     {
-        Numeric temp(right);
-        swap(*this, temp);
+        auto temp(right.numericValue);
+        std::swap(numericValue, temp);
+        postChangeEvent();
         return *this;
     }
     
     Numeric &operator=(Numeric &&right) noexcept
     {
-        Numeric temp(std::move(right));
-        swap(*this, temp);
+        std::swap(numericValue, right.numericValue);
+        postChangeEvent();
         return *this;
     }
     
     //==================================================================================================================
     Numeric &operator=(NumericType value) noexcept
     {
-        numericValue = value;
+        modifyValue(value);
         return *this;
     }
     
@@ -122,17 +122,14 @@ struct JAUT_API Numeric
     {
         ++numericValue;
         postChangeEvent();
-        
         return *this;
     }
     
     Numeric operator++(int)
     {
         const Numeric old = *this;
-        
         ++numericValue;
         postChangeEvent();
-        
         return old;
     }
     
@@ -140,47 +137,37 @@ struct JAUT_API Numeric
     {
         --numericValue;
         postChangeEvent();
-        
         return *this;
     }
     
     Numeric operator--(int)
     {
         const Numeric old = *this;
-        
         --numericValue;
         postChangeEvent();
-        
         return old;
     }
     
     //==================================================================================================================
     bool operator==(const Numeric &right) const noexcept { return numericValue == right.numericValue; }
     bool operator!=(const Numeric &right) const noexcept { return numericValue != right.numericValue; }
-    bool operator>(const Numeric &right)  const noexcept { return numericValue > right.numericValue; }
-    bool operator<(const Numeric &right)  const noexcept { return numericValue < right.numericValue; }
+    bool operator> (const Numeric &right) const noexcept { return numericValue > right.numericValue; }
+    bool operator< (const Numeric &right) const noexcept { return numericValue < right.numericValue; }
     bool operator>=(const Numeric &right) const noexcept { return (*this) > right || (*this) == right; }
     bool operator<=(const Numeric &right) const noexcept { return (*this) < right || (*this) == right; }
-    
-    //==================================================================================================================
-    friend void swap(Numeric &left, Numeric &right)
-    {
-        using std::swap;
-        swap(left.numericValue, right.numericValue);
-    }
     
 private:
     inline void postChangeEvent()
     {
-        if (ValueChangedHandler handler = ValueChanged)
+        if constexpr (DispatchEvent != juce::dontSendNotification)
         {
-            handler(numericValue);
+            ValueChanged(numericValue);
         }
     }
     
     inline Numeric &modifyValue(NumericType newValue)
     {
-        numericValue = std::move(newValue);
+        numericValue = newValue;
         postChangeEvent();
         return *this;
     }

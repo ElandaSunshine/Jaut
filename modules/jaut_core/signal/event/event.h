@@ -85,11 +85,8 @@ public:
      *  @param owner    An instance of the type holding the member function
      */
     template<class Owner>
-    EventHandler(MemberCallbackType<Owner> callback, Owner &owner) noexcept
-        : callback([&owner, callback](EventArgs ...args) mutable
-                   {
-                       (owner.*callback)(args...);
-                   }),
+    EventHandler(MemberCallbackType<Owner> eventCallback, Owner &owner) noexcept
+        : callback([&owner, eventCallback](EventArgs ...args) { (owner.*eventCallback)(args...); }),
           owner(&owner), memberData(getRelativeFunctionID(callback))
     {}
     

@@ -118,6 +118,12 @@ public:
      */
     juce::Component* getCurrentComponent() noexcept;
     
+    /**
+     *  Gets the current contained component.
+     *  @return The current contained component or nullptr if none was set
+     */
+    const juce::Component* getCurrentComponent() const noexcept;
+    
 private:
     juce::OptionalScopedPointer<juce::Component> content;
     JAUT_CREATE_LAF()
