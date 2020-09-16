@@ -70,6 +70,9 @@ class LookAndFeel_Jaut;
 // Structure
 #include <jaut_gui/structure/sizestructs.h>
 
+// Mouse
+#include <jaut_gui/mouse/draganddropcontaineradvanced.h>
+
 // Components
 #include <jaut_gui/component/contentpane.h>
 #include <jaut_gui/component/splitcontainer.h>

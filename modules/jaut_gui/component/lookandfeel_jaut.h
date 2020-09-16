@@ -28,9 +28,10 @@
 namespace jaut
 {
 class JAUT_API LookAndFeel_Jaut : public juce::LookAndFeel_V4,
-                                  public ContentPane   ::LookAndFeelMethods,
-                                  public SplitContainer::LookAndFeelMethods,
-                                  public MultiPagePane  ::LookAndFeelMethods
+                                  public ContentPane          ::LookAndFeelMethods,
+                                  public SplitContainer       ::LookAndFeelMethods,
+                                  public MultiPagePane        ::LookAndFeelMethods,
+                                  public MultiPagePane::Window::LookAndFeelMethods
 {
 public:
     static LookAndFeel_Jaut& getDefaultLaf()
@@ -65,5 +66,8 @@ public:
                                         const juce::TextButton &button, bool isMouseOver, bool isMouseDown) override;
     void drawMultiTabPaneTabPinButton(juce::Graphics &g, const MultiPagePane::TabButton &tabButton,
                                       const juce::ToggleButton &button, bool isMouseOver, bool isMouseDown) override;
+    
+    //==================================================================================================================
+    int getWindowStyleFlags() const override;
 };
 }

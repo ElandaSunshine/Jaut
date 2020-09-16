@@ -17,7 +17,7 @@
     ===============================================================
     
     @author Elanda
-    @file   multitabpane.h
+    @file   multipagepane.h
     @date   21, July 2020
     
     ===============================================================
@@ -40,13 +40,16 @@ namespace jaut
  *
  *  You can also dynamically change style options about the component by using setStyle.
  */
-class JAUT_API MultiPagePane : public juce::Component
+class JAUT_API MultiPagePane : public juce::Component, public juce::DragAndDropTarget
 {
 private:
     class InternalTabBar;
 
 public:
-    /** The drag-and-drop identifier when using juce::DragAndDropContainer and juce::DragAndDropTarget */
+    /**
+     *  The drag-and-drop identifier which identifies this component when juce::DragAndDropContainer
+     *  and juce::DragAndDropTarget are being used.
+     */
     static constexpr const char *DragAndDrop_ID = "6d062147-33ef-4ea4-b9ec-04756959fe08";
     
     //==================================================================================================================
@@ -137,6 +140,15 @@ public:
         
         /** Defines whether you can reorder tabs by dragging them around. */
         bool allowTabReordering { false };
+        
+        /** Defines whether tabs can be dragged out of the tab-bar to other components. */
+        bool allowDragExchange { false };
+        
+        /**
+         *  Defines whether tabs can be extracted from the main window to become their own modal window.
+         *  This only works if allowDragExchange is true.
+         */
+        bool allowPageExtraction { false };
     };
     
     /**
@@ -229,6 +241,12 @@ public:
          *  @return The image
          */
         virtual juce::Image getImageForPage(const juce::String &id) const { juce::ignoreUnused(id); return {}; }
+        
+        /**
+         *  Clones this tab-factory object.
+         *  @return
+         */
+        virtual std::unique_ptr<TabFactory> clone() = 0;
     };
     
     struct JAUT_API TabFactoryTemplates
@@ -279,6 +297,12 @@ public:
             {
                 return pageCallback(id);
             }
+    
+            //==========================================================================================================
+            std::unique_ptr<TabFactory> clone() override
+            {
+                return std::make_unique<Default>(*this);
+            }
 
         private:
             std::vector<TabItemLayout> layouts;
@@ -294,7 +318,7 @@ public:
      *  create instances of it.
      *  However, the reason for it being public is to know about its state.
      */
-    class JAUT_API TabButton : public juce::Button, juce::LookAndFeel_V4
+    class JAUT_API TabButton : public juce::Button, private juce::LookAndFeel_V4
     {
     public:
         std::function<void(const TabButton&)>       onActivating;
@@ -437,9 +461,81 @@ public:
                                                   bool isMouseOver, bool isMouseDown) = 0;
     };
     
+    /**
+     *  This is just an optional class so you don't have to roll your own window class when adding tabs to
+     *  the desktop.
+     *  You can always have your custom window class if needed.
+     */
+    class JAUT_API Window : public juce::ResizableWindow
+    {
+    public:
+        struct JAUT_API LookAndFeelMethods
+        {
+            /**
+             *  Gets the style flags for this window.
+             *  By default this will be a native-window with only a close-button.
+             *
+             *  @return The juce::ComponentPeer:StyleFlags to use
+             */
+            virtual int getWindowStyleFlags() const = 0;
+        };
+    
+        //==============================================================================================================
+        using DragAndDropContainerProxy = std::variant<juce::DragAndDropContainer*, DragAndDropContainerAdvanced*>;
+    
+        //==============================================================================================================
+        using WindowClosingHandler = EventHandler<Window*>;
+        
+        /** Dispatched whenever the window is about to be closed. */
+        Event<WindowClosingHandler> WindowClosing;
+        
+        //==============================================================================================================
+        Window(const juce::String &name, std::unique_ptr<TabFactory> factory, Style style, Options options);
+        Window(const juce::String &name, std::unique_ptr<TabFactory> factory, Style style);
+        Window(const juce::String &name, std::unique_ptr<TabFactory> factory, Options options);
+        Window(const juce::String &name, std::unique_ptr<TabFactory> factory);
+    
+        //==============================================================================================================
+        template<class DragAndDropContainerType>
+        void setDragAndDropProxy(DragAndDropContainerType *dragAndDropContainerProxy)
+        {
+            static_assert(std::is_base_of_v<juce::DragAndDropContainer,   DragAndDropContainerType>
+                       || std::is_base_of_v<DragAndDropContainerAdvanced, DragAndDropContainerType>,
+                          "DragAndDropContainerType must either be a juce::DragAndDropContainer"
+                          "or jaut::DragAndDropContainerAdvanced instance");
+            
+            dragAndDropContainer = DragAndDropContainerProxy(dragAndDropContainerProxy);
+        }
+    
+        DragAndDropContainerProxy& getDragAndDropProxy() noexcept
+        {
+            return dragAndDropContainer;
+        }
+        
+        //==============================================================================================================
+        void resized() override;
+        
+        //==============================================================================================================
+        int getDesktopWindowStyleFlags() const override;
+        MultiPagePane& getMultiPagePane() noexcept;
+        
+        //==============================================================================================================
+        void userTriedToCloseWindow() override;
+        
+    private:
+        DragAndDropContainerProxy dragAndDropContainer;
+        
+        //==============================================================================================================
+        void forceToCloseWindow(const juce::String&);
+        JAUT_CREATE_LAF()
+    };
+    
     //==================================================================================================================
     /** The pointer type of the TabFactory passed into the MultiPagePane constructor. */
     using FactoryPtr = std::unique_ptr<TabFactory>;
+    
+    /** The pointer type of any tab page contained in MultiPagePane components. */
+    using PagePtr = juce::OptionalScopedPointer<juce::Component>;
     
     //==================================================================================================================
     using LastTabClosingHandler     = EventHandler<const juce::String&>;
@@ -486,7 +582,6 @@ public:
      */
     MultiPagePane(FactoryPtr factory, Options options);
     
-    
     /**
      *  Creates a new MultiPagePane instance.
      *
@@ -499,7 +594,8 @@ public:
     ~MultiPagePane() override;
     
     //==================================================================================================================
-    void paint(juce::Graphics &g) override;
+    void paint(juce::Graphics&) override;
+    void paintOverChildren(juce::Graphics&) override;
     void resized() override;
     
     //==================================================================================================================
@@ -516,9 +612,17 @@ public:
      *  Closes a page and removes it from this component at the specified tab-index.
      *  If the tab doesn't exist, nothing happens.
      *
-     *  @param index The index of the tab to be closed
+     *  @param index The index of the page to be closed
      */
     void closePage(int index);
+    
+    /**
+     *  Closes a page with this id and removes it from this component.
+     *  If the page doesn't exist, nothing happens.
+     *
+     *  @param pageId The id of the page to be closed
+     */
+    void closePage(const juce::String &pageId);
     
     /**
      *  Changes the active page to the page with the specified tab-index.
@@ -527,6 +631,14 @@ public:
      *  @param index The index of the tab to be opened
      */
     void openPage(int index);
+    
+    /**
+     *  Changes the active page to the page with this id.
+     *  If the page is already opened, nothing happens.
+     *
+     *  @param pageId The id of the page to be opened
+     */
+    void openPage(const juce::String &pageId);
     
     /**
      *  Changes the pin-state of the tab at the specified index.
@@ -538,15 +650,42 @@ public:
     void pinPage(int index, bool shouldBePinned);
     
     /**
-     *  Closes all open tabs.
+     *  Changes the pin-state of the page with this id.
+     *  If the pin-state is the same as specified, nothing happens.
+     *
+     *  @param pageId         The id of the page to be pinned.
+     *  @param shouldBePinned Whether the page should be pinned
+     */
+    void pinPage(const juce::String &id, bool shouldBePinned);
+    
+    /**
+     *  Removes the tab and page from this component and returns a juce::OptionScopedPointer containing
+     *  the page component.
+     *
+     *  @param index The index of the page to be detached
+     *  @return The page-component or nullptr if there was none with this index
+     */
+    PagePtr detachPage(int index);
+    
+    /**
+     *  Removes the tab and page from this component and returns a juce::OptionScopedPointer containing
+     *  the page component.
+     *
+     *  @param pageId The id of the page to be detached
+     *  @return The page-component or nullptr if there was none with this id
+     */
+    PagePtr detachPage(const juce::String &pageId);
+    
+    /**
+     *  Closes all open pages.
      *
      *  If TabFactory::getPinBehaviour contains the flag PinBehaviour::ClosingAllNoEffect and forcePinned is false,
-     *  pinned tabs won't be touched.
-     *  If this flag is not set, pinned tabs will be closed regardless.
+     *  pinned pages won't be touched.
+     *  If this flag is not set, pinned pages will be closed regardless.
      *
-     *  @param forcePinned Force pinned tabs to be closed
+     *  @param forcePinned Force pinned pages to be closed
      */
-    void closeAllTabs(bool forcePinned);
+    void closeAllPages(bool forcePinned);
     
     //==================================================================================================================
     /**
@@ -556,10 +695,56 @@ public:
     int getNumPages() const noexcept;
     
     /**
-     *  Gets whether this component has any pages or not.
+     *  Gets whether this component has any pages.
      *  @return True if this component has any pages
      */
     bool hasAnyPages() const noexcept;
+    
+    /**
+     *  Gets whether this component has any pinned pages.
+     *  @return True if there is at least one pinned page
+     */
+    bool hasPinnedPages() const noexcept;
+    
+    //==================================================================================================================
+    /**
+     *  Gets the component that is shown when this element contains no pages.
+     *  @return The component or nullptr if none was set
+     */
+    juce::Component* getBackgroundComponent() noexcept;
+    
+    /**
+     *  Sets the component that is shown when this object has no pages.
+     *
+     *  @param component The component to set
+     *  @param owned     If the component should be owned by this class
+     */
+    void setBackgroundComponent(juce::Component *component, bool owned);
+    
+    /**
+     *  Sets the component that is shown when this object has no pages.
+     *  The component will not be owned by this object.
+     *
+     *  @param component The component to set
+     */
+    void setBackgroundComponent(juce::Component &component);
+    
+    //==================================================================================================================
+    /**
+     *  Gets the id of the page at the specified index.
+     *
+     *  @param index The index of the page
+     *  @return The id of the page at the specified index or empty if none was found
+     */
+    juce::String getIdAt(int index) const noexcept;
+    
+    /**
+     *  Gets the index of the specified page.
+     *
+     *  @param pageId The id of the page to get the index for
+     *  @return The index of the page or -1 if none was found
+     */
+    int getIndexOf(const juce::String &pageId) const noexcept;
     
     //==================================================================================================================
     /**
@@ -685,11 +870,19 @@ public:
      */
     juce::Rectangle<int> getPageSpaceBounds() const noexcept;
     
+    //==================================================================================================================
+    void itemDragEnter(const SourceDetails&) override;
+    void itemDragExit(const SourceDetails&) override;
+    bool isInterestedInDragSource(const SourceDetails&) override;
+    void itemDropped(const SourceDetails&) override;
+
 private:
-    std::unordered_map<juce::String, std::unique_ptr<juce::Component>> pages;
+    std::unordered_map<juce::String, PagePtr> pages;
     
-    ContentPane contentPane;
+    ContentPane pageView;
     std::unique_ptr<InternalTabBar> tabBar;
+    
+    juce::OptionalScopedPointer<juce::Component> backgroundComponent;
     
     FactoryPtr factory;
     Style      style;
@@ -697,6 +890,8 @@ private:
     
     juce::Rectangle<int> tabSpaceBounds;
     juce::Rectangle<int> pageSpaceBounds;
+    
+    bool paintDropBox { false };
     
     //==================================================================================================================
     void updateSpaceBounds(Style::TabBarLayout);

@@ -74,7 +74,7 @@ public:
         : callback(callback), owner(nullptr)
     {
         // For the time being, lambdas are not supported yet
-        jassert(!(callback.template target<GlobalCallbackType>()));
+        jassert(callback.template target<GlobalCallbackType>());
     }
     
     /**
@@ -87,7 +87,7 @@ public:
     template<class Owner>
     EventHandler(MemberCallbackType<Owner> eventCallback, Owner &owner) noexcept
         : callback([&owner, eventCallback](EventArgs ...args) { (owner.*eventCallback)(args...); }),
-          owner(&owner), memberData(getRelativeFunctionID(callback))
+          owner(&owner), memberData(EventHandler::getRelativeFunctionID(eventCallback))
     {}
     
     EventHandler(EventHandler &&other) noexcept
@@ -275,15 +275,18 @@ public:
      */
     Event& operator+=(Handler &&handler)
     {
+        auto temp(std::move(handler));
+        
         {
             typename CriticalSection::ScopedLockType lock(criticalSection);
             
-            if (std::find(handlers.begin(), handlers.end(), handler) == handlers.end())
+            if (std::find(handlers.begin(), handlers.end(), temp) == handlers.end())
             {
-                addCallback(handler);
-                handlers.emplace_back(std::move(handler));
+                addCallback(temp);
+                handlers.emplace_back(std::move(temp));
             }
         }
+        
         return *this;
     }
     
@@ -314,7 +317,7 @@ public:
     template<class ...Args>
     void invoke(Args &&...args)
     {
-        for (auto &handler : handlers)
+        for (Handler &handler : handlers)
         {
             handler(std::forward<Args>(args)...);
         }
@@ -334,11 +337,18 @@ private:
     CriticalSection criticalSection;
     AddRemoveCallback addCallback, removeCallback;
     std::vector<Handler> handlers;
-    std::vector<Handler*> controlHandlers;
     
     JUCE_DECLARE_NON_COPYABLE(Event)
 };
 
+//======================================================================================================================
+/**
+ *  An EventHandler with no arguments.
+ *  Use this instead of EventHandler<> to express intent.
+ */
+using TrivialHandler = EventHandler<>;
+
+//======================================================================================================================
 /**
  *  Creates a new handler from a member function.
  *

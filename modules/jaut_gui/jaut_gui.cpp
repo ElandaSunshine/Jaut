@@ -37,6 +37,7 @@
 #endif
 
 #include <jaut_gui/component/component.cpp>
+#include <jaut_gui/mouse/mouse.cpp>
 
 #include <jaut_gui/text/internal/jaut_format_attributes.h>
 #include <jaut_gui/text/internal/jaut_format_layout.h>

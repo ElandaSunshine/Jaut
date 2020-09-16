@@ -26,6 +26,9 @@
 //**********************************************************************************************************************
 // region Namespace
 //======================================================================================================================
+#include <jaut_gui/mouse/draganddropcontaineradvanced.h>
+#include "multipagepane.h"
+
 namespace
 {
 /** The amount of difference on the x-axis between two tabs before swapping them. */
@@ -271,13 +274,14 @@ void SplitContainer::setSeperatorThickness(int val)
 //**********************************************************************************************************************
 // region InternalTabBar
 //======================================================================================================================
-class MultiPagePane::InternalTabBar final : public juce::Component, private juce::LookAndFeel_V4
+class MultiPagePane::InternalTabBar final : public juce::Component, private juce::LookAndFeel_V4,
+                                                                    private juce::ComponentListener
 {
 public:
     class TabStrip : public juce::Viewport
     {
     public:
-        struct DragHelper : juce::MouseListener
+        struct DragHelper : public juce::MouseListener
         {
             //==========================================================================================================
             struct Constrainer : juce::ComponentBoundsConstrainer
@@ -298,39 +302,41 @@ public:
             TabButton *draggedTab { nullptr };
             int        dragIndex  { 0 };
             
-            bool enabled { false };
-            
             //==========================================================================================================
             explicit DragHelper(TabStrip &parTabStrip)
                 : tabStrip(parTabStrip)
             {}
-    
+            
             //==========================================================================================================
-            void enable(bool parEnabled) noexcept
+            TabButton* getDraggedTab() const noexcept
             {
-                enabled = parEnabled;
+                return draggedTab;
             }
             
             //==========================================================================================================
             void mouseDown(const juce::MouseEvent &e) override
             {
-                if (!enabled || tabStrip.tabs.size() < 2)
+                if (tabStrip.tabs.empty() || (!tabStrip.canReorder && !tabStrip.canExchange))
                 {
                     return;
                 }
                 
                 if (auto *const tab = dynamic_cast<TabButton*>(e.eventComponent))
                 {
-                    tabDragger.startDraggingComponent(tab, e);
                     draggedTab = tab;
-                    tab->toFront(false);
-            
-                    for (int i = 0; i < tabStrip.getNumTabs(); ++i)
+                    
+                    if (tabStrip.canReorder)
                     {
-                        if (tab == tabStrip.tabs.at(static_cast<SizeTypes::Vector>(i)))
+                        tabDragger.startDraggingComponent(tab, e);
+                        tab->toFront(false);
+    
+                        for (int i = 0; i < tabStrip.getNumTabs(); ++i)
                         {
-                            dragIndex = i;
-                            break;
+                            if (tab == tabStrip.tabs.at(static_cast<SizeTypes::Vector>(i)))
+                            {
+                                dragIndex = i;
+                                break;
+                            }
                         }
                     }
                 }
@@ -340,38 +346,49 @@ public:
             {
                 if (draggedTab)
                 {
-                    tabDragger.dragComponent(draggedTab, e, &dragConstrainer);
-            
-                    TabButton *const prev = dragIndex > 0
-                                                      ? tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex) - 1)
-                                                      : nullptr;
-                    TabButton *const next = (dragIndex + 1) < tabStrip.getNumTabs()
-                                                      ? tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex) + 1)
-                                                      : nullptr;
-            
-                    const juce::Rectangle<int> bounds = draggedTab->getBounds();
-            
-                    if (prev && bounds.getX() < (prev->getX() + Const_TabSwapSensitivity))
+                    if (tabStrip.canReorder)
                     {
-                        const auto prev_index  =   static_cast<SizeTypes::Vector>(dragIndex) - 1;
-                        std::swap(tabStrip.tabs.at(static_cast<SizeTypes::Vector>(prev_index)),
-                                  tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex)));
-                        
-                        const int new_right = prev->getX() + draggedTab->getWidth();
-                        prev->setTopLeftPosition(new_right, 0);
-                        
-                        --dragIndex;
+                        tabDragger.dragComponent(draggedTab, e, &dragConstrainer);
+    
+                        TabButton *const prev = dragIndex > 0
+                                                ? tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex) - 1)
+                                                : nullptr;
+                        TabButton *const next = (dragIndex + 1) < tabStrip.getNumTabs()
+                                                ? tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex) + 1)
+                                                : nullptr;
+    
+                        const juce::Rectangle<int> bounds = draggedTab->getBounds();
+    
+    
+                        if (prev && bounds.getX() < (prev->getX() + Const_TabSwapSensitivity))
+                        {
+                            const auto prev_index = static_cast<SizeTypes::Vector>(dragIndex) - 1;
+                            std::swap(tabStrip.tabs.at(static_cast<SizeTypes::Vector>(prev_index)),
+                                      tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex)));
+        
+                            const int new_right = prev->getX() + draggedTab->getWidth();
+                            prev->setTopLeftPosition(new_right, 0);
+        
+                            --dragIndex;
+                            return;
+                        }
+                        else if (next && (bounds.getRight() > next->getRight() - Const_TabSwapSensitivity))
+                        {
+                            const auto next_index = static_cast<SizeTypes::Vector>(dragIndex) + 1;
+                            std::swap(tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex)),
+                                      tabStrip.tabs.at(static_cast<SizeTypes::Vector>(next_index)));
+        
+                            const int new_right = next->getX() - draggedTab->getWidth();
+                            next->setTopLeftPosition(new_right, 0);
+        
+                            ++dragIndex;
+                            return;
+                        }
                     }
-                    else if (next && (bounds.getRight() > next->getRight() - Const_TabSwapSensitivity))
+                    
+                    if (tabStrip.canExchange && dragExchange(e))
                     {
-                        const auto next_index  =   static_cast<SizeTypes::Vector>(dragIndex) + 1;
-                        std::swap(tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex)),
-                                  tabStrip.tabs.at(static_cast<SizeTypes::Vector>(next_index)));
-                        
-                        const int new_right = next->getX() - draggedTab->getWidth();
-                        next->setTopLeftPosition(new_right, 0);
-                        
-                        ++dragIndex;
+                        mouseUp(e);
                     }
                 }
             }
@@ -384,11 +401,72 @@ public:
                                       : tabStrip.tabs.at(static_cast<SizeTypes::Vector>(dragIndex - 1))->getRight(), 0);
                 }
             }
+            
+            bool dragExchange(const juce::MouseEvent &e) const
+            {
+                if (juce::Component *const par_comp = tabStrip.tabBar.getParentComponent()->getParentComponent())
+                {
+                    if (Window *const wind = dynamic_cast<Window*>(par_comp))
+                    {
+                        Window::DragAndDropContainerProxy &dadcp = wind->getDragAndDropProxy();
+                        bool result = false;
+                        
+                        std::visit([&](auto &dadc)
+                        {
+                            result = executeDrag(dadc, e);
+                        }, dadcp);
+                        
+                        return result;
+                    }
+                }
+                
+                jaut::DragAndDropContainerAdvanced *const dada_container =
+                                     jaut::DragAndDropContainerAdvanced::findParentDragContainerFor(&tabStrip.tabBar);
+                
+                if (dada_container)
+                {
+                    return executeDrag(dada_container, e);
+                }
+                
+                juce::DragAndDropContainer *const dad_container =
+                                             juce::DragAndDropContainer::findParentDragContainerFor(&tabStrip.tabBar);
+                
+                return executeDrag(dad_container, e);
+            }
+    
+            template<class Container>
+            bool executeDrag(Container *container, const juce::MouseEvent &e) const
+            {
+                if (container && !container->isDragAndDropActive())
+                {
+                    const juce::Point<int> mouse_pos = tabStrip.canReorder ? tabStrip.content.getMouseXYRelative()
+                                                                           : e.position.toInt();
+            
+                    if (mouse_pos.getX() <= -30 || mouse_pos.getY() <= -30
+                        || mouse_pos.getX() > (tabStrip.content.getWidth()  + 30)
+                        || mouse_pos.getY() > (tabStrip.content.getHeight() + 30))
+                    {
+                        const juce::Image snapshot = createTabSnapshot(draggedTab);
+                
+                        juce::DynamicObject::Ptr   obj      = tabStrip.tabBar.dragDropJson.clone();
+                        juce::DynamicObject *const tab_info = obj->getProperty("tab_info").getDynamicObject();
+                
+                        tab_info->setProperty("page_id", draggedTab->getName());
+                        tab_info->setProperty("name",    draggedTab->getButtonText());
+                
+                        container->startDragging(obj.get(), tabStrip.tabBar.getParentComponent(), snapshot,
+                                                 tabStrip.canExtract, nullptr, &e.source);
+                        return true;
+                    }
+                }
+        
+                return false;
+            }
         };
         
         //==============================================================================================================
-        TabStrip()
-            : dragger(*this)
+        explicit TabStrip(InternalTabBar &parTabBar)
+            : tabBar(parTabBar), dragger(*this)
         {
             setViewedComponent(&content, false);
         }
@@ -475,9 +553,19 @@ public:
             }
         }
         
-        void setCanReorder(bool canReorderTabs)
+        void setCanReorder(bool parCanReorder) noexcept
         {
-            dragger.enable(canReorderTabs);
+            canReorder = parCanReorder;
+        }
+        
+        void setCanExchange(bool parCanExchange) noexcept
+        {
+            canExchange = parCanExchange;
+        }
+        
+        void setCanExtract(bool parCanExtract) noexcept
+        {
+            canExtract = parCanExtract;
         }
         
         //==============================================================================================================
@@ -509,10 +597,26 @@ public:
         }
         
     private:
+        static juce::Image createTabSnapshot(TabButton *tab)
+        {
+            juce::Image dragImage = tab->createComponentSnapshot(tab->getLocalBounds())
+                                       .convertedToFormat(juce::Image::ARGB);
+            dragImage.multiplyAllAlphas(0.5f);
+        
+            return dragImage;
+        }
+    
+        //==============================================================================================================
         std::vector<TabButton*> tabs;
+        
+        InternalTabBar &tabBar;
         
         juce::Component content;
         DragHelper      dragger;
+    
+        bool canReorder  { false };
+        bool canExchange { false };
+        bool canExtract  { false };
         
         //==============================================================================================================
         void rearrangeTabs(int index)
@@ -554,12 +658,15 @@ public:
     using TabVector  = std::vector<TabPointer>;
     
     //==================================================================================================================
-    std::function<void(const juce::String&)>       onTabClosed;
-    std::function<void(const juce::String&)>       onTabChanged;
-    std::function<void(const juce::String&, bool)> onTabPinned;
+    std::function<void(const juce::String&)>       onTabClosed   { nullptr };
+    std::function<void(const juce::String&)>       onTabChanged  { nullptr };
+    std::function<PagePtr(const juce::String&)>    onTabDetached { nullptr };
+    std::function<void(const juce::String&, bool)> onTabPinned   { nullptr };
     
     //==================================================================================================================
     explicit InternalTabBar()
+        : tabStripNormal(*this),
+          tabStripPinned(*this)
     {
         lookAndFeelChanged();
         
@@ -634,6 +741,17 @@ public:
             popup_menu.showMenu(popup_options);
         };
         addChildComponent(buttonHiddenTabs);
+        
+        dragDropJson.setProperty("drag_id",  DragAndDrop_ID);
+        dragDropJson.setProperty("tab_info", new juce::DynamicObject);
+    }
+    
+    ~InternalTabBar() override
+    {
+        if (auto *const parent = dynamic_cast<MultiPagePane*>(getParentComponent()))
+        {
+            parent->removeComponentListener(this);
+        }
     }
     
     //==================================================================================================================
@@ -708,48 +826,7 @@ public:
     
     void removeTab(int index)
     {
-        TabPointer tab = std::move(tabs.at(static_cast<SizeTypes::Vector>(index)));
-    
-        if (hasSeperateRow && tab->isPinned())
-        {
-            tabStripPinned.removeTab(tab.get());
-        }
-        else
-        {
-            tabStripNormal.removeTab(tab.get());
-        }
-    
-        tabs.erase(tabs.begin() + index);
-        updateTabIndices(index);
-        
-        if (activeTab == index)
-        {
-            if (activeTab != 0)
-            {
-                --activeTab;
-            }
-        }
-        else if (activeTab > index)
-        {
-            --activeTab;
-        }
-    
-        if (!tabs.empty())
-        {
-            TabButton &ntab = *tabs.at(static_cast<SizeTypes::Vector>(activeTab));
-            ntab.setActive(true);
-        
-            const TabStrip &strip = hasSeperateRow && ntab.isPinned() ? tabStripPinned : tabStripNormal;
-        
-            if (!strip.getViewArea().contains(ntab.getBounds()))
-            {
-                moveToTab(&ntab);
-            }
-        
-            onTabChanged(ntab.getName());
-        }
-    
-        onTabClosed(tab->getName());
+        onTabClosed(removeInternally(index));
     }
     
     void activateTab(int index)
@@ -788,6 +865,11 @@ public:
         }
         
         onTabPinned(tab->getName(), state);
+    }
+    
+    PagePtr detachTab(int index)
+    {
+        return onTabDetached(removeInternally(index));
     }
     
     //==================================================================================================================
@@ -837,6 +919,18 @@ public:
         tabStripPinned.setCanReorder(canReorder);
     }
     
+    void setTabsCanBeExchanged(bool canExchange) noexcept
+    {
+        tabStripNormal.setCanExchange(canExchange);
+        tabStripPinned.setCanExchange(canExchange);
+    }
+    
+    void setTabsCanBeExtracted(bool canExtract) noexcept
+    {
+        tabStripNormal.setCanExtract(canExtract);
+        tabStripPinned.setCanExtract(canExtract);
+    }
+    
     //==================================================================================================================
     bool hasTabs() const noexcept
     {
@@ -850,7 +944,20 @@ public:
     
     bool hasPinnedTabs() const noexcept
     {
-        return tabStripPinned.hasTabs();
+        if (hasSeperateRow)
+        {
+            return tabStripPinned.hasTabs();
+        }
+        
+        for (auto &tab : tabs)
+        {
+            if (tab->isPinned())
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     //==================================================================================================================
@@ -882,7 +989,7 @@ public:
     }
     
     //==================================================================================================================
-    const TabVector &getAllTabs() const noexcept
+    const TabVector& getAllTabs() const noexcept
     {
         return tabs;
     }
@@ -897,6 +1004,8 @@ private:
     
     juce::TextButton buttonHiddenTabs;
     
+    juce::DynamicObject dragDropJson;
+    
     TabStrip tabStripNormal;
     TabStrip tabStripPinned;
     
@@ -909,9 +1018,21 @@ private:
     bool hasSeperateRow { false };
     
     //==================================================================================================================
+    void componentNameChanged(Component &component) override
+    {
+        dragDropJson.setProperty("id", component.getName());
+    }
+    
+    //==================================================================================================================
     void parentHierarchyChanged() override
     {
         lookAndFeelChanged();
+        
+        if (auto *const parent = dynamic_cast<MultiPagePane*>(getParentComponent()))
+        {
+            parent->addComponentListener(this);
+            componentNameChanged(*parent);
+        }
     }
     
     void lookAndFeelChanged() override
@@ -921,6 +1042,45 @@ private:
             lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf();
             setLookAndFeel(lookAndFeel);
         }
+    }
+    
+    //==================================================================================================================
+    juce::String removeInternally(int index)
+    {
+        TabPointer tab = std::move(tabs.at(static_cast<SizeTypes::Vector>(index)));
+        (hasSeperateRow && tab->isPinned() ? (tabStripPinned) : (tabStripNormal)).removeTab(tab.get());
+    
+        tabs.erase(tabs.begin() + index);
+        updateTabIndices(index);
+    
+        if (activeTab == index)
+        {
+            if (activeTab != 0)
+            {
+                --activeTab;
+            }
+        }
+        else if (activeTab > index)
+        {
+            --activeTab;
+        }
+    
+        if (!tabs.empty())
+        {
+            TabButton &ntab = *tabs.at(static_cast<SizeTypes::Vector>(activeTab));
+            ntab.setActive(true);
+        
+            const TabStrip &strip = hasSeperateRow && ntab.isPinned() ? tabStripPinned : tabStripNormal;
+        
+            if (!strip.getViewArea().contains(ntab.getBounds()))
+            {
+                moveToTab(&ntab);
+            }
+        
+            onTabChanged(ntab.getName());
+        }
+        
+        return tab->getName();
     }
     
     //==================================================================================================================
@@ -950,7 +1110,6 @@ private:
     
     //==================================================================================================================
     void drawButtonBackground(juce::Graphics&, juce::Button&, const juce::Colour&, bool, bool) override {}
-    
     void drawButtonText(juce::Graphics &g, juce::TextButton &button, bool isOver, bool isDown) override
     {
         lookAndFeel->drawMultiTabPaneMoreTabsButton(g, button, isOver, isDown);
@@ -1164,11 +1323,71 @@ void MultiPagePane::TabButton::drawToggleButton(juce::Graphics &g, juce::ToggleB
         lookAndFeel->drawMultiTabPaneTabPinButton(g, *this, button, isOver, isDown);
     }
 }
-
-//======================================================================================================================
-JAUT_IMPL_LAF(MultiPagePane::TabButton)
 //======================================================================================================================
 // endregion TabButton
+//**********************************************************************************************************************
+// region DesktopTabPane
+//======================================================================================================================
+MultiPagePane::Window::Window(const juce::String &name, std::unique_ptr<TabFactory> parFactory, Style parStyle,
+                              Options parOptions)
+    : ResizableWindow(name, false)
+{
+    JAUT_INIT_LAF();
+    
+    auto pane = std::make_unique<MultiPagePane>(std::move(parFactory), parStyle, parOptions);
+    pane->LastTabClosing += make_handler(&Window::forceToCloseWindow, this);
+    setContentOwned(pane.release(), false);
+    
+    setSize(400, 250);
+    setUsingNativeTitleBar(true);
+    setOpaque(true);
+    setVisible(true);
+}
+
+MultiPagePane::Window::Window(const juce::String &name, std::unique_ptr<TabFactory> parFactory, Style parStyle)
+    : Window(name, std::move(parFactory), parStyle, {})
+{}
+
+MultiPagePane::Window::Window(const juce::String &name, std::unique_ptr<TabFactory> parFactory, Options parOptions)
+    : Window(name, std::move(parFactory), {}, parOptions)
+{}
+
+MultiPagePane::Window::Window(const juce::String &name, std::unique_ptr<TabFactory> parFactory)
+    : Window(name, std::move(parFactory), {}, {})
+{}
+
+//======================================================================================================================
+void MultiPagePane::Window::resized()
+{
+    ResizableWindow::resized();
+    getContentComponent()->setBounds(getLocalBounds());
+}
+
+//======================================================================================================================
+int MultiPagePane::Window::getDesktopWindowStyleFlags() const
+{
+    return lookAndFeel->getWindowStyleFlags();
+}
+
+MultiPagePane &MultiPagePane::Window::getMultiPagePane() noexcept
+{
+    return *static_cast<MultiPagePane*>(getContentComponent());
+}
+
+//======================================================================================================================
+void MultiPagePane::Window::userTriedToCloseWindow()
+{
+    WindowClosing(this);
+}
+
+//======================================================================================================================
+void MultiPagePane::Window::forceToCloseWindow(const juce::String&)
+{
+    removeFromDesktop();
+    userTriedToCloseWindow();
+}
+//======================================================================================================================
+// endregion DesktopTabPane
 //**********************************************************************************************************************
 // region MultiPagePane
 //======================================================================================================================
@@ -1203,37 +1422,78 @@ MultiPagePane::MultiPagePane(FactoryPtr parFactory, Style parStyle, Options parO
     tabBar->setPinBehaviour   (::hasPinFlag(parOptions, Options::PinBehaviour::PutInExtraRow));
     tabBar->setTabsReorderable(parOptions.allowTabReordering);
     
+    tabBar->setTabsCanBeExchanged(parOptions.allowDragExchange);
+    tabBar->setTabsCanBeExtracted(parOptions.allowPageExtraction);
+    
     // Tab callbacks
     tabBar->onTabClosed = [this](const juce::String &pageId)
     {
-        if (contentPane.getCurrentComponent()->getName() == pageId)
+        if (pageView.getCurrentComponent()->getName() == pageId)
         {
-            contentPane.resetComponent();
+            pageView.resetComponent();
         }
         
-        pages.erase(pageId);
-        TabClosed(pageId);
+        const bool was_last = (pages.size() == 1);
         
-        resized(); // NOLINT
+        pages.erase(pageId);
+        resized();
+    
+        TabClosed(pageId);
+    
+        if (was_last)
+        {
+            LastTabClosing(pageId);
+            
+            if (backgroundComponent)
+            {
+                pageView.resetComponent(*backgroundComponent);
+            }
+        }
     };
     tabBar->onTabChanged = [this](const juce::String &pageId)
     {
-        contentPane.resetComponent(*pages.at(pageId));
+        pageView.resetComponent(*pages.at(pageId));
         TabChanged(pageId);
     };
     tabBar->onTabPinned = [this](const juce::String &pageId, bool state)
     {
-        TabPinStateChanged(pageId, state);
-        
         if (::hasPinFlag(options, Options::PinBehaviour::PutInExtraRow))
         {
-            resized(); // NOLINT
+            resized();
         }
-    };
     
+        TabPinStateChanged(pageId, state);
+    };
+    tabBar->onTabDetached = [this](const juce::String &pageId)
+    {
+        if (pageView.getCurrentComponent()->getName() == pageId)
+        {
+            pageView.resetComponent();
+        }
+        
+        PagePtr page        = std::move(pages.at(pageId));
+        const bool was_last = (pages.size() == 1);
+        
+        pages.erase(pageId);
+        resized();
+        
+        TabClosed(pageId);
+    
+        if (was_last)
+        {
+            LastTabClosing(pageId);
+    
+            if (backgroundComponent)
+            {
+                pageView.resetComponent(*backgroundComponent);
+            }
+        }
+        
+        return page;
+    };
     // Add components
     addAndMakeVisible(*tabBar);
-    addAndMakeVisible(contentPane);
+    addAndMakeVisible(pageView);
 }
 
 MultiPagePane::~MultiPagePane() = default;
@@ -1242,6 +1502,26 @@ MultiPagePane::~MultiPagePane() = default;
 void MultiPagePane::paint(juce::Graphics &g)
 {
     lookAndFeel->drawMultiTabPaneBackground(g, *this);
+}
+
+void MultiPagePane::paintOverChildren(juce::Graphics &g)
+{
+    if (!paintDropBox)
+    {
+        return;
+    }
+    
+    g.setColour(juce::Colours::white);
+    g.setOpacity(0.2f);
+    
+    if (pages.empty())
+    {
+        g.fillAll();
+    }
+    else
+    {
+        g.fillRect(tabBar->getBounds());
+    }
 }
 
 void MultiPagePane::resized()
@@ -1292,8 +1572,8 @@ void MultiPagePane::resized()
     
         tabBar->setBounds(tab_rect);
     }
-
-    contentPane.setBounds(style.pageViewMargin.trimRectangle(pageSpaceBounds));
+    
+    pageView.setBounds(style.pageViewMargin.trimRectangle(pageSpaceBounds));
     
     if (prev_bounds == tabBar->getBounds())
     {
@@ -1315,9 +1595,9 @@ void MultiPagePane::addPage(const juce::String &pageId, const juce::String &name
             pages.emplace(id, std::move(new_page));
             tabBar->addTab(style, *factory, id, !name.isEmpty() ? name : id);
             
-            TabOpened(id);
-            
             resized();
+    
+            TabOpened(id);
         }
     }
 }
@@ -1326,13 +1606,13 @@ void MultiPagePane::closePage(int index)
 {
     if (fit(index, 0, getNumPages()))
     {
-        if (pages.size() == 1)
-        {
-            LastTabClosing(getTab(index)->getName());
-        }
-        
         tabBar->removeTab(index);
     }
+}
+
+void MultiPagePane::closePage(const juce::String &pageId)
+{
+    closePage(getIndexOf(pageId));
 }
 
 void MultiPagePane::openPage(int index)
@@ -1343,6 +1623,11 @@ void MultiPagePane::openPage(int index)
     }
 }
 
+void MultiPagePane::openPage(const juce::String &pageId)
+{
+    openPage(getIndexOf(pageId));
+}
+
 void MultiPagePane::pinPage(int index, bool shouldBePinned)
 {
     if (fit(index, 0, getNumPages()) && getTab(index)->isPinned() != shouldBePinned)
@@ -1351,7 +1636,27 @@ void MultiPagePane::pinPage(int index, bool shouldBePinned)
     }
 }
 
-void MultiPagePane::closeAllTabs(bool forcePinned)
+void MultiPagePane::pinPage(const juce::String &pageId, bool shouldBePinned)
+{
+    pinPage(getIndexOf(pageId), shouldBePinned);
+}
+
+MultiPagePane::PagePtr MultiPagePane::detachPage(int index)
+{
+    if (fit(index, 0, getNumPages()))
+    {
+        return tabBar->detachTab(index);
+    }
+    
+    return {};
+}
+
+MultiPagePane::PagePtr MultiPagePane::detachPage(const juce::String &pageId)
+{
+    return detachPage(getIndexOf(pageId));
+}
+
+void MultiPagePane::closeAllPages(bool forcePinned)
 {
     if (!::hasPinFlag(options, Options::PinBehaviour::ClosingAllNoEffect) || forcePinned)
     {
@@ -1365,7 +1670,7 @@ void MultiPagePane::closeAllTabs(bool forcePinned)
         for (int i = 0; i < getNumPages(); ++i)
         {
             const auto &tab = getTab(i);
-        
+            
             if (!tab->isPinned())
             {
                 closePage(i);
@@ -1383,6 +1688,58 @@ int MultiPagePane::getNumPages() const noexcept
 bool MultiPagePane::hasAnyPages() const noexcept
 {
     return !pages.empty();
+}
+
+bool MultiPagePane::hasPinnedPages() const noexcept
+{
+    return tabBar->hasPinnedTabs();
+}
+
+//======================================================================================================================
+juce::Component* MultiPagePane::getBackgroundComponent() noexcept
+{
+    return backgroundComponent.get();
+}
+
+void MultiPagePane::setBackgroundComponent(juce::Component *component, bool owned)
+{
+    if (component == backgroundComponent.get())
+    {
+        return;
+    }
+    
+    if (pages.empty())
+    {
+        pageView.resetComponent(component, false);
+    }
+    
+    backgroundComponent.set(component, owned);
+}
+
+void MultiPagePane::setBackgroundComponent(juce::Component &component)
+{
+    setBackgroundComponent(&component, false);
+}
+
+//======================================================================================================================
+juce::String MultiPagePane::getIdAt(int index) const noexcept
+{
+    if (const TabButton *const tab = getTab(index))
+    {
+        return tab->getName();
+    }
+    
+    return {};
+}
+
+int MultiPagePane::getIndexOf(const juce::String &pageId) const noexcept
+{
+    if (const TabButton *const tab = getTab(pageId))
+    {
+        return tab->getTabIndex();
+    }
+    
+    return -1;
 }
 
 //======================================================================================================================
@@ -1462,12 +1819,12 @@ const MultiPagePane::TabButton* MultiPagePane::getActiveTab() const noexcept
 
 juce::Component* MultiPagePane::getActivePage() noexcept
 {
-    return hasAnyPages() ? contentPane.getCurrentComponent() : nullptr;
+    return hasAnyPages() ? pageView.getCurrentComponent() : nullptr;
 }
 
 const juce::Component* MultiPagePane::getActivePage() const noexcept
 {
-    return hasAnyPages() ? contentPane.getCurrentComponent() : nullptr;
+    return hasAnyPages() ? pageView.getCurrentComponent() : nullptr;
 }
 
 //======================================================================================================================
@@ -1522,7 +1879,7 @@ void MultiPagePane::setStyle(const Style &parStyle)
     }
     else if (old_style.pageViewMargin != parStyle.pageViewMargin)
     {
-        contentPane.setBounds(parStyle.pageViewMargin.trimRectangle(pageSpaceBounds));
+        pageView.setBounds(parStyle.pageViewMargin.trimRectangle(pageSpaceBounds));
     }
 }
 
@@ -1542,10 +1899,9 @@ void MultiPagePane::setOptions(const Options &parOptions)
         resized();
     }
     
-    if (old_options.allowTabReordering != parOptions.allowTabReordering)
-    {
-        tabBar->setTabsReorderable(parOptions.allowTabReordering);
-    }
+    tabBar->setTabsReorderable(parOptions.allowTabReordering);
+    tabBar->setTabsCanBeExchanged(parOptions.allowDragExchange);
+    tabBar->setTabsCanBeExtracted(parOptions.allowPageExtraction);
 }
 
 const MultiPagePane::Options& MultiPagePane::getOptions() const noexcept
@@ -1562,6 +1918,76 @@ juce::Rectangle<int> MultiPagePane::getTabSpaceBounds() const noexcept
 juce::Rectangle<int> MultiPagePane::getPageSpaceBounds() const noexcept
 {
     return pageSpaceBounds;
+}
+
+//======================================================================================================================
+void MultiPagePane::itemDragEnter(const SourceDetails&)
+{
+    paintDropBox = true;
+    
+    if (pages.empty())
+    {
+        repaint();
+    }
+    else
+    {
+        repaint(tabBar->getBounds());
+    }
+}
+
+void MultiPagePane::itemDragExit(const SourceDetails&)
+{
+    paintDropBox = false;
+    repaint();
+}
+
+bool MultiPagePane::isInterestedInDragSource(const SourceDetails &dragSourceDetails)
+{
+    if (const juce::DynamicObject *const json_cif = dragSourceDetails.description.getDynamicObject())
+    {
+        if (json_cif->getProperty("drag_id").toString() != DragAndDrop_ID)
+        {
+            return false;
+        }
+        
+        if (const juce::DynamicObject *const tab_info = json_cif->getProperty("tab_info").getDynamicObject())
+        {
+            const juce::String id = tab_info->getProperty("page_id");
+    
+            if (!id.isEmpty())
+            {
+                for (const auto &tab : tabBar->getAllTabs())
+                {
+                    const juce::String &tab_id = tab->getName();
+    
+                    if (tab_id == id)
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+void MultiPagePane::itemDropped(const SourceDetails &dragSourceDetails)
+{
+    const juce::DynamicObject *const tab_info = dragSourceDetails.description.getProperty("tab_info", {})
+                                                                 .getDynamicObject();
+    const juce::String page_id   = tab_info->getProperty("page_id");
+    const juce::String page_name = tab_info->getProperty("name");
+    
+    MultiPagePane &other = *static_cast<MultiPagePane*>(dragSourceDetails.sourceComponent.get());
+    pages.emplace(page_id, other.detachPage(page_id));
+    tabBar->addTab(style, *factory, page_id, page_name);
+    
+    paintDropBox = false;
+    resized();
+    repaint();
 }
 
 //======================================================================================================================
@@ -1806,9 +2232,18 @@ void LookAndFeel_Jaut::drawMultiTabPaneTabPinButton(juce::Graphics &g, const Mul
 }
 
 //======================================================================================================================
+int LookAndFeel_Jaut::getWindowStyleFlags() const
+{
+    using Flags = juce::ComponentPeer::StyleFlags;
+    return Flags::windowHasTitleBar | Flags::windowHasCloseButton;
+}
+
+//======================================================================================================================
 JAUT_IMPL_LAF(ContentPane)
 JAUT_IMPL_LAF(SplitContainer)
 JAUT_IMPL_LAF(MultiPagePane)
+JAUT_IMPL_LAF(MultiPagePane::TabButton)
+JAUT_IMPL_LAF(MultiPagePane::Window)
 //======================================================================================================================
 // endregion LookAndFeel_Jaut
 //**********************************************************************************************************************
