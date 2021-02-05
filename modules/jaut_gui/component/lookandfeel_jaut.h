@@ -34,30 +34,27 @@ class JAUT_API LookAndFeel_Jaut : public juce::LookAndFeel_V4,
                                   public MultiPagePane::Window::LookAndFeelMethods
 {
 public:
-    static LookAndFeel_Jaut& getDefaultLaf()
-    {
-        static LookAndFeel_Jaut defaultLaf;
-        return defaultLaf;
-    }
+    static LookAndFeel_Jaut& getDefaultLaf() { return jaut::getDefaultLaf(); }
     
     //==================================================================================================================
     LookAndFeel_Jaut();
     
     //==================================================================================================================
     void drawContentPaneBackground(juce::Graphics &g, juce::Rectangle<int> bounds) override;
+    void drawContentPaneBorder(juce::Graphics &g, juce::Rectangle<int> bounds, Thickness<int> thickness) override;
     
     //==================================================================================================================
     void drawSplitContainerBackground(juce::Graphics &g, juce::Rectangle<int> bounds) override;
-    void drawSplitContainerSeperator(juce::Graphics &g, juce::Rectangle<int> bounds,
+    void drawSplitContainerBorder(juce::Graphics &g, juce::Rectangle<int> bounds, Thickness<int> thickness) override;
+    void drawSplitContainerSeparator(juce::Graphics &g, juce::Rectangle<int> bounds,
                                      SplitContainer::Orientation orientation) override;
     
     //==================================================================================================================
     juce::Font getMultiTabPaneFont() override;
     void drawMultiTabPaneBackground(juce::Graphics &g, const MultiPagePane &multiTabPane) override;
-    
+    void drawMultiTabPaneBorder(juce::Graphics &g, juce::Rectangle<int> bounds, Thickness<int> thickness) override;
     void drawMultiTabPaneMoreTabsButton(juce::Graphics &g, const juce::Button &button,
                                         bool isMouseOver, bool isMouseDown) override;
-    
     void drawMultiTabPaneTabBackground(juce::Graphics &g, const MultiPagePane::TabButton &tabButton,
                                        bool isMouseOver, bool isMouseDown) override;
     void drawMultiTabPaneTabText(juce::Graphics &g, const MultiPagePane::TabButton &tabButton,

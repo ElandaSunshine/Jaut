@@ -25,6 +25,15 @@
 
 #include <jaut_gui/jaut_gui.h>
 
+namespace jaut
+{
+    LookAndFeel_Jaut& getDefaultLaf()
+    {
+        static LookAndFeel_Jaut laf;
+        return laf;
+    }
+}
+
 #if !DOXYGEN
 #   define JAUT_IMPL_LAF(CLASS) \
     void CLASS ::parentHierarchyChanged() { lookAndFeelChanged(); }\

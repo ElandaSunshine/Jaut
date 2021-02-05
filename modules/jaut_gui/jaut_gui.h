@@ -45,19 +45,8 @@
 
 namespace jaut
 {
-namespace DefaultColours
-{
-    const juce::Colour Colour_Background { 0xff282828 };
-    const juce::Colour Colour_Border     { 0xccffffff };
-    const juce::Colour Colour_Text       { 0xccffffff };
-    
-    const juce::Colour Colour_Button     { 0xff282828 };
-    const juce::Colour Colour_ButtonText { 0xccffffff };
-    const juce::Colour Colour_ButtonDown = Colour_Button.brighter(0.2f);
-    const juce::Colour Colour_ButtonOver = Colour_Button.brighter(0.3f);
-};
-
-class LookAndFeel_Jaut;
+    class LookAndFeel_Jaut;
+    LookAndFeel_Jaut& getDefaultLaf();
 }
 
 #if !DOXYGEN
@@ -74,6 +63,7 @@ class LookAndFeel_Jaut;
 #include <jaut_gui/mouse/draganddropcontaineradvanced.h>
 
 // Components
+//#include <jaut_gui/component/styleablecomponent.h>
 #include <jaut_gui/component/contentpane.h>
 #include <jaut_gui/component/splitcontainer.h>
 #include <jaut_gui/component/multipagepane.h>

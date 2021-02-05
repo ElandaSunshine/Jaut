@@ -82,6 +82,10 @@ public:
         Static
     };
     
+    //==================================================================================================================
+    virtual ~IExpandable() = default;
+    
+    //==================================================================================================================
     /**
      *  Gets the textual representation of this IExpandable object.
      *  @return The name
@@ -120,8 +124,9 @@ public:
     virtual juce::String getRangeStartIfEmpty(const juce::String &value) const = 0;
     
     /**
-     *  Gets the instruciton this IExpandable should be represented by.
+     *  Gets the instruction this IExpandable should be represented by.
      *  Allowed are alphanumerical values and underscores.
+     *
      *  @return The symbol
      */
     virtual juce::String getInstruction() const = 0;
