@@ -26,8 +26,9 @@
 #pragma once
 
 #if !DOXYGEN
-  #define JAUT_ASSERT_EVENT_NOT_A_HANDLER "Event has invalid template parameter, "\
-                                          "parameter 'Handler' must be of type EventHandler."
-                                        
-  #define JAUT_ASSERT_NUMERIC_TYPE_NOT_NUMERIC "The specified template parameter is not a numeric type."
+#   define JAUT_ASSERT_EVENT_NOT_A_HANDLER "Event has invalid template parameter, " \
+                                           "parameter 'Handler' must be of type EventHandler."
+#   define JAUT_ASSERT_NUMERIC_TYPE_NOT_NUMERIC "The specified template parameter is not a numeric type."
+#   define JAUT_ASSERT_NUMERIC_IEEE_NOT_SUPPORTED "Overflow checking of floating point values is only available " \
+                                                  "for machines supporting the IEEE standard."
 #endif

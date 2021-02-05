@@ -27,55 +27,61 @@
 
 namespace jaut
 {
-    struct JAUT_API NumericEvents
+    struct JAUT_API NumericChecks
     {
-        enum { OnChange = 1, OnOverflow = 2 };
+        enum { CheckForChanges = 1, CheckForOverflow = 2, CheckForZeroDivision };
     };
     
     /**
      *  An numeric base class for classes that need to be arithmetically operable.
      *  @tparam NumericType The numeric type this class is managing
      */
-    template<class T, int VEvents = NumericEvents::OnChange>
+    template<class T, int VChecks = NumericChecks::CheckForChanges>
     class JAUT_API Numeric
     {
     private:
-        template<class = void> struct OverflowDetector;
-    
-        template<>
-        struct OverflowDetector<std::enable_if_t<std::is_integral_v<T>>>
+        struct OverflowDetector
         {
-            juce::BigInteger value;
-        
-            //==========================================================================================================
-            static int checkIfOverflowed(juce::BigInteger value) noexcept
+            static int checkIfOverflowed(const juce::BigInteger &value)
             {
-                return value > std::numeric_limits<T>::max() ?  1 :
-                       value < std::numeric_limits<T>::min() ? -1 : 0;
+                return value < std::numeric_limits<T>::min() ? -1 : (value > std::numeric_limits<T>::max());
+            }
+    
+            template<class T2>
+            static int checkIfOverflowed(T2)
+            {
+                return std::fetestexcept(FE_UNDERFLOW) ? -1 : (std::fetestexcept(FE_OVERFLOW) > 0);
             }
         };
-    
+        
         //==============================================================================================================
-        using Detector = OverflowDetector<>;
-        using OfType   = std::conditional_t<(VEvents & NumericEvents::OnOverflow) == NumericEvents::OnOverflow,
-                                            juce::BigInteger, T>;
+        using Detector = OverflowDetector;
+        using OfType   = std::conditional_t<(VChecks & NumericChecks::CheckForOverflow)
+                                                == NumericChecks::CheckForOverflow
+                                            && std::is_integral_v<T>, juce::BigInteger, T>;
         
     public:
         static_assert(std::is_integral_v<T> || std::is_floating_point_v<T>,
                       JAUT_ASSERT_NUMERIC_TYPE_NOT_NUMERIC);
-    
+        
         //==============================================================================================================
-        enum class JAUT_API OverflowLimit { Up, Down };
+        enum class JAUT_API OverflowLimit { Down = -1, Up = 1 };
         
         //==============================================================================================================
         using ValueChangedHandler    = EventHandler<Numeric&, T>;
-        using ValueOverflowedHandler = EventHandler<Numeric&, T, juce::BigInteger, OverflowLimit>;
+        using ValueOverflowedHandler = std::conditional_t<std::is_integral_v<T>,
+                                                          EventHandler<Numeric&, T, juce::BigInteger, OverflowLimit>,
+                                                          EventHandler<Numeric&, T, OverflowLimit>>;
+        using DividedByZeroHandler   = EventHandler<Numeric&>;
         
         /** Dispatched whenever the value has changed. */
         Event<ValueChangedHandler> ValueChanged;
         
         /** Dispatched whenever the number overflowed. */
         Event<ValueOverflowedHandler> ValueOverflowed;
+        
+        /** Dispatched whenever the user tried to divide by zero. */
+        Event<DividedByZeroHandler> DividedByZero;
         
         //==============================================================================================================
         T numericValue {};
@@ -119,11 +125,47 @@ namespace jaut
         Numeric operator%(T value) const noexcept { return numericValue % value; }
     
         //==============================================================================================================
-        Numeric& operator+=(Numeric value) { return modify(OfType(numericValue) + value.numericValue); }
-        Numeric& operator-=(Numeric value) { return modify(OfType(numericValue) - value.numericValue); }
-        Numeric& operator/=(Numeric value) { return modify(OfType(numericValue) / value.numericValue); }
-        Numeric& operator*=(Numeric value) { return modify(OfType(numericValue) * value.numericValue); }
-        Numeric& operator%=(Numeric value) { return modify(OfType(numericValue) % value.numericValue); }
+        Numeric& operator+=(Numeric value)
+        {
+            enableOverflowBits();
+            return modify(OfType(numericValue) + value.numericValue);
+        }
+        
+        Numeric& operator-=(Numeric value)
+        {
+            enableOverflowBits();
+            return modify(OfType(numericValue) - value.numericValue);
+        }
+        
+        Numeric& operator/=(Numeric value)
+        {
+            const bool dont_send = dontSend;
+            
+            enableOverflowBits();
+            (void) modify(OfType(numericValue) / value.numericValue);
+    
+            if constexpr ((VChecks & NumericChecks::CheckForZeroDivision) == NumericChecks::CheckForZeroDivision)
+            {
+                if (value == 0 && !dont_send)
+                {
+                    DividedByZero.invoke(*this);
+                }
+            }
+            
+            return *this;
+        }
+        
+        Numeric& operator*=(Numeric value)
+        {
+            enableOverflowBits();
+            return modify(OfType(numericValue) * value.numericValue);
+        }
+        
+        Numeric& operator%=(Numeric value)
+        {
+            enableOverflowBits();
+            return modify(OfType(numericValue) % value.numericValue);
+        }
         
         /*
         Numeric& operator+=(T value) { return modify(static_cast<OfType>(numericValue) + value); }
@@ -185,7 +227,7 @@ namespace jaut
         //==============================================================================================================
         void postChangeEvent(T newValue)
         {
-            if constexpr ((VEvents & NumericEvents::OnChange) == NumericEvents::OnChange)
+            if constexpr ((VChecks & NumericChecks::CheckForChanges) == NumericChecks::CheckForChanges)
             {
                 if (const T old_value = std::exchange(numericValue, newValue); old_value != newValue)
                 {
@@ -194,14 +236,29 @@ namespace jaut
             }
         }
         
-        inline Numeric& modify(OfType newValue)
+        void enableOverflowBits()
+        {
+            if constexpr (std::is_floating_point_v<T>
+                          && (VChecks & NumericChecks::CheckForOverflow) == NumericChecks::CheckForOverflow)
+            {
+                if (!dontSend)
+                {
+                    std::feclearexcept(FE_OVERFLOW);
+                    std::feclearexcept(FE_UNDERFLOW);
+                }
+            }
+        }
+        
+        Numeric& modify(OfType newValue)
         {
             const bool is_diff = newValue != numericValue;
             T old_value = numericValue;
     
             if constexpr (std::is_same_v<OfType, juce::BigInteger>)
             {
-                numericValue = static_cast<T>(newValue.toInt64());
+                using CastType = std::conditional_t<std::is_unsigned_v<T>, std::uint64_t, std::int64_t>;
+                numericValue   = std::clamp<CastType>(static_cast<CastType>(newValue.toInt64()),
+                                                      std::numeric_limits<T>::min(), std::numeric_limits<T>::max());
             }
             else
             {
@@ -210,30 +267,35 @@ namespace jaut
             
             if (is_diff && !dontSend)
             {
-                if constexpr ((VEvents & NumericEvents::OnChange) == NumericEvents::OnChange)
+                if constexpr ((VChecks & NumericChecks::CheckForChanges) == NumericChecks::CheckForChanges)
                 {
                     ValueChanged.invoke(*this, old_value);
                 }
     
-                if constexpr ((VEvents & NumericEvents::OnOverflow) == NumericEvents::OnOverflow)
+                if constexpr ((VChecks & NumericChecks::CheckForOverflow) == NumericChecks::CheckForOverflow)
                 {
                     if (const int res = Detector::checkIfOverflowed(newValue))
                     {
-                        OverflowLimit limit;
+                        const OverflowLimit limit = static_cast<OverflowLimit>(res);
                         
-                        if (res < 0)
+                        if constexpr (std::is_integral_v<T>)
                         {
-                            limit     = OverflowLimit::Down;
-                            newValue -= std::numeric_limits<T>::min();
-                            newValue.setNegative(false);
+                            if (limit == OverflowLimit::Down)
+                            {
+                                newValue -= std::numeric_limits<T>::min();
+                                newValue.setNegative(false);
+                            }
+                            else
+                            {
+                                newValue -= std::numeric_limits<T>::max();
+                            }
+    
+                            ValueOverflowed.invoke(*this, old_value, newValue, limit);
                         }
                         else
                         {
-                            limit     = OverflowLimit::Up;
-                            newValue -= std::numeric_limits<T>::max();
+                            ValueOverflowed.invoke(*this, old_value, limit);
                         }
-                        
-                        ValueOverflowed.invoke(*this, old_value, newValue, limit);
                     }
                 }
             }

@@ -103,7 +103,20 @@ namespace jaut
             /** Resize the panels depending on the side the parent component has been resized at. */
             Directional
         };
-    
+        
+        /** Specifies the mode of this SplitContainer if one or no panel is set. */
+        enum class JAUT_API CollapseMode : int
+        {
+            /** Act as if both components were present. */
+            AlwaysShow,
+            
+            /** Collapse the empty panel and push the seperator to the end. */
+            Collapse,
+            
+            /** Collapse the empty panel and hide the seperator. */
+            Hide
+        };
+        
         struct JAUT_API Style
         {
             /** The padding between border and content. */
@@ -124,14 +137,17 @@ namespace jaut
             /** The resizing behaviour of the individual panels when the SplitContainer is getting resised. */
             ResizeBehaviour resizeBehaviour { ResizeBehaviour::Centred };
             
+            /** Specifies what happens if only one or no panel is set. */
+            CollapseMode collapseMode { CollapseMode::AlwaysShow };
+            
             /** The orientation of the SplitContainer. */
-            Orientation orientation { Orientation::Horizontal };
+            Orientation orientation { Orientation::Vertical };
             
             /** The minimum size of the left-hand panel when being resized. */
-            int panel1MinimumSize { 0 };
+            int panel1MinimumSize { 30 };
     
             /** The minimum size of the right-hand panel when being resized. */
-            int panel2MinimumSize { 0 };
+            int panel2MinimumSize { 30 };
         };
         
         //==============================================================================================================
@@ -283,6 +299,12 @@ namespace jaut
         void setResizeBehaviour(ResizeBehaviour resizeBehaviour) noexcept { options.resizeBehaviour = resizeBehaviour; }
         
         /**
+         *  Sets the collapse mode.
+         *  @param collapseMode The new collapse mode
+         */
+        void setCollapseMode(CollapseMode collapseMode) noexcept;
+        
+        /**
          *  Sets the orientation and changes the components arrangement.
          *  @param orientation The new orientation
          */
@@ -339,7 +361,16 @@ namespace jaut
             {
                 auto parent_bounds = component.getParentComponent()->getLocalBounds();
                 
-                if (container.options.orientation == Orientation::Horizontal)
+                if (container.options.collapseMode != CollapseMode::AlwaysShow)
+                {
+                    if (!container.contentContainer.components[0].get()
+                        || !container.contentContainer.components[1].get())
+                    {
+                        return;
+                    }
+                }
+                
+                if (container.options.orientation == Orientation::Vertical)
                 {
                     if (parent_bounds.getWidth() > (container.options.panel1MinimumSize
                                                     + container.options.panel2MinimumSize

@@ -39,19 +39,7 @@ namespace jaut
         };
     
         //==============================================================================================================
-        /**
-         *  Assign your own callback to construct a new SplitContainer with your own style and options.
-         *  The SplitContainer is used whenever the DockingPane is holding two components.
-         */
-        std::function<std::unique_ptr<SplitContainer>()> createSplitContainer
-            = [] { return std::make_unique<SplitContainer>(); };
-        
-        /**
-         *  Assign your own callback to construct a new ContentPane with your own style and options.
-         *  The ContentPane is used whenever the DockingPane is holding only a single component.
-         */
-        std::function<std::unique_ptr<ContentPane>()> createContentPane
-            = [] { return std::make_unique<ContentPane>(); };
+        explicit DockingPane(jaut::SplitContainer::Style style = {}, jaut::SplitContainer::Options options = {});
         
         //==============================================================================================================
         void dockComponent(juce::OptionalScopedPointer<juce::Component> component, Anchor anchor);
@@ -61,7 +49,6 @@ namespace jaut
         void resized() override;
         
     private:
-        std::unique_ptr<SplitContainer> multiContainer;
-        std::unique_ptr<ContentPane>    soloContainer;
+        SplitContainer container;
     };
 }

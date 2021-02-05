@@ -64,6 +64,7 @@ namespace jaut
 
 // Components
 //#include <jaut_gui/component/styleablecomponent.h>
+//#include <jaut_gui/component/targetcomponent.h>
 #include <jaut_gui/component/contentpane.h>
 #include <jaut_gui/component/splitcontainer.h>
 #include <jaut_gui/component/multipagepane.h>
