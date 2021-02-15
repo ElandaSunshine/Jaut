@@ -51,20 +51,18 @@ namespace jaut
              *  Draws the background of the ContentPane.
              *  This will only be called if the ContentPane object contains no content-component.
              *
-             *  @param g      The graphics context
-             *  @param bounds The bounds of the ContentPane (local bounds)
+             *  @param g           The graphics context
+             *  @param contentPane The content pane
              */
-            virtual void drawContentPaneBackground(juce::Graphics &g, juce::Rectangle<int> bounds) = 0;
+            virtual void drawContentPaneBackground(juce::Graphics &g, const ContentPane &contentPane) = 0;
     
             /**
-             *  Draws the border of the SplitContainer.
+             *  Draws the border of the SplitPane.
              *
-             *  @param g         The graphics context
-             *  @param bounds    The component bounds
-             *  @param thickness The border thickness
+             *  @param g           The graphics context
+             *  @param contentPane The content pane
              */
-            virtual void drawContentPaneBorder(juce::Graphics &g, juce::Rectangle<int> bounds,
-                                               Thickness<int> thickness) = 0;
+            virtual void drawContentPaneBorder(juce::Graphics &g, const ContentPane &contentPane) = 0;
         };
         
         struct JAUT_API Style

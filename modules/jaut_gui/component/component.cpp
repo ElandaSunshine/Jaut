@@ -24,7 +24,7 @@
  */
 
 //**********************************************************************************************************************
-// region Namespace
+// region Anonymous
 //======================================================================================================================
 namespace
 {
@@ -78,41 +78,41 @@ namespace
         return SplitContainerSizeState::Small;
     }
     
-    constexpr jaut::SplitContainer::ResizeBehaviour getResizeBehaviour(jaut::SplitContainer::ResizeBehaviour behaviour,
-                                                                       int prevXY, int xy, int prevWidthHeight,
-                                                                       int widthHeight) noexcept
+    constexpr jaut::SplitPane::ResizeBehaviour getResizeBehaviour(jaut::SplitPane::ResizeBehaviour behaviour,
+                                                                  int prevXY, int xy, int prevWidthHeight,
+                                                                  int widthHeight) noexcept
     {
-        if (behaviour != jaut::SplitContainer::ResizeBehaviour::Directional)
+        if (behaviour != jaut::SplitPane::ResizeBehaviour::Directional)
         {
             return behaviour;
         }
         
         if (prevXY != xy && (prevXY + prevWidthHeight) != (xy + widthHeight))
         {
-            return jaut::SplitContainer::ResizeBehaviour::Centred;
+            return jaut::SplitPane::ResizeBehaviour::Centred;
         }
         else if (prevXY == xy)
         {
-            return jaut::SplitContainer::ResizeBehaviour::Panel2;
+            return jaut::SplitPane::ResizeBehaviour::Panel2;
         }
         
-        return jaut::SplitContainer::ResizeBehaviour::Panel1;
+        return jaut::SplitPane::ResizeBehaviour::Panel1;
     }
     
-    void resizeSplitContainer(jaut::SplitContainer::ResizeBehaviour resizeBehaviour, juce::Component &comp,
+    void resizeSplitContainer(jaut::SplitPane::ResizeBehaviour resizeBehaviour, juce::Component &comp,
                               int prevWidthHeight, int prevXY, int xy, int widthHeight, int heightWidth,
                               int separatorXY, int sepWidthHeight, int sepHeightWidth, int sepRightBottom,
-                              int min1, int min2, bool vertical)
+                              int min1, int min2, int sepThickness, bool vertical)
     {
         if (sepHeightWidth != heightWidth)
         {
             if (!vertical)
             {
-                comp.setSize(sepWidthHeight, heightWidth);
+                comp.setSize(sepThickness, heightWidth);
             }
             else
             {
-                comp.setSize(heightWidth, sepWidthHeight);
+                comp.setSize(heightWidth, sepThickness);
             }
         }
         
@@ -124,7 +124,7 @@ namespace
             const int  top_max   = widthHeight - min2 - sepWidthHeight;
             const auto behaviour = getResizeBehaviour(resizeBehaviour, prevXY, xy, prevWidthHeight, widthHeight);
     
-            if (behaviour == jaut::SplitContainer::ResizeBehaviour::Centred)
+            if (behaviour == jaut::SplitPane::ResizeBehaviour::Centred)
             {
                 if (prev_state == SplitContainerSizeState::Full || prev_state == SplitContainerSizeState::Semi)
                 {
@@ -136,7 +136,7 @@ namespace
                     setPositionOf(comp, (widthHeight / 2.0) - (sepWidthHeight / 2.0), vertical);
                 }
             }
-            else if (behaviour == jaut::SplitContainer::ResizeBehaviour::Panel2)
+            else if (behaviour == jaut::SplitPane::ResizeBehaviour::Panel2)
             {
                 if (prev_state == SplitContainerSizeState::Semi || prev_state == SplitContainerSizeState::Small)
                 {
@@ -208,7 +208,7 @@ namespace
     }
 }
 //======================================================================================================================
-// endregion Namespace
+// endregion Anonymous
 //**********************************************************************************************************************
 
 namespace jaut
@@ -222,12 +222,12 @@ namespace jaut
     //==================================================================================================================
     void ContentPane::paint(juce::Graphics &g)
     {
-        lookAndFeel->drawContentPaneBackground(g, getLocalBounds());
+        lookAndFeel->drawContentPaneBackground(g, *this);
     }
     
     void ContentPane::paintOverChildren(juce::Graphics &g)
     {
-        lookAndFeel->drawContentPaneBorder(g, getLocalBounds(), style.borderThickness);
+        lookAndFeel->drawContentPaneBorder(g, *this);
     }
     
     void ContentPane::resized()
@@ -336,13 +336,13 @@ namespace jaut
     //==================================================================================================================
     // endregion ContentPane
     //******************************************************************************************************************
-    // region SplitContainer
+    // region SplitPane
     //==================================================================================================================
     //==================================================================================================================
     //******************************************************************************************************************
     // region ContentContainer
     //==================================================================================================================
-    SplitContainer::ContentContainer::ContentContainer(SplitContainer &container)
+    SplitPane::ContentContainer::ContentContainer(SplitPane &container)
         : parent(container), constrainer(container)
     {
         if (parent.options.orientation == Orientation::Vertical)
@@ -359,35 +359,35 @@ namespace jaut
         addAndMakeVisible(containers[0]);
         addAndMakeVisible(containers[1]);
         addAndMakeVisible(separator);
-    
         separator.addMouseListener(this, false);
     }
     
     //==================================================================================================================
-    void SplitContainer::ContentContainer::paint(juce::Graphics &g)
+    void SplitPane::ContentContainer::paint(juce::Graphics &g)
     {
         LookAndFeel_Jaut &laf = *parent.lookAndFeel;
-        laf.drawSplitContainerSeparator(g, separator.getBounds(), parent.options.orientation);
+        laf.drawSplitContainerSeparator(g, separator);
         
         if (parent.options.orientation == Orientation::Vertical)
         {
-            laf.drawSplitContainerBorder(g, getLocalBounds().withWidth(separator.getX()),
+            laf.drawSplitContainerBorder(g, containers[0], getLocalBounds().withWidth(separator.getX()),
                                          parent.style.panelBorderThickness);
-            laf.drawSplitContainerBorder(g, getLocalBounds().withWidth(getWidth() - separator.getRight())
-                                                            .withX(separator.getRight()),
+            laf.drawSplitContainerBorder(g, containers[1], getLocalBounds().withWidth(getWidth() - separator.getRight())
+                                                                          .withX(separator.getRight()),
                                          parent.style.panelBorderThickness);
         }
         else
         {
-            laf.drawSplitContainerBorder(g, getLocalBounds().withHeight(separator.getY()),
+            laf.drawSplitContainerBorder(g, containers[0], getLocalBounds().withHeight(separator.getY()),
                                          parent.style.panelBorderThickness);
-            laf.drawSplitContainerBorder(g, getLocalBounds().withHeight(getHeight() - separator.getBottom())
-                                                            .withY(separator.getBottom()),
+            laf.drawSplitContainerBorder(g, containers[1], getLocalBounds().withHeight(getHeight()
+                                                                                        - separator.getBottom())
+                                                                           .withY(separator.getBottom()),
                                          parent.style.panelBorderThickness);
         }
     }
     
-    void SplitContainer::ContentContainer::resized()
+    void SplitPane::ContentContainer::resized()
     {
         if (getWidth() <= 0 || getHeight() <= 0)
         {
@@ -397,117 +397,92 @@ namespace jaut
         const Options &loptions = parent.options;
         const Style   &lstyle   = parent.style;
         
-        if (!initialised)
-        {
-            if (loptions.orientation == Orientation::Vertical)
-            {
-                const int value = std::round(getWidth() / 2.0f - (lstyle.separatorThickness / 2.0f));
-            
-                if (getWidth() >= (loptions.panel1MinimumSize + loptions.panel2MinimumSize + lstyle.separatorThickness))
-                {
-                    const int max = getWidth() - loptions.panel2MinimumSize - lstyle.separatorThickness;
-                    separator.setBounds(std::clamp(value, loptions.panel1MinimumSize, max), 0,
-                                        lstyle.separatorThickness, getHeight());
-                }
-                else
-                {
-                    separator.setBounds(value, 0, lstyle.separatorThickness, getHeight());
-                }
-            }
-            else
-            {
-                const int value = std::round(getHeight() / 2.0f - (lstyle.separatorThickness / 2.0f));
-            
-                if (getHeight() >= (loptions.panel1MinimumSize + loptions.panel2MinimumSize
-                                                               + lstyle.separatorThickness))
-                {
-                    const int max = getHeight() - loptions.panel2MinimumSize - lstyle.separatorThickness;
-                    separator.setBounds(0, std::clamp(value, loptions.panel1MinimumSize, max), getWidth(),
-                                        lstyle.separatorThickness);
-                }
-                else
-                {
-                    separator.setBounds(0, value, getWidth(), lstyle.separatorThickness);
-                }
-            }
+        prevSeparatorPos = separator.getPosition();
         
-            initialised = true;
+        if (loptions.collapseMode != CollapseMode::AlwaysShow)
+        {
+            if (!components[0].get())
+            {
+                const int mul = ((loptions.collapseMode == CollapseMode::Hide) * lstyle.separatorThickness);
+        
+                if (loptions.orientation == Orientation::Vertical)
+                {
+                    separator.setTopLeftPosition(-mul, 0);
+                }
+                else
+                {
+                    separator.setTopLeftPosition(0, -mul);
+                }
+                
+                prevSize = getLocalBounds().withX(parent.getX()).withY(parent.getY());
+                return;
+            }
+            else if (!components[1].get())
+            {
+                const int mul = ((loptions.collapseMode == CollapseMode::Collapse) * lstyle.separatorThickness);
+        
+                if (loptions.orientation == Orientation::Vertical)
+                {
+                    separator.setTopLeftPosition(getWidth() - mul, 0);
+                }
+                else
+                {
+                    separator.setTopLeftPosition(0, getHeight() - mul);
+                }
+        
+                prevSize = getLocalBounds().withX(parent.getX()).withY(parent.getY());
+                return;
+            }
+        }
+        
+        if (loptions.orientation == Orientation::Vertical)
+        {
+            ::resizeSplitContainer(loptions.resizeBehaviour, separator, prevSize.getWidth(), prevSize.getX(),
+                                   getX(), getWidth(), getHeight(), separator.getX(), separator.getWidth(),
+                                   separator.getHeight(), separator.getRight(), loptions.panel1MinimumSize,
+                                   loptions.panel2MinimumSize, lstyle.separatorThickness, false);
         }
         else
         {
-            if (loptions.collapseMode != CollapseMode::AlwaysShow)
-            {
-                if (!components[0].get())
-                {
-                    const int mul = ((loptions.collapseMode == CollapseMode::Hide) * lstyle.separatorThickness);
-            
-                    if (loptions.orientation == Orientation::Vertical)
-                    {
-                        separator.setTopLeftPosition(-mul, 0);
-                    }
-                    else
-                    {
-                        separator.setTopLeftPosition(0, -mul);
-                    }
-                    
-                    prevSize = getLocalBounds().withX(parent.getX()).withY(parent.getY());
-                    return;
-                }
-                else if (!components[1].get())
-                {
-                    const int mul = ((loptions.collapseMode == CollapseMode::Collapse) * lstyle.separatorThickness);
-            
-                    if (loptions.orientation == Orientation::Vertical)
-                    {
-                        separator.setTopLeftPosition(getWidth() - mul, 0);
-                    }
-                    else
-                    {
-                        separator.setTopLeftPosition(0, getHeight() - mul);
-                    }
-            
-                    prevSize = getLocalBounds().withX(parent.getX()).withY(parent.getY());
-                    return;
-                }
-            }
-            
-            if (loptions.orientation == Orientation::Vertical)
-            {
-                ::resizeSplitContainer(loptions.resizeBehaviour, separator, prevSize.getWidth(), prevSize.getX(),
-                                       getX(), getWidth(), getHeight(), separator.getX(), separator.getWidth(),
-                                       separator.getHeight(), separator.getRight(), loptions.panel1MinimumSize,
-                                       loptions.panel2MinimumSize, false);
-            }
-            else
-            {
-                ::resizeSplitContainer(loptions.resizeBehaviour, separator, prevSize.getHeight(), prevSize.getY(),
-                                       getY(), getHeight(), getWidth(), separator.getY(), separator.getHeight(),
-                                       separator.getWidth(), separator.getBottom(), loptions.panel1MinimumSize,
-                                       loptions.panel2MinimumSize, true);
-            }
+            ::resizeSplitContainer(loptions.resizeBehaviour, separator, prevSize.getHeight(), prevSize.getY(),
+                                   getY(), getHeight(), getWidth(), separator.getY(), separator.getHeight(),
+                                   separator.getWidth(), separator.getBottom(), loptions.panel1MinimumSize,
+                                   loptions.panel2MinimumSize, lstyle.separatorThickness, true);
         }
     
         prevSize = getLocalBounds().withX(parent.getX()).withY(parent.getY());
     }
     
     //==================================================================================================================
-    void SplitContainer::ContentContainer::mouseDown(const juce::MouseEvent &event)
+    void SplitPane::ContentContainer::mouseDown(const juce::MouseEvent &event)
     {
+        prevSeparatorPos = separator.getPosition();
         dragger.startDraggingComponent(&separator, event);
     }
     
-    void SplitContainer::ContentContainer::mouseDrag(const juce::MouseEvent &event)
+    void SplitPane::ContentContainer::mouseDrag(const juce::MouseEvent &event)
     {
         dragger.dragComponent(&separator, event, &constrainer);
     }
     
     //==================================================================================================================
-    void SplitContainer::ContentContainer::childBoundsChanged(Component *child)
+    void SplitPane::ContentContainer::childBoundsChanged(Component *child)
     {
         if (child == &separator)
         {
+            if (prevSeparatorPos != child->getPosition())
+            {
+                parent.SeparatorMoved.invoke(prevSeparatorPos, child->getPosition());
+            }
+            
             const Options &loptions = parent.options;
             const Style   &lstyle   = parent.style;
+            
+            auto &container_1 = containers[0];
+            auto &container_2 = containers[1];
+            
+            const juce::Rectangle pane1_old = containers[0].getBounds();
+            const juce::Rectangle pane2_old = containers[1].getBounds();
             
             if (loptions.orientation == Orientation::Vertical)
             {
@@ -515,20 +490,20 @@ namespace jaut
                                                                  - lstyle.panelBorderThickness.right;
                 const int new_min_2 = loptions.panel1MinimumSize - lstyle.panelBorderThickness.left
                                                                  - lstyle.panelBorderThickness.right;
+    
+                container_1.setBounds(lstyle.panelBorderThickness.trimRectangle({ separator.getX(), getHeight() }));
+                container_2.setBounds(lstyle.panelBorderThickness.trimRectangle({ separator.getRight(), 0,
+                                                                                  getWidth() - separator.getRight(),
+                                                                                  getHeight() }));
                 
-                containers[0].setBounds(lstyle.panelBorderThickness.trimRectangle({ separator.getX(), getHeight() }));
-                containers[1].setBounds(lstyle.panelBorderThickness.trimRectangle({ separator.getRight(), 0,
-                                                                                    getWidth() - separator.getRight(),
-                                                                                    getHeight() }));
-            
                 if (auto *comp = components[0].get())
                 {
-                    comp->setBounds(0, 0, std::max(containers[0].getWidth(), new_min_1), getHeight());
+                    comp->setBounds(0, 0, std::max(container_1.getWidth(), new_min_1), getHeight());
                 }
             
                 if (auto *comp = components[1].get())
                 {
-                    comp->setBounds(0, 0, std::max(containers[1].getWidth(), new_min_2), getHeight());
+                    comp->setBounds(0, 0, std::max(container_2.getWidth(), new_min_2), getHeight());
                 }
             }
             else
@@ -537,61 +512,71 @@ namespace jaut
                                                                  - lstyle.panelBorderThickness.bottom;
                 const int new_min_2 = loptions.panel1MinimumSize - lstyle.panelBorderThickness.top
                                                                  - lstyle.panelBorderThickness.bottom;
+    
+                container_1.setBounds(lstyle.panelBorderThickness.trimRectangle({ getWidth(), separator.getY() }));
+                container_2.setBounds(lstyle.panelBorderThickness.trimRectangle({ 0, separator.getBottom(), getWidth(),
+                                                                                  getHeight()
+                                                                                      - separator.getBottom() }));
                 
-                containers[0].setBounds(lstyle.panelBorderThickness.trimRectangle({ getWidth(), separator.getY() }));
-                containers[1].setBounds(lstyle.panelBorderThickness.trimRectangle({ 0, separator.getBottom(),
-                                                                                    getWidth(),
-                                                                                    getHeight()
-                                                                                        - separator.getBottom() }));
-            
                 if (auto *comp = components[0].get())
                 {
-                    comp->setBounds(0, 0, getWidth(), std::max(containers[0].getHeight(), new_min_1));
+                    comp->setBounds(0, 0, getWidth(), std::max(container_1.getHeight(), new_min_1));
                 }
-            
+                
                 if (auto *comp = components[1].get())
                 {
-                    comp->setBounds(0, 0, getWidth(), std::max(containers[1].getHeight(), new_min_2));
+                    comp->setBounds(0, 0, getWidth(), std::max(container_2.getHeight(), new_min_2));
                 }
+            }
+    
+            if (const juce::Rectangle pane1_new = container_1.getBounds(); pane1_new != pane1_old)
+            {
+                parent.PanelResized.invoke(PanelId::Panel1, pane1_old, pane1_new);
+            }
+            
+            if (const juce::Rectangle pane2_new = container_2.getBounds(); pane2_new != pane2_old)
+            {
+                parent.PanelResized.invoke(PanelId::Panel2, pane2_old, pane2_new);
             }
         }
     }
     //==================================================================================================================
     // endregion ContentContainer
     //******************************************************************************************************************
-    // region SplitContainer
+    // region SplitPane
     //==================================================================================================================
-    SplitContainer::SplitContainer(Style parStyle, Options parOptions)
-        : style(std::move(parStyle)), options(std::move(parOptions)),
+    SplitPane::SplitPane(Style parStyle, Options parOptions)
+        : style(std::move(parStyle)),
+          options(std::move(parOptions)),
           contentContainer(*this)
     {
         JAUT_INIT_LAF()
         addAndMakeVisible(contentContainer);
     }
     
-    SplitContainer::SplitContainer(Style   parStyle)   : SplitContainer(std::move(parStyle), Options{}) {}
-    SplitContainer::SplitContainer(Options parOptions) : SplitContainer(Style{}, std::move(parOptions)) {}
-    SplitContainer::SplitContainer()                   : SplitContainer(Style{}, Options{})             {}
+    SplitPane::SplitPane(Style   parStyle)   : SplitPane(std::move(parStyle), Options{}) {}
+    SplitPane::SplitPane(Options parOptions) : SplitPane(Style{}, std::move(parOptions)) {}
+    SplitPane::SplitPane()                   : SplitPane(Style{}, Options{})             {}
     
     //==================================================================================================================
-    void SplitContainer::paint(juce::Graphics &g)
+    void SplitPane::paint(juce::Graphics &g)
     {
-        lookAndFeel->drawSplitContainerBackground(g, getLocalBounds());
+        lookAndFeel->drawSplitContainerBackground(g, *this);
     }
     
-    void SplitContainer::paintOverChildren(juce::Graphics &g)
+    void SplitPane::paintOverChildren(juce::Graphics &g)
     {
-        lookAndFeel->drawSplitContainerBorder(g, getLocalBounds(), style.borderThickness);
+        lookAndFeel->drawSplitContainerBorder(g, *this, getLocalBounds(), style.borderThickness);
     }
     
-    void SplitContainer::resized()
+    void SplitPane::resized()
     {
         contentContainer.setBounds(style.borderThickness.trimRectangle(style.contentPadding
                                                                             .trimRectangle(getLocalBounds())));
     }
     
     //==================================================================================================================
-    void SplitContainer::resetComponent(PanelId panelId)
+    void SplitPane::resetComponent(PanelId panelId)
     {
         juce::Viewport &pane = contentContainer.containers[static_cast<int>(panelId)];
         
@@ -609,33 +594,94 @@ namespace jaut
         }
     }
     
-    void SplitContainer::setComponent(juce::OptionalScopedPointer<juce::Component> component, PanelId panelId)
+    void SplitPane::setComponent(juce::OptionalScopedPointer<juce::Component> component, PanelId panelId)
     {
-        juce::Viewport &pane = contentContainer.containers[static_cast<int>(panelId)];
-        
-        if (pane.getViewedComponent() != component.get())
+        if (!contentContainer.components[0] && !contentContainer.components[1] && component.get())
         {
-            auto *comp = (contentContainer.components[static_cast<int>(panelId)] = std::move(component)).get();
-            pane.setViewedComponent(comp, false);
-    
-            if (options.collapseMode != CollapseMode::AlwaysShow)
+            if (options.orientation == Orientation::Vertical)
             {
-                contentContainer.resized();
+                if (panelId == PanelId::Panel1)
+                {
+                    int x = std::clamp(component->getWidth(),
+                                       options.panel1MinimumSize,
+                                       contentContainer.getWidth() - options.panel2MinimumSize
+                                                                   - style.separatorThickness);
+                    
+                    x = std::clamp(x, 0, contentContainer.getWidth());
+                    contentContainer.separator.setTopLeftPosition(x, 0);
+                }
+                else
+                {
+                    int x = std::clamp(contentContainer.getWidth() - component->getWidth()
+                                                                   - style.separatorThickness,
+                                       options.panel1MinimumSize,
+                                       contentContainer.getWidth() - options.panel2MinimumSize
+                                                                   - style.separatorThickness);
+
+                    x = std::clamp(x, 0, contentContainer.getWidth());
+                    contentContainer.separator.setTopLeftPosition(x, 0);
+                }
+            }
+            else
+            {
+                if (panelId == PanelId::Panel1)
+                {
+                    int y = std::clamp(component->getHeight(),
+                                       options.panel1MinimumSize,
+                                       contentContainer.getHeight() - options.panel2MinimumSize
+                                                                    - style.separatorThickness);
+    
+                    y = std::clamp(y, 0, contentContainer.getHeight());
+                    contentContainer.separator.setTopLeftPosition(0, y);
+                }
+                else
+                {
+                    int y = std::clamp(contentContainer.getHeight() - component->getHeight()
+                                                                    - style.separatorThickness,
+                                       options.panel1MinimumSize,
+                                       contentContainer.getHeight() - options.panel2MinimumSize
+                                                                    - style.separatorThickness);
+    
+                    y = std::clamp(y, 0, contentContainer.getHeight());
+                    contentContainer.separator.setTopLeftPosition(0, y);
+                }
             }
             
-            ComponentChanged(comp, panelId);
+            contentContainer.repaint();
         }
+    
+        juce::Viewport &pane = contentContainer.containers[static_cast<int>(panelId)];
+    
+        if (pane.getViewedComponent())
+        {
+            pane.setViewedComponent(nullptr);
+        }
+        
+        auto *comp = (contentContainer.components[static_cast<int>(panelId)] = std::move(component)).get();
+        pane.setViewedComponent(comp, false);
+        
+        contentContainer.resized();
+        ComponentChanged(comp, panelId);
     }
     
-    void SplitContainer::setComponent(std::nullptr_t, PanelId panelId) { resetComponent(panelId); }
+    void SplitPane::setComponent(std::nullptr_t, PanelId panelId) { resetComponent(panelId); }
     
-    void SplitContainer::setComponent(juce::Component &component, PanelId panelId)
+    void SplitPane::setComponent(juce::Component &component, PanelId panelId)
     {
         setComponent({ &component, false }, panelId);
     }
     
+    void SplitPane::swapPanes()
+    {
+        auto comp_1 = releaseComponent(PanelId::Panel1);
+        auto comp_2 = releaseComponent(PanelId::Panel2);
+        
+        setComponent(std::move(comp_2), PanelId::Panel1);
+        setComponent(std::move(comp_1), PanelId::Panel2);
+    }
+    
     //==================================================================================================================
-    void SplitContainer::setContentPadding(Padding padding)
+    void SplitPane::setContentPadding(Padding padding)
     {
         if (padding != std::exchange(style.contentPadding, padding) && contentContainer.initialised)
         {
@@ -643,7 +689,7 @@ namespace jaut
         }
     }
 
-    void SplitContainer::setBorderThickness(Thickness<int> thickness)
+    void SplitPane::setBorderThickness(Thickness<int> thickness)
     {
         // Negative border values are illegal!
         // If you want the contents to go out of bounds, you can do so by supplying negative values
@@ -661,7 +707,7 @@ namespace jaut
         }
     }
     
-    void SplitContainer::setPanelBorderThickness(Thickness<int> thickness)
+    void SplitPane::setPanelBorderThickness(Thickness<int> thickness)
     {
         // Negative border values are illegal!
         // If you want the contents to go out of bounds, you can do so by supplying negative values
@@ -679,7 +725,7 @@ namespace jaut
         }
     }
     
-    void SplitContainer::setSeperatorThickness(int val)
+    void SplitPane::setSeperatorThickness(int val)
     {
         if (val != std::exchange(style.separatorThickness, val) && contentContainer.initialised)
         {
@@ -689,7 +735,7 @@ namespace jaut
     }
     
     //==================================================================================================================
-    void SplitContainer::setOrientation(Orientation parOrientation)
+    void SplitPane::setOrientation(Orientation parOrientation)
     {
         if (parOrientation != std::exchange(options.orientation, parOrientation) && contentContainer.initialised)
         {
@@ -747,7 +793,7 @@ namespace jaut
         }
     }
     
-    void SplitContainer::setCollapseMode(CollapseMode collapseMode) noexcept
+    void SplitPane::setCollapseMode(CollapseMode collapseMode) noexcept
     {
         if (collapseMode != std::exchange(options.collapseMode, collapseMode) && contentContainer.initialised)
         {
@@ -755,7 +801,7 @@ namespace jaut
         }
     }
     
-    void SplitContainer::setPanel1Minimum(int newMinimum)
+    void SplitPane::setPanel1Minimum(int newMinimum)
     {
         if (newMinimum != std::exchange(options.panel1MinimumSize, newMinimum) && contentContainer.initialised)
         {
@@ -763,7 +809,7 @@ namespace jaut
         }
     }
     
-    void SplitContainer::setPanel2Minimum(int newMinimum)
+    void SplitPane::setPanel2Minimum(int newMinimum)
     {
         if (newMinimum != std::exchange(options.panel2MinimumSize, newMinimum) && contentContainer.initialised)
         {
@@ -772,7 +818,7 @@ namespace jaut
     }
     
     //==================================================================================================================
-    void SplitContainer::setStyle(Style newStyle)
+    void SplitPane::setStyle(Style newStyle)
     {
         std::swap(style, newStyle);
         
@@ -795,7 +841,7 @@ namespace jaut
         }
     }
     
-    void SplitContainer::setOptions(Options newOptions)
+    void SplitPane::setOptions(Options newOptions)
     {
         std::swap(options, newOptions);
         setOrientation(newOptions.orientation);
@@ -809,11 +855,11 @@ namespace jaut
         }
     }
     //==================================================================================================================
-    // endregion SplitContainer
+    // endregion SplitPane
     //******************************************************************************************************************
     //==================================================================================================================
     //==================================================================================================================
-    // endregion SplitContainer
+    // endregion SplitPane
     //******************************************************************************************************************
     // region MultiPagePane
     //==================================================================================================================
@@ -821,8 +867,8 @@ namespace jaut
     //******************************************************************************************************************
     // region InternalTabBar
     //==================================================================================================================
-    class MultiPagePane::InternalTabBar final : public juce::Component, private juce::LookAndFeel_V4,
-                                                                        private juce::ComponentListener
+    class MultiPagePane::InternalTabBar : public juce::Component,
+                                          private LookAndFeel_Jaut, private juce::ComponentListener
     {
     public:
         class TabStrip : public juce::Viewport
@@ -1590,7 +1636,7 @@ namespace jaut
             }
         }
         
-        void lookAndFeelChanged() override
+        void lookAndFeelChanged() final
         {
             if (lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getLookAndFeel()); !lookAndFeel)
             {
@@ -1675,6 +1721,42 @@ namespace jaut
     //******************************************************************************************************************
     // region TabButton
     //==================================================================================================================
+    //==================================================================================================================
+    //******************************************************************************************************************
+    // region LookAndFeelProxy
+    //==================================================================================================================
+    class MultiPagePane::TabButton::LookAndFeelProxy : public LookAndFeel_Jaut
+    {
+    public:
+        void drawToggleButton(juce::Graphics &g, juce::ToggleButton &txtButton, bool isOver, bool isDown) override
+        {
+            if (txtButton.getName() == "itemPinButton")
+            {
+                MultiPagePane::TabButton &tab = *static_cast<MultiPagePane::TabButton*>(txtButton.getParentComponent());
+                tab.lookAndFeel->drawMultiTabPaneTabPinButton(g, tab, txtButton, isOver, isDown);
+            }
+        }
+        
+        void drawButtonText(juce::Graphics &g, juce::TextButton &txtButton, bool isOver, bool isDown) override
+        {
+            if (txtButton.getName() == "itemCloseButton")
+            {
+                MultiPagePane::TabButton &tab = *static_cast<MultiPagePane::TabButton*>(txtButton.getParentComponent());
+                tab.lookAndFeel->drawMultiTabPaneTabCloseButton(g, tab, txtButton, isOver, isDown);
+            }
+        }
+        
+        void drawButtonBackground(juce::Graphics&, Button&, const juce::Colour&, bool, bool) override {}
+    };
+    //==================================================================================================================
+    // endregion LookAndFeelProxy
+    //******************************************************************************************************************
+    // region TabButton
+    //==================================================================================================================
+    MultiPagePane::TabButton::LafProxyPtr MultiPagePane::TabButton::buttonProxyLaf
+        = LafProxyPtr(new LookAndFeelProxy, [](LookAndFeelProxy *laf) { delete laf; });
+    
+    //==================================================================================================================
     MultiPagePane::TabButton::TabButton(const Style &parStyle, const TabFactory &parFactory, const juce::String &id,
                                         const juce::String &parText)
         : juce::Button(id),
@@ -1682,7 +1764,7 @@ namespace jaut
     {
         JAUT_INIT_LAF()
         const std::vector<TabFactory::TabItemLayout> &layouts = factory.getTabLayout();
-    
+        
         for (const TabFactory::TabItemLayout &layout : layouts)
         {
             juce::Component *comp;
@@ -1741,7 +1823,7 @@ namespace jaut
                 }
             }
     
-            comp->setLookAndFeel(this);
+            comp->setLookAndFeel(buttonProxyLaf.get());
             addAndMakeVisible(comp);
             layoutComponents.emplace_back(comp);
         }
@@ -1750,7 +1832,13 @@ namespace jaut
         updateTabSize(parStyle.tabButtonItemHeight);
     }
     
-    MultiPagePane::TabButton::~TabButton() = default;
+    MultiPagePane::TabButton::~TabButton()
+    {
+        for (auto &child : getChildren())
+        {
+            child->setLookAndFeel(nullptr);
+        }
+    }
     
     //==================================================================================================================
     void MultiPagePane::TabButton::paintButton(juce::Graphics &g, bool mouseOver, bool mouseDown)
@@ -1861,23 +1949,10 @@ namespace jaut
     {
         setSize(tabWidth, tabHeight);
     }
-    
     //==================================================================================================================
-    void MultiPagePane::TabButton::drawButtonText(juce::Graphics &g, juce::TextButton &button, bool isOver, bool isDown)
-    {
-        if (button.getName() == "itemCloseButton")
-        {
-            lookAndFeel->drawMultiTabPaneTabCloseButton(g, *this, button, isOver, isDown);
-        }
-    }
-    
-    void MultiPagePane::TabButton::drawToggleButton(juce::Graphics &g, juce::ToggleButton &button, bool over, bool down)
-    {
-        if (button.getName() == "itemPinButton")
-        {
-            lookAndFeel->drawMultiTabPaneTabPinButton(g, *this, button, over, down);
-        }
-    }
+    // endregion TabButton
+    //******************************************************************************************************************
+    //==================================================================================================================
     //==================================================================================================================
     // endregion TabButton
     //******************************************************************************************************************
@@ -1890,14 +1965,12 @@ namespace jaut
         JAUT_INIT_LAF();
         
         auto pane = std::make_unique<MultiPagePane>(std::move(parFactory), parStyle, parOptions);
-        pane->LastTabClosing += make_handler(&Window::forceToCloseWindow, this);
+        pane->LastTabClosing += makeHandler(this, &Window::forceToCloseWindow);
         setContentOwned(pane.release(), false);
         
         setSize(400, 250);
         setUsingNativeTitleBar(true);
         setOpaque(true);
-        
-        // setVisible(true);
     }
     
     MultiPagePane::Window::Window(const juce::String &name, juce::OptionalScopedPointer<TabFactory> parFactory,
@@ -2067,7 +2140,7 @@ namespace jaut
     
     void MultiPagePane::paintOverChildren(juce::Graphics &g)
     {
-        lookAndFeel->drawMultiTabPaneBorder(g, getLocalBounds(), style.borderThickness);
+        lookAndFeel->drawMultiTabPaneBorder(g, *this);
         
         if (!paintDropBox)
         {
@@ -2773,117 +2846,87 @@ namespace jaut
     //******************************************************************************************************************
     // region DockingPane
     //==================================================================================================================
-    DockingPane::DockingPane(jaut::SplitContainer::Style style, jaut::SplitContainer::Options options)
-        : container(std::move(style), std::move(options))
+    DockingPane::DockingPane(jaut::SplitPane::Style style, jaut::SplitPane::Options options)
+        : SplitPane(style, options),
+          OverlayTarget(*this, OverlayTarget::allBlocks)
     {
-        container.setCollapseMode(SplitContainer::CollapseMode::Hide);
+        setCollapseMode(SplitPane::CollapseMode::Hide);
     }
     
     //==================================================================================================================
     void DockingPane::dockComponent(juce::OptionalScopedPointer<juce::Component> component, Anchor anchor)
     {
-        // Stop operation if the component is invalid or if the pane is already full
-        /*if (!component || multiContainer)
+        /*
+        if (!component)
         {
             return;
         }
         
-        if (!soloContainer)
+        const auto &panel1 = getComponent(SplitPane::PanelId::Panel1);
+        
+        if (!panel1)
         {
-            if (!createSplitContainer)
-            {
-                // The creation callback must not be a nullptr
-                jassertfalse;
-                return;
-            }
-            
-            soloContainer = createContentPane();
-            soloContainer->setComponent(std::move(component));
-            addAndMakeVisible(soloContainer.get());
+            setComponent(std::move(component), SplitPane::PanelId::Panel1);
         }
         else
         {
-            const bool is_horizontal = (anchor == Anchor::Left || anchor == Anchor::Right);
-            multiContainer = createSplitContainer();
-            
-            if (!is_horizontal)
+            if (panel1 == component.get())
             {
-                multiContainer->setOrientation(SplitContainer::Orientation::Horizontal);
+                return;
             }
             
-            auto old_comp = soloContainer->releaseComponent();
-            
-            removeChildComponent(soloContainer.get());
-            soloContainer.reset();
-            
-            if (is_horizontal)
+            if (anchor == Anchor::Fill)
             {
-                multiContainer->setComponent(std::move(old_comp),
-                                             anchor == Anchor::Left ? SplitContainer::PanelId::Panel2
-                                                                    : SplitContainer::PanelId::Panel1);
-                multiContainer->setComponent(std::move(component),
-                                             anchor == Anchor::Left ? SplitContainer::PanelId::Panel1
-                                                                    : SplitContainer::PanelId::Panel2);
+                if (auto *target = dynamic_cast<OverlayTarget*>(panel1))
+                {
+                    auto root_obj = std::make_unique<juce::DynamicObject>();
+                    juce::var var = ;
+                    
+                    const juce::DragAndDropTarget::SourceDetails details {
+                        var, component.release(), { 0, 0 }
+                    };
+                    
+                    target->itemDropped(details);
+                }
             }
-            else
+            else if (!getComponent(SplitPane::PanelId::Panel2))
             {
-                multiContainer->setComponent(std::move(old_comp),
-                                             anchor == Anchor::Top ? SplitContainer::PanelId::Panel2
-                                                                   : SplitContainer::PanelId::Panel1);
-                multiContainer->setComponent(std::move(component),
-                                             anchor == Anchor::Top ? SplitContainer::PanelId::Panel1
-                                                                   : SplitContainer::PanelId::Panel2);
+                auto dock_1 = std::make_unique<DockingPane>(getStyle(), getOptions());
+                auto dock_2 = std::make_unique<DockingPane>(getStyle(), getOptions());
+                dock_1->dockComponent(releaseComponent(SplitPane::PanelId::Panel1), Anchor::Left);
+                dock_2->dockComponent(std::move(component),                         Anchor::Left);
+    
+                setComponent(juce::OptionalScopedPointer<juce::Component>(std::move(dock_1)), PanelId::Panel1);
+                setComponent(juce::OptionalScopedPointer<juce::Component>(std::move(dock_2)), PanelId::Panel2);
+    
+                switch (anchor)
+                {
+                    case Anchor::Left:
+                        setOrientation(SplitPane::Orientation::Vertical);
+                        swapPanes();
+                        break;
+                    case Anchor::Right:
+                        setOrientation(SplitPane::Orientation::Vertical);
+                        break;
+                    case Anchor::Top:
+                        setOrientation(SplitPane::Orientation::Horizontal);
+                        swapPanes();
+                        break;
+                    case Anchor::Bottom:
+                        setOrientation(SplitPane::Orientation::Horizontal);
+                        break;
+                    default: break;
+                }
             }
-            
-            addAndMakeVisible(multiContainer.get());
         }
-        
-        resized();*/
+         */
     }
     
-    juce::OptionalScopedPointer<juce::Component> DockingPane::undockComponent(DockingPane::Anchor anchor)
+    juce::OptionalScopedPointer<juce::Component> DockingPane::undockComponent(SplitPane::PanelId panelId)
     {
-        /*if (soloContainer)
-        {
-            auto comp = soloContainer->releaseComponent();
-            soloContainer.reset();
-            return comp;
-        }
-        else if (multiContainer)
-        {
-            if (((anchor == Anchor::Left || anchor == Anchor::Right) && multiContainer->getOrientation()
-                    != SplitContainer::Orientation::Vertical)
-                || ((anchor == Anchor::Top || anchor == Anchor::Bottom) && multiContainer->getOrientation()
-                       != SplitContainer::Orientation::Horizontal))
-            {
-                return {};
-            }
-            
-            auto comp_1 = multiContainer->releaseComponent(SplitContainer::ComponentOrder::LeftOrTop);
-            auto comp_2 = multiContainer->releaseComponent(SplitContainer::ComponentOrder::RightOrBottom);
-            
-            multiContainer.reset();
-            
-            if (anchor == Anchor::Left || anchor == Anchor::Top)
-            {
-                dockComponent(std::move(comp_2), {});
-                return comp_1;
-            }
-            else
-            {
-                dockComponent(std::move(comp_1), {});
-                return comp_2;
-            }
-        }
-        
-        return {};*/
+        return {}; //return splitPane.releaseComponent(panelId);
     }
     
-    //==================================================================================================================
-    void DockingPane::resized()
-    {
-        container.setBounds(getLocalBounds());
-    }
     //==================================================================================================================
     // endregion DockingPane
     //******************************************************************************************************************
@@ -2910,14 +2953,14 @@ namespace jaut
             CharFormat::ColourFormatDId, juce::Colour ::fromString("#FF55FF").getARGB(),
             CharFormat::ColourFormatEId, juce::Colours::yellow               .getARGB(),
             CharFormat::ColourFormatFId, juce::Colours::white                .getARGB(),
-            
+    
             ContentPane::ColourBackgroundId, ::getArgbFrom(this, UICol::windowBackground),
             ContentPane::ColourBorderId,     ::getArgbFrom(this, UICol::outline),
-            
-            SplitContainer::ColourBackgroundId, ::getArgbFrom(this, UICol::windowBackground),
-            SplitContainer::ColourSeparatorId,  ::getArgbFrom(this, UICol::windowBackground),
-            SplitContainer::ColourBorderId,     ::getArgbFrom(this, UICol::outline),
-                
+    
+            SplitPane::ColourBackgroundId, ::getArgbFrom(this, UICol::windowBackground),
+            SplitPane::ColourSeparatorId,  ::getArgbFrom(this, UICol::windowBackground),
+            SplitPane::ColourBorderId,     ::getArgbFrom(this, UICol::outline),
+    
             MultiPagePane::ColourBackgroundId,              ::getArgbFrom(this, UICol::windowBackground),
             MultiPagePane::ColourBorderId,                  ::getArgbFrom(this, UICol::outline),
             MultiPagePane::ColourTabId,                     ::getArgbFrom(this, UICol::windowBackground),
@@ -2935,38 +2978,36 @@ namespace jaut
     }
     
     //==================================================================================================================
-    void LookAndFeel_Jaut::drawContentPaneBackground(juce::Graphics &g, juce::Rectangle<int>)
+    void LookAndFeel_Jaut::drawContentPaneBackground(juce::Graphics &g, const ContentPane &contentPane)
     {
-        g.setColour(findColour(ContentPane::ColourBackgroundId));
+        g.setColour(contentPane.findColour(ContentPane::ColourBackgroundId));
         g.fillAll();
     }
     
-    void LookAndFeel_Jaut::drawContentPaneBorder(juce::Graphics &g, juce::Rectangle<int> bounds,
-                                                 Thickness<int> thickness)
+    void LookAndFeel_Jaut::drawContentPaneBorder(juce::Graphics &g, const ContentPane &contentPane)
     {
-        g.setColour(findColour(SplitContainer::ColourBorderId));
-        g.fillPath(::getBorderForComponent(bounds, thickness));
+        g.setColour(contentPane.findColour(SplitPane::ColourBorderId));
+        g.fillPath(::getBorderForComponent(contentPane.getLocalBounds(), contentPane.getStyle().borderThickness));
     }
     
     //==================================================================================================================
-    void LookAndFeel_Jaut::drawSplitContainerBackground(juce::Graphics &g, juce::Rectangle<int>)
+    void LookAndFeel_Jaut::drawSplitContainerBackground(juce::Graphics &g, const SplitPane &splitPane)
     {
-        g.setColour(findColour(SplitContainer::ColourBackgroundId));
+        g.setColour(splitPane.findColour(SplitPane::ColourBackgroundId));
         g.fillAll();
     }
     
-    void LookAndFeel_Jaut::drawSplitContainerBorder(juce::Graphics &g, juce::Rectangle<int> bounds,
-                                                    Thickness<int> thickness)
+    void LookAndFeel_Jaut::drawSplitContainerBorder(juce::Graphics &g, const juce::Component &component,
+                                                    juce::Rectangle<int> bounds, Thickness<int> borderThickness)
     {
-        g.setColour(findColour(SplitContainer::ColourBorderId));
-        g.fillPath(::getBorderForComponent(bounds, thickness));
+        g.setColour(component.findColour(SplitPane::ColourBorderId, true));
+        g.fillPath(::getBorderForComponent(bounds, borderThickness));
     }
     
-    void LookAndFeel_Jaut::drawSplitContainerSeparator(juce::Graphics &g, juce::Rectangle<int> bounds,
-                                                       SplitContainer::Orientation)
+    void LookAndFeel_Jaut::drawSplitContainerSeparator(juce::Graphics &g, const juce::Component &separator)
     {
-        g.setColour(findColour(SplitContainer::ColourSeparatorId));
-        g.fillRect(bounds);
+        g.setColour(separator.findColour(SplitPane::ColourSeparatorId, true));
+        g.fillRect(separator.getBounds());
     }
     
     //==================================================================================================================
@@ -2975,17 +3016,16 @@ namespace jaut
         return juce::Font().withHeight(13.0f);
     }
     
-    void LookAndFeel_Jaut::drawMultiTabPaneBackground(juce::Graphics &g, const MultiPagePane&)
+    void LookAndFeel_Jaut::drawMultiTabPaneBackground(juce::Graphics &g, const MultiPagePane &multiPagePane)
     {
-        g.setColour(findColour(MultiPagePane::ColourBackgroundId));
+        g.setColour(multiPagePane.findColour(MultiPagePane::ColourBackgroundId));
         g.fillAll();
     }
     
-    void LookAndFeel_Jaut::drawMultiTabPaneBorder(juce::Graphics &g, juce::Rectangle<int> bounds,
-                                                  Thickness<int> thickness)
+    void LookAndFeel_Jaut::drawMultiTabPaneBorder(juce::Graphics &g, const MultiPagePane &multiTabPane)
     {
-        g.setColour(findColour(MultiPagePane::ColourBorderId));
-        g.fillPath(::getBorderForComponent(bounds, thickness));
+        g.setColour(multiTabPane.findColour(MultiPagePane::ColourBorderId));
+        g.fillPath(::getBorderForComponent(multiTabPane.getLocalBounds(), multiTabPane.getStyle().borderThickness));
     }
     
     void LookAndFeel_Jaut::drawMultiTabPaneMoreTabsButton(juce::Graphics &g, const juce::Button &button,
@@ -2997,8 +3037,8 @@ namespace jaut
     
         const juce::Rectangle<float> bounds = button.getLocalBounds().toFloat();
     
-        g.setColour(isMouseOver ? findColour(MultiPagePane::ColourTabHighlightId)
-                                : isMouseDown ? findColour(MultiPagePane::ColourTabActiveId)
+        g.setColour(isMouseOver ? button.findColour(MultiPagePane::ColourTabHighlightId, true)
+                                : isMouseDown ? button.findColour(MultiPagePane::ColourTabActiveId, true)
                                               : juce::Colours::transparentBlack);
         g.fillRoundedRectangle(bounds.toFloat(), 2.0f);
     
@@ -3006,7 +3046,7 @@ namespace jaut
         path_down.addLineSegment({ 0.0f,   0.0f, half_w, h    }, 1.5f);
         path_down.addLineSegment({ half_w, h,    w,      0.0f }, 1.5f);
     
-        g.setColour(findColour(MultiPagePane::ColourTabTextId));
+        g.setColour(button.findColour(MultiPagePane::ColourTabTextId, true));
         g.addTransform(juce::AffineTransform::translation(bounds.getWidth()  / 2.0f - half_w,
                                                           bounds.getHeight() / 2.0f - h / 2.0f));
         g.fillPath(path_down);
@@ -3018,17 +3058,18 @@ namespace jaut
         constexpr int bottom_line = 2;
     
         const bool is_active      = tabButton.isActive();
-        const juce::Colour colour = is_active ? findColour(MultiPagePane::ColourTabActiveId)
-                                              : (isMouseOver ? findColour(MultiPagePane::ColourTabHighlightId)
-                                                             : findColour(MultiPagePane::ColourTabId));
+        const juce::Colour colour = is_active ? tabButton.findColour(MultiPagePane::ColourTabActiveId, true)
+                                              : (isMouseOver
+                                                     ? tabButton.findColour(MultiPagePane::ColourTabHighlightId, true)
+                                                     : tabButton.findColour(MultiPagePane::ColourTabId,          true));
         g.setColour(is_active && isMouseOver ? colour.darker() : colour);
         g.fillAll();
     }
     
-    void LookAndFeel_Jaut::drawMultiTabPaneTabText(juce::Graphics &g, const MultiPagePane::TabButton&,
+    void LookAndFeel_Jaut::drawMultiTabPaneTabText(juce::Graphics &g, const MultiPagePane::TabButton &tabButton,
                                                    const juce::Label &label, bool, bool)
     {
-        g.setColour(findColour(MultiPagePane::ColourTabTextId));
+        g.setColour(tabButton.findColour(MultiPagePane::ColourTabTextId, true));
         g.setFont(getMultiTabPaneFont());
         g.drawText(label.getText(), label.getLocalBounds(), juce::Justification::centredLeft);
     }
@@ -3040,17 +3081,17 @@ namespace jaut
         constexpr float c = s * 1.8f;
         
         const juce::Rectangle<float> bounds = button.getLocalBounds().toFloat();
-        const juce::Colour main_colour      = findColour(MultiPagePane::ColourTabCloseButtonId);
+        const juce::Colour main_colour      = tabButton.findColour(MultiPagePane::ColourTabCloseButtonId, true);
         
         if (isMouseOver)
         {
             g.setColour(main_colour);
             g.fillEllipse(bounds.getWidth() / 2.0f - c / 2.0f, bounds.getHeight() / 2.0f - c / 2.0f, c, c);
             
-            const juce::Colour colour = tabButton.isActive() ? findColour(MultiPagePane::ColourTabActiveId)
-                                                             : (isMouseOver
-                                                                    ? findColour(MultiPagePane::ColourTabHighlightId)
-                                                                    : findColour(MultiPagePane::ColourTabId));
+            const juce::Colour colour = tabButton.isActive()
+                ? tabButton.findColour(MultiPagePane::ColourTabActiveId, true)
+                : (isMouseOver ? tabButton.findColour(MultiPagePane::ColourTabHighlightId, true)
+                               : tabButton.findColour(MultiPagePane::ColourTabId,          true));
             
             g.setColour(colour);
         }
@@ -3076,18 +3117,18 @@ namespace jaut
         constexpr float s =     7.0f;
         constexpr float c = s * 1.8f;
     
-        const juce::Colour &colour_text     = findColour(MultiPagePane::ColourTabTextId);
+        const juce::Colour &colour_text     = tabButton.findColour(MultiPagePane::ColourTabTextId, true);
         const juce::Rectangle<float> bounds = button.getLocalBounds().toFloat();
         const juce::Rectangle<float> ellipse(bounds.getWidth() / 2.0f - c / 2.0f, bounds.getHeight() / 2.0f - c / 2.0f,
                                              c, c);
         
         if (tabButton.isActive())
         {
-            g.setColour(isMouseOver ? findColour(MultiPagePane::ColourTabActiveId) : colour_text);
+            g.setColour(isMouseOver ? tabButton.findColour(MultiPagePane::ColourTabActiveId, true) : colour_text);
         }
         else
         {
-            g.setColour(isMouseOver ? findColour(MultiPagePane::ColourTabHighlightId) : colour_text);
+            g.setColour(isMouseOver ? tabButton.findColour(MultiPagePane::ColourTabHighlightId, true) : colour_text);
         }
         
         if (tabButton.isPinned())
@@ -3109,7 +3150,7 @@ namespace jaut
     
     //==================================================================================================================
     JAUT_IMPL_LAF(ContentPane)
-    JAUT_IMPL_LAF(SplitContainer)
+    JAUT_IMPL_LAF(SplitPane)
     JAUT_IMPL_LAF(MultiPagePane)
     JAUT_IMPL_LAF(MultiPagePane::TabButton)
     JAUT_IMPL_LAF(MultiPagePane::Window)

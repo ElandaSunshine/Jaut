@@ -32,7 +32,7 @@ namespace jaut
      *  You can pick between two types of orientation, horizontal and vertical, which specify the orientation of
      *  the seperator.
      */
-    class JAUT_API SplitContainer : public juce::Component
+    class JAUT_API SplitPane : public juce::Component
     {
     public:
         /** The orientation of the panels. */
@@ -62,31 +62,32 @@ namespace jaut
         struct JAUT_API LookAndFeelMethods
         {
             /**
-             *  Draws the background of the SplitContainer.
-             *
-             *  @param g      The graphics context
-             *  @param bounds The local bounds of the SplitContainer
-             */
-            virtual void drawSplitContainerBackground(juce::Graphics &g, juce::Rectangle<int> bounds) = 0;
-            
-            /**
-             *  Draws the border of the SplitContainer.
+             *  Draws the background of the SplitPane.
              *
              *  @param g         The graphics context
-             *  @param thickness The border thickness
+             *  @param splitPane The component
              */
-            virtual void drawSplitContainerBorder(juce::Graphics &g, juce::Rectangle<int> bounds,
-                                                  Thickness<int> thickness) = 0;
+            virtual void drawSplitContainerBackground(juce::Graphics &g, const SplitPane &splitPane) = 0;
             
             /**
-             *  Draws the seperator of the SplitContainer.
+             *  Draws the border of the SplitPane.
              *
-             *  @param g           The graphics context
-             *  @param bounds      The relative bounds of the separator.
-             *  @param orientation The orientation of the separator
+             *  @param g         The graphics context
+             *  @param splitPane The component, SplitContainer if it is the top border or the consecutive panel
+             *                   when drawing the panel borders
+             *  @param bounds    The bounds of the border-box
              */
-            virtual void drawSplitContainerSeparator(juce::Graphics &g, juce::Rectangle<int> bounds,
-                                                     Orientation orientation) = 0;
+            virtual void drawSplitContainerBorder(juce::Graphics &g, const juce::Component &component,
+                                                  juce::Rectangle<int> bounds, Thickness<int> borderThickness) = 0;
+            
+            /**
+             *  Draws the separator of the SplitPane.
+             *
+             *  @param g         The graphics context
+             *  @param splitPane The component
+             *  @param separator The seperator component
+             */
+            virtual void drawSplitContainerSeparator(juce::Graphics &g, const juce::Component &separator) = 0;
         };
         
         enum class JAUT_API ResizeBehaviour
@@ -104,16 +105,16 @@ namespace jaut
             Directional
         };
         
-        /** Specifies the mode of this SplitContainer if one or no panel is set. */
+        /** Specifies the mode of this SplitPane if one or no panel is set. */
         enum class JAUT_API CollapseMode : int
         {
             /** Act as if both components were present. */
             AlwaysShow,
             
-            /** Collapse the empty panel and push the seperator to the end. */
+            /** Collapse the empty panel and push the separator to the end. */
             Collapse,
             
-            /** Collapse the empty panel and hide the seperator. */
+            /** Collapse the empty panel and hide the separator. */
             Hide
         };
         
@@ -134,50 +135,58 @@ namespace jaut
         
         struct JAUT_API Options
         {
-            /** The resizing behaviour of the individual panels when the SplitContainer is getting resised. */
+            /** The resizing behaviour of the individual panels when the SplitPane is getting resized. */
             ResizeBehaviour resizeBehaviour { ResizeBehaviour::Centred };
             
             /** Specifies what happens if only one or no panel is set. */
             CollapseMode collapseMode { CollapseMode::AlwaysShow };
             
-            /** The orientation of the SplitContainer. */
+            /** The orientation of the SplitPane. */
             Orientation orientation { Orientation::Vertical };
             
-            /** The minimum size of the left-hand panel when being resized. */
+            /** The minimum size of panel 1 when being resized. */
             int panel1MinimumSize { 30 };
     
-            /** The minimum size of the right-hand panel when being resized. */
+            /** The minimum size of panel 2 when being resized. */
             int panel2MinimumSize { 30 };
         };
         
         //==============================================================================================================
         using ComponentChangedHandler = EventHandler<juce::Component*, PanelId>;
+        using SeparatorMovedHandler   = EventHandler<juce::Point<int>, juce::Point<int>>;
+        using PanelResizedHandler     = EventHandler<PanelId, juce::Rectangle<int>, juce::Rectangle<int>>;
         
         /** Dispatched when a component changes on either side. */
         Event<ComponentChangedHandler> ComponentChanged;
         
+        /** Dispatched whenever the separator moved to a different position. */
+        Event<SeparatorMovedHandler> SeparatorMoved;
+        
+        /** Dispatched whenever one of the two panels was resized due to the separator moving or the pane resizing. */
+        Event<PanelResizedHandler> PanelResized;
+        
         //==============================================================================================================
         /**
-         *  Constructs a new SplitContainer object.
+         *  Constructs a new SplitPane object.
          *  @param style   The initial style
          *  @param options The initial options
          */
-        SplitContainer(Style style, Options options);
-    
+        SplitPane(Style style, Options options);
+        
         /**
-         *  Constructs a new SplitContainer object.
+         *  Constructs a new SplitPane object.
          *  @param style   The initial style
          */
-        explicit SplitContainer(Style style);
-    
+        explicit SplitPane(Style style);
+        
         /**
-         *  Constructs a new SplitContainer object.
+         *  Constructs a new SplitPane object.
          *  @param options The initial options
          */
-        explicit SplitContainer(Options options);
-    
-        /** Constructs a new SplitContainer object. */
-        SplitContainer();
+        explicit SplitPane(Options options);
+        
+        /** Constructs a new SplitPane object. */
+        SplitPane();
         
         //==============================================================================================================
         void paint(juce::Graphics &g) override;
@@ -216,7 +225,10 @@ namespace jaut
          *  @param limits    The size limits of the component
          */
         void setComponent(juce::Component &component, PanelId panelId);
-    
+        
+        /** Swaps the components from panel 1 and panel 2. */
+        void swapPanes();
+        
         //==============================================================================================================
         /**
          *  Gets the component inside the specified panel.
@@ -254,7 +266,7 @@ namespace jaut
     
         //==============================================================================================================
         /**
-         *  Gets whether the component in the specified panel is owned by this SplitContainer or not.
+         *  Gets whether the component in the specified panel is owned by this SplitPane or not.
          *  This will return false if there is no component in the panel.
          *
          *  @param panelId The panel
@@ -351,10 +363,10 @@ namespace jaut
         class LockedAxisConstrainer : public juce::ComponentBoundsConstrainer
         {
         public:
-            SplitContainer &container;
+            SplitPane &container;
             
             //==========================================================================================================
-            explicit LockedAxisConstrainer(SplitContainer &parContainer) noexcept : container(parContainer) {}
+            explicit LockedAxisConstrainer(SplitPane &parContainer) noexcept : container(parContainer) {}
             
             //==========================================================================================================
             void applyBoundsToComponent(Component &component, juce::Rectangle<int> bounds) override
@@ -397,7 +409,7 @@ namespace jaut
         class ContentContainer : public juce::Component
         {
         public:
-            SplitContainer &parent;
+            SplitPane &parent;
     
             std::array<juce::Viewport, 2> containers;
             std::array<juce::OptionalScopedPointer<juce::Component>, 2> components;
@@ -406,11 +418,12 @@ namespace jaut
             LockedAxisConstrainer  constrainer;
             juce::ComponentDragger dragger;
             juce::Rectangle<int>   prevSize;
+            juce::Point<int>       prevSeparatorPos;
             
             bool initialised { false };
             
             //==========================================================================================================
-            explicit ContentContainer(SplitContainer &container);
+            explicit ContentContainer(SplitPane &container);
             
             //==========================================================================================================
             void paint(juce::Graphics &g) override;

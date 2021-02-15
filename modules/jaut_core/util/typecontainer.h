@@ -25,8 +25,6 @@
 
 #pragma once
 
-#include <variant>
-
 namespace jaut
 {
 #ifndef JAUT_TYPE_TRAITS_TYPE_CONTAINER_FULL_SPEC

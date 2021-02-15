@@ -27,7 +27,7 @@
 
 namespace jaut
 {
-    class JAUT_API DockingPane : public juce::Component
+    class JAUT_API DockingPane : public SplitPane, public OverlayTarget
     {
     public:
         enum class JAUT_API Anchor
@@ -35,20 +35,40 @@ namespace jaut
             Left,
             Top,
             Right,
-            Bottom
+            Bottom,
+            Fill
         };
     
         //==============================================================================================================
-        explicit DockingPane(jaut::SplitContainer::Style style = {}, jaut::SplitContainer::Options options = {});
+        explicit DockingPane(jaut::SplitPane::Style style = {}, jaut::SplitPane::Options options = {});
         
         //==============================================================================================================
         void dockComponent(juce::OptionalScopedPointer<juce::Component> component, Anchor anchor);
-        juce::OptionalScopedPointer<juce::Component> undockComponent(Anchor anchor);
-        
-        //==============================================================================================================
-        void resized() override;
+        juce::OptionalScopedPointer<juce::Component> undockComponent(SplitPane::PanelId panelId);
         
     private:
-        SplitContainer container;
+        using SplitPane::resetComponent;
+        using SplitPane::setComponent;
+        using SplitPane::swapPanes;
+        using SplitPane::releaseComponent;
+        using SplitPane::getComponent;
+        using SplitPane::isOwned;
+        using SplitPane::setContentPadding;
+        using SplitPane::setBorderThickness;
+        using SplitPane::setPanelBorderThickness;
+        using SplitPane::setSeperatorThickness;
+        using SplitPane::setResizeBehaviour;
+        using SplitPane::setCollapseMode;
+        using SplitPane::setOrientation;
+        using SplitPane::setPanel1Minimum;
+        using SplitPane::setPanel2Minimum;
+        using SplitPane::setStyle;
+        using SplitPane::setOptions;
+        using SplitPane::getStyle;
+        using SplitPane::getOptions;
+        
+        //==============================================================================================================
+        void onItemDropped(const SourceDetails &details) override {}
+        bool isInterestedInDragSource(const SourceDetails& dragSourceDetails) override {}
     };
 }

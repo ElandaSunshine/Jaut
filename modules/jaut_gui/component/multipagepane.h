@@ -270,7 +270,7 @@ namespace jaut
          *  create instances of it.
          *  However, the reason for it being public is to know about its state.
          */
-        class JAUT_API TabButton : public juce::Button, private juce::LookAndFeel_V4
+        class JAUT_API TabButton : public juce::Button
         {
         public:
             std::function<void(const TabButton&)>       onActivating;
@@ -319,6 +319,15 @@ namespace jaut
             void updateTabHeight(int tabHeight);
             
         private:
+            class LookAndFeelProxy;
+    
+            //==========================================================================================================
+            using LafProxyPtr = std::unique_ptr<LookAndFeelProxy, std::function<void(LookAndFeelProxy*)>>;
+            
+            //==========================================================================================================
+            static LafProxyPtr buttonProxyLaf;
+    
+            //==========================================================================================================
             std::vector<std::unique_ptr<juce::Component>> layoutComponents;
             const TabFactory &factory;
             
@@ -326,11 +335,6 @@ namespace jaut
             int tabIndex { 0 };
             bool active  { false };
             bool pinned  { false };
-    
-            //==========================================================================================================
-            void drawToggleButton    (juce::Graphics&, juce::ToggleButton&,          bool, bool) override;
-            void drawButtonText      (juce::Graphics&, juce::TextButton&,            bool, bool) override;
-            void drawButtonBackground(juce::Graphics&, Button&, const juce::Colour&, bool, bool) override {}
             
             JAUT_CREATE_LAF()
         };
@@ -354,12 +358,10 @@ namespace jaut
             /**
              *  Draws the border of the MultiPagePane.
              *
-             *  @param g         The graphics context
-             *  @param bounds    The component bounds
-             *  @param thickness The border thickness
+             *  @param g            The graphics context
+             *  @param multiTabPane The multi-page component
              */
-            virtual void drawMultiTabPaneBorder(juce::Graphics &g, juce::Rectangle<int> bounds,
-                                                Thickness<int> thickness) = 0;
+            virtual void drawMultiTabPaneBorder(juce::Graphics &g, const MultiPagePane &multiTabPane) = 0;
             
             /**
              *  Draws the button that shows the hidden tabs.

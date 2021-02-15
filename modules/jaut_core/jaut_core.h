@@ -43,6 +43,8 @@
 #include <juce_events/juce_events.h>
 
 #include <cfenv>
+#include <variant>
+//#include <future>
 
 // Options
 //======================================================================================================================

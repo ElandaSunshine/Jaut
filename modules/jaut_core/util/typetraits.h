@@ -218,4 +218,10 @@ public:
  */
 template<class Holder, class TypeToReplace, class ReplaceWith>
 JAUT_API using replaceType_t = typename replaceType<Holder, TypeToReplace, ReplaceWith>::type;
+
+template<class TRet, class ...TArgs>
+using FunctionPointer_t = TRet(*)(TArgs...);
+
+template<class TObj, class TRet, class ...TArgs>
+using MemberFunctionPointer_t = TRet(TObj::*)(TArgs...);
 }

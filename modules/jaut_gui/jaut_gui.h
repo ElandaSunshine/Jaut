@@ -43,6 +43,8 @@
 #include <jaut_core/jaut_core.h>
 #include <juce_gui_extra/juce_gui_extra.h>
 
+#include <bitset>
+
 namespace jaut
 {
     class LookAndFeel_Jaut;
@@ -56,25 +58,16 @@ namespace jaut
            void lookAndFeelChanged() final override;
 #endif
 
-// Structure
 #include <jaut_gui/structure/sizestructs.h>
-
-// Mouse
 #include <jaut_gui/mouse/draganddropcontaineradvanced.h>
-
-// Components
-//#include <jaut_gui/component/styleablecomponent.h>
-//#include <jaut_gui/component/targetcomponent.h>
+#include <jaut_gui/util/dadeformat.h>
+#include <jaut_gui/util/overlaytarget.h>
 #include <jaut_gui/component/contentpane.h>
 #include <jaut_gui/component/splitcontainer.h>
 #include <jaut_gui/component/multipagepane.h>
 #include <jaut_gui/component/dockingpane.h>
-
-// Includes
 #include <jaut_gui/text/charformat.h>
 #include <jaut_gui/text/fontformat.h>
-
-// Laf
 #include <jaut_gui/component/lookandfeel_jaut.h>
 
 #undef JAUT_CREATE_LAF

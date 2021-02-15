@@ -29,9 +29,10 @@ namespace jaut
 {
 class JAUT_API LookAndFeel_Jaut : public juce::LookAndFeel_V4,
                                   public ContentPane          ::LookAndFeelMethods,
-                                  public SplitContainer       ::LookAndFeelMethods,
+                                  public SplitPane       ::LookAndFeelMethods,
                                   public MultiPagePane        ::LookAndFeelMethods,
                                   public MultiPagePane::Window::LookAndFeelMethods
+                                  //public TargetComponent
 {
 public:
     static LookAndFeel_Jaut& getDefaultLaf() { return jaut::getDefaultLaf(); }
@@ -40,19 +41,19 @@ public:
     LookAndFeel_Jaut();
     
     //==================================================================================================================
-    void drawContentPaneBackground(juce::Graphics &g, juce::Rectangle<int> bounds) override;
-    void drawContentPaneBorder(juce::Graphics &g, juce::Rectangle<int> bounds, Thickness<int> thickness) override;
+    void drawContentPaneBackground(juce::Graphics &g, const ContentPane &contentPane) override;
+    void drawContentPaneBorder(juce::Graphics &g, const ContentPane &contentPane) override;
     
     //==================================================================================================================
-    void drawSplitContainerBackground(juce::Graphics &g, juce::Rectangle<int> bounds) override;
-    void drawSplitContainerBorder(juce::Graphics &g, juce::Rectangle<int> bounds, Thickness<int> thickness) override;
-    void drawSplitContainerSeparator(juce::Graphics &g, juce::Rectangle<int> bounds,
-                                     SplitContainer::Orientation orientation) override;
+    void drawSplitContainerBackground (juce::Graphics &g, const SplitPane &panel) override;
+    void drawSplitContainerBorder     (juce::Graphics &g, const juce::Component &splitPane,
+                                       juce::Rectangle<int> bounds, Thickness<int> borderThickness) override;
+    void drawSplitContainerSeparator  (juce::Graphics &g, const juce::Component &separator) override;
     
     //==================================================================================================================
     juce::Font getMultiTabPaneFont() override;
     void drawMultiTabPaneBackground(juce::Graphics &g, const MultiPagePane &multiTabPane) override;
-    void drawMultiTabPaneBorder(juce::Graphics &g, juce::Rectangle<int> bounds, Thickness<int> thickness) override;
+    void drawMultiTabPaneBorder(juce::Graphics &g, const MultiPagePane &multiTabPane) override;
     void drawMultiTabPaneMoreTabsButton(juce::Graphics &g, const juce::Button &button,
                                         bool isMouseOver, bool isMouseDown) override;
     void drawMultiTabPaneTabBackground(juce::Graphics &g, const MultiPagePane::TabButton &tabButton,

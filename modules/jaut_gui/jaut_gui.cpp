@@ -36,17 +36,22 @@ namespace jaut
 
 #if !DOXYGEN
 #   define JAUT_IMPL_LAF(CLASS) \
-    void CLASS ::parentHierarchyChanged() { lookAndFeelChanged(); }\
+    void CLASS ::parentHierarchyChanged() \
+    { \
+        if (!(lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getParentComponent()->getLookAndFeel()))) \
+            lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf(); \
+    } \
     void CLASS ::lookAndFeelChanged() \
     { \
-        if (lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getLookAndFeel()); !lookAndFeel) \
-        { lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf(); setLookAndFeel(lookAndFeel); } \
+        if (!(lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getLookAndFeel()))) \
+            lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf(); \
     }
 #   define JAUT_INIT_LAF() lookAndFeelChanged();
 #endif
 
 #include <jaut_gui/component/component.cpp>
 #include <jaut_gui/mouse/mouse.cpp>
+#include <jaut_gui/util/util.cpp>
 
 #include <jaut_gui/text/internal/jaut_format_attributes.h>
 #include <jaut_gui/text/internal/jaut_format_layout.h>
