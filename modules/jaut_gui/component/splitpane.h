@@ -28,9 +28,9 @@
 namespace jaut
 {
     /**
-     *  A component that contains two components that can be resised with a seperator between those two.
+     *  A component that contains two components that can be resized with a separator between those two.
      *  You can pick between two types of orientation, horizontal and vertical, which specify the orientation of
-     *  the seperator.
+     *  the separator.
      */
     class JAUT_API SplitPane : public juce::Component
     {
@@ -102,7 +102,17 @@ namespace jaut
             Panel2,
             
             /** Resize the panels depending on the side the parent component has been resized at. */
-            Directional
+            Directional,
+            
+            /**
+             *  Resize the panels so as to that the separator will return to its last dragged state that did
+             *  not come about by resizing the component.
+             *  This means, whenever the resizer was dragged, it will store this position info.
+             *  As soon as the panel gets smaller and bigger again, it will return to its previous set position.
+             *
+             *  Any move event besides resizing will update the remembered position of the resizer.
+             */
+            Remember
         };
         
         /** Specifies the mode of this SplitPane if one or no panel is set. */
