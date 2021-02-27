@@ -67,6 +67,7 @@ namespace jaut
 #include <jaut_gui/component/splitpane.h>
 #include <jaut_gui/component/multipagepane.h>
 #include <jaut_gui/component/dockingpane.h>
+#include <jaut_gui/component/coordinatepane.h>
 #include <jaut_gui/text/charformat.h>
 #include <jaut_gui/text/fontformat.h>
 #include <jaut_gui/component/lookandfeel_jaut.h>
