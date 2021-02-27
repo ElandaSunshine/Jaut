@@ -102,21 +102,11 @@ namespace jaut
             Panel2,
             
             /** Resize the panels depending on the side the parent component has been resized at. */
-            Directional,
-            
-            /**
-             *  Resize the panels so as to that the separator will return to its last dragged state that did
-             *  not come about by resizing the component.
-             *  This means, whenever the resizer was dragged, it will store this position info.
-             *  As soon as the panel gets smaller and bigger again, it will return to its previous set position.
-             *
-             *  Any move event besides resizing will update the remembered position of the resizer.
-             */
-            Remember
+            Directional
         };
         
         /** Specifies the mode of this SplitPane if one or no panel is set. */
-        enum class JAUT_API CollapseMode : int
+        enum class JAUT_API CollapseMode
         {
             /** Act as if both components were present. */
             AlwaysShow,
@@ -138,9 +128,15 @@ namespace jaut
             
             /** The thickness of the border of the panels. */
             Thickness<int> panelBorderThickness;
-        
+            
             /** The thickness of the separator. */
             int separatorThickness { 5 };
+        
+            /** The cursor to be used when the cursor is over the resizer. (vertical) */
+            juce::MouseCursor cursorVertical { juce::MouseCursor::LeftRightResizeCursor };
+    
+            /** The cursor to be used when the cursor is over the resizer. (horizontal) */
+            juce::MouseCursor cursorHorizontal { juce::MouseCursor::UpDownResizeCursor };
         };
         
         struct JAUT_API Options
@@ -159,6 +155,18 @@ namespace jaut
     
             /** The minimum size of panel 2 when being resized. */
             int panel2MinimumSize { 30 };
+    
+            /**
+             *  Resize the panels so as to that the separator will return to its known dragged state that did
+             *  not come about by resizing the component.
+             *  This means, whenever the resizer was dragged, it will store this position info.
+             *  As soon as the panel gets smaller and bigger again, it will return to its previous set position.
+             *
+             *  This will only work for behaviours Panel1, Panel2 and Directional.
+             *
+             *  Any move event besides resizing will update the remembered position of the resizer.
+             */
+            bool rememberLastSeparatorPosition { true };
         };
         
         //==============================================================================================================
@@ -290,6 +298,35 @@ namespace jaut
         
         //==============================================================================================================
         /**
+         *  Gets the last remembered separator position used when ResizeBehaviour::Remember was used.
+         *  @return The last remembered separator position
+         */
+        int getLastRememberedSeparatorPosition() const noexcept { return contentContainer.lastRememberedPosition; }
+    
+        //==============================================================================================================
+        /**
+         *  Set the position of the resizer relative to the two panel's minimum requirements.
+         *  @param pos The new position
+         */
+        void setResizerPos(int pos);
+        
+        //==============================================================================================================
+        /**
+         *  Moves the resizer the specified amount.
+         *  @param value The amount to move the resizer
+         */
+        void moveResizer(int amount);
+    
+        /**
+         *  Moves the resizer the specified amount relative to the entire width of the container.
+         *  Values range from 0.0f for none to 1.0f for a full move.
+         *
+         *  @param value The amount to move the resizer
+         */
+        void moveResizer(float rational);
+        
+        //==============================================================================================================
+        /**
          *  Sets the content padding of this component.
          *  @param padding The new padding
          */
@@ -312,13 +349,29 @@ namespace jaut
          *  @param thickness The thickness in pixels
          */
         void setSeperatorThickness(int thickness);
+    
+        /**
+         *  Sets the mouse cursor for the specified orientations.
+         *
+         *  @param verticalCursor   The cursor to be shown when mouse is over the resizer (vertical)
+         *  @param horizontalCursor The cursor to be shown when mouse is over the resizer (horizontal)
+         */
+        void setResizerCursor(juce::MouseCursor verticalCursor, juce::MouseCursor horizontalCursor);
+        
+        /**
+         *  Sets the mouse cursor for the specified orientation.
+         *
+         *  @param cursor         The cursor to be shown when mouse is over the resizer
+         *  @param forOrientation The orientation this cursor belongs to
+         */
+        void setResizerCursor(juce::MouseCursor cursor, Orientation forOrientation);
         
         //==============================================================================================================
         /**
          *  Sets the resize behaviour.
          *  @param newBehaviour The new resize behaviour
          */
-        void setResizeBehaviour(ResizeBehaviour resizeBehaviour) noexcept { options.resizeBehaviour = resizeBehaviour; }
+        void setResizeBehaviour(ResizeBehaviour resizeBehaviour) noexcept;
         
         /**
          *  Sets the collapse mode.
@@ -343,6 +396,12 @@ namespace jaut
          *  @param minimum The new size
          */
         void setPanel2Minimum(int minimum);
+        
+        /**
+         *  Sets whether the seperator should remember its position when the pane gets too small.
+         *  @param shouldRemember Should it remember
+         */
+        void setRememberLastPosition(bool shouldRemember);
         
         //==============================================================================================================
         /**
@@ -430,6 +489,7 @@ namespace jaut
             juce::Rectangle<int>   prevSize;
             juce::Point<int>       prevSeparatorPos;
             
+            int lastRememberedPosition;
             bool initialised { false };
             
             //==========================================================================================================
@@ -442,6 +502,9 @@ namespace jaut
             //==========================================================================================================
             void mouseDown(const juce::MouseEvent &event) override;
             void mouseDrag(const juce::MouseEvent &event) override;
+    
+            //==========================================================================================================
+            void updateLastPosition() noexcept;
             
             //==========================================================================================================
             void childBoundsChanged(Component *child) override;

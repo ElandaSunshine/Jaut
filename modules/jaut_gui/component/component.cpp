@@ -26,6 +26,10 @@
 //**********************************************************************************************************************
 // region Anonymous
 //======================================================================================================================
+#include "pseudocomponent.h"
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "HidingNonVirtualFunction"
 namespace
 {
     /** The amount of difference on the x-axis between two tabs before swapping them. */
@@ -99,10 +103,10 @@ namespace
         return jaut::SplitPane::ResizeBehaviour::Panel1;
     }
     
-    void resizeSplitContainer(jaut::SplitPane::ResizeBehaviour resizeBehaviour, juce::Component &comp,
+    void resizeSplitContainer(jaut::SplitPane::ResizeBehaviour behaviour, juce::Component &comp,
                               int prevWidthHeight, int prevXY, int xy, int widthHeight, int heightWidth,
-                              int separatorXY, int sepWidthHeight, int sepHeightWidth, int sepRightBottom,
-                              int min1, int min2, int sepThickness, bool vertical)
+                              int separatorXY, int sepHeightWidth, int sepRightBottom, int prevSavedXY,
+                              int min1, int min2, int sepThickness, bool withLast, bool vertical)
     {
         if (sepHeightWidth != heightWidth)
         {
@@ -116,14 +120,13 @@ namespace
             }
         }
         
-        const SplitContainerSizeState prev_state = getSizeState(prevWidthHeight, min1, min2, sepWidthHeight);
-        const SplitContainerSizeState this_state = getSizeState(widthHeight,     min1, min2, sepWidthHeight);
+        const int top_max = widthHeight - (min2 + sepThickness);
+    
+        const SplitContainerSizeState prev_state = getSizeState(prevWidthHeight, min1, min2, sepThickness);
+        const SplitContainerSizeState this_state = getSizeState(widthHeight,     min1, min2, sepThickness);
         
         if (this_state == SplitContainerSizeState::Full)
         {
-            const int  top_max   = widthHeight - min2 - sepWidthHeight;
-            const auto behaviour = getResizeBehaviour(resizeBehaviour, prevXY, xy, prevWidthHeight, widthHeight);
-    
             if (behaviour == jaut::SplitPane::ResizeBehaviour::Centred)
             {
                 if (prev_state == SplitContainerSizeState::Full || prev_state == SplitContainerSizeState::Semi)
@@ -133,18 +136,23 @@ namespace
                 }
                 else
                 {
-                    setPositionOf(comp, (widthHeight / 2.0) - (sepWidthHeight / 2.0), vertical);
+                    const int value = std::round((widthHeight / 2.0) - (sepThickness / 2.0f));
+                    setPositionOf(comp, std::clamp(value, min1, top_max), vertical);
                 }
             }
             else if (behaviour == jaut::SplitPane::ResizeBehaviour::Panel2)
             {
+                const int max_pos = widthHeight - sepThickness - prevSavedXY;
+                const int size_2  = widthHeight - sepThickness - separatorXY;
+                const int diff    = widthHeight - prevWidthHeight;
+    
                 if (prev_state == SplitContainerSizeState::Semi || prev_state == SplitContainerSizeState::Small)
                 {
-                    setPositionOf(comp, min1, vertical);
+                    setPositionOf(comp, withLast ? std::min(prevSavedXY, top_max) : min1, vertical);
                 }
-                else
+                else if (diff < 0)
                 {
-                    if ((widthHeight - sepRightBottom) >= min2)
+                    if (size_2 >= min2)
                     {
                         comp.getParentComponent()->childBoundsChanged(&comp);
                     }
@@ -153,22 +161,65 @@ namespace
                         setPositionOf(comp, top_max, vertical);
                     }
                 }
-            }
-            else
-            {
-                if (prev_state == SplitContainerSizeState::Semi || prev_state == SplitContainerSizeState::Small)
-                {
-                    setPositionOf(comp, top_max, vertical);
-                }
                 else
                 {
-                    if (separatorXY >= min1)
+                    if (withLast && (separatorXY < prevSavedXY))
                     {
-                        setPositionOf(comp, separatorXY + (widthHeight - prevWidthHeight), vertical);
+                        setPositionOf(comp, std::min(prevSavedXY, separatorXY + diff), vertical);
+                        
+                        if (separatorXY == prevSavedXY)
+                        {
+                            comp.getParentComponent()->childBoundsChanged(&comp);
+                        }
                     }
                     else
                     {
                         comp.getParentComponent()->childBoundsChanged(&comp);
+                    }
+                }
+            }
+            else
+            {
+                const int max_pos = widthHeight - sepThickness - prevSavedXY;
+                const int size_2  = widthHeight - sepThickness - separatorXY;
+                const int diff    = widthHeight - prevWidthHeight;
+                
+                if (prev_state == SplitContainerSizeState::Semi || prev_state == SplitContainerSizeState::Small)
+                {
+                    setPositionOf(comp, withLast ? std::max(min1, max_pos) : top_max, vertical);
+                }
+                else if (diff < 0)
+                {
+                    const int min_pos = separatorXY + diff;
+                    
+                    if (min_pos >= min1)
+                    {
+                        setPositionOf(comp, min_pos, vertical);
+                    }
+                    else
+                    {
+                        setPositionOf(comp, min1, vertical);
+    
+                        if (separatorXY == min1)
+                        {
+                            comp.getParentComponent()->childBoundsChanged(&comp);
+                        }
+                    }
+                }
+                else
+                {
+                    if (withLast && ((size_2 - diff) < prevSavedXY))
+                    {
+                        setPositionOf(comp, std::max(max_pos, min1), vertical);
+                        
+                        if (separatorXY == min1)
+                        {
+                            comp.getParentComponent()->childBoundsChanged(&comp);
+                        }
+                    }
+                    else
+                    {
+                        setPositionOf(comp, separatorXY + diff, vertical);
                     }
                 }
             }
@@ -177,7 +228,7 @@ namespace
         {
             if (min1 > min2)
             {
-                setPositionOf(comp, widthHeight - min2 - sepWidthHeight, vertical);
+                setPositionOf(comp, top_max, vertical);
             }
             else
             {
@@ -186,7 +237,8 @@ namespace
         }
         else
         {
-            setPositionOf(comp, std::round((widthHeight / 2.0) - (sepWidthHeight / 2.0)), vertical);
+            const int value = std::round((widthHeight / 2.0) - (sepThickness / 2.0f));
+            setPositionOf(comp, value, vertical);
         }
     }
     
@@ -343,23 +395,27 @@ namespace jaut
     // region ContentContainer
     //==================================================================================================================
     SplitPane::ContentContainer::ContentContainer(SplitPane &container)
-        : parent(container), constrainer(container)
+        : parent(container), constrainer(container),
+          lastRememberedPosition(container.options.panel1MinimumSize)
     {
         if (parent.options.orientation == Orientation::Vertical)
         {
             containers[0].setScrollBarsShown(false, true);
             containers[1].setScrollBarsShown(false, true);
+            separator.setMouseCursor(container.style.cursorVertical);
         }
         else
         {
             containers[0].setScrollBarsShown(true, false);
             containers[1].setScrollBarsShown(true, false);
+            separator.setMouseCursor(container.style.cursorHorizontal);
         }
-    
+        
         addAndMakeVisible(containers[0]);
         addAndMakeVisible(containers[1]);
-        addAndMakeVisible(separator);
+    
         separator.addMouseListener(this, false);
+        addAndMakeVisible(separator);
     }
     
     //==================================================================================================================
@@ -393,11 +449,12 @@ namespace jaut
         {
             return;
         }
+        
+        initialised      = true;
+        prevSeparatorPos = separator.getPosition();
     
         const Options &loptions = parent.options;
         const Style   &lstyle   = parent.style;
-        
-        prevSeparatorPos = separator.getPosition();
         
         if (loptions.collapseMode != CollapseMode::AlwaysShow)
         {
@@ -435,34 +492,70 @@ namespace jaut
             }
         }
         
+        const bool should_remember = loptions.rememberLastSeparatorPosition
+                                         && (   loptions.resizeBehaviour == ResizeBehaviour::Panel1
+                                             || loptions.resizeBehaviour == ResizeBehaviour::Panel2);
+        
         if (loptions.orientation == Orientation::Vertical)
         {
-            ::resizeSplitContainer(loptions.resizeBehaviour, separator, prevSize.getWidth(), prevSize.getX(),
-                                   getX(), getWidth(), getHeight(), separator.getX(), separator.getWidth(),
-                                   separator.getHeight(), separator.getRight(), loptions.panel1MinimumSize,
-                                   loptions.panel2MinimumSize, lstyle.separatorThickness, false);
+            const ResizeBehaviour behaviour = getResizeBehaviour(loptions.resizeBehaviour, prevSize.getX(), getX(),
+                                                                 prevSize.getWidth(), getWidth());
+            
+            ::resizeSplitContainer(behaviour, separator, prevSize.getWidth(), prevSize.getX(),
+                                   getX(), getWidth(), getHeight(), separator.getX(), separator.getHeight(),
+                                   separator.getRight(), lastRememberedPosition, loptions.panel1MinimumSize,
+                                   loptions.panel2MinimumSize, lstyle.separatorThickness, should_remember, false);
         }
         else
         {
-            ::resizeSplitContainer(loptions.resizeBehaviour, separator, prevSize.getHeight(), prevSize.getY(),
-                                   getY(), getHeight(), getWidth(), separator.getY(), separator.getHeight(),
-                                   separator.getWidth(), separator.getBottom(), loptions.panel1MinimumSize,
-                                   loptions.panel2MinimumSize, lstyle.separatorThickness, true);
+            const ResizeBehaviour behaviour = getResizeBehaviour(loptions.resizeBehaviour, prevSize.getY(), getY(),
+                                                                 prevSize.getHeight(), getHeight());
+            
+            ::resizeSplitContainer(behaviour, separator, prevSize.getHeight(), prevSize.getY(),
+                                   getY(), getHeight(), getWidth(), separator.getY(), separator.getWidth(),
+                                   separator.getBottom(), lastRememberedPosition, loptions.panel1MinimumSize,
+                                   loptions.panel2MinimumSize, lstyle.separatorThickness, should_remember, true);
         }
-    
+        
         prevSize = getLocalBounds().withX(parent.getX()).withY(parent.getY());
     }
     
     //==================================================================================================================
     void SplitPane::ContentContainer::mouseDown(const juce::MouseEvent &event)
     {
+        if (event.eventComponent != &separator)
+        {
+            return;
+        }
+        
         prevSeparatorPos = separator.getPosition();
         dragger.startDraggingComponent(&separator, event);
     }
     
     void SplitPane::ContentContainer::mouseDrag(const juce::MouseEvent &event)
     {
+        if (event.eventComponent != &separator)
+        {
+            return;
+        }
+        
         dragger.dragComponent(&separator, event, &constrainer);
+        updateLastPosition();
+    }
+    
+    //==================================================================================================================
+    void SplitPane::ContentContainer::updateLastPosition() noexcept
+    {
+        if (parent.options.resizeBehaviour == ResizeBehaviour::Panel2)
+        {
+            lastRememberedPosition = parent.options.orientation == Orientation::Vertical
+                                         ? separator.getX() : separator.getY();
+        }
+        else
+        {
+            lastRememberedPosition = parent.options.orientation == Orientation::Vertical
+                                         ? getWidth() - separator.getRight() : getHeight() - separator.getBottom();
+        }
     }
     
     //==================================================================================================================
@@ -646,7 +739,8 @@ namespace jaut
                     contentContainer.separator.setTopLeftPosition(0, y);
                 }
             }
-            
+    
+            contentContainer.updateLastPosition();
             contentContainer.repaint();
         }
     
@@ -678,6 +772,48 @@ namespace jaut
         
         setComponent(std::move(comp_2), PanelId::Panel1);
         setComponent(std::move(comp_1), PanelId::Panel2);
+    }
+    
+    //==================================================================================================================
+    void SplitPane::setResizerPos(int pos)
+    {
+        if (options.orientation == Orientation::Vertical)
+        {
+            if (::getSizeState(contentContainer.getWidth(), options.panel1MinimumSize, options.panel2MinimumSize,
+                               style.separatorThickness) != SplitContainerSizeState::Full)
+            {
+                return;
+            }
+        
+            contentContainer.separator
+                            .setTopLeftPosition(std::clamp(pos, options.panel1MinimumSize,
+                                                           contentContainer.getWidth() - options.panel2MinimumSize
+                                                                                       - style.separatorThickness), 0);
+        }
+        else
+        {
+            if (::getSizeState(contentContainer.getHeight(), options.panel1MinimumSize, options.panel2MinimumSize,
+                               style.separatorThickness) != SplitContainerSizeState::Full)
+            {
+                return;
+            }
+        
+            contentContainer.separator
+                            .setTopLeftPosition(0, std::clamp(pos, options.panel1MinimumSize,
+                                                              contentContainer.getHeight() - options.panel2MinimumSize
+                                                                                           - style.separatorThickness));
+        }
+    
+        contentContainer.updateLastPosition();
+    }
+    
+    //==================================================================================================================
+    void SplitPane::moveResizer(int amount) { setResizerPos(contentContainer.separator.getX() + amount); }
+    void SplitPane::moveResizer(float rational)
+    {
+        const int value = (options.orientation == Orientation::Vertical ? contentContainer.getWidth()
+                                                                        : contentContainer.getHeight());
+        moveResizer(value * rational);
     }
     
     //==================================================================================================================
@@ -727,18 +863,84 @@ namespace jaut
     
     void SplitPane::setSeperatorThickness(int val)
     {
-        if (val != std::exchange(style.separatorThickness, val) && contentContainer.initialised)
+        // Separator thickness cannot be a negative value
+        jassert(val >= 0);
+        
+        if (val != std::exchange(style.separatorThickness, std::max(val, 0)) && contentContainer.initialised)
         {
             contentContainer.resized();
             contentContainer.repaint();
         }
     }
     
+    void SplitPane::setResizerCursor(juce::MouseCursor verticalCursor, juce::MouseCursor horizontalCursor)
+    {
+        style.cursorVertical   = verticalCursor;
+        style.cursorHorizontal = horizontalCursor;
+        
+        if (options.orientation == Orientation::Vertical)
+        {
+            contentContainer.separator.setMouseCursor(verticalCursor);
+        }
+        else
+        {
+            contentContainer.separator.setMouseCursor(horizontalCursor);
+        }
+    }
+    
+    void SplitPane::setResizerCursor(juce::MouseCursor cursor, Orientation forOrientation)
+    {
+        if (forOrientation == Orientation::Vertical)
+        {
+            style.cursorVertical = cursor;
+        }
+        else
+        {
+            style.cursorHorizontal = cursor;
+        }
+    
+        if (forOrientation == options.orientation)
+        {
+            contentContainer.separator.setMouseCursor(cursor);
+        }
+    }
+    
     //==================================================================================================================
+    void SplitPane::setResizeBehaviour(ResizeBehaviour resizeBehaviour) noexcept
+    {
+        if (options.resizeBehaviour != std::exchange(options.resizeBehaviour, resizeBehaviour)
+            && (resizeBehaviour == ResizeBehaviour::Panel1 || resizeBehaviour == ResizeBehaviour::Panel2))
+        {
+            contentContainer.updateLastPosition();
+        }
+    }
+    
+    void SplitPane::setCollapseMode(CollapseMode collapseMode) noexcept
+    {
+        if (collapseMode != std::exchange(options.collapseMode, collapseMode) && contentContainer.initialised)
+        {
+            contentContainer.resized();
+        }
+    }
+    
     void SplitPane::setOrientation(Orientation parOrientation)
     {
-        if (parOrientation != std::exchange(options.orientation, parOrientation) && contentContainer.initialised)
+        if (parOrientation != std::exchange(options.orientation, parOrientation))
         {
+            if (!contentContainer.initialised)
+            {
+                if (options.orientation == Orientation::Vertical)
+                {
+                    contentContainer.separator.setMouseCursor(style.cursorVertical);
+                }
+                else
+                {
+                    contentContainer.separator.setMouseCursor(style.cursorHorizontal);
+                }
+                
+                return;
+            }
+            
             const float      vert_p    = getHeight() / 100.0f;
             const float      horz_p    = getWidth()  / 100.0f;
             juce::Component &separator = contentContainer.separator;
@@ -762,6 +964,8 @@ namespace jaut
                 
                 contentContainer.containers[0].setScrollBarsShown(false, true);
                 contentContainer.containers[1].setScrollBarsShown(false, true);
+                
+                contentContainer.separator.setMouseCursor(style.cursorVertical);
             }
             else
             {
@@ -782,22 +986,17 @@ namespace jaut
     
                 contentContainer.containers[0].setScrollBarsShown(true, false);
                 contentContainer.containers[1].setScrollBarsShown(true, false);
+    
+                contentContainer.separator.setMouseCursor(style.cursorHorizontal);
             }
             
+            contentContainer.updateLastPosition();
             contentContainer.repaint();
     
             if (options.collapseMode != CollapseMode::AlwaysShow)
             {
                 contentContainer.resized();
             }
-        }
-    }
-    
-    void SplitPane::setCollapseMode(CollapseMode collapseMode) noexcept
-    {
-        if (collapseMode != std::exchange(options.collapseMode, collapseMode) && contentContainer.initialised)
-        {
-            contentContainer.resized();
         }
     }
     
@@ -817,6 +1016,14 @@ namespace jaut
         }
     }
     
+    void SplitPane::setRememberLastPosition(bool shouldRemember)
+    {
+        if (shouldRemember != std::exchange(options.rememberLastSeparatorPosition, shouldRemember) && shouldRemember)
+        {
+            contentContainer.updateLastPosition();
+        }
+    }
+    
     //==================================================================================================================
     void SplitPane::setStyle(Style newStyle)
     {
@@ -827,8 +1034,23 @@ namespace jaut
             return;
         }
         
+        if (style.cursorVertical != newStyle.cursorVertical || style.cursorHorizontal != newStyle.cursorHorizontal)
+        {
+            setResizerCursor(style.cursorVertical, style.cursorHorizontal);
+        }
+        
         if (style.contentPadding != newStyle.contentPadding || style.borderThickness != newStyle.borderThickness)
         {
+            // Negative border values are illegal!
+            // If you want the contents to go out of bounds, you can do so by supplying negative values
+            // to the component's padding property
+            jassert(   style.borderThickness.left  >= 0 && style.borderThickness.top    >= 0
+                    && style.borderThickness.right >= 0 && style.borderThickness.bottom >= 0);
+            style.borderThickness.left   = std::max(style.borderThickness.left, 0);
+            style.borderThickness.top    = std::max(style.borderThickness.top, 0);
+            style.borderThickness.right  = std::max(style.borderThickness.right, 0);
+            style.borderThickness.bottom = std::max(style.borderThickness.bottom, 0);
+            
             resized();
             repaint();
         }
@@ -836,6 +1058,10 @@ namespace jaut
         if (   style.separatorThickness   != newStyle.separatorThickness
             || style.panelBorderThickness != newStyle.panelBorderThickness)
         {
+            // Separator thickness cannot be a negative value
+            jassert(style.separatorThickness >= 0);
+            style.separatorThickness = std::max(style.separatorThickness, 0);
+            
             contentContainer.resized();
             contentContainer.repaint();
         }
@@ -852,6 +1078,11 @@ namespace jaut
             || options.panel2MinimumSize != newOptions.panel2MinimumSize))
         {
             contentContainer.resized();
+        }
+        
+        if (options.resizeBehaviour != newOptions.resizeBehaviour)
+        {
+            contentContainer.updateLastPosition();
         }
     }
     //==================================================================================================================

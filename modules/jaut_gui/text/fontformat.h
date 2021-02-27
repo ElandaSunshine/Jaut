@@ -40,27 +40,36 @@ public:
     //=================================================================================================================
     static void drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
                          juce::Justification justification, Formats formats = None,
-                         CharFormat *charFormat = nullptr) noexcept;
+                         CharFormat *charFormat = nullptr);
     static void drawText(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
                          juce::Justification justification, Formats formats = None,
-                         CharFormat *charFormat = nullptr) noexcept;
+                         CharFormat *charFormat = nullptr);
     static void drawText(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
                          juce::Justification justification, Formats formats = None,
-                         CharFormat *charFormat = nullptr) noexcept;
+                         CharFormat *charFormat = nullptr);
     static void drawSmallCaps(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
-                              juce::Justification justification) noexcept;
+                              juce::Justification justification);
     static void drawSmallCaps(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
-                              juce::Justification justification) noexcept;
+                              juce::Justification justification);
     static void drawSmallCaps(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
-                              juce::Justification justification) noexcept;
+                              juce::Justification justification);
     static void drawFormattedString(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
                                     juce::Colour colour, juce::Justification justification,
-                                    CharFormat *charFormat = nullptr) noexcept;
+                                    CharFormat *charFormat = nullptr);
     static void drawFormattedString(juce::Graphics &g, const juce::String &text, float x, float y, float width,
                                     float height, juce::Colour colour, juce::Justification justification,
-                                    CharFormat *charFormat = nullptr) noexcept;
+                                    CharFormat *charFormat = nullptr);
     static void drawFormattedString(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
                                     juce::Colour colour, juce::Justification justification,
-                                    CharFormat *charFormat = nullptr) noexcept;
+                                    CharFormat *charFormat = nullptr);
+    static void drawOutlineString(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
+                                  float outlineThickness, juce::Colour outlineColour,
+                                  juce::Justification justification, bool useEllipsesIfTooBig = true);
+    static void drawOutlineString(juce::Graphics &g, const juce::String &text, float x, float y, float width,
+                                  float height, float outlineThickness, juce::Colour outlineColour,
+                                  juce::Justification justification, bool useEllipsesIfTooBig = true);
+    static void drawOutlineString(juce::Graphics &g, const juce::String &text, int x, int y, int width,
+                                  int height, float outlineThickness, juce::Colour outlineColour,
+                                  juce::Justification justification, bool useEllipsesIfTooBig = true);
 };
 }

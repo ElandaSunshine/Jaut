@@ -62,8 +62,9 @@ namespace jaut
 #include <jaut_gui/mouse/draganddropcontaineradvanced.h>
 #include <jaut_gui/util/dadeformat.h>
 #include <jaut_gui/util/overlaytarget.h>
+//#include <jaut_gui/component/pseudocomponent.h>
 #include <jaut_gui/component/contentpane.h>
-#include <jaut_gui/component/splitcontainer.h>
+#include <jaut_gui/component/splitpane.h>
 #include <jaut_gui/component/multipagepane.h>
 #include <jaut_gui/component/dockingpane.h>
 #include <jaut_gui/text/charformat.h>

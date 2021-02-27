@@ -26,95 +26,80 @@
 //**********************************************************************************************************************
 // region Namespace
 //======================================================================================================================
+#include "fontformat.h"
+
 namespace
 {
-int getColourCode(juce::juce_wchar charCode) noexcept
-{
-    charCode = std::tolower(charCode);
-    
-    if(std::isdigit(charCode))
+    int getColourCode(juce::juce_wchar charCode)
     {
-        return jaut::CharFormat::ColourIds::ColourFormat0Id + static_cast<int>(charCode - '0');
-    }
-    else if(charCode >= 'a' && charCode <= 'f')
-    {
-        return jaut::CharFormat::ColourIds::ColourFormatAId + static_cast<int>(charCode - 'a');
-    }
-    
-    return 0;
-}
-
-bool isCharValid(juce::juce_wchar charCode) noexcept
-{
-    charCode = std::tolower(charCode);
-    
-    return charCode == 'r' || (charCode >= 'x' && charCode <= 'z') || isdigit(charCode) ||
-           (charCode >= 'a' && charCode <= 'f');
-}
-
-void editFont(juce::juce_wchar charCode, juce::Font &font, juce::Colour &colour, juce::LookAndFeel &lookAndFeel,
-              const juce::Colour &defaultColour) noexcept
-{
-    charCode = std::tolower(charCode);
-    
-    if (charCode == 'r')
-    {
-        font.setStyleFlags(0);
-        colour = defaultColour;
-    }
-    else if (int colour_id = getColourCode(charCode))
-    {
-        colour = lookAndFeel.findColour(colour_id);
-    }
-    else if (charCode >= 'x' && charCode <= 'z')
-    {
-        font.setStyleFlags(font.getStyleFlags() | (1 << (charCode - 'x')));
-    }
-}
-
-jaut::FormatAttributes formatInput(const juce::String &input, const juce::Font &font, juce::LookAndFeel &lookAndFeel,
-                                   const jaut::CharFormat::Options &options) noexcept
-{
-    const juce::Colour default_colour = options.defaultColour == juce::Colour(0) ||
-                                        options.defaultColour == juce::Colour(0x00ffffff)
-                                                             ? lookAndFeel.findColour(jaut::CharFormat::ColourFormat0Id)
-                                                             : options.defaultColour;
-    
-    juce::Colour current_colour = default_colour;
-    juce::Font   current_font   = font;
-    juce::String::CharPointerType char_ptr = input.getCharPointer();
-    juce::String text;
-    jaut::FormatAttributes attributes;
-    
-    for (;;)
-    {
-        juce::juce_wchar current_char = char_ptr.getAndAdvance();
+        charCode = std::tolower(charCode);
         
-        if (current_char == 0)
+        if (std::isdigit(charCode))
         {
-            break;
+            return jaut::CharFormat::ColourIds::ColourFormat0Id + static_cast<int>(charCode - '0');
+        }
+        else if (charCode >= 'a' && charCode <= 'f')
+        {
+            return jaut::CharFormat::ColourIds::ColourFormatAId + static_cast<int>(charCode - 'a');
         }
         
-        juce::juce_wchar next_char = *char_ptr;
+        return 0;
+    }
+    
+    bool isCharValid(juce::juce_wchar charCode)
+    {
+        charCode = std::tolower(charCode);
         
-        if (current_char == '\n')
+        return charCode == 'r' || (charCode >= 'x' && charCode <= 'z') || isdigit(charCode) ||
+               (charCode >= 'a' && charCode <= 'f');
+    }
+    
+    void editFont(juce::juce_wchar charCode, juce::Font &font, juce::Colour &colour, juce::LookAndFeel &lookAndFeel,
+                  const juce::Colour &defaultColour)
+    {
+        charCode = std::tolower(charCode);
+        
+        if (charCode == 'r')
         {
-            if(!text.isEmpty())
+            font.setStyleFlags(0);
+            colour = defaultColour;
+        }
+        else if (int colour_id = getColourCode(charCode))
+        {
+            colour = lookAndFeel.findColour(colour_id);
+        }
+        else if (charCode >= 'x' && charCode <= 'z')
+        {
+            font.setStyleFlags(font.getStyleFlags() | (1 << (charCode - 'x')));
+        }
+    }
+    
+    jaut::FormatAttributes formatInput(const juce::String &input, const juce::Font &font,
+                                       juce::LookAndFeel &lookAndFeel, const jaut::CharFormat::Options &options)
+    {
+        const juce::Colour default_colour = options.defaultColour == juce::Colour(0) ||
+                                            options.defaultColour == juce::Colour(0x00ffffff)
+                                                ? lookAndFeel.findColour(jaut::CharFormat::ColourFormat0Id)
+                                                : options.defaultColour;
+        
+        juce::Colour current_colour = default_colour;
+        juce::Font   current_font   = font;
+        
+        juce::String::CharPointerType char_ptr = input.getCharPointer();
+        
+        juce::String           text;
+        jaut::FormatAttributes attributes;
+        
+        for (;;)
+        {
+            const juce::juce_wchar current_char = char_ptr.getAndAdvance();
+            
+            if (current_char == 0)
             {
-                attributes.append(text, current_font, current_colour);
-                text.clear();
+                break;
             }
             
-            attributes.append("\n", current_font, current_colour);
-        }
-        else if (current_char == '\\' && next_char == options.terminator)
-        {
-            text += options.terminator;
-            ++char_ptr;
-        }
-        else if (current_char == options.terminator)
-        {
-            if(::isCharValid(next_char))
+            if (current_char == '\n')
             {
                 if (!text.isEmpty())
                 {
@@ -122,23 +107,45 @@ jaut::FormatAttributes formatInput(const juce::String &input, const juce::Font &
                     text.clear();
                 }
                 
-                ::editFont(next_char, current_font, current_colour, lookAndFeel, default_colour);
-                ++char_ptr;
+                attributes.append("\n", current_font, current_colour);
+            }
+            else
+            {
+                const juce::juce_wchar next_char = *char_ptr;
+                
+                if (current_char == '\\' && next_char == options.terminator)
+                {
+                    text += options.terminator;
+                    ++char_ptr;
+                }
+                else if (current_char == options.terminator)
+                {
+                    if (::isCharValid(next_char))
+                    {
+                        if (!text.isEmpty())
+                        {
+                            attributes.append(text, current_font, current_colour);
+                            text.clear();
+                        }
+                
+                        ::editFont(next_char, current_font, current_colour, lookAndFeel, default_colour);
+                        ++char_ptr;
+                    }
+                }
+                else
+                {
+                    text += current_char;
+                }
             }
         }
-        else
+        
+        if (!text.isEmpty())
         {
-            text += current_char;
+            attributes.append(text, current_font, current_colour);
         }
+        
+        return attributes;
     }
-    
-    if (!text.isEmpty())
-    {
-        attributes.append(text, current_font, current_colour);
-    }
-    
-    return attributes;
-}
 }
 //======================================================================================================================
 // endregion Namespace
@@ -149,12 +156,12 @@ namespace jaut
 //**********************************************************************************************************************
 // region CharFormat
 //======================================================================================================================
-CharFormat::CharFormat() noexcept
+CharFormat::CharFormat()
 {
     setLookAndFeel(nullptr);
 }
 
-CharFormat::CharFormat(Options options) noexcept
+CharFormat::CharFormat(Options options)
     : options(std::move(options))
 {
     setLookAndFeel(nullptr);
@@ -162,25 +169,25 @@ CharFormat::CharFormat(Options options) noexcept
 
 //======================================================================================================================
 void CharFormat::drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> destRectangle,
-                          juce::Justification justification) const noexcept
+                          juce::Justification justification) const
 {
     juce::Graphics::ScopedSaveState save_state (g);
     
-    jaut::FormatLayout text_layout;
-    auto attributes          = ::formatInput(text, g.getCurrentFont(), *lookAndFeel, options);
-    const juce::Point origin = justification.appliedToRectangle({destRectangle.getWidth(), destRectangle.getHeight()},
-                                                                destRectangle).getPosition();
-    juce::LowLevelGraphicsContext &context = g.getInternalContext();
-    const juce::Rectangle<int> clip        = context.getClipBounds();
-    const float clip_top                   = clip.getY() - origin.y;
-    const float clip_bottom                = clip.getBottom() - origin.y;
+    jaut::FormatLayout     text_layout;
+    jaut::FormatAttributes attributes = ::formatInput(text, g.getCurrentFont(), *lookAndFeel, options);
+    const juce::Point      origin     = justification.appliedToRectangle({ destRectangle.getWidth(),
+                                                                           destRectangle.getHeight() },
+                                                                         destRectangle).getPosition();
+    juce::LowLevelGraphicsContext &context     = g.getInternalContext();
+    const juce::Rectangle<int>     clip        = context.getClipBounds();
+    const float                    clip_top    = clip.getY() - origin.y;
+    const float                    clip_bottom = clip.getBottom() - origin.y;
     
     attributes.setJustification(justification);
     text_layout.createLayout(attributes, destRectangle.getWidth());
     
-    for (int i = 0; i < text_layout.getNumLines(); ++i)
+    for (const auto &line : text_layout)
     {
-        const jaut::FormatLayout::Line &line  = text_layout.getLine(i);
         const juce::Range<float> line_range_y = line.getLineBoundsY();
         
         if (line_range_y.getEnd() < clip_top)
@@ -195,47 +202,43 @@ void CharFormat::drawText(juce::Graphics &g, const juce::String &text, juce::Rec
         
         const juce::Point<float> line_origin = origin + line.lineOrigin;
         
-        for (int j = 0; j < line.runs.size(); ++j)
+        for (const auto *const run : line.runs)
         {
-            jaut::FormatLayout::Run const * const run = line.runs.getUnchecked(j);
             context.setFont(run->font);
             context.setFill(run->colour);
             
-            juce::String text;
-            
-            for (auto &glyph : run->glyphs)
+            for (const auto &glyph : run->glyphs)
             {
                 context.drawGlyph(glyph.glyphCode, juce::AffineTransform::translation(line_origin.x + glyph.anchor.x,
                                                                                       line_origin.y + glyph.anchor.y));
-                text += static_cast<juce::juce_wchar>(glyph.glyphCode);
             }
             
             if (run->isUnderlined)
             {
-                const juce::Range<float> run_extent = run->getRunBoundsX();
-                const float line_thickness          = run->font.getDescent() * 0.3f;
+                const juce::Range<float> run_extent     = run->getRunBoundsX();
+                const float              line_thickness = run->font.getDescent() * 0.3f;
                 
-                context.fillRect({run_extent.getStart() + line_origin.x, line_origin.y + line_thickness * 2.0f,
-                                  run_extent.getLength(), line_thickness});
+                context.fillRect({ run_extent.getStart() + line_origin.x, line_origin.y + line_thickness * 2.0f,
+                                   run_extent.getLength(), line_thickness });
             }
         }
     }
 }
 
 void CharFormat::drawText(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
-                          juce::Justification justification) const noexcept
+                          juce::Justification justification) const
 {
-    drawText(g, text, {x, y, width, height}, justification);
+    drawText(g, text, { x, y, width, height }, justification);
 }
 
 void CharFormat::drawText(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
-                          juce::Justification justification) const noexcept
+                          juce::Justification justification) const
 {
     drawText(g, text, juce::Rectangle<int>(x, y, width, height).toFloat(), justification);
 }
 
 //======================================================================================================================
-void CharFormat::setLookAndFeel(LookAndFeel_Jaut *laf) noexcept
+void CharFormat::setLookAndFeel(LookAndFeel_Jaut *laf)
 {
     if (laf)
     {
@@ -260,7 +263,7 @@ void CharFormat::setColour(const juce::Colour &colour) noexcept
     options.defaultColour = colour;
 }
 
-juce::Colour CharFormat::getColour(juce::juce_wchar colourCode) const noexcept
+juce::Colour CharFormat::getColour(juce::juce_wchar colourCode) const
 {
     const int colour_id = ::getColourCode(colourCode);
     return colour_id && lookAndFeel ? lookAndFeel->findColour(colour_id) : options.defaultColour;
@@ -281,7 +284,7 @@ const CharFormat::Options &CharFormat::getOptions() const noexcept
 // region FontFormat
 //======================================================================================================================
 void FontFormat::drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
-                          juce::Justification justification, Formats formats, CharFormat *charFormat) noexcept
+                          juce::Justification justification, Formats formats, CharFormat *charFormat)
 {
     if ((formats & None) == None && (text.isEmpty() || g.clipRegionIntersects(area.getSmallestIntegerContainer())))
     {
@@ -386,19 +389,19 @@ void FontFormat::drawText(juce::Graphics &g, const juce::String &text, juce::Rec
 }
 
 void FontFormat::drawText(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
-                          juce::Justification justification, Formats formats, CharFormat *charFormat) noexcept
+                          juce::Justification justification, Formats formats, CharFormat *charFormat)
 {
     drawText(g, text, {x, y, width, height}, justification, formats, charFormat);
 }
 
 void FontFormat::drawText(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
-                          juce::Justification justification, Formats formats, CharFormat *charFormat) noexcept
+                          juce::Justification justification, Formats formats, CharFormat *charFormat)
 {
     drawText(g, text, juce::Rectangle<int>(x, y, width, height).toFloat(), justification, formats, charFormat);
 }
 
 void FontFormat::drawSmallCaps(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
-                               juce::Justification justification) noexcept
+                               juce::Justification justification)
 {
     if (text.isEmpty() || !g.clipRegionIntersects(area.getSmallestIntegerContainer()))
     {
@@ -447,20 +450,20 @@ void FontFormat::drawSmallCaps(juce::Graphics &g, const juce::String &text, juce
 }
 
 void FontFormat::drawSmallCaps(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
-                               juce::Justification justification) noexcept
+                               juce::Justification justification)
 {
     drawSmallCaps(g, text, {x, y, width, height}, justification);
 }
 
 void FontFormat::drawSmallCaps(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
-                               juce::Justification justification) noexcept
+                               juce::Justification justification)
 {
     drawSmallCaps(g, text, juce::Rectangle<int>(x, y, width, height).toFloat(), justification);
 }
 
 void FontFormat::drawFormattedString(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
                                      juce::Colour colour, juce::Justification justification,
-                                     CharFormat *charFormat) noexcept
+                                     CharFormat *charFormat)
 {
     CharFormat::Options options;
     
@@ -475,17 +478,55 @@ void FontFormat::drawFormattedString(juce::Graphics &g, const juce::String &text
 
 void FontFormat::drawFormattedString(juce::Graphics &g, const juce::String &text, float x, float y, float width,
                                      float height, juce::Colour colour, juce::Justification justification,
-                                     CharFormat *charFormat) noexcept
+                                     CharFormat *charFormat)
 {
     drawFormattedString(g, text, {x, y, width, height}, colour, justification, charFormat);
 }
 
 void FontFormat::drawFormattedString(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
                                      juce::Colour colour, juce::Justification justification,
-                                     CharFormat *charFormat) noexcept
+                                     CharFormat *charFormat)
 {
     drawFormattedString(g, text, juce::Rectangle<int>(x, y, width, height).toFloat(), colour, justification,
                         charFormat);
+}
+
+void FontFormat::drawOutlineString(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> area,
+                                   float outlineThickness, juce::Colour outlineColour,
+                                   juce::Justification justification, bool useEllipsesIfTooBig)
+{
+    juce::GlyphArrangement glyphs;
+    glyphs.addCurtailedLineOfText(g.getCurrentFont(), text, 0.0f, 0.0f, area.getWidth(), useEllipsesIfTooBig);
+    glyphs.justifyGlyphs(0, glyphs.getNumGlyphs(), area.getX(), area.getY(), area.getWidth(), area.getHeight(),
+                         justification);
+    glyphs.draw(g);
+    
+    juce::Path path;
+    glyphs.createPath(path);
+    
+    {
+        juce::Graphics::ScopedSaveState sss(g);
+    
+        juce::PathStrokeType stroke(outlineThickness);
+        g.setColour(outlineColour);
+        g.strokePath(path, stroke);
+    }
+}
+
+void FontFormat::drawOutlineString(juce::Graphics &g, const juce::String &text, float x, float y, float width,
+                                   float height, float outlineThickness, juce::Colour outlineColour,
+                                   juce::Justification justification, bool useEllipsesIfTooBig)
+{
+    drawOutlineString(g, text, { x, y, width, height }, outlineThickness, outlineColour, justification,
+                      useEllipsesIfTooBig);
+}
+    
+void FontFormat::drawOutlineString(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
+                                   float outlineThickness, juce::Colour outlineColour,
+                                   juce::Justification justification, bool useEllipsesIfTooBig)
+{
+    drawOutlineString(g, text, juce::Rectangle<int>(x, y, width, height).toFloat(), outlineThickness, outlineColour,
+                      justification, useEllipsesIfTooBig);
 }
 //======================================================================================================================
 // endregion FontFormat

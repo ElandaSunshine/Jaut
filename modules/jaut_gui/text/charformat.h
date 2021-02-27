@@ -72,13 +72,13 @@ public:
     
     //==================================================================================================================
     /** Creates a new default instance of the CharFormat class. */
-    CharFormat() noexcept;
+    CharFormat();
     
     /**
      *  Creates a new instance of the CharFormat class with all colours white.
      *  @param terminator The character determining when a new formatting sequence begins
      */
-    explicit CharFormat(Options options) noexcept;
+    explicit CharFormat(Options options);
     
     //==================================================================================================================
     /**
@@ -90,7 +90,7 @@ public:
      *  @param justification The justification to apply to the text
      */
     void drawText(juce::Graphics &g, const juce::String &text, juce::Rectangle<float> destRectangle,
-                  juce::Justification justification) const noexcept;
+                  juce::Justification justification) const;
     
     /**
      *  Draws the formatted text to screen.
@@ -104,7 +104,7 @@ public:
      *  @param justification The justification to apply to the text
      */
     void drawText(juce::Graphics &g, const juce::String &text, float x, float y, float width, float height,
-                  juce::Justification justification) const noexcept;
+                  juce::Justification justification) const;
     
     /**
      *  Draws the formatted text to screen.
@@ -118,7 +118,7 @@ public:
      *  @param justification The justification to apply to the text
      */
     void drawText(juce::Graphics &g, const juce::String &text, int x, int y, int width, int height,
-                  juce::Justification justification) const noexcept;
+                  juce::Justification justification) const;
     
     //=================================================================================================================
     /**
@@ -130,7 +130,7 @@ public:
      *  @param lookAndFeel A pointer to a LookAndFeel object which should be used
      */
     
-    void setLookAndFeel(LookAndFeel_Jaut *lookAndFeel) noexcept;
+    void setLookAndFeel(LookAndFeel_Jaut *lookAndFeel);
     
     /**
      *  Gets the current set LookAndFeel object.
@@ -150,7 +150,7 @@ public:
      *  @param colourCode The colour code ranging from 0-9 and A-F
      *  @return The colour to that colour code or else a default colour
      */
-    juce::Colour getColour(juce::juce_wchar colourCode) const noexcept;
+    juce::Colour getColour(juce::juce_wchar colourCode) const;
     
     /**
      *  Gets the current formatting character.
