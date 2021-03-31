@@ -52,7 +52,7 @@ enum JAUT_API FitMode
  *  @param upper      The upper bound of the checked range
  *  @return True if the tested value fits inside the range
  */
-template <class ValueType, FitMode Mode = FitLower>
+template<class ValueType, FitMode Mode = FitLower>
 JAUT_API inline constexpr bool fit(ValueType test, ValueType lower, ValueType upper) noexcept
 {
     if constexpr(Mode == FitClamped)
@@ -71,9 +71,16 @@ JAUT_API inline constexpr bool fit(ValueType test, ValueType lower, ValueType up
     return test >= lower && test <= upper;
 }
 
-template <class ValueType>
+template<class ValueType>
 JAUT_API inline constexpr ValueType compareAndGet(ValueType value, ValueType isNot, ValueType elseReturn) noexcept
 {
     return value != isNot ? value : elseReturn;
+}
+
+template<class FloatType>
+JAUT_API inline constexpr bool isZero(FloatType value, FloatType tolerance = 1e-7) noexcept
+{
+    static_assert(std::is_floating_point_v<FloatType>, JAUT_ASSERT_TYPE_NOT_FLOATING_POINT);
+    return ((value + tolerance) >= FloatType()) && ((value - tolerance) <= FloatType());
 }
 }

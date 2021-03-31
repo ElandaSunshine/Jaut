@@ -23,18 +23,15 @@
     ===============================================================
  */
 
-//**********************************************************************************************************************
-// region Anonymous
-//======================================================================================================================
 #pragma clang diagnostic push
 #pragma ide diagnostic ignored "HidingNonVirtualFunction"
 namespace
 {
-    /** The amount of difference on the x-axis between two tabs before swapping them. */
-    inline constexpr int Const_TabSwapSensitivity = 25;
-    
     //==================================================================================================================
-    enum class SplitContainerSizeState { Full, Semi, Small };
+    // MultiPagePane
+    //==================================================================================================================
+    // The amount of difference on the x-axis between two tabs before swapping them
+    inline constexpr int Const_TabSwapSensitivity = 25;
     
     //==================================================================================================================
     bool hasPinFlag(const jaut::MultiPagePane::Options &options, jaut::MultiPagePane::PinBehaviour flag)
@@ -42,6 +39,12 @@ namespace
         return (options.pinnedTabBehaviour & flag) == flag;
     }
     
+    //==================================================================================================================
+    // SplitPane
+    //==================================================================================================================
+    enum class SplitContainerSizeState { Full, Semi, Small };
+    
+    //==================================================================================================================
     void setPositionOf(juce::Component &comp, int value, bool vertical)
     {
         if (!vertical)
@@ -61,7 +64,7 @@ namespace
                 comp.getParentComponent()->childBoundsChanged(&comp);
                 return;
             }
-            
+        
             comp.setTopLeftPosition(0, value);
         }
     }
@@ -88,7 +91,7 @@ namespace
         {
             return behaviour;
         }
-        
+    
         if (prevXY != xy && (prevXY + prevWidthHeight) != (xy + widthHeight))
         {
             return jaut::SplitPane::ResizeBehaviour::Centred;
@@ -97,14 +100,14 @@ namespace
         {
             return jaut::SplitPane::ResizeBehaviour::Panel2;
         }
-        
+    
         return jaut::SplitPane::ResizeBehaviour::Panel1;
     }
     
-    void resizeSplitContainer(jaut::SplitPane::ResizeBehaviour behaviour, juce::Component &comp,
-                              int prevWidthHeight, int prevXY, int xy, int widthHeight, int heightWidth,
-                              int separatorXY, int sepHeightWidth, int sepRightBottom, int prevSavedXY,
-                              int min1, int min2, int sepThickness, bool withLast, bool vertical)
+    void resizeSplitPane(jaut::SplitPane::ResizeBehaviour behaviour, juce::Component &comp,
+                         int prevWidthHeight, int prevXY, int xy, int widthHeight, int heightWidth,
+                         int separatorXY, int sepHeightWidth, int sepRightBottom, int prevSavedXY,
+                         int min1, int min2, int sepThickness, bool withLast, bool vertical)
     {
         if (sepHeightWidth != heightWidth)
         {
@@ -240,6 +243,9 @@ namespace
         }
     }
     
+    //==================================================================================================================
+    // LookAndFeel_Jaut
+    //==================================================================================================================
     auto getBorderForComponent(juce::Rectangle<int> bounds, jaut::Thickness<int> thickness)
     {
         juce::Path path;
@@ -248,46 +254,44 @@ namespace
         path.addRectangle(bounds.withWidth(thickness.right).withX(bounds.getX() + bounds.getWidth() - thickness.right));
         path.addRectangle(bounds.withHeight(thickness.bottom)
                                 .withY(bounds.getY() + bounds.getHeight() - thickness.bottom));
-        
+    
         return path;
     }
     
-    juce::uint32 getArgbFrom(juce::LookAndFeel_V4 *laf, juce::LookAndFeel_V4::ColourScheme::UIColour colour) noexcept
+    juce::uint32 getArgbFrom(juce::LookAndFeel_V4 *laf, juce::LookAndFeel_V4::ColourScheme::UIColour colour,
+                             float alpha = 1.0f) noexcept
     {
-        return laf->getCurrentColourScheme().getUIColour(colour).getARGB();
+        return laf->getCurrentColourScheme().getUIColour(colour).withAlpha(alpha).getARGB();
     }
     
     //==================================================================================================================
     // CoordinatePane
     //==================================================================================================================
-    inline constexpr double zeroPivot   = 1e-7;
-    inline constexpr int    minTileSize = 90;
-    inline constexpr int    maxTileSize = 180;
-    inline constexpr int    textPadding = 4;
+    inline constexpr int textPadding = 4;
     
     //==================================================================================================================
-    std::vector<double> getPoints(juce::Range<double> range, int size, double &resMult)
+    std::vector<double> getPoints(juce::Range<double> range, int size, int min, int max, double &resMult)
     {
         std::vector<double> points;
         const double length = range.getLength();
         
-        if ((length * minTileSize) > size)
+        if ((length * min) > size)
         {
             int base = 1;
             int mult = 1;
             
             for (;;)
             {
-                if (((length / base) * minTileSize) <= size)
+                if (((length / base) * min) <= size)
                 {
                     break;
                 }
-                else if (((length / (base * 2)) * minTileSize) <= size)
+                else if (((length / (base * 2)) * min) <= size)
                 {
                     mult = 2;
                     break;
                 }
-                else if (((length / (base * 5)) * minTileSize) <= size)
+                else if (((length / (base * 5)) * min) <= size)
                 {
                     mult = 5;
                     break;
@@ -329,16 +333,16 @@ namespace
             
             for (;;)
             {
-                if (((length / base) * maxTileSize) >= size)
+                if (((length / base) * max) >= size)
                 {
                     break;
                 }
-                else if (((length / (base * 0.5)) * maxTileSize) >= size)
+                else if (((length / (base * 0.5)) * max) >= size)
                 {
                     mult = 0.5;
                     break;
                 }
-                else if (((length / (base * 0.2)) * maxTileSize) >= size)
+                else if (((length / (base * 0.2)) * max) >= size)
                 {
                     mult = 0.2;
                     break;
@@ -381,9 +385,9 @@ namespace
     {
         juce::String text;
         
-        for (const auto point : points)
+        for (const double point : points)
         {
-            if (std::abs(point) < zeroPivot)
+            if (jaut::isZero(point))
             {
                 continue;
             }
@@ -396,10 +400,58 @@ namespace
         
         return font.getStringWidth(text);
     }
+    
+    template<bool Vertical>
+    int getInterLinesLength(const std::vector<double> &points, const juce::Range<double> &range, int numLines) noexcept
+    {
+        if (points.empty())
+        {
+            return 4;
+        }
+        
+        int length = (points.size() - 1) * numLines;
+        
+        if constexpr (!Vertical)
+        {
+            if (points[0] != range.getStart())
+            {
+                length += numLines;
+            }
+            
+            if (points[points.size() - 1] != range.getEnd())
+            {
+                length += numLines;
+            }
+        }
+        else
+        {
+            if (points[points.size() - 1] != range.getStart())
+            {
+                length += numLines;
+            }
+    
+            if (points[0] != range.getEnd())
+            {
+                length += numLines;
+            }
+        }
+        
+        return length;
+    }
+    
+    template<bool Vertical, class TH, class TV>
+    constexpr std::conditional_t<not Vertical, TH, TV>&& getHOrV(TH &&h, TV &&v) noexcept
+    {
+        if constexpr (!Vertical)
+        {
+            return std::forward<TH>(h);
+        }
+        else
+        {
+            return std::forward<TV>(v);
+        }
+    }
 }
-//======================================================================================================================
-// endregion Anonymous
-//**********************************************************************************************************************
 
 namespace jaut
 {
@@ -638,21 +690,21 @@ namespace jaut
         {
             const ResizeBehaviour behaviour = getResizeBehaviour(loptions.resizeBehaviour, prevSize.getX(), getX(),
                                                                  prevSize.getWidth(), getWidth());
-            
-            ::resizeSplitContainer(behaviour, separator, prevSize.getWidth(), prevSize.getX(),
-                                   getX(), getWidth(), getHeight(), separator.getX(), separator.getHeight(),
-                                   separator.getRight(), lastRememberedPosition, loptions.panel1MinimumSize,
-                                   loptions.panel2MinimumSize, lstyle.separatorThickness, should_remember, false);
+    
+            ::resizeSplitPane(behaviour, separator, prevSize.getWidth(), prevSize.getX(), getX(), getWidth(),
+                              getHeight(), separator.getX(), separator.getHeight(), separator.getRight(),
+                              lastRememberedPosition, loptions.panel1MinimumSize, loptions.panel2MinimumSize,
+                              lstyle.separatorThickness, should_remember, false);
         }
         else
         {
             const ResizeBehaviour behaviour = getResizeBehaviour(loptions.resizeBehaviour, prevSize.getY(), getY(),
                                                                  prevSize.getHeight(), getHeight());
-            
-            ::resizeSplitContainer(behaviour, separator, prevSize.getHeight(), prevSize.getY(),
-                                   getY(), getHeight(), getWidth(), separator.getY(), separator.getWidth(),
-                                   separator.getBottom(), lastRememberedPosition, loptions.panel1MinimumSize,
-                                   loptions.panel2MinimumSize, lstyle.separatorThickness, should_remember, true);
+    
+            ::resizeSplitPane(behaviour, separator, prevSize.getHeight(), prevSize.getY(), getY(), getHeight(),
+                              getWidth(), separator.getY(), separator.getWidth(), separator.getBottom(),
+                              lastRememberedPosition, loptions.panel1MinimumSize, loptions.panel2MinimumSize,
+                              lstyle.separatorThickness, should_remember, true);
         }
         
         prevSize = getLocalBounds().withX(parent.getX()).withY(parent.getY());
@@ -3310,8 +3362,9 @@ namespace jaut
     
     //==================================================================================================================
     template<bool Vertical>
-    CoordinatePane::ValueStrip<Vertical>::ValueStrip()
-        : points(::getPoints(range, 0, mult))
+    CoordinatePane::ValueStrip<Vertical>::ValueStrip(CoordinatePane &parPane)
+        : points(::getPoints(range, 0, parPane.options.minTileSize, parPane.options.maxTileSize, mult)),
+          pane(parPane)
     {}
     
     //==================================================================================================================
@@ -3323,65 +3376,15 @@ namespace jaut
             return false;
         }
         
-        if (newRange.getStart() == newRange.getEnd())
+        if (newRange.getStart() == newRange.getEnd() || (isZero(newRange.getStart()) && isZero((newRange.getEnd()))))
         {
-            // You can't show zero coordinates on a cartesian component, make sure there is at least a 1e-7 difference
-            // between the two points
+            // You can't show zero coordinates on a cartesian component.
             jassertfalse;
             return false;
         }
         
         std::swap(range, newRange);
-        centreIndex = -1;
-        
-        if constexpr (!Vertical)
-        {
-            points = ::getPoints(range, area.getWidth(), mult);
-        }
-        else
-        {
-            points = ::getPoints(range, area.getHeight(), mult);
-        }
-        
-        if (!points.empty())
-        {
-            tail = std::abs(range.getStart() - points[0])                 / mult;
-            head = std::abs(range.getEnd()   - points[points.size() - 1]) / mult;
-        }
-        else
-        {
-            tail         = 0.0;
-            head         = 0.0;
-            mult         = 1.0;
-            tickDistance = 0;
-            
-            return true;
-        }
-        
-        if constexpr (!Vertical)
-        {
-            tickDistance = area.getWidth() / ((points.size() - 1) + tail + head);
-        }
-        else
-        {
-            tickDistance = area.getHeight() / ((points.size() - 1) + tail + head);
-            std::reverse(points.begin(), points.end());
-        }
-        
-        juce::String debug = "Points [";
-        
-        for (auto point : points)
-        {
-            debug << point << ", ";
-        }
-        
-        for (int i = 0; i < points.size(); ++i)
-        {
-            if (std::abs(points[i]) < ::zeroPivot)
-            {
-                centreIndex = i;
-            }
-        }
+        calculateValues();
         
         return true;
     }
@@ -3396,50 +3399,7 @@ namespace jaut
         }
         
         std::swap(area, newArea);
-        centreIndex = -1;
-        
-        if constexpr (!Vertical)
-        {
-            points = ::getPoints(range, area.getWidth(), mult);
-        }
-        else
-        {
-            points = ::getPoints(range, area.getHeight(), mult);
-        }
-        
-        if (!points.empty())
-        {
-            tail = std::abs(range.getStart() - points[0])                 / mult;
-            head = std::abs(range.getEnd()   - points[points.size() - 1]) / mult;
-        }
-        else
-        {
-            tail         = 0.0;
-            head         = 0.0;
-            mult         = 1.0;
-            tickDistance = 0;
-            
-            return true;
-        }
-        
-        if constexpr (!Vertical)
-        {
-            tickDistance = area.getWidth() / ((points.size() - 1) + tail + head);
-        }
-        else
-        {
-            tickDistance = area.getHeight() / ((points.size() - 1) + tail + head);
-            std::reverse(points.begin(), points.end());
-        }
-        
-        for (int i = 0; i < points.size(); ++i)
-        {
-            if (std::abs(points[i]) < ::zeroPivot)
-            {
-                centreIndex = i;
-                break;
-            }
-        }
+        calculateValues();
         
         return true;
     }
@@ -3452,181 +3412,49 @@ namespace jaut
         {
             return;
         }
+    
+        const juce::Font font_desc  = g.getCurrentFont();
+        const double     tick_start = getTickStart();
+        const double     tick_quart = tickDistance / (pane.options.numIntermediateLines + 1);
+    
+        std::vector<int> lines_full;
+        std::vector<int> lines_intermediate;
+        lines_full        .reserve(points.size() - (centreIndex >= 0 ? 1 : 0));
+        lines_intermediate.reserve(::getInterLinesLength<Vertical>(points, range, pane.options.numIntermediateLines));
         
-        static const juce::Colour baseColour           = juce::Colours::white;
-        static const juce::Colour colourText           = baseColour;
-        static const juce::Colour colourTextOutOfRange = baseColour.withAlpha(0.5f);
-        static const juce::Colour colourTick           = baseColour.withAlpha(0.2f);
-        static const juce::Colour colourTickZero       = baseColour;
-        static const juce::Colour colourTickQuarter    = baseColour.withAlpha(0.05f);
-        
-        const juce::Font font_desc = g.getCurrentFont();
-        
-        const double tick_start = getTickStart();
-        const double tick_quart = tickDistance / 5.0;
+        for (int i = 1; i <= pane.options.numIntermediateLines; ++i)
+        {
+            const int qtick_pos = tick_start - (tick_quart * i);
+    
+            if (qtick_pos < 0)
+            {
+                break;
+            }
+    
+            lines_intermediate.emplace_back(qtick_pos);
+        }
         
         for (int i = 0; i < points.size(); ++i)
         {
-            const double tick_value  = points[i];
-            const double tick_offset = tickDistance * i;
-            const double tick_pos    = tick_start + tick_offset;
+            const double tick_pos = tick_start + (tickDistance * i);
+            lines_full.emplace_back(tick_pos);
             
-            const juce::String tick_text(tick_value);
-            const float text_width = font_desc.getStringWidthFloat(tick_text);
-            
-            // Draw lines and numbers
-            if (std::abs(tick_value) >= ::zeroPivot)
+            for (int j = 1; j <= pane.options.numIntermediateLines; ++j)
             {
-                const int text_size = text_width;
-                
-                
-                
-                // ==============
-                // Ticks
-                // ==============
-                g.setColour(colourTick);
-                
-                if constexpr (!Vertical)
-                {
-                    g.drawRect(tick_pos, area.getY(), 1, area.getHeight());
-                }
-                else
-                {
-                    g.drawRect(area.getX(), tick_pos, area.getWidth(), 1);
-                }
-                
-                
-                
-                // ==============
-                // Values
-                // ==============
-                int text_x;
-                int text_y;
-                int align_flags;
-                
-                if constexpr (!Vertical)
-                {
-                    const int top_font_pos = (font_desc.getHeight() + ::textPadding);
-                    text_x = tick_pos - (text_size / 2);
-                    text_y = std::clamp(linePos + ::textPadding, area.getY() + ::textPadding,
-                                        area.getBottom() - top_font_pos);
-                    
-                    if (linePos >= area.getY())
-                    {
-                        g.setColour((linePos < area.getBottom()) ? colourText : colourTextOutOfRange);
-                        align_flags = juce::Justification::centredBottom;
-                    }
-                    else
-                    {
-                        g.setColour(colourTextOutOfRange);
-                        align_flags = juce::Justification::centredTop;
-                    }
-                }
-                else
-                {
-                    const int min_x = area.getX() + ::textPadding;
-                    
-                    text_x = std::clamp(linePos         -  text_size - ::textPadding, min_x,
-                                        area.getRight() - (text_size + ::textPadding));
-                    text_y = tick_pos - std::round(font_desc.getHeight() / 2.0);
-                    
-                    if (linePos >= area.getX())
-                    {
-                        g.setColour((linePos < area.getRight()) ? colourText : colourTextOutOfRange);
-                        align_flags = juce::Justification::centredRight;
-                    }
-                    else
-                    {
-                        g.setColour(colourTextOutOfRange);
-                        align_flags = juce::Justification::centredLeft;
-                    }
-                }
-                
-                g.drawText(tick_text, text_x, text_y, text_size, font_desc.getHeight(), align_flags);
-            }
-            
-            // ==============
-            // Intermediate ticks
-            // ==============
-            g.setColour(colourTickQuarter);
-            
-            if constexpr (!Vertical)
-            {
-                for (int j = 0; j < 5; ++j)
-                {
-                    const int qtick_pos = tick_pos + (tick_quart * j);
-                    
-                    if (qtick_pos >= area.getRight())
-                    {
-                        break;
-                    }
-                    
-                    g.drawRect(qtick_pos, area.getY(), 1, area.getHeight());
-                }
-            }
-            else
-            {
-                for (int j = 0; j < 5; ++j)
-                {
-                    const int qtick_pos = tick_pos + (tick_quart * j);
-                    
-                    if (qtick_pos >= area.getBottom())
-                    {
-                        break;
-                    }
-                    
-                    g.drawRect(area.getX(), qtick_pos, area.getWidth(), 1);
-                }
-            }
-        }
-        
-        g.setColour(colourTickQuarter);
-        
-        // Draw tail quarter ticks and zero lines
-        if constexpr (!Vertical)
-        {
-            for (int j = 0; j < 5; ++j)
-            {
-                const int qtick_pos = tick_start - (tick_quart * j);
-                
-                if (qtick_pos < area.getX())
+                const int qtick_pos = tick_pos + (tick_quart * j);
+    
+                if (qtick_pos >= ::getHOrV<Vertical>(area.getWidth(), area.getHeight()))
                 {
                     break;
                 }
-                
-                g.drawRect(qtick_pos, area.getY(), 1, area.getHeight());
-            }
-            
-            const int zero_pos = getZeroLinePos();
-            
-            if (zero_pos >= area.getX() && zero_pos < area.getRight())
-            {
-                g.setColour(colourTickZero);
-                g.drawRect(area.withWidth(1).withX(zero_pos));
+    
+                lines_intermediate.emplace_back(qtick_pos);
             }
         }
-        else
-        {
-            for (int j = 0; j < 5; ++j)
-            {
-                const int qtick_pos = tick_start - (tick_quart * j);
-                
-                if (qtick_pos < area.getY())
-                {
-                    break;
-                }
-                
-                g.drawRect(area.getX(), qtick_pos, area.getWidth(), 1);
-            }
-            
-            const int zero_pos = getZeroLinePos();
-            
-            if (zero_pos >= area.getY() && zero_pos < area.getBottom())
-            {
-                g.setColour(colourTickZero);
-                g.drawRect(area.withHeight(1).withY(zero_pos));
-            }
-        }
+        
+        pane.lookAndFeel->drawCoordinatePaneLines (g, pane, area, lines_full,         centreIndex, false,   !Vertical);
+        pane.lookAndFeel->drawCoordinatePaneLines (g, pane, area, lines_intermediate, -1,          true,    !Vertical);
+        pane.lookAndFeel->drawCoordinatePaneValues(g, pane, area, lines_full, points, centreIndex, linePos, !Vertical);
     }
     
     //==================================================================================================================
@@ -3635,22 +3463,70 @@ namespace jaut
     {
         if constexpr (!Vertical)
         {
-            return area.getX() + static_cast<int>(tickDistance * tail);
+            return static_cast<int>(tickDistance * tail);
         }
         else
         {
-            return area.getY() + static_cast<int>(tickDistance * head);
+            return static_cast<int>(tickDistance * head);
         }
     }
     
+    //==================================================================================================================
     template<bool Vertical>
-    int CoordinatePane::ValueStrip<Vertical>::getZeroLinePos() const
+    void CoordinatePane::ValueStrip<Vertical>::calculateValues()
     {
-        if (points.empty())
+        centreIndex = -1;
+        
+        if constexpr (!Vertical)
         {
-            return -1;
+            points = ::getPoints(range, area.getWidth(), pane.options.minTileSize, pane.options.maxTileSize, mult);
+        }
+        else
+        {
+            points = ::getPoints(range, area.getHeight(), pane.options.minTileSize, pane.options.maxTileSize, mult);
+        }
+    
+        if (!points.empty())
+        {
+            tail = std::abs(range.getStart() - points[0])                 / mult;
+            head = std::abs(range.getEnd()   - points[points.size() - 1]) / mult;
+        }
+        else
+        {
+            tail         = 0.0;
+            head         = 0.0;
+            mult         = 1.0;
+            tickDistance = 0;
+            zeroLinePos  = 0;
+            
+            return;
+        }
+    
+        if constexpr (!Vertical)
+        {
+            tickDistance = area.getWidth() / ((points.size() - 1) + tail + head);
+        }
+        else
+        {
+            tickDistance = area.getHeight() / ((points.size() - 1) + tail + head);
+            std::reverse(points.begin(), points.end());
         }
         
+        for (int i = 0; i < points.size(); ++i)
+        {
+            if (isZero(points[i]))
+            {
+                centreIndex = i;
+                break;
+            }
+        }
+    
+        zeroLinePos = calculateZeroLinePos();
+    }
+    
+    template<bool Vertical>
+    int CoordinatePane::ValueStrip<Vertical>::calculateZeroLinePos() const
+    {
         const double tick_start = getTickStart();
         
         if (centreIndex >= 0)
@@ -3693,60 +3569,62 @@ namespace jaut
     //******************************************************************************************************************
     // region CoordinatePane
     //==================================================================================================================
-    CoordinatePane::CoordinatePane()
-        : labelX("", "X"),
-          labelY("", "Y")
+    CoordinatePane::CoordinatePane(Style style, Options options)
+        : defaultCursor(juce::Component::getMouseCursor()),
+          stripX(*this), stripY(*this), style(std::move(style)),
+          options(std::move(options)), txtLabelX("X"),
+          txtLabelY("Y")
     {
-        juce::Font font(12.0f);
-        
-        labelX.setColour(juce::Label::textColourId, juce::Colours::white);
-        labelX.setFont(font);
-        addAndMakeVisible(labelX);
-        
-        labelY.setColour(juce::Label::textColourId, juce::Colours::white);
-        labelY.setFont(font);
-        addAndMakeVisible(labelY);
+        JAUT_INIT_LAF()
     }
+    
+    CoordinatePane::CoordinatePane(Style style)
+        : CoordinatePane(std::move(style), Options{})
+    {}
+    
+    CoordinatePane::CoordinatePane(Options options)
+        : CoordinatePane(Style{}, std::move(options))
+    {}
+    
+    CoordinatePane::CoordinatePane()
+        : CoordinatePane(Style{}, Options{})
+    {}
     
     //==================================================================================================================
     void CoordinatePane::paint(juce::Graphics &g)
     {
+        lookAndFeel->drawCoordinatePaneBackground(g, *this);
+        
+        const juce::Font font_text = lookAndFeel->getCoordinatePaneFont();
         g.setFont(font_text);
         
-        stripX.draw(g, stripY.getZeroLinePos());
-        stripY.draw(g, stripX.getZeroLinePos());
+        stripX.draw(g, stripY.zeroLinePos);
+        stripY.draw(g, stripX.zeroLinePos);
         
         const juce::Rectangle<int> graph_area = stripX.area;
-        g.reduceClipRegion(graph_area);
-        
-        const int line_pos_x = stripX.getZeroLinePos();
-        const int line_pos_y = stripY.getZeroLinePos();
-        
-        if (!graph_area.contains(line_pos_x, line_pos_y))
-        {
-            return;
-        }
-        
-        const int text_width = font_text.getStringWidth("0");
-        
         g.setColour(juce::Colours::white);
-        g.drawText("0", line_pos_x - (text_width + ::textPadding), line_pos_y + ::textPadding,
-                   text_width, font_text.getHeight(), juce::Justification::topRight);
+        drawLabels(g, graph_area);
+    }
+    
+    void CoordinatePane::paintOverChildren(juce::Graphics &g)
+    {
+        lookAndFeel->drawCoordinatePaneBorder(g, *this);
     }
     
     void CoordinatePane::resized()
     {
-        const juce::Rectangle<int> content_area = getLocalBounds().reduced(10);
-        const juce::Rectangle<int> graph_area   = content_area.withTrimmedLeft(30).withTrimmedBottom(30);
+        const juce::Rectangle<int> graph_area
+            = style.borderThickness.trimRectangle(style.contentPadding.trimRectangle(getLocalBounds()));
         
         const bool changed_x = stripX.setBounds(graph_area);
         const bool changed_y = stripY.setBounds(graph_area);
         
         if (changed_x || changed_y)
         {
-            updateLabelPosition();
             repaint();
         }
+        
+        attributes[Attributes::Initialised] = true;
     }
     
     //==================================================================================================================
@@ -3754,7 +3632,6 @@ namespace jaut
     {
         if (stripX.setRange(range))
         {
-            updateLabelPosition();
             repaint();
         }
     }
@@ -3763,7 +3640,6 @@ namespace jaut
     {
         if (stripY.setRange(range))
         {
-            updateLabelPosition();
             repaint();
         }
     }
@@ -3771,6 +3647,11 @@ namespace jaut
     //==================================================================================================================
     void CoordinatePane::mouseWheelMove(const juce::MouseEvent &event, const juce::MouseWheelDetails &wheel)
     {
+        if (!options.allowWheelResize)
+        {
+            return;
+        }
+        
         const juce::Rectangle<int> graph_area = stripX.area;
         const auto m_pos = event.getPosition();
         
@@ -3817,25 +3698,17 @@ namespace jaut
         
         if (changed_x || changed_y)
         {
-            updateLabelPosition();
             repaint();
         }
     }
     
-    void CoordinatePane::mouseDown(const juce::MouseEvent &event)
-    {
-        prevPos    = event.getPosition();
-        prevCursor = getMouseCursor();
-        setMouseCursor(juce::MouseCursor::CrosshairCursor);
-    }
-    
-    void CoordinatePane::mouseUp(const juce::MouseEvent &event)
-    {
-        setMouseCursor(prevCursor);
-    }
-    
     void CoordinatePane::mouseDrag(const juce::MouseEvent &event)
     {
+        if (!options.allowDragMove)
+        {
+            return;
+        }
+        
         const juce::Point<int> m_pos = event.getPosition();
         
         if (prevPos != m_pos)
@@ -3846,14 +3719,62 @@ namespace jaut
             const double amount_x = (stripX.mult / static_cast<int>(stripX.tickDistance)) * diff_x;
             const double amount_y = (stripY.mult / static_cast<int>(stripY.tickDistance)) * diff_y;
             
-            stripX.setRange(stripX.range.withStart(stripX.range.getStart() + amount_x)
-                                  .withEnd  (stripX.range.getEnd()   + amount_x));
-            stripY.setRange(stripY.range.withStart(stripY.range.getStart() - amount_y)
-                                  .withEnd  (stripY.range.getEnd()   - amount_y));
-            updateLabelPosition();
+            const juce::Range<double> range_x = stripX.range.withStart(stripX.range.getStart() + amount_x)
+                                                            .withEnd  (stripX.range.getEnd()   + amount_x);
+            const juce::Range<double> range_y = stripY.range.withStart(stripY.range.getStart() - amount_y)
+                                                            .withEnd  (stripY.range.getEnd()   - amount_y);
             
+            if (stripX.setRange(range_x) || stripY.setRange(range_y))
+            {
+                repaint();
+            }
+    
             prevPos = m_pos;
-            repaint();
+        }
+    }
+    
+    //==================================================================================================================
+    void CoordinatePane::mouseDown(const juce::MouseEvent &event)
+    {
+        if (!options.allowDragMove)
+        {
+            return;
+        }
+        
+        prevPos    = event.getPosition();
+        prevCursor = getMouseCursor();
+        setMouseCursor(juce::MouseCursor::CrosshairCursor);
+        
+        attributes[Attributes::Dragging] = true;
+    }
+    
+    void CoordinatePane::mouseUp(const juce::MouseEvent &event)
+    {
+        if (!options.allowDragMove)
+        {
+            return;
+        }
+        
+        setMouseCursor(prevCursor);
+        attributes[Attributes::Dragging] = false;
+    }
+    
+    void CoordinatePane::mouseMove(const juce::MouseEvent &event)
+    {
+        if (stripX.area.contains(event.getPosition()))
+        {
+            if (options.allowDragMove && attributes.test(Attributes::Dragging))
+            {
+                setMouseCursor(style.cursorMove);
+            }
+            else
+            {
+                setMouseCursor(style.cursorNormal);
+            }
+        }
+        else
+        {
+            setMouseCursor(defaultCursor);
         }
     }
     
@@ -3928,29 +3849,75 @@ namespace jaut
     }
     
     //==================================================================================================================
-    void CoordinatePane::updateLabelPosition()
+    void CoordinatePane::setStyle(Style parStyle)
     {
-        const int t_max_w = ::getMaxWidth(font_text, stripY.points);
+        std::swap(style, parStyle);
         
-        const juce::Rectangle<int> graph_area = stripX.area;
-        const int x_width = labelX.getFont().getStringWidth(labelX.getText()) + 10;
-        const int y_width = labelY.getFont().getStringWidth(labelY.getText()) + 10;
+        if (!attributes.test(Attributes::Initialised))
+        {
+            return;
+        }
         
-        const int internal_padding = font_text.getHeight() + ::textPadding;
+        if (style.contentPadding != parStyle.contentPadding || style.borderThickness != parStyle.borderThickness)
+        {
+            resized();
+        }
+    }
+    
+    void CoordinatePane::setOptions(Options parOptions)
+    {
+        std::swap(options, parOptions);
         
-        labelX.setBounds(graph_area.getRight() - x_width,
-                         std::clamp<int>(stripY.getZeroLinePos() +  internal_padding,
-                                         graph_area.getY()       +  internal_padding,
-                                         graph_area.getBottom()  - (internal_padding + font_text.getHeight() + 1)),
-                         x_width, labelX.getFont().getHeight());
+        if (!attributes.test(Attributes::Initialised))
+        {
+            return;
+        }
         
-        const int text_margin = (t_max_w + internal_padding + ::textPadding);
-        labelY.setBounds(std::clamp<int>(stripX.getZeroLinePos() - text_margin,
-                                         graph_area.getX()       + ::textPadding + t_max_w,
-                                         graph_area.getRight()   - text_margin),
-                         graph_area.getY() + y_width, y_width, labelY.getFont().getHeight());
-        labelY.setTransform(juce::AffineTransform::rotation(juce::MathConstants<float>::pi * 1.5, labelY.getX(),
-                                                            labelY.getY()));
+        if (   options.autoScale            != parOptions.autoScale
+            || options.numIntermediateLines != parOptions.numIntermediateLines
+            || options.maxTileSize          != parOptions.maxTileSize || options.minTileSize != parOptions.minTileSize)
+        {
+            resized();
+        }
+    }
+    
+    //==================================================================================================================
+    void CoordinatePane::drawLabels(juce::Graphics &g, const juce::Rectangle<int> &graphArea)
+    {
+        juce::Graphics::ScopedSaveState sss(g);
+    
+        const juce::Font font_text = lookAndFeel->getCoordinatePaneFont();
+        const int        t_max_w   = ::getMaxWidth(font_text, stripY.points);
+        const int        t_max_h   = std::ceil(font_text.getHeight());
+        const int        x_width   = font_text.getStringWidth(txtLabelX) + 10;
+        const int        y_width   = font_text.getStringWidth(txtLabelY) + 10;
+        
+        const int internal_padding = t_max_h + ::textPadding;
+        
+        // Label X
+        {
+            const juce::Rectangle<int> label_x_rect {
+                /* X: */ graphArea.getRight() - x_width,
+                /* Y: */ std::clamp<int>(stripY.zeroLinePos + internal_padding, graphArea.getY() + internal_padding,
+                                         graphArea.getBottom() - (internal_padding + t_max_h + 1)),
+                /* W: */ x_width,
+                /* H: */ t_max_h
+            };
+            lookAndFeel->drawCoordinatePaneLabel(g, *this, label_x_rect, txtLabelX, true);
+        }
+        
+        // Label Y
+        {
+            const int text_margin = (t_max_w + internal_padding + ::textPadding);
+            const juce::Rectangle<int> label_y_rect {
+                /* X: */ std::clamp<int>(stripX.zeroLinePos - text_margin, graphArea.getX() + ::textPadding + t_max_w,
+                                         graphArea.getRight() - text_margin),
+                /* Y: */ graphArea.getY() + y_width,
+                /* W: */ y_width,
+                /* H: */ t_max_h
+            };
+            lookAndFeel->drawCoordinatePaneLabel(g, *this, label_y_rect, txtLabelY, false);
+        }
     }
     //==================================================================================================================
     // endregion CoordinatePane
@@ -3997,7 +3964,16 @@ namespace jaut
             MultiPagePane::ColourTabHighlightId,            ::getArgbFrom(this, UICol::highlightedFill),
             MultiPagePane::ColourTabTextId,                 ::getArgbFrom(this, UICol::defaultText),
             MultiPagePane::ColourTabCloseButtonId,          ::getArgbFrom(this, UICol::defaultText),
-            MultiPagePane::ColourTabCloseButtonHighlightId, ::getArgbFrom(this, UICol::highlightedText)
+            MultiPagePane::ColourTabCloseButtonHighlightId, ::getArgbFrom(this, UICol::highlightedText),
+    
+            CoordinatePane::ColourBackgroundId,      ::getArgbFrom(this, UICol::windowBackground),
+            CoordinatePane::ColourBorderId,          ::getArgbFrom(this, UICol::outline),
+            CoordinatePane::ColourValueNormalId,     ::getArgbFrom(this, UICol::defaultText),
+            CoordinatePane::ColourValueOutOfRangeId, ::getArgbFrom(this, UICol::defaultText, 0.5f),
+            CoordinatePane::ColourValueLineId,       ::getArgbFrom(this, UICol::outline,     0.2f),
+            CoordinatePane::ColourValueLineInterId,  ::getArgbFrom(this, UICol::outline,     0.05f),
+            CoordinatePane::ColourValueLineZeroId,   ::getArgbFrom(this, UICol::outline),
+            CoordinatePane::ColourLabelId,           ::getArgbFrom(this, UICol::defaultText)
         };
     
         for (int i = 0; i < juce::numElementsInArray(colours); i += 2)
@@ -4178,11 +4154,174 @@ namespace jaut
     }
     
     //==================================================================================================================
+    void LookAndFeel_Jaut::drawCoordinatePaneBackground(juce::Graphics &g, const CoordinatePane &coordinatePane)
+    {
+        g.setColour(coordinatePane.findColour(CoordinatePane::ColourBackgroundId));
+        g.fillAll();
+    }
+    
+    void LookAndFeel_Jaut::drawCoordinatePaneBorder(juce::Graphics &g, const CoordinatePane &coordinatePane)
+    {
+        g.setColour(coordinatePane.findColour(CoordinatePane::ColourBorderId));
+        g.fillPath(::getBorderForComponent(coordinatePane.getLocalBounds(), coordinatePane.getStyle().borderThickness));
+    }
+    
+    void LookAndFeel_Jaut::drawCoordinatePaneLabel(juce::Graphics &g, const CoordinatePane &coordinatePane,
+                                                   juce::Rectangle<int> area, juce::String text, bool isXLabel)
+    {
+        g.setColour(coordinatePane.findColour(CoordinatePane::ColourLabelId));
+        
+        if (isXLabel)
+        {
+            g.drawText(text, area, juce::Justification::centred);
+        }
+        else
+        {
+            juce::Graphics::ScopedSaveState sss(g);
+            
+            g.addTransform(juce::AffineTransform::rotation(juce::MathConstants<float>::pi * 1.5,
+                                                           area.getX(), area.getY()));
+            g.drawText(text, area, juce::Justification::centred);
+        }
+    }
+    
+    void LookAndFeel_Jaut::drawCoordinatePaneLines(juce::Graphics &g, const CoordinatePane &coordinatePane,
+                                                   juce::Rectangle<int> area, const std::vector<int> &lines,
+                                                   int zeroLineIndex, bool intermediate, bool isXAxis)
+    {
+        g.setColour(coordinatePane.findColour(intermediate ? CoordinatePane::ColourValueLineInterId
+                                                           : CoordinatePane::ColourValueLineId));
+        
+        if (isXAxis)
+        {
+            const juce::Rectangle line_bounds = area.withWidth(1);
+            
+            for (const int line_pos : lines)
+            {
+                g.drawRect(line_bounds.translated(line_pos, 0));
+            }
+    
+            if (zeroLineIndex >= 0)
+            {
+                g.setColour(coordinatePane.findColour(CoordinatePane::ColourValueLineZeroId));
+                g.drawRect(lines[zeroLineIndex], area.getY(), 1, area.getHeight());
+            }
+        }
+        else
+        {
+            const juce::Rectangle line_bounds = area.withHeight(1);
+    
+            for (int line_pos : lines)
+            {
+                g.drawRect(line_bounds.translated(0, line_pos));
+            }
+    
+            if (zeroLineIndex >= 0)
+            {
+                g.setColour(coordinatePane.findColour(CoordinatePane::ColourValueLineZeroId));
+                g.drawRect(area.getX(), lines[zeroLineIndex], area.getWidth(), 1);
+            }
+        }
+    }
+    
+    void LookAndFeel_Jaut::drawCoordinatePaneValues(juce::Graphics &g, const CoordinatePane &coordinatePane,
+                                                    juce::Rectangle<int> area, const std::vector<int> &lines,
+                                                    const std::vector<double> &values, int zeroValIndex,int linePos,
+                                                    bool isXAxis)
+    {
+        if (isXAxis)
+        {
+            const int text_height = g.getCurrentFont().getHeight();
+            
+            for (int i = 0; i < lines.size(); ++i)
+            {
+                if (i == zeroValIndex)
+                {
+                    continue;
+                }
+    
+                const juce::String text(values[i]);
+                const int text_width = g.getCurrentFont().getStringWidth(text);
+                const int text_x     = lines[i] - (text_width / 2);
+                const int text_y     = std::clamp(linePos                         + ::textPadding,
+                                                  area.getY()                     + ::textPadding,
+                                                  area.getBottom() - (text_height + ::textPadding));
+                int align_flags = juce::Justification::horizontallyCentred;
+    
+                if (linePos >= area.getY())
+                {
+                    g.setColour((linePos < area.getBottom())
+                                    ? coordinatePane.findColour(CoordinatePane::ColourValueNormalId)
+                                    : coordinatePane.findColour(CoordinatePane::ColourValueOutOfRangeId));
+                    align_flags |= juce::Justification::bottom;
+                }
+                else
+                {
+                    g.setColour(coordinatePane.findColour(CoordinatePane::ColourValueOutOfRangeId));
+                    align_flags |= juce::Justification::top;
+                }
+    
+                g.drawText(text, text_x, text_y, text_width, text_height, align_flags);
+            }
+            
+            if (zeroValIndex >= 0 && fit(linePos, area.getY(), area.getBottom()))
+            {
+                const int text_width = g.getCurrentFont().getStringWidth("0");
+                
+                g.drawText("0", lines[zeroValIndex] - text_width - ::textPadding, linePos + ::textPadding,
+                           text_width, text_height, juce::Justification::topRight);
+            }
+        }
+        else
+        {
+            const int text_height = g.getCurrentFont().getHeight();
+            
+            for (int i = 0; i < lines.size(); ++i)
+            {
+                if (i == zeroValIndex)
+                {
+                    continue;
+                }
+        
+                const juce::String text(values[i]);
+                const int text_width = g.getCurrentFont().getStringWidth(text);
+                const int text_y     = lines[i] - std::round(text_height / 2);
+                const int text_x     = std::clamp(linePos         -  text_width - ::textPadding,
+                                                  area.getX()                   + ::textPadding,
+                                                  area.getRight() - (text_width + ::textPadding));
+
+                int align_flags = juce::Justification::verticallyCentred;
+    
+                if (linePos >= area.getX())
+                {
+                    g.setColour((linePos < area.getRight())
+                                    ? coordinatePane.findColour(CoordinatePane::ColourValueNormalId)
+                                    : coordinatePane.findColour(CoordinatePane::ColourValueOutOfRangeId));
+                    align_flags = juce::Justification::right;
+                }
+                else
+                {
+                    g.setColour(coordinatePane.findColour(CoordinatePane::ColourValueOutOfRangeId));
+                    align_flags = juce::Justification::left;
+                }
+        
+                g.drawText(text, text_x, text_y, text_width, text_height, align_flags);
+            }
+        }
+    }
+    
+    juce::Font LookAndFeel_Jaut::getCoordinatePaneFont()
+    {
+        return juce::Font(11.0f);
+    }
+    
+    //==================================================================================================================
     JAUT_IMPL_LAF(ContentPane)
     JAUT_IMPL_LAF(SplitPane)
     JAUT_IMPL_LAF(MultiPagePane)
     JAUT_IMPL_LAF(MultiPagePane::TabButton)
     JAUT_IMPL_LAF(MultiPagePane::Window)
+    JAUT_IMPL_LAF(CoordinatePane)
     //==================================================================================================================
     // endregion LookAndFeel_Jaut
     //******************************************************************************************************************

@@ -42,7 +42,7 @@ inline constexpr char newLine = '\n';
 #endif
 
 template<int Add>
-inline constexpr int nextColourId = JAUT_COLOUR_ID_START + Add; // FUTURE next start 26
+inline constexpr int nextColourId = JAUT_COLOUR_ID_START + Add; // FUTURE next start 34
 
 /** A dirty type previewer that will work in lots of IDEs. */
 template<class> struct TView;

@@ -29,10 +29,10 @@ namespace jaut
 {
 class JAUT_API LookAndFeel_Jaut : public juce::LookAndFeel_V4,
                                   public ContentPane          ::LookAndFeelMethods,
-                                  public SplitPane       ::LookAndFeelMethods,
+                                  public SplitPane            ::LookAndFeelMethods,
                                   public MultiPagePane        ::LookAndFeelMethods,
-                                  public MultiPagePane::Window::LookAndFeelMethods
-                                  //public TargetComponent
+                                  public MultiPagePane::Window::LookAndFeelMethods,
+                                  public CoordinatePane       ::LookAndFeelMethods
 {
 public:
     static LookAndFeel_Jaut& getDefaultLaf() { return jaut::getDefaultLaf(); }
@@ -67,5 +67,18 @@ public:
     
     //==================================================================================================================
     int getWindowStyleFlags() const override;
+    
+    //==================================================================================================================
+    void drawCoordinatePaneBackground(juce::Graphics &g, const CoordinatePane &coordinatePane) override;
+    void drawCoordinatePaneBorder(juce::Graphics &g, const CoordinatePane &coordinatePane) override;
+    void drawCoordinatePaneLabel(juce::Graphics &g, const CoordinatePane &coordinatePane, juce::Rectangle<int> area,
+                                 juce::String text, bool isXLabel) override;
+    void drawCoordinatePaneLines(juce::Graphics &g, const CoordinatePane &coordinatePane, juce::Rectangle<int> area,
+                                 const std::vector<int> &lines, int zeroLineIndex, bool intermediate,
+                                 bool isXAxis) override;
+    void drawCoordinatePaneValues(juce::Graphics &g, const CoordinatePane &coordinatePane, juce::Rectangle<int> area,
+                                  const std::vector<int> &lines, const std::vector<double> &values, int zeroValIndex,
+                                  int linePos, bool isXAxis) override;
+    juce::Font getCoordinatePaneFont() override;
 };
 }
