@@ -3461,14 +3461,7 @@ namespace jaut
     template<bool Vertical>
     int CoordinatePane::ValueStrip<Vertical>::getTickStart() const noexcept
     {
-        if constexpr (!Vertical)
-        {
-            return static_cast<int>(tickDistance * tail);
-        }
-        else
-        {
-            return static_cast<int>(tickDistance * head);
-        }
+        return static_cast<int>(tickDistance * tail);
     }
     
     //==================================================================================================================
@@ -3502,15 +3495,7 @@ namespace jaut
             return;
         }
     
-        if constexpr (!Vertical)
-        {
-            tickDistance = area.getWidth() / ((points.size() - 1) + tail + head);
-        }
-        else
-        {
-            tickDistance = area.getHeight() / ((points.size() - 1) + tail + head);
-            std::reverse(points.begin(), points.end());
-        }
+        tickDistance = ::getHOrV<Vertical>(area.getWidth(), area.getHeight()) / ((points.size() - 1) + tail + head);
         
         for (int i = 0; i < points.size(); ++i)
         {
@@ -3535,33 +3520,15 @@ namespace jaut
         }
         else if (points[0] > 0)
         {
-            if constexpr (!Vertical)
-            {
-                const double first_tick      = points[0];
-                const int    indices_to_zero = first_tick / mult;
-                return tick_start - (tickDistance * indices_to_zero);
-            }
-            else
-            {
-                const double first_tick      = points[points.size() - 1];
-                const int    indices_to_zero = first_tick / mult;
-                return tick_start + ((points.size() - 1) * tickDistance) + (tickDistance * indices_to_zero);
-            }
+            const double first_tick      = points[0];
+            const int    indices_to_zero = first_tick / mult;
+            return tick_start - (tickDistance * indices_to_zero);
         }
         else
         {
-            if constexpr (!Vertical)
-            {
-                const double last_tick       = points[points.size() - 1];
-                const int    indices_to_zero = -last_tick / mult;
-                return tick_start + ((points.size() - 1) * tickDistance) + (tickDistance * indices_to_zero);
-            }
-            else
-            {
-                const double last_tick       = points[0];
-                const int    indices_to_zero = -last_tick / mult;
-                return tick_start - (tickDistance * indices_to_zero);
-            }
+            const double last_tick       = points[points.size() - 1];
+            const int    indices_to_zero = -last_tick / mult;
+            return tick_start + ((points.size() - 1) * tickDistance) + (tickDistance * indices_to_zero);
         }
     }
     //==================================================================================================================
@@ -3674,32 +3641,34 @@ namespace jaut
         
         double amount_x;
         double amount_y;
-        
-        if (graph_area.getWidth() == graph_area.getHeight())
-        {
-            amount_x = stripX.mult / 5.0 * -wheel_delta;
-            amount_y = stripY.mult / 5.0 * -wheel_delta;
-        }
-        else if (graph_area.getWidth() > graph_area.getHeight())
+    
+        if (graph_area.getWidth() > graph_area.getHeight())
         {
             amount_x =  stripX.mult / 5.0 * -wheel_delta;
             amount_y = (stripY.mult / 5.0 * -wheel_delta) / graph_area.getWidth() * graph_area.getHeight();
         }
-        else
+        else if (graph_area.getWidth() < graph_area.getHeight())
         {
             amount_x = (stripX.mult / 5.0 * -wheel_delta) / graph_area.getHeight() * graph_area.getWidth();
             amount_y =  stripY.mult / 5.0 * -wheel_delta;
         }
+        else
+        {
+            amount_x = stripX.mult / 5.0 * -wheel_delta;
+            amount_y = stripY.mult / 5.0 * -wheel_delta;
+        }
         
-        const bool changed_x = stripX.setRange(stripX.range.withStart(stripX.range.getStart() - amount_x * right_amount)
-                                                     .withEnd  (stripX.range.getEnd()   + amount_x * left_amount));
-        const bool changed_y = stripY.setRange(stripY.range.withStart(stripY.range.getStart() - amount_y * top_amount)
-                                                     .withEnd  (stripY.range.getEnd()   + amount_y * bottom_amount));
+        const bool chg_x = stripX.setRange(stripX.range.withStart(stripX.range.getStart() - amount_x * right_amount)
+                                                       .withEnd  (stripX.range.getEnd()   + amount_x * left_amount));
+        const bool chg_y = stripY.setRange(stripY.range.withStart(stripY.range.getStart() - amount_y * top_amount)
+                                                       .withEnd  (stripY.range.getEnd()   + amount_y * bottom_amount));
         
-        if (changed_x || changed_y)
+        if (chg_x || chg_y)
         {
             repaint();
         }
+        
+        DBG("{" << stripY.range.getStart() << "; " << stripY.range.getEnd() << "}");
     }
     
     void CoordinatePane::mouseDrag(const juce::MouseEvent &event)
@@ -3898,7 +3867,8 @@ namespace jaut
         {
             const juce::Rectangle<int> label_x_rect {
                 /* X: */ graphArea.getRight() - x_width,
-                /* Y: */ std::clamp<int>(stripY.zeroLinePos + internal_padding, graphArea.getY() + internal_padding,
+                /* Y: */ std::clamp<int>(graphArea.getBottom() - stripY.zeroLinePos + internal_padding,
+                                         graphArea.getY() + internal_padding,
                                          graphArea.getBottom() - (internal_padding + t_max_h + 1)),
                 /* W: */ x_width,
                 /* H: */ t_max_h
@@ -3910,7 +3880,8 @@ namespace jaut
         {
             const int text_margin = (t_max_w + internal_padding + ::textPadding);
             const juce::Rectangle<int> label_y_rect {
-                /* X: */ std::clamp<int>(stripX.zeroLinePos - text_margin, graphArea.getX() + ::textPadding + t_max_w,
+                /* X: */ std::clamp<int>(stripX.zeroLinePos - text_margin,
+                                         graphArea.getX() + ::textPadding + t_max_w,
                                          graphArea.getRight() - text_margin),
                 /* Y: */ graphArea.getY() + y_width,
                 /* W: */ y_width,
@@ -4204,22 +4175,22 @@ namespace jaut
             if (zeroLineIndex >= 0)
             {
                 g.setColour(coordinatePane.findColour(CoordinatePane::ColourValueLineZeroId));
-                g.drawRect(lines[zeroLineIndex], area.getY(), 1, area.getHeight());
+                g.drawRect(line_bounds.translated(lines[zeroLineIndex], 0));
             }
         }
         else
         {
-            const juce::Rectangle line_bounds = area.withHeight(1);
+            const juce::Rectangle line_bounds = area.withHeight(1).withY(area.getBottom() - 1);
     
             for (int line_pos : lines)
             {
-                g.drawRect(line_bounds.translated(0, line_pos));
+                g.drawRect(line_bounds.translated(0, -line_pos));
             }
     
             if (zeroLineIndex >= 0)
             {
                 g.setColour(coordinatePane.findColour(CoordinatePane::ColourValueLineZeroId));
-                g.drawRect(area.getX(), lines[zeroLineIndex], area.getWidth(), 1);
+                g.drawRect(line_bounds.translated(0, -lines[zeroLineIndex]));
             }
         }
     }
@@ -4242,8 +4213,10 @@ namespace jaut
     
                 const juce::String text(values[i]);
                 const int text_width = g.getCurrentFont().getStringWidth(text);
-                const int text_x     = lines[i] - (text_width / 2);
-                const int text_y     = std::clamp(linePos                         + ::textPadding,
+                const int text_x     = std::clamp(lines[i] - (text_width / 2),
+                                                  area.getX(),
+                                                  area.getRight() - (text_width + ::textPadding));
+                const int text_y     = std::clamp((area.getBottom() - linePos)    + ::textPadding,
                                                   area.getY()                     + ::textPadding,
                                                   area.getBottom() - (text_height + ::textPadding));
                 int align_flags = juce::Justification::horizontallyCentred;
@@ -4264,12 +4237,13 @@ namespace jaut
                 g.drawText(text, text_x, text_y, text_width, text_height, align_flags);
             }
             
-            if (zeroValIndex >= 0 && fit(linePos, area.getY(), area.getBottom()))
+            if (zeroValIndex >= 0 && fit(linePos, 0, area.getHeight()))
             {
                 const int text_width = g.getCurrentFont().getStringWidth("0");
                 
-                g.drawText("0", lines[zeroValIndex] - text_width - ::textPadding, linePos + ::textPadding,
-                           text_width, text_height, juce::Justification::topRight);
+                g.drawText("0", lines[zeroValIndex] - text_width - ::textPadding,
+                           ((area.getBottom() - 1) - linePos) + ::textPadding, text_width, text_height,
+                           juce::Justification::topRight);
             }
         }
         else
@@ -4285,7 +4259,9 @@ namespace jaut
         
                 const juce::String text(values[i]);
                 const int text_width = g.getCurrentFont().getStringWidth(text);
-                const int text_y     = lines[i] - std::round(text_height / 2);
+                const int text_y     = std::clamp<int>(((area.getBottom() - 1) - lines[i]) - std::round(text_height / 2),
+                                                       area.getY(),
+                                                       area.getBottom() - (text_height + ::textPadding));
                 const int text_x     = std::clamp(linePos         -  text_width - ::textPadding,
                                                   area.getX()                   + ::textPadding,
                                                   area.getRight() - (text_width + ::textPadding));
