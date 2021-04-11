@@ -3849,9 +3849,9 @@ namespace jaut
             return;
         }
         
-        if (   options.autoScale            != parOptions.autoScale
-            || options.numIntermediateLines != parOptions.numIntermediateLines
-            || options.maxTileSize          != parOptions.maxTileSize || options.minTileSize != parOptions.minTileSize)
+        if (options.numIntermediateLines != parOptions.numIntermediateLines
+            || options.maxTileSize       != parOptions.maxTileSize
+            || options.minTileSize       != parOptions.minTileSize)
         {
             resized();
         }
@@ -4191,7 +4191,6 @@ namespace jaut
     
             for (int line_pos : lines)
             {
-                g.setColour(juce::Colours::red);
                 g.drawRect(line_bounds.translated(0, -line_pos));
             }
     
