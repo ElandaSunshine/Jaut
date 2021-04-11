@@ -36,7 +36,7 @@
     END_JUCE_MODULE_DECLARATION
     ===============================================================
  */
- 
+
 #pragma once
 
 // Dependencies
@@ -51,6 +51,15 @@ namespace jaut
     LookAndFeel_Jaut& getDefaultLaf();
 }
 
+/** Config: JAUT_GUI_COORDINATE_PANE_UNLIMITED_PRECISION
+    Allows the jaut::CoordinatePane to be used in unlimited precision instead of the 64-bit version.
+    Note that this will require you to include the boost.multiprecision library, which you can find over here:
+    https://www.boost.org/doc/libs/1_66_0/libs/math/doc/html/math_toolkit/high_precision/use_multiprecision.html
+ */
+#ifndef JAUT_GUI_COORDINATE_PANE_UNLIMITED_PRECISION
+#   define JAUT_GUI_COORDINATE_PANE_UNLIMITED_PRECISION 0
+#endif
+
 #if !DOXYGEN
 #   define JAUT_CREATE_LAF() \
            LookAndFeel_Jaut *lookAndFeel { nullptr }; \
@@ -62,7 +71,6 @@ namespace jaut
 #include <jaut_gui/mouse/draganddropcontaineradvanced.h>
 #include <jaut_gui/util/dadeformat.h>
 #include <jaut_gui/util/overlaytarget.h>
-//#include <jaut_gui/component/pseudocomponent.h>
 #include <jaut_gui/component/contentpane.h>
 #include <jaut_gui/component/splitpane.h>
 #include <jaut_gui/component/multipagepane.h>

@@ -3425,7 +3425,7 @@ namespace jaut
         for (int i = 1; i <= pane.options.numIntermediateLines; ++i)
         {
             const int qtick_pos = tick_start - (tick_quart * i);
-    
+            
             if (qtick_pos < 0)
             {
                 break;
@@ -3442,12 +3442,12 @@ namespace jaut
             for (int j = 1; j <= pane.options.numIntermediateLines; ++j)
             {
                 const int qtick_pos = tick_pos + (tick_quart * j);
-    
+                
                 if (qtick_pos >= ::getHOrV<Vertical>(area.getWidth(), area.getHeight()))
                 {
                     break;
                 }
-    
+                
                 lines_intermediate.emplace_back(qtick_pos);
             }
         }
@@ -3730,6 +3730,9 @@ namespace jaut
     
     void CoordinatePane::mouseMove(const juce::MouseEvent &event)
     {
+        DBG("X: " << getXValueAt(event.getPosition().getX()));
+        DBG("Y: " << getYValueAt(event.getPosition().getY()));
+        
         if (stripX.area.contains(event.getPosition()))
         {
             if (options.allowDragMove && attributes.test(Attributes::Dragging))
@@ -3748,73 +3751,82 @@ namespace jaut
     }
     
     //==================================================================================================================
-    double CoordinatePane::getXValueAt(int x)
+    double CoordinatePane::getXValueAt(int x) const
     {
-        /*
-        const juce::Rectangle<int> graph_area = stripX.area;
-        
-        if (x >= graph_area.getX() && x < graph_area.getRight() && !stripX.points.empty())
+        const juce::Rectangle<int> &area = stripX.area;
+    
+        if (!fit(x, area.getX(), area.getRight()))
         {
-            const double tick_size  = stripX.getTickSize(graph_area.getWidth());
-            const int    tick_start = stripX.getTickStart(graph_area.getX(), tick_size);
-            
-            if (x < tick_start)
-            {
-                const double max_perc_tail = tick_start - graph_area.getX();
-                const double perc_of_tail  = max_perc_tail - tick_start - x;
-                return stripX.tail / max_perc_tail * perc_of_tail;
-            }
-            
-            int tick_nearest = (x - tick_start) / tick_size;
-            const int next   = tick_start + tick_size * (tick_nearest + 1);
-            
-            if (next <= x && next != tick_nearest)
-            {
-                ++tick_nearest;
-            }
-            
-            const int    tick_pos   = tick_nearest * tick_size;
-            const double tick_value = stripX.points[tick_nearest];
-            
-            return tick_value + stripX.mult / tick_size * (x - tick_start - tick_pos);
-        }*/
+            return 0.0;
+        }
+    
+        x -= area.getX();
+    
+        const int    tick_strt = stripX.getTickStart();
+        const double tick_dist = stripX.tickDistance;
+        const double val       = stripX.mult;
+    
+        if (x < tick_strt)
+        {
+            return stripX.range.getStart() + ((val / tick_dist) * x);
+        }
+        else
+        {
+            const int pos = x - tick_strt;
         
-        return 0.0;
+            for (int i = 0; stripX.points.size(); ++i)
+            {
+                const int t_pos = static_cast<int>(tick_dist * i);
+                
+                if (t_pos >= pos)
+                {
+                    const double point = stripX.points[i];
+                    const double inter = static_cast<double>(val / tick_dist) * (pos - t_pos);
+                    return point + inter;
+                }
+            }
+        
+            return 0.0;
+        }
     }
     
-    double CoordinatePane::getYValueAt(int y)
+    double CoordinatePane::getYValueAt(int y) const
     {
-        /*
-        const juce::Rectangle<int> graph_area = stripX.area;
+        const juce::Rectangle<int> &area = stripY.area;
         
-        if (y >= graph_area.getY() && y < graph_area.getBottom() && !stripY.points.empty())
+        if (!fit(y, area.getY(), area.getBottom()))
         {
-            const double tick_size  = stripX.getTickSize(graph_area.getHeight());
-            const int    tick_start = stripX.getTickStart(graph_area.getBottom(), tick_size);
-            
-            if (y > tick_start)
-            {
-                const double max_perc_tail = tick_start - graph_area.getX();
-                const double perc_of_tail  = max_perc_tail - tick_start - x;
-                return stripX.tail / max_perc_tail * perc_of_tail;
-            }
-            
-            int tick_nearest = (x - tick_start) / tick_size;
-            const int next   = tick_start + tick_size * (tick_nearest + 1);
-            
-            if (next <= x && next != tick_nearest)
-            {
-                ++tick_nearest;
-            }
-            
-            const int    tick_pos   = tick_nearest * tick_size;
-            const double tick_value = stripX.points[tick_nearest];
-            
-            return tick_value + stripX.mult / tick_size * (x - tick_start - tick_pos);
+            return 0.0;
         }
-        */
         
-        return 0.0;
+        y = (area.getHeight() - 1) - (y - area.getY());
+        
+        const int    tick_strt = stripY.getTickStart();
+        const double tick_dist = stripY.tickDistance;
+        const double val       = stripY.mult;
+        
+        if (y < tick_strt)
+        {
+            return stripY.range.getStart() + ((val / tick_dist) * y);
+        }
+        else
+        {
+            const int pos = y - tick_strt;
+            
+            for (int i = 0; stripY.points.size(); ++i)
+            {
+                const int t_pos = static_cast<int>(tick_dist * i);
+                
+                if (t_pos >= pos)
+                {
+                    const double point = stripY.points[i];
+                    const double inter = static_cast<double>(val / tick_dist) * (pos - t_pos);
+                    return point + inter;
+                }
+            }
+            
+            return 0.0;
+        }
     }
     
     //==================================================================================================================
@@ -4184,6 +4196,7 @@ namespace jaut
     
             for (int line_pos : lines)
             {
+                g.setColour(juce::Colours::red);
                 g.drawRect(line_bounds.translated(0, -line_pos));
             }
     
@@ -4256,18 +4269,19 @@ namespace jaut
                 {
                     continue;
                 }
-        
+                
                 const juce::String text(values[i]);
                 const int text_width = g.getCurrentFont().getStringWidth(text);
-                const int text_y     = std::clamp<int>(((area.getBottom() - 1) - lines[i]) - std::round(text_height / 2),
+                const int text_y     = std::clamp<int>(((area.getBottom() - 1) - lines[i])
+                                                           - std::round(text_height / 2),
                                                        area.getY(),
                                                        area.getBottom() - (text_height + ::textPadding));
                 const int text_x     = std::clamp(linePos         -  text_width - ::textPadding,
                                                   area.getX()                   + ::textPadding,
                                                   area.getRight() - (text_width + ::textPadding));
-
+                
                 int align_flags = juce::Justification::verticallyCentred;
-    
+                
                 if (linePos >= area.getX())
                 {
                     g.setColour((linePos < area.getRight())
@@ -4280,7 +4294,7 @@ namespace jaut
                     g.setColour(coordinatePane.findColour(CoordinatePane::ColourValueOutOfRangeId));
                     align_flags = juce::Justification::left;
                 }
-        
+                
                 g.drawText(text, text_x, text_y, text_width, text_height, align_flags);
             }
         }

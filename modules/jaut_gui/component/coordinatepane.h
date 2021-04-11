@@ -80,13 +80,6 @@ namespace jaut
             int numIntermediateLines { 4 };
             
             /**
-             *  If this is true, the coordinate system will automatically scale the minimum and maximum tile
-             *  size depending on the reference value of minTileSize and maxTileSize.
-             *  If this is false, minTileSize and maxTileSize will be absolute for every size.
-             */
-            bool autoScale { false };
-            
-            /**
              *  Determines whether it should be allowed to move the canvas by holding the left mouse button down
              *  and dragging around.
              */
@@ -182,11 +175,29 @@ namespace jaut
         void resized() override;
         
         //==============================================================================================================
+        /**
+         *   Sets the label on the x-axis.
+         *   @param text The new text
+         */
         void setXLabel(juce::String text) { std::swap(txtLabelX, text); repaint(); }
+    
+        /**
+         *   Sets the label on the y-axis.
+         *   @param text The new text
+         */
         void setYLabel(juce::String text) { std::swap(txtLabelY, text); repaint(); }
         
         //==============================================================================================================
+        /**
+         *   Sets the range on the x-axis.
+         *   @param range The new range
+         */
         void setXRange(juce::Range<double> range);
+    
+        /**
+         *   Sets the range on the y-axis.
+         *   @param range The new range
+         */
         void setYRange(juce::Range<double> range);
         
         //==============================================================================================================
@@ -199,9 +210,26 @@ namespace jaut
         void mouseMove(const juce::MouseEvent&) override;
         
         //==============================================================================================================
-        double getXValueAt(int x);
-        double getYValueAt(int y);
+        /**
+         *  Gets a value on the X-axis from the x mouse coordinate.
+         *  Note that you need to subtract the position of the pane to its borders, since the pane will always start
+         *  with 0.
+         *
+         *  @param x The x coordinate on the plane
+         *  @return The x value if any, or 0 if outside of the coordinate area
+         */
+        double getXValueAt(int x) const;
     
+        /**
+         *  Gets a value on the Y-axis from the y mouse coordinate.
+         *  Note that you need to subtract the position of the pane to its borders, since the pane will always start
+         *  with 0.
+         *
+         *  @param y The y coordinate on the plane
+         *  @return The y value if any, or 0 if outside of the coordinate area
+         */
+        double getYValueAt(int y) const;
+        
         //==============================================================================================================
         /**
          *  Sets the style of this component.
@@ -237,9 +265,9 @@ namespace jaut
             std::vector<double> points;
             
             double tickDistance { 0.0 };
-            double tail { 0.0 };
-            double head { 0.0 };
-            double mult { 1.0 };
+            double tail         { 0.0 };
+            double head         { 0.0 };
+            double mult         { 1.0 };
             
             int centreIndex { -1 };
             int zeroLinePos {  0 };
