@@ -3667,8 +3667,6 @@ namespace jaut
         {
             repaint();
         }
-        
-        DBG("{" << stripY.range.getStart() << "; " << stripY.range.getEnd() << "}");
     }
     
     void CoordinatePane::mouseDrag(const juce::MouseEvent &event)
@@ -3730,9 +3728,6 @@ namespace jaut
     
     void CoordinatePane::mouseMove(const juce::MouseEvent &event)
     {
-        DBG("X: " << getXValueAt(event.getPosition().getX()));
-        DBG("Y: " << getYValueAt(event.getPosition().getY()));
-        
         if (stripX.area.contains(event.getPosition()))
         {
             if (options.allowDragMove && attributes.test(Attributes::Dragging))
