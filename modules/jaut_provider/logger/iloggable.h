@@ -12,23 +12,24 @@
 
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
-    
+
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
-    
-    @author Elanda
-    @file   config.cpp
-    @date   20, March 2020
-    
+
+    @author Elanda (elanda@elandasunshine.com)
+    @file   iloggable.h
+    @date   25, March 2022
+
     ===============================================================
  */
+ 
+#pragma once
 
-#include <jaut_provider/jaut_provider.h>
-
-#include <jaut_provider/config/config.cpp>
-#include <jaut_provider/config/configparser.cpp>
-#include <jaut_provider/lang/localisation.cpp>
-#include <jaut_provider/logger/logger.cpp>
-#include <jaut_provider/logger/logmanager.cpp>
-#include <jaut_provider/util/metadatautil.cpp>
-#include <jaut_provider/theme/thememanager.cpp>
+namespace jaut
+{
+    struct ILoggable
+    {
+        virtual ~ILoggable() = default;
+        virtual juce::String toLog() const = 0;
+    };
+}

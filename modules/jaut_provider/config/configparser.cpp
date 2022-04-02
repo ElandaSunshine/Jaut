@@ -115,15 +115,75 @@ juce::String prepareCommentJson(const juce::String &comment, const juce::String 
     return result;
 }
 
-juce::String getVarVal(const juce::var &value) noexcept
+juce::String getVarVal(const juce::var &value, const juce::String &indent) noexcept
 {
-    if (value.isVoid())
+    if (value.isVoid() | value.isString())
     {
-        return "\"\"";
+        return '"' + value.toString() + '"';
     }
     
-    return !value.isString() ? (value.isBool() ? (value ? "true" : "false") : value.toString())
-                             : "\"" + value.toString() + "\"";
+    if (value.isBool())
+    {
+        return (value ? "true" : "false");
+    }
+    
+    if (value.isArray())
+    {
+        const juce::Array<juce::var> &array = *value.getArray();
+        
+        if (array.isEmpty())
+        {
+            return "[]";
+        }
+        
+        juce::String       value_string = "[\n";
+        const juce::String indentation  = indent + "    ";
+        
+        for (auto it = array.begin(); it != array.end(); ++it)
+        {
+            const juce::var &val = *it;
+            value_string << indentation << getVarVal(val, indentation);
+        
+            if (it < (array.end() - 1))
+            {
+                value_string << ',';
+            }
+            
+            value_string << '\n';
+        }
+        
+        return value_string + indent + ']';
+    }
+    
+    if (value.isObject())
+    {
+        juce::DynamicObject &obj = *value.getDynamicObject();
+        
+        if (obj.getProperties().isEmpty())
+        {
+            return "{}";
+        }
+        
+        juce::String value_string = "{\n";
+        const juce::String indentation = indent + "    ";
+        
+        for (auto it = obj.getProperties().begin(); it != obj.getProperties().end(); ++it)
+        {
+            const auto &[name, val] = *it;
+            value_string << indentation << '"' << name << "\": " << getVarVal(val, indentation);
+    
+            if (it < (obj.getProperties().end() - 1))
+            {
+                value_string << ',';
+            }
+    
+            value_string << '\n';
+        }
+    
+        return value_string + indent + '}';
+    }
+    
+    return value.toString();
 }
 
 juce::String appendSubPropertiesXml(const jaut::Config::Property &parent, int level,
@@ -187,7 +247,7 @@ bool readPropertiesXml(const juce::XmlElement *const xml, jaut::Config::Property
     
     if (num_childs > 0)
     {
-        forEachXmlChildElementWithTagName(*xml, setting, tagSetting)
+        for(const auto &setting : xml->getChildWithTagNameIterator(tagSetting))
         {
             (void) readPropertiesXml(setting, parent.getProperty(setting->getStringAttribute("name")), tagSetting);
         }
@@ -228,7 +288,7 @@ juce::String appendSubPropertiesJson(const jaut::Config::Property &parent, int l
                 
                 if (!value.isVoid())
                 {
-                    output << "    " << indentation << "\"value\": " << getVarVal(value) << ",\n";
+                    output << "    " << indentation << "\"value\": " << getVarVal(value, "    " + indentation) << ",\n";
                 }
                 
                 output << appendSubPropertiesJson(property, level + 1) << "\n" << indentation << "}"
@@ -236,7 +296,7 @@ juce::String appendSubPropertiesJson(const jaut::Config::Property &parent, int l
             }
             else
             {
-                output << getVarVal(value) << getCommaOrNot(it, property.end());
+                output << getVarVal(value, indentation) << getCommaOrNot(it, parent.end());
             }
         }
     }
@@ -630,16 +690,16 @@ OperationResult XmlParser::parseConfig(const juce::File &configFile, PropertyTyp
         return ErrorCodes::InvalidConfig;
     }
     
-    forEachXmlChildElement(*config, xml_category)
+    for (const auto &xml_category : config->getChildIterator())
     {
         if (xml_category->hasTagName(tagCategory))
         {
             const juce::String category_name     = xml_category->getStringAttribute("name");
             const Config::Property prop_category = root.getProperty(category_name);
-            
+        
             if (prop_category.isValid())
             {
-                forEachXmlChildElementWithTagName(*xml_category, xml_setting, tagSetting)
+                for (const auto &xml_setting : xml_category->getChildWithTagNameIterator(tagSetting))
                 {
                     const juce::String setting_name = xml_setting->getStringAttribute("name");
                     (void) jaut::readPropertiesXml(xml_setting, *prop_category.getProperty(setting_name), tagSetting);
@@ -726,6 +786,7 @@ OperationResult JsonParser::parseConfig(const juce::File &configFile, PropertyTy
     if (!configFile.exists())
     {
         DBG("File not found: " << configFile.getFullPathName());
+        jassertfalse;
         return ErrorCodes::FileNotFound;
     }
 
@@ -738,6 +799,7 @@ OperationResult JsonParser::parseConfig(const juce::File &configFile, PropertyTy
         if (!obj_root)
         {
             DBG("Json file is invalid.");
+            jassertfalse;
             return ErrorCodes::InvalidConfig;
         }
 
@@ -749,7 +811,7 @@ OperationResult JsonParser::parseConfig(const juce::File &configFile, PropertyTy
             }
     
             juce::DynamicObject *const obj_category = json_category.getDynamicObject();
-            Config::Property property_category      = root.getProperty(category_name.toString());
+            Config::Property    property_category   = root.getProperty(category_name.toString());
 
             if (!property_category.hasValid() || !obj_category)
             {
@@ -792,6 +854,7 @@ OperationResult JsonParser::writeConfig(const juce::File &configFile, ConstPrope
     if (!configFile.exists())
     {
         DBG("File not found: " << configFile.getFullPathName());
+        jassertfalse;
         return ErrorCodes::FileNotFound;
     }
 

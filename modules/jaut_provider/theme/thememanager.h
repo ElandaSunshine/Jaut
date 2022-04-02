@@ -28,6 +28,7 @@
 namespace jaut
 {
 class ThemeManager;
+class IMetaReader;
 
 /**
  *  The ThemePointer is a wrapper around a IThemeDefinition object, sharing it along all other ThemePointer objects

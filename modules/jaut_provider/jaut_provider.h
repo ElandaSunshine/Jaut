@@ -39,25 +39,59 @@
 
 #pragma once
 
-// Dependencies
+#if __has_include(<fmt/core.h>)
+    #define JAUT_OPTLIB_FMT 1
+#else
+    #define JAUT_OPTLIB_FMT 0
+#endif
+
+#if __has_include(<yaml-cpp/yaml.h>)
+    #define JAUT_OPTLIB_YAML_CPP 1
+#else
+    #define JAUT_OPTLIB_YAML_CPP 0
+#endif
+
+// Dependencies ========================================================================================================
 #include <jaut_core/jaut_core.h>
 #include <juce_graphics/juce_graphics.h>
 
-// Interfaces
-#include <jaut_provider/interfaces/iconfigparser.h>
-#include <jaut_provider/interfaces/imetadata.h>
-#include <jaut_provider/interfaces/imetareader.h>
-#include <jaut_provider/interfaces/ithemedefinition.h>
+// Exception ===========================================================================================================
+#include <jaut_provider/exception/loggerexception.h>
 
-// Config
+// Config ==============================================================================================================
+#include <jaut_provider/config/iconfigparser.h>
 #include <jaut_provider/config/config.h>
 #include <jaut_provider/config/configparser.h>
 
-// Locale
+// Locale ==============================================================================================================
 #include <jaut_provider/lang/localisation.h>
 
-// Themes
+// Logger ==============================================================================================================
+#include <jaut_provider/logger/iloggable.h>
+#include <jaut_provider/logger/logmanager.h>
+#include <jaut_provider/logger/logger.h>
+#include <jaut_provider/logger/rotation/logrotationmanager.h>
+#include "jaut_provider/logger/rotation/handler/disabledrotationhandler.h"
+#include "jaut_provider/logger/rotation/handler/timedrotationhandler.h"
+#include "jaut_provider/logger/rotation/handler/dailyrotationhandler.h"
+#include "jaut_provider/logger/rotation/handler/sizelimitrotationhandler.h"
+#include <jaut_provider/logger/sink/ilogsink.h>
+#include <jaut_provider/logger/sink/sinkmixed.h>
+#include <jaut_provider/logger/sink/detail/sinkcimpl.h>
+#include <jaut_provider/logger/sink/sinkc.h>
+#include <jaut_provider/logger/sink/detail/sinkfileimpl.h>
+#include <jaut_provider/logger/sink/sinkfile.h>
+
+#if JAUT_OPTLIB_FMT
+    #include <jaut_provider/logger/sink/detail/sinkfmtimpl.h>
+    #include <jaut_provider/logger/sink/sinkfmt.h>
+#endif
+
+// Themes ==============================================================================================================
+#include <jaut_provider/theme/ithemedefinition.h>
 #include <jaut_provider/theme/thememanager.h>
 
-// Util
+// Util ================================================================================================================
+#include <jaut_provider/util/imetadata.h>
+#include <jaut_provider/util/imetareader.h>
 #include <jaut_provider/util/metadatautil.h>

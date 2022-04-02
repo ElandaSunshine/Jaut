@@ -25,8 +25,8 @@
 
 #pragma once
 
-#if __has_include(<yaml-cpp/yaml.h>)
-#   include <yaml-cpp/yaml.h>
+#if JAUT_OPTLIB_YAML_CPP
+    #include <yaml-cpp/yaml.h>
 #endif
 
 namespace jaut
