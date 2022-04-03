@@ -43,6 +43,7 @@ namespace jaut::detail
         {
             static constexpr std::array colours {
                     fmt::color::white,
+                    fmt::color::white,
                     fmt::color::orange,
                     fmt::color::indian_red,
                     fmt::color::lime_green,
@@ -50,16 +51,8 @@ namespace jaut::detail
             };
             
             const typename CriticalSection::ScopedLockType lock(criticalSection);
-            
-            if (level != Logger::None)
-            {
-                fmt::print(stream, fmt::fg(colours[static_cast<std::size_t>(getBitPosition(level))]),
-                           message.toStdString() + '\n');
-            }
-            else
-            {
-                fmt::print(stream, message.toStdString() + '\n');
-            }
+            fmt::print(stream, fmt::fg(colours[static_cast<std::size_t>(getBitPosition(level))]),
+                       message.toStdString() + '\n');
         }
         
         void flush() final

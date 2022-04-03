@@ -43,22 +43,22 @@ namespace jaut
         enum LogLevel
         {
             /** For unformatted messages. */
-            None = 0,
+            None = 1,
             
             /** For informative messages. */
-            Info = 1,
+            Info = 2,
             
             /** For warning messages that should prepare the user for possible conflicts in future. */
-            Warn = 2,
+            Warn = 4,
             
             /** For problems that arise during runtime, but are still recoverable and usually don't force a shutdown. */
-            Error = 4,
+            Error = 8,
             
             /** For developer messages that are only output in debug mode. */
-            Debug = 8,
+            Debug = 16,
             
             /** For problems that arise during runtime that usually end up in shutting down the program. */
-            Fatal = 16
+            Fatal = 32
         };
         
         /**
@@ -111,7 +111,7 @@ namespace jaut
         struct Options
         {
             /** A bit mask of log levels that should stand out by adding a new line before and after the message. */
-            unsigned isolatedLevels {};
+            std::uint32_t isolatedLevels {};
             
             /** The default log level to be used when trying to log with a method that does not take a log level. */
             LogLevel defaultLogLevel { LogLevel::Info };

@@ -77,4 +77,21 @@ namespace jaut
     private:
         juce::String message;
     };
+    
+    class LogIOException final : public std::exception
+    {
+    public:
+        explicit LogIOException(juce::String error)
+        : message(std::move(error))
+        {}
+    
+        //==============================================================================================================
+        const char* what() const noexcept override
+        {
+            return message.toRawUTF8();
+        }
+
+    private:
+        juce::String message;
+    };
 }

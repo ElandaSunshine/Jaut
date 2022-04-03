@@ -479,7 +479,13 @@ public:
      *  @return The options object
      */
     const Options& getOptions() const noexcept;
-
+    
+    /**
+     *  Gets the exact path to the config file.
+     *  @return The config file
+     */
+    juce::File getConfigFile() const noexcept;
+    
     //==================================================================================================================
     /**
      *  Adds a property to the config if it doesn't exist already.

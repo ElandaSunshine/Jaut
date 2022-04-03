@@ -169,7 +169,7 @@ namespace
     
     constexpr int getBitPosition(jaut::Logger::LogLevel level)
     {
-        return (level == jaut::Logger::None ? 0 : (static_cast<int>(std::log2(static_cast<double>(level))) + 1));
+        return static_cast<int>(std::log2(static_cast<double>(level)));
     }
     
     std::string_view getLogLevelString(jaut::Logger::LogLevel level)

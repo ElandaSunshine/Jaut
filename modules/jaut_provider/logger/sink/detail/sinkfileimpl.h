@@ -52,7 +52,7 @@ namespace jaut::detail
             /** If log rotation is enabled, this determines whether old logs should be compressed with gzip. */
             bool compressLogFiles { true };
         };
-    
+        
         //==============================================================================================================
         using RotationManager = LogRotationManager<RotationHandler>;
         
@@ -124,41 +124,50 @@ namespace jaut::detail
         juce::String getLastError() { return std::exchange(lastError, ""); }
         
         //==============================================================================================================
-        bool setLogFile(const juce::File &newLogFile)
+        void setLogFile(const juce::File &newLogFile)
         {
             using Behaviour = typename RotationManager::FileManagementBehaviour;
             const typename CriticalSection::ScopedLockType lock(criticalSection);
             
-            if (!logFile.exists())
+            if (!newLogFile.exists())
             {
-                (void) logFile.create();
+                const juce::Result result = newLogFile.create();
+                
+                if (result.failed())
+                {
+                    throw LogIOException(result.getErrorMessage());
+                }
             }
             
             try
             {
-                stream.open(logFile.getFullPathName().toStdString(), std::ios::out | std::ios::app);
-                logFile = newLogFile;
-                rotationManager = std::make_unique<RotationManager>(logFile, options.maxLogFiles,
-                                                                    static_cast<Behaviour>(!options.compressLogFiles));
-                
-                if (!buffer.isEmpty())
+                if (stream.is_open())
                 {
-                    for (const auto &message : buffer)
-                    {
-                        stream << message << '\n';
-                    }
-                    
-                    stream.flush();
-                    buffer.clear();
+                    stream.close();
                 }
+                
+                stream.open(newLogFile.getFullPathName().toStdString(), std::ios::out | std::ios::app);
             }
             catch (const std::exception &ex)
             {
-                lastError = ex.what();
-                return false;
+                throw LogIOException(ex.what());
             }
             
-            return true;
+            logFile         = newLogFile;
+            rotationManager = std::make_unique<RotationManager>(newLogFile, options.maxLogFiles,
+                                                                static_cast<Behaviour>(!options.compressLogFiles));
+            
+            if (!buffer.isEmpty())
+            {
+                for (const auto &message : buffer)
+                {
+                    DBG(message);
+                    stream << message << '\n';
+                }
+                
+                stream.flush();
+                buffer.clear();
+            }
         }
         
     private:

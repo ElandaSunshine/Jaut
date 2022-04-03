@@ -912,6 +912,11 @@ const Config::Options &Config::getOptions() const noexcept
     return options;
 }
 
+juce::File Config::getConfigFile() const noexcept
+{
+    return fullPath;
+}
+
 //======================================================================================================================
 Config::Property Config::createProperty(const juce::String &name, const juce::var &defaultValue,
                                         const juce::String &category) noexcept
