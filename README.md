@@ -1,4 +1,4 @@
-![Jaut Banner](https://i.imgur.com/SOFEwFV.png)
+![Jaut Banner](https://i.imgur.com/jre9B3S.png)
 
 # JAUT: JUCE Augmented Utility Toolbox
 JUCE, a wonderful framework, a vast collection of amazing tools.  
