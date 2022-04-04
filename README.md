@@ -1,3 +1,5 @@
+![Jaut Banner](https://i.imgur.com/SOFEwFV.png)
+
 # JAUT: JUCE Augmented Utility Toolbox
 JUCE, a wonderful framework, a vast collection of amazing tools.  
 It's main focus has always been on audio, but lately evolved into much more than just for sound engineers; everyone can do almost everything with it and it constantly grows bigger and bigger.
