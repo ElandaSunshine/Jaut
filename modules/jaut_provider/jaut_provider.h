@@ -1,5 +1,14 @@
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +22,7 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-    Copyright (c) 2019 ElandaSunshine
+    Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
     @author Elanda
@@ -31,7 +40,7 @@
     website:            https://github.com/elandasunshine/jaut
     license:            AGPL v3
     minimumCppStandard: 17
-    dependencies:       jaut_core juce_graphics
+    dependencies:       jaut_core juce_events juce_graphics
 
     END_JUCE_MODULE_DECLARATION
     ===============================================================
@@ -39,34 +48,22 @@
 
 #pragma once
 
-#if __has_include(<fmt/core.h>)
-    #define JAUT_OPTLIB_FMT 1
-#else
-    #define JAUT_OPTLIB_FMT 0
-#endif
+#include <jaut_provider/jaut_provider_define.h>
 
-#if __has_include(<yaml-cpp/yaml.h>)
-    #define JAUT_OPTLIB_YAML_CPP 1
-#else
-    #define JAUT_OPTLIB_YAML_CPP 0
-#endif
-
-// Dependencies ========================================================================================================
+/*
 #include <jaut_core/jaut_core.h>
+#include <juce_events/juce_events.h>
 #include <juce_graphics/juce_graphics.h>
 
-// Exception ===========================================================================================================
 #include <jaut_provider/exception/loggerexception.h>
-
-// Config ==============================================================================================================
-#include <jaut_provider/config/iconfigparser.h>
-#include <jaut_provider/config/config.h>
-#include <jaut_provider/config/configparser.h>
-
-// Locale ==============================================================================================================
+#include <jaut_provider/config/jaut_IConfigParser.h>
+#include <jaut_provider/config/jaut_Config.h>
+#include <jaut_provider/config/jaut_ConfigProperty.h>
+#include <jaut_provider/config/jaut_ConfigException.h>
+#include <jaut_provider/config/parser/jaut_XmlParser.h>
+#include <jaut_provider/config/parser/jaut_JsonParser.h>
+#include <jaut_provider/config/parser/jaut_YamlParser.h>
 #include <jaut_provider/lang/localisation.h>
-
-// Logger ==============================================================================================================
 #include <jaut_provider/logger/iloggable.h>
 #include <jaut_provider/logger/logmanager.h>
 #include <jaut_provider/logger/logger.h>
@@ -87,11 +84,9 @@
     #include <jaut_provider/logger/sink/sinkfmt.h>
 #endif
 
-// Themes ==============================================================================================================
 #include <jaut_provider/theme/ithemedefinition.h>
 #include <jaut_provider/theme/thememanager.h>
-
-// Util ================================================================================================================
 #include <jaut_provider/util/imetadata.h>
 #include <jaut_provider/util/imetareader.h>
 #include <jaut_provider/util/metadatautil.h>
+*/

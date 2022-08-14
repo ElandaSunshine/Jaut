@@ -1,5 +1,14 @@
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +22,7 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-    Copyright (c) 2019 ElandaSunshine
+    Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
     @author Elanda (elanda@elandasunshine.xyz)
@@ -31,7 +40,7 @@
     website:            https://github.com/elandasunshine/jaut
     license:            AGPL v3
     minimumCppStandard: 17
-    dependencies:       juce_core juce_events
+    dependencies:       juce_events
 
     END_JUCE_MODULE_DECLARATION
     ===============================================================
@@ -39,74 +48,14 @@
 
 #pragma once
 
-// Dependencies
 #include <juce_events/juce_events.h>
 
-#include <cfenv>
-#include <variant>
-//#include <future>
+#include <jaut_core/define/jaut_AssertDef.h>
+#include <jaut_core/define/jaut_Define.h>
+#include <jaut_core/define/jaut_DefUtils.h>
 
-// Options
-//======================================================================================================================
-//======================================================================================================================
-//======================================================================================================================
-/** Config: JAUT_STRICT_MODE
-    If strict mode is enabled, the jaut library will assert a lot more often to specific scenarios where
-    this is advisable.
- */
-#ifndef JAUT_STRICT_MODE
-#   define JAUT_STRICT_MODE 1
-#endif
-
-#if JAUT_STRICT_MODE
-  /** Config: JAUT_STRICT_TEMPLATES
-      If this is enabled, certain jaut classes needing objects from interfaces will make sure custom
-      implementations will need to inherit from these interfaces to compile.
-      Only enabled if JAUT_STRICT_MODE is enabled.
-   */
-#   ifndef JAUT_STRICT_TEMPLATES
-#       define JAUT_STRICT_TEMPLATES 1
-#   endif
-
-  /** Config: JAUT_STRICT_THREAD_EXCLUSION
-      If this is enabled, the library will assert if message-thread code was not executed from
-      the message-thread.
-      Only enabled if JAUT_STRICT_MODE is enabled.
-   */
-#   ifndef JAUT_STRICT_THREAD_EXCLUSION
-#       define JAUT_STRICT_THREAD_EXCLUSION 1
-#   endif
-#endif
-
-/** Config: JAUT_PREFER_JUCE_LISTENERS_OVER_EVENTS
-    If this is enabled, all jaut classes will use JUCE listeners instead of jaut Events.
- */
-#ifndef JAUT_PREFER_JUCE_LISTENERS_OVER_EVENTS
-#   define JAUT_PREFER_JUCE_LISTENERS_OVER_EVENTS 0
-#endif
-
-/** Config: JAUT_PROXY_OBJECT_OVERLOAD_ADDRESS_OF_OPERATOR
-    If this is enabled, the jaut::ObjectProxy class will overload the address-of operator that when you acquire
-    the address of the proxy you will get the address of the underlying object instead.
- */
-#ifndef JAUT_PROXY_OBJECT_OVERLOAD_ADDRESS_OF_OPERATOR
-#   define JAUT_PROXY_OBJECT_OVERLOAD_ADDRESS_OF_OPERATOR 0
-#endif
-
-// Module headers
-//======================================================================================================================
-//======================================================================================================================
-//======================================================================================================================
-// Library defines
-#include <jaut_core/define/assertdef.h>
-#include <jaut_core/define/jautdef.h>
-#include <jaut_core/define/threadex.h>
-#include <jaut_core/define/utils.h>
-
-//======================================================================================================================
-// Preprocessor general
-#include <jaut_core/preprocessor/upp_assert.h>
-#include <jaut_core/preprocessor/upp_misc.h>
+#include <jaut_core/preprocessor/jaut_UppAssert.h>
+#include <jaut_core/preprocessor/jaut_UppMisc.h>
 
 // Define
 #if !DOXYGEN
@@ -115,42 +64,19 @@
 #   include <jaut_core/preprocessor/define/conditional.def>
 #endif
 
-// Arguments
-#include <jaut_core/preprocessor/arguments/upp_args.h>
-
-// Collection
-// #include <jaut_core/preprocessor/collection/upp_group.h> // experimental
-
-// Conditional
-#include <jaut_core/preprocessor/conditional/upp_cond.h>
-#include <jaut_core/preprocessor/conditional/upp_if.h>
-
-//======================================================================================================================
-// Interfaces
-#include <jaut_core/interfaces/iexpandable.h>
-#include <jaut_core/interfaces/iexpansionunit.h>
-
-//======================================================================================================================
-// Misc utils
-#include <jaut_core/util/exception.h>
-#include <jaut_core/util/mathutil.h>
-#include <jaut_core/util/typetraits.h>
-#include <jaut_core/util/evaluator.h>
-#include <jaut_core/util/typecontainer.h>
-#include <jaut_core/util/operationresult.h>
-#include <jaut_core/util/objectproxy.h>
-#include <jaut_core/util/version.h>
-
-//======================================================================================================================
-// Signaling handlers
-#include <jaut_core/signal/event/event.h>
-
-//======================================================================================================================
-// Math utils
-#include <jaut_core/math/numeric.h>
-
-//======================================================================================================================
-// Text utils
-#include <jaut_core/text/alphabetiterator.h>
-#include <jaut_core/text/expansion/expandables.h>
-#include <jaut_core/text/expansion/expansionunit.h>
+#include <jaut_core/preprocessor/arguments/jaut_UppArgs.h>
+// #include <jaut_core/preprocessor/collection/jaut_UppGroup.h> // slows everything down heavily (like ur mom :p)
+#include <jaut_core/preprocessor/conditional/jaut_UppConditional.h>
+#include <jaut_core/preprocessor/conditional/jaut_UppIf.h>
+#include <jaut_core/util/jaut_CommonUtils.h>
+#include <jaut_core/util/jaut_MathUtil.h>
+#include <jaut_core/util/jaut_TypeTraits.h>
+#include <jaut_core/util/jaut_TypeEvaluator.h>
+#include <jaut_core/util/jaut_TypeContainer.h>
+#include <jaut_core/util/jaut_OperationResult.h>
+#include <jaut_core/util/jaut_Version.h>
+#include <jaut_core/util/jaut_VarUtil.h>
+#include <jaut_core/signal/event/jaut_Event.h>
+#include <jaut_core/math/jaut_SafeInteger.h>
+#include <jaut_core/math/jaut_SafeFloat.h>
+#include <jaut_core/math/jaut_Numeric.h>

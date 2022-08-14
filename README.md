@@ -13,16 +13,19 @@ All we try to accomplish is a central collection of useful stuff.
 # Table of Contents
 <details><summary>Click to expand</summary>
 
-1. [Motivation](#motivation)
-2. [Installation](#installation)
-    * [Dependencies](#dependencies)
-        - [JUCE](#juce)
-        - [Optionals](#optionals)
-    * [Setup](#setup)
-        - [CMake](#cmake)
-        - [Projucer](#projucer)
-3. [Usage](#usage)
-4. [License](#license)
+- [JAUT: JUCE Augmented Utility Toolbox](#jaut-juce-augmented-utility-toolbox)
+- [Table of Contents](#table-of-contents)
+- [Motivation](#motivation)
+- [Installation](#installation)
+  - [Dependencies](#dependencies)
+    - [JUCE](#juce)
+    - [Optionals](#optionals)
+  - [Setup](#setup)
+    - [CMake](#cmake)
+    - [Projucer](#projucer)
+- [Usage](#usage)
+- [License](#license)
+- [Contact](#contact)
 </details>
 
 # Motivation
@@ -85,3 +88,7 @@ Thankfully, this repository also provides a wiki and a reference which sheds som
 
 # License
 You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.
+
+# Contact
+If you need more information or would like to contact us, you can find us on our Discord:  
+![ElandaSunshine Community](https://discordapp.com/api/guilds/781531690383179826/widget.png?style=banner2)

@@ -34,3 +34,9 @@
 # UNTRACKED FILES
 bin/
 JuceLibraryCode/
+.idea
+cmake-build*
+.vscode
+.cache
+build
+*.code-workspace

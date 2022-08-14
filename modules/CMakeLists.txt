@@ -6,4 +6,5 @@ juce_add_modules(
     jaut_gui
     jaut_message
     jaut_provider
-    jaut_util)
+    jaut_util
+    jaut_dummy)

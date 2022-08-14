@@ -1,5 +1,14 @@
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,22 +22,17 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-    Copyright (c) 2019 ElandaSunshine
+    Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
     @author Elanda (elanda@elandasunshine.xyz)
-    @file   jaut_message.h
+    @file   jaut_core.h
     @date   13, March 2020
 
     ===============================================================
  */
 
-#include <jaut_core/jaut_core.h>
-
-#include <jaut_core/text/alphabetiterator.cpp>
-#include <jaut_core/text/expansion/expandables.cpp>
-#include <jaut_core/text/expansion/expansionunit.cpp>
-
-#if JAUT_STRICT_THREAD_EXCLUSION && JUCE_DEBUG && !DOXYGEN
-namespace jaut::internal { bool ThreadexIsEnabled = true; }
-#endif
+#include <jaut_core/math/jaut_SafeInteger.cpp>
+#include <jaut_core/util/jaut_OperationResult.cpp>
+#include <jaut_core/util/jaut_Version.cpp>
+#include <jaut_core/util/jaut_VarUtil.cpp>

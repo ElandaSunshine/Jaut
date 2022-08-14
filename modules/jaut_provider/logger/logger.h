@@ -1,5 +1,14 @@
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +22,7 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-    Copyright (c) 2019 ElandaSunshine
+    Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
     @author Elanda (elanda@elandasunshine.com)
@@ -57,7 +66,7 @@ namespace jaut
             /** For developer messages that are only output in debug mode. */
             Debug = 16,
             
-            /** For problems that arise during runtime that usually end up in shutting down the program. */
+            /** For problems that arise during runtime that usually end up in shutting down the process. */
             Fatal = 32
         };
         

@@ -1,7 +1,14 @@
-#include <utility>
-
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -15,7 +22,7 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
     
-    Copyright (c) 2019 ElandaSunshine
+    Copyright (c) 2022 ElandaSunshine
     ===============================================================
     
     @author Elanda
@@ -53,7 +60,7 @@ bool isDefaultValidAndEquals(const ThemeManager *themeManager, const juce::Strin
 {
     const ThemePointer &theme = themeManager->getOptions().defaultTheme;
     return theme.isValid() &&
-           (theme.getId() == stringToCompare || toIdString(theme->getThemeMeta()->getName()) == stringToCompare);
+           (theme.getId() == stringToCompare || toIdString(theme->getThemeMeta()->getId()) == stringToCompare);
 }
 
 inline juce::NamedValueSet peakThemeMeta(const juce::File &metaFile)

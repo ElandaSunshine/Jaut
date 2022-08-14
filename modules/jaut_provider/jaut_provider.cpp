@@ -1,5 +1,14 @@
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,7 +22,7 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
     
-    Copyright (c) 2019 ElandaSunshine
+    Copyright (c) 2022 ElandaSunshine
     ===============================================================
     
     @author Elanda
@@ -25,8 +34,8 @@
 
 #include <jaut_provider/jaut_provider.h>
 
-#include <jaut_provider/config/config.cpp>
-#include <jaut_provider/config/configparser.cpp>
+#include <jaut_provider/config/jaut_Config.cpp>
+#include <jaut_provider/config/jaut_ConfigParser.cpp>
 #include <jaut_provider/lang/localisation.cpp>
 #include <jaut_provider/logger/logger.cpp>
 #include <jaut_provider/logger/logmanager.cpp>
