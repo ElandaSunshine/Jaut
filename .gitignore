@@ -38,3 +38,6 @@ JuceLibraryCode/
 .idea
 cmake-build*
 .cache
+build
+.vscode
+docs/html
