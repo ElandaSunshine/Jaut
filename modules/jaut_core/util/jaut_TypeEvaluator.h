@@ -38,6 +38,7 @@
 #include <jaut_core/define/jaut_DefUtils.h>
 
 #include <cstddef>
+#include <type_traits>
 
 namespace jaut
 {
