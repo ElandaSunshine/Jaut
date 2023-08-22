@@ -35,16 +35,13 @@ if (JAUT_CLONE_JUCE)
     CPMAddPackage("gh:juce-framework/JUCE#develop")
 endif()
 
-add_subdirectory(tools)
-
-if (NOT JAUT_BUILD_JAUTGEN)
-    if (JAUT_BUILD_TESTS)
-        add_subdirectory(test)
-    endif()
-    
-    if (JAUT_BUILD_EXAMPLES)
-        add_subdirectory(examples)
-    endif()
-    
-    add_subdirectory(modules)
+if (JAUT_BUILD_TESTS)
+    include(CTest)
+    add_subdirectory(test)
 endif()
+    
+if (JAUT_BUILD_EXAMPLES)
+    add_subdirectory(examples)
+endif()
+    
+add_subdirectory(modules)

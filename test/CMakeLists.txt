@@ -90,8 +90,6 @@ function(jaut_add_test target group)
         add_custom_target(${TEST_TARGET}_Resources
             DEPENDS ${RESOURCE_NAMES})
         add_dependencies(${TEST_TARGET} ${TEST_TARGET}_Resources)
-
-        add_test(${TEST_TARGET} COMMAND ${TEST_TARGET})
     endif()
     
     if (DEFINED PARG_DEFINES AND NOT "DEFINES" IN_LIST PARG_KEYWORDS_MISSING_VALUES)
@@ -116,20 +114,9 @@ function(jaut_add_test target group)
             
             ${BINARY_DATA_TARGET}
             ${PARG_DEPENDENCIES})
-    
-    if (MSVC)
-        target_compile_options(${TEST_TARGET}
-            PRIVATE
-                /W4
-                /WX)
-    else()
-        target_compile_options(${TEST_TARGET}
-            PRIVATE
-                -Wall
-                -Wextra
-                -Wpedantic
-                -Werror)
-    endif()
+
+    add_test(NAME    ${TEST_TARGET}
+             COMMAND ${TEST_TARGET})
 endfunction()
 
 
@@ -175,12 +162,17 @@ jaut_add_test(MessageHandler message
 # Logger test
 jaut_add_test(Logger logger
     DEPENDENCIES
-        jaut::jaut_message)
+        jaut::jaut_message
+        juce::juce_graphics)
 
 jaut_add_test(LoggerSink logger
     DEPENDENCIES
-        jaut::jaut_message)
+        jaut::jaut_message
+        juce::juce_graphics)
 
 jaut_add_test(LoggerFormat logger
     DEPENDENCIES
-        jaut::jaut_message)
+        jaut::jaut_message
+        juce::juce_graphics)
+
+

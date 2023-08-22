@@ -275,7 +275,7 @@ TEST_F(EventFixture, TestAssocHandlers)
     EXPECT_EQ(memberHandlerValue,  42069666);
     EXPECT_EQ(functorHandlerValue, 42069666);
     
-    // try two through policies
+    // try to unsubscribe
     handlerMode = HandlerMode::Free;
     TestEventST -= free_handler;
     EXPECT_FALSE(freeHandlerAdded);
@@ -284,13 +284,12 @@ TEST_F(EventFixture, TestAssocHandlers)
     TestEventST -= closure_handler;
     EXPECT_FALSE(closureHandlerAdded);
     
-    // and two through their id
     handlerMode = HandlerMode::Member;
-    TestEventST.unsubscribeFrom(member_handler.getId());
+    TestEventST -= member_handler;
     EXPECT_FALSE(memberHandlerAdded);
     
     handlerMode = HandlerMode::Functor;
-    TestEventST.unsubscribeFrom(functor_handler.getId());
+    TestEventST -= functor_handler;
     EXPECT_FALSE(functorHandlerAdded);
 }
 //======================================================================================================================

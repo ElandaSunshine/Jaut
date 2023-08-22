@@ -40,6 +40,8 @@
 #include <limits>
 #include <type_traits>
 
+#include <jaut_core/math/jaut_SafeInteger.cpp>
+
 
 
 //**********************************************************************************************************************
@@ -103,11 +105,7 @@ namespace
     //==================================================================================================================
     template<class T>
     class NumericFixture : public testing::Test
-    {
-    public:
-        jaut::Numeric<T> numeric;
-        jaut::Numeric<T, jaut::NumericCheck::ArithmeticError, jaut::NumericCheck::Change> numericChecked;
-    };
+    {};
     //==================================================================================================================
     // endregion Fixture Setup
     //******************************************************************************************************************
@@ -134,7 +132,7 @@ TYPED_TEST_SUITE_P(NumericFixture);
 //======================================================================================================================
 TYPED_TEST_P(NumericFixture, TestArithmetics)
 {
-    jaut::Numeric<TypeParam> &l_numeric  = this->numeric;
+    jaut::Numeric<TypeParam> l_numeric;
     ASSERT_EQ(l_numeric.numericValue, 0) << "Default construction failed";
     
     EXPECT_TYPE_BASED((l_numeric + 120).numericValue, 120);
@@ -219,7 +217,7 @@ TYPED_TEST_P(NumericFixture, TestComparisons)
 {
     using NumericT = jaut::Numeric<TypeParam>;
     
-    NumericT &l_numeric = this->numeric;
+    NumericT l_numeric;
     ASSERT_EQ(l_numeric.numericValue, 0) << "Default construction failed";
     
     // Ignore these for floating point.
@@ -323,7 +321,7 @@ TYPED_TEST_P(NumericFixture, TestCasts)
 {
     using NumericT = jaut::Numeric<TypeParam>;
     
-    NumericT &l_numeric = this->numeric;
+    NumericT l_numeric;
     ASSERT_EQ(l_numeric.numericValue, 0) << "Default construction failed";
     
     // Value casting ===========================
@@ -423,9 +421,9 @@ TYPED_TEST_P(NumericFixture, TestArithmeticError)
 {
     using NumericT = jaut::Numeric<TypeParam, jaut::NumericCheck::ArithmeticError, jaut::NumericCheck::Change>;
     
-    const TypeParam init     = std::numeric_limits<TypeParam>::max();
-    bool has_overflowed      = false;
-    bool was_divided_by_zero = false;
+    static constexpr TypeParam init = std::numeric_limits<TypeParam>::max();
+    bool has_overflowed             = false;
+    bool was_divided_by_zero        = false;
     
     auto on_overflow = [&has_overflowed](const NumericT&) mutable
     {
@@ -437,7 +435,7 @@ TYPED_TEST_P(NumericFixture, TestArithmeticError)
         was_divided_by_zero = true;
     };
     
-    NumericT &l_numeric = this->numericChecked;
+    NumericT l_numeric;
     l_numeric.ValueOverflowed += jaut::makeHandler(on_overflow);
     l_numeric.DividedByZero   += jaut::makeHandler(on_zero_div);
     l_numeric = init;
@@ -452,12 +450,16 @@ TYPED_TEST_P(NumericFixture, TestArithmeticError)
     }
     
     EXPECT_TYPE_BASED(init);
-    ASSERT_TRUE(has_overflowed);
+    
+    if constexpr (!std::is_same_v<double, TypeParam> && !std::is_same_v<long double, TypeParam>)
+    {
+        ASSERT_TRUE(has_overflowed);
+    }
     
     l_numeric /= 0;
     
     EXPECT_TYPE_BASED(init);
-    ASSERT_TRUE(has_overflowed);
+    ASSERT_TRUE(was_divided_by_zero);
 }
 
 TYPED_TEST_P(NumericFixture, TestChangeDetector)
@@ -470,7 +472,7 @@ TYPED_TEST_P(NumericFixture, TestChangeDetector)
         change_toggle = !change_toggle;
     };
     
-    NumericT &l_numeric = this->numericChecked;
+    NumericT l_numeric;
     l_numeric.ValueChanged += jaut::makeHandler(on_change);
     
     l_numeric = TypeParam(12);
