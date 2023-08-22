@@ -57,7 +57,7 @@ jobs:
     - name: Setup for Linux only
       if: matrix.os == 'ubuntu-latest'
       run: >
-        sudo apt update
+        sudo apt update &&
         sudo apt install libasound2-dev libjack-jackd2-dev
             ladspa-sdk
             libcurl4-openssl-dev 
