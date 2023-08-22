@@ -46,7 +46,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-
+    
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
@@ -54,6 +54,18 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
+    - name: Setup for Linux only
+      if: matrix.os == 'ubuntu-latest'
+      run: >
+        sudo apt update
+        sudo apt install libasound2-dev libjack-jackd2-dev
+            ladspa-sdk
+            libcurl4-openssl-dev 
+            libfreetype6-dev
+            libx11-dev libxcomposite-dev libxcursor-dev libxcursor-dev libxext-dev libxinerama-dev libxrandr-dev libxrender-dev
+            libwebkit2gtk-4.0-dev
+            libglu1-mesa-dev mesa-common-dev
+    
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
