@@ -53,22 +53,32 @@ Since this repository is a juce module-bundle, it is just natural to fetch JUCE 
 Learn more here:  
 https://github.com/juce-framework/juce
 
+### Integrated
+Some of the dependencies that this module bundle requires are directly embedded into the modules.
+The following dependencies are hardwired into the codebase:
+- **FMT**  
+  Homepage: https://github.com/fmtlib/fmt  
+  Path: modules/jaut_logger/detail  
+  Provides the logging module with additional and optional formatting capabilities.
+
+- **MS SafeInt**  
+  Homepage: https://github.com/dcleblanc/SafeInt  
+  Path: modules/jaut_core/detail/  
+  Provides the capability of dealing with integer overflows, mainly used in the core module by the `jaut::Number` class.
+
 ### Optionals
-There is also a few optonal libraries that are used to enable a subset of additional functionality.
+There is also a few optional libraries that are used to enable a subset of additional functionality.
 These are not necessary but needed when making use of these tools.
 
-- `jaut::YamlParser` depends on:   https://github.com/jbeder/yaml-cpp  
-  Provides the JAUT configuration tools with a yaml parser
-
-- `jaut::LogSinkFmt...` classes depend on:   https://github.com/fmtlib/fmt  
-  Provides the JAUT logger classes with formatting capabilities
+- **yaml-cpp**  
+  Homepage: https://github.com/jbeder/yaml-cpp  
+  Depends: `jaut::YamlParser`  
+  Provides the JAUT configuration tools with a yaml parser.
 
 ## Setup
 ### CMake
-It couldn't be any easier. Thanks to the JUCE module system, all you need to do is adding this bundle as a subdirectory. (after adding JUCE)
-
-You can then selectively link the module, you want to use, to your target.  
-
+It couldn't be any easier. Thanks to the JUCE module system, all you need to do is adding this bundle as a subdirectory. (after adding JUCE)  
+You can then selectively link the module, you want to use, to your target:
 ```cmake
 add_subdirectory(path/to/jaut)
 target_link_libraries(YourTarget
@@ -78,21 +88,24 @@ target_link_libraries(YourTarget
         # ect.
         )
 ```
-That's it!  
-You can now continue with your work. :)
 
 ### Projucer
-Add the module of interest to the module section pf the Projucer. (the little '+' in the corner of the module list)
+Add the module of interest to the module section of the Projucer. (the little '+' in the corner of the module list)
 
 # Usage
-Since JAUT is a bigger collection of tools and utilities, it wouldn't make much sense to give details about every single thing in this section.
+Since JAUT is a bigger collection of tools and utilities, it wouldn't make much sense to give details about every single thing in this section. 
+Thankfully, this repository also provides a wiki and a reference which sheds some light on the individual parts of this toolset which both can be found here:  
+- [Wiki](https://github.com/ElandaSunshine/jaut/wiki)  
+- [Documentation](https://elandasunshine.github.io/docs/jaut/develop/)
 
-Thankfully, this repository also provides a wiki and a reference which sheds some light on the individual parts of this toolset which can be found here:  
-[Wiki](https://github.com/ElandaSunshine/jaut/wiki)  
-[Documentation](https://elandasunshine.github.io/docs/jaut/develop/)
+Also take a look at the `examples` and `test` folders for indicators on how to possibly use a tool.
 
 # License
+### JAUT
 You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.
+
+### FMT & MS SafeInt
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Contact
 If you need more information or would like to contact us, you can find us on our Discord:  
