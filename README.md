@@ -89,7 +89,7 @@ Since JAUT is a bigger collection of tools and utilities, it wouldn't make much 
 
 Thankfully, this repository also provides a wiki and a reference which sheds some light on the individual parts of this toolset which can be found here:  
 [Wiki](https://github.com/ElandaSunshine/jaut/wiki)  
-[Documentation](https://elandasunshine.github.io/jaut)
+[Documentation](https://elandasunshine.github.io/docs/jaut/develop/)
 
 # License
 You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.
