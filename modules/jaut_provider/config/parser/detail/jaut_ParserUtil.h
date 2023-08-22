@@ -136,7 +136,7 @@ namespace jaut::detail
                 }
                 
                 const juce::String indent_p1 = indent.toString(+1);
-                juce::String       output    = "{\n";
+                juce::String       output    = juce::String("{") + juce::newLine;
                 
                 for (auto it = properties.begin(); it != properties.end(); ++it)
                 {
@@ -149,7 +149,7 @@ namespace jaut::detail
                         output << ',';
                     }
                     
-                    output << '\n';
+                    output << juce::newLine;
                 }
                 
                 return output + indent.toString() + "}";
@@ -165,7 +165,7 @@ namespace jaut::detail
                 }
                 
                 const juce::String indent_p1 = indent.toString(+1);
-                juce::String       output    = "[\n";
+                juce::String       output    = juce::String("[") + juce::newLine;
                 
                 for (auto it = array.begin(); it != array.end(); ++it)
                 {
@@ -177,7 +177,7 @@ namespace jaut::detail
                         output << ',';
                     }
                     
-                    output << '\n';
+                    output << juce::newLine;
                 }
                 
                 return output + indent.toString() + "]";

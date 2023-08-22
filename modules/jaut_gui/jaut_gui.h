@@ -24,7 +24,7 @@
     BEGIN_JUCE_MODULE_DECLARATION
 
     ID:                 jaut_gui
-    vendor:             ElandaOfficial
+    vendor:             ElandaSunshine
     version:            0.1.0
     name:               JAUT Gui Tools
     description:        Gui related utils.
@@ -45,30 +45,33 @@
 
 #include <bitset>
 
-namespace jaut
-{
-    class LookAndFeel_Jaut;
-    LookAndFeel_Jaut& getDefaultLaf();
-}
+#include <jaut_gui/jaut_gui_define.h>
 
-#if !DOXYGEN
-#   define JAUT_CREATE_LAF() \
-           LookAndFeel_Jaut *lookAndFeel { nullptr }; \
-           void parentHierarchyChanged() final override; \
-           void lookAndFeelChanged() final override;
-#endif
-
-#include <jaut_gui/structure/sizestructs.h>
+/**
+#include <jaut_gui/structure/jaut_SizeStructs.h>
 #include <jaut_gui/mouse/draganddropcontaineradvanced.h>
 #include <jaut_gui/util/dadeformat.h>
 #include <jaut_gui/util/overlaytarget.h>
-//#include <jaut_gui/component/pseudocomponent.h>
 #include <jaut_gui/component/contentpane.h>
-#include <jaut_gui/component/splitpane.h>
+#include <jaut_gui/component/jaut_SplitPane.h>
 #include <jaut_gui/component/multipagepane.h>
 #include <jaut_gui/component/dockingpane.h>
 #include <jaut_gui/text/charformat.h>
 #include <jaut_gui/text/fontformat.h>
-#include <jaut_gui/component/lookandfeel_jaut.h>
+#include "jaut_gui/lookandfeel/jaut_LookAndFeel.h"
+#include <jaut_gui/util/jaut_ScopedCursor.h>
+*/
 
-#undef JAUT_CREATE_LAF
+// Component
+#include <jaut_gui/component/jaut_ContentPane.h>
+#include <jaut_gui/component/jaut_DragAndDropWindow.h>
+#include <jaut_gui/component/jaut_ExtraComponent.h>
+#include <jaut_gui/component/jaut_MultiPagePanel.h>
+#include <jaut_gui/component/jaut_SplitPanel.h>
+
+// LookAndFeel
+#include <jaut_gui/lookandfeel/jaut_CidNamespace.h>
+#include <jaut_gui/lookandfeel/jaut_LookAndFeel.h>
+
+// Structure
+#include <jaut_gui/structure/jaut_SizeStructs.h>

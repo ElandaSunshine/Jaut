@@ -25,14 +25,17 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_core.h
     @date   13, March 2020
 
     ===============================================================
  */
 
+// Math
 #include <jaut_core/math/jaut_SafeInteger.cpp>
+
+// Util
 #include <jaut_core/util/jaut_OperationResult.cpp>
-#include <jaut_core/util/jaut_Version.cpp>
 #include <jaut_core/util/jaut_VarUtil.cpp>
+#include <jaut_core/util/jaut_Version.cpp>

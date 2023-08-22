@@ -25,7 +25,7 @@
     Copyright (c) 2019 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshe.xyz)
+    @author Elanda
     @file   jaut_YamlCppCompatibility.h
     @date   28, July 2022
 
@@ -183,6 +183,7 @@ namespace YAML
     template<>
     struct convert<juce::var>
     {
+        //==============================================================================================================
         template<class First, class ...Remainder>
         static juce::var getOpt(const Node &node)
         {
@@ -203,6 +204,7 @@ namespace YAML
             }
         }
         
+        //==============================================================================================================
         static Node encode(const juce::var& rhs)
 		{
 			switch (jaut::VarUtil::getVarType(rhs))

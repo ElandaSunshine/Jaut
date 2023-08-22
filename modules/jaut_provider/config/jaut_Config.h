@@ -381,19 +381,23 @@ namespace jaut
         
     private:
         class PropertyBuilder;
+    
+        //==============================================================================================================
+        template<class Check>
+        using getConstVariant = std::conditional_t<std::is_const_v<Check>, const Property*, Property*>;
         
         //==============================================================================================================
         template<class T>
-        JAUT_NODISCARD static auto getCategory_impl(T &config, const juce::String &categoryId)
-            -> decltype(config.getCategory(""));
+        JAUT_NODISCARD
+        static auto getCategory_impl(T &config, const juce::String &categoryId);
         
         template<class T>
-        JAUT_NODISCARD static auto getProperty_impl(T &config, const juce::String &id, const juce::String &category)
-            -> decltype(config.getProperty("",""));
+        JAUT_NODISCARD
+        static auto getProperty_impl(T &config, const juce::String &id, const juce::String &category);
         
         template<class T>
-        JAUT_NODISCARD static auto findProperty_impl(T &config, const juce::String &expression)
-            -> decltype(config.findProperty(""));
+        JAUT_NODISCARD
+        static auto findProperty_impl(T &config, const juce::String &expression);
         
         //==============================================================================================================
         Options         options;

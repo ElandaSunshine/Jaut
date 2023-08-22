@@ -49,7 +49,9 @@ namespace
     
     //==================================================================================================================
     // GENERATION ============================
-    juce::String jsonGenerateEntity(const juce::String &id, ContentGenerator generator, jaut::detail::Indent indent)
+    juce::String jsonGenerateEntity(const juce::String     &id,
+                                    const ContentGenerator &generator,
+                                    jaut::detail::Indent   indent)
     {        
         juce::String output;
         generator(output, indent);
@@ -201,19 +203,156 @@ namespace
         }
     }
     
-    juce::String jsonStripComments(const juce::String &jsonIn)
+    void stripCommentsSkipUntil(juce::String::CharPointerType &it, juce::juce_wchar c)
     {
-        const std::regex pattern(R"((?!.*"(\\[\s\S]|[^"])*")(\/\/.*|\/\*[\s\S]*?\*\/))");
-        
-        std::string input  = jsonIn.toStdString();
-        std::smatch match;
-                
-        while (std::regex_search(input, match, pattern))
+        for (;;)
         {
-            input = match.prefix().str() + match.suffix().str();
+            const juce::juce_wchar c_2 = it.getAndAdvance();
+        
+            if (c_2 == '\0' || c_2 == c)
+            {
+                break;
+            }
         }
+    }
+    
+    void stripCommentsParseQuotedString(juce::String &out, juce::String::CharPointerType &it)
+    {
+        for (;;)
+        {
+            const juce::juce_wchar c = it.getAndAdvance();
+        
+            if (c == '\0')
+            {
+                break;
+            }
+        
+            out << c;
+            
+            if (c == '\\')
+            {
+                const juce::juce_wchar c_2 = it.getAndAdvance();
                 
-        return input;
+                if (c_2 == '\0')
+                {
+                    break;
+                }
+    
+                out << c_2;
+                continue;
+            }
+            
+            if (c == '"')
+            {
+                break;
+            }
+        }
+    }
+    
+    void stripCommentsParseMultiline(juce::String::CharPointerType &it)
+    {
+        for (;;)
+        {
+            stripCommentsSkipUntil(it, '*');
+        
+            if (*it == '\0')
+            {
+                break;
+            }
+        
+            const juce::juce_wchar c_3 = it.getAndAdvance();
+        
+            if (c_3 == '\0' || c_3 == '/')
+            {
+                break;
+            }
+        }
+    }
+    
+    bool stripCommentsCommaFollowedByObjectEnd(juce::String::CharPointerType it)
+    {
+        for (;;)
+        {
+            const juce::juce_wchar c = it.getAndAdvance();
+            
+            if (c == '\0')
+            {
+                return false;
+            }
+            
+            if (juce::CharacterFunctions::isWhitespace(c))
+            {
+                continue;
+            }
+            
+            if (c == '}' || c == ']')
+            {
+                return true;
+            }
+            
+            return false;
+        }
+    }
+    
+    juce::String jsonStripCommentsAndTrailingCommas(const juce::String &jsonIn)
+    {
+        juce::String out;
+        out.preallocateBytes(jsonIn.getCharPointer().sizeInBytes());
+        
+        juce::String::CharPointerType it = jsonIn.getCharPointer();
+        
+        for (;;)
+        {
+            const juce::juce_wchar c = it.getAndAdvance();
+            
+            if (c == '\0')
+            {
+                break;
+            }
+            
+            if (c == '"')
+            {
+                out << c;
+                stripCommentsParseQuotedString(out, it);
+            }
+            else if (c == '/')
+            {
+                const juce::juce_wchar c_2 = it.getAndAdvance();
+
+                if (c_2 == '\0')
+                {
+                    break;
+                }
+                
+                if (c_2 == '/') // process single line
+                {
+                    stripCommentsSkipUntil(it, '\n');
+                }
+                else if (c_2 == '*') // process multi-line
+                {
+                    stripCommentsParseMultiline(it);
+                }
+                else
+                {
+                    out << c_2;
+                }
+            }
+            else if (c == ',')
+            {
+                if (stripCommentsCommaFollowedByObjectEnd(it))
+                {
+                    continue;
+                }
+                
+                out << c;
+            }
+            else
+            {
+                out << c;
+            }
+        }
+        
+        return out;
     }
     
     juce::var jsonParseDocument(const juce::File &configFile)
@@ -221,9 +360,9 @@ namespace
         juce::var root_var;
         
         {
-            const juce::String json_text = ::jsonStripComments(configFile.loadFileAsString());
+            const juce::String json_text = ::jsonStripCommentsAndTrailingCommas(configFile.loadFileAsString());
             const juce::Result result    = juce::JSON::parse(json_text, root_var);
-                        
+            
             if (result.failed())
             {
                 throw jaut::ConfigParseException("config couldn't be parsed, " + result.getErrorMessage());
@@ -250,7 +389,7 @@ namespace jaut
     {
         const juce::var document = ::jsonParseDocument(parAttributes.configFile);
         juce::DynamicObject *const root_json = document.getDynamicObject();
-
+        
         if (!root_json)
         {
             throw ConfigParseException("config couldn't be parsed, invalid json document");

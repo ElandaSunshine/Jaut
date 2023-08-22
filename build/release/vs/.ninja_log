@@ -1,0 +1,5 @@
+# ninja log v5
+1	418	0	D:/Development/Coding/cpp/Jaut/build/release/vs/CMakeFiles/cmake.verify_globs	380180e682a4944c
+0	265	6980963156153904	tools/jautgen/CMakeFiles/jautgen.dir/main.cpp.obj	25a154aef91c36e0
+3	2225	6980963175683999	tools/jautgen/CMakeFiles/jautgen.dir/__/__/_deps/juce-src/modules/juce_core/juce_core.cpp.obj	781c3878bf75e344
+2226	2971	6980963181555278	tools/jautgen/jautgen_artefacts/Debug/jautgen.exe	ab17060eea976fec

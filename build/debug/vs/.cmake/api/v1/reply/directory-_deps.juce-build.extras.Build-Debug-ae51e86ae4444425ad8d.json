@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "_deps/juce-build/extras/Build",
+		"source" : "build/debug/vs/_deps/juce-src/extras/Build"
+	}
+}

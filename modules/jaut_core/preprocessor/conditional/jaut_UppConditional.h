@@ -25,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_UppConditional.h
     @date   24, March 2020
     

@@ -25,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_UppGroup.h
     @date   26, March 2020
 

@@ -42,7 +42,7 @@
 
 #if JUCE_DEBUG
     /**
-     *  Creates an anti-leak handler that helps a global instance of a class with a leak detector to be destroyed
+     *  Creates an anti-leak policies that helps a global instance of a class with a leak detector to be destroyed
      *  before the leak detector is destroyed.
      *
      *  The issue with leak detectors is, that when it is part of a class that you have a global instance of,
@@ -55,24 +55,24 @@
      *  was created first.
      *  That is due to lazy initialisation which the juce leak detector utilises to create its counter object.
      *
-     *  To circumvent this, you can use this anti-leak handler, that, when you place it after your leak detector
+     *  To circumvent this, you can use this anti-leak policies, that, when you place it after your leak detector
      *  declaration, is safe to be initialised after your leak detector.
      *  Hence, you can use this to destroy your global objects by hand just before the leak detector is destroyed.
      */
-    #define JAUT_CREATE_ANTILEAK_HANDLER(F)         \
-        class AntiLeakHandler                       \
-        {                                           \
-        public:                                     \
-            AntiLeakHandler() { createAntiLeak(); } \
-        private:                                    \
-            static void createAntiLeak()            \
-            {                                       \
-                struct AntiLeakWatcher              \
-                {                                   \
-                    ~AntiLeakWatcher() { F }        \
-                };                                  \
-                static AntiLeakWatcher watcher;     \
-            }                                       \
+    #define JAUT_CREATE_ANTILEAK_HANDLER(F)             \
+        class AntiLeakHandler                           \
+        {                                               \
+        public: AntiLeakHandler() { createAntiLeak(); } \
+        private:                                        \
+            static void createAntiLeak()                \
+            {                                           \
+                struct AntiLeakWatcher                  \
+                {                                       \
+                    ~AntiLeakWatcher() { F }            \
+                };                                      \
+                                                        \
+                static AntiLeakWatcher watcher;         \
+            }                                           \
         };
 #else
     #define JAUT_CREATE_ANTILEAK_HANDLER(F)
@@ -83,3 +83,20 @@
 #else
     #define jdconst const
 #endif
+
+#if !DOXYGEN
+    #define JAUT_LINEISE_AUTOVAR_1(x, y) x##y
+    #define JAUT_LINEISE_AUTOVAR(x, y) JAUT_LINEISE_AUTOVAR_1(x##_, y)
+#endif
+
+/**
+ *  Allows defining a local scoped variable without a name.<br>
+ *  This is useful for when you have something that is only affected by construction and destruction and you don't
+ *  actually need access to the object.
+ *  <br><br>
+ *  e.g 
+ *  @code
+ *  jdscoped std::lock_guard(mutex);
+ *  @endcode
+ */
+#define jdscoped const auto JAUT_LINEISE_AUTOVAR(jaut_scoped, __LINE__) =

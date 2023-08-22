@@ -26,18 +26,17 @@
     ===============================================================
     
     @author Elanda
-    @file   config.cpp
+    @file   jaut_provider.cpp
     @date   20, March 2020
     
     ===============================================================
  */
 
+// Main
 #include <jaut_provider/jaut_provider.h>
 
+// Config
 #include <jaut_provider/config/jaut_Config.cpp>
-#include <jaut_provider/config/jaut_ConfigParser.cpp>
-#include <jaut_provider/lang/localisation.cpp>
-#include <jaut_provider/logger/logger.cpp>
-#include <jaut_provider/logger/logmanager.cpp>
-#include <jaut_provider/util/metadatautil.cpp>
-#include <jaut_provider/theme/thememanager.cpp>
+#include <jaut_provider/config/parser/jaut_JsonParser.cpp>
+#include <jaut_provider/config/parser/jaut_XmlParser.cpp>
+#include <jaut_provider/config/parser/jaut_YamlParser.cpp>

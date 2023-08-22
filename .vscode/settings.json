@@ -1,0 +1,21 @@
+{
+    "cmake.configureSettings": {
+
+        "JAUT_BUILD_TESTS": true,
+        "JAUT_CLONE_JUCE": true,
+        "CMAKE_EXPORT_COMPILE_COMMANDS": true
+    },
+    "cmake.generator": "Ninja",
+    "C_Cpp.default.intelliSenseMode": "msvc-x64",
+    "C_Cpp.inlayHints.autoDeclarationTypes.enabled": true,
+    "C_Cpp.inlayHints.autoDeclarationTypes.showOnLeft": true,
+    "C_Cpp.clang_format_sortIncludes": true,
+    "C_Cpp.doxygen.generatedStyle": "/**",
+    "C_Cpp.commentContinuationPatterns": [
+        "/**"
+    ],
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
+    "cmake.exportCompileCommandsFile": false,
+    "cmake.copyCompileCommands": "build/compile_commands.json",
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+}

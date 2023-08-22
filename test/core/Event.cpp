@@ -1,5 +1,14 @@
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -16,16 +25,16 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.com)
+    @author Elanda
     @file   Event.cpp
     @date   08, April 2022
     
     ===============================================================
  */
 
-#include <gtest/gtest.h>
-
 #include <jaut_core/signal/event/jaut_Event.h>
+
+#include <gtest/gtest.h>
 
 
 
@@ -63,13 +72,13 @@ namespace
         //==============================================================================================================
         EventFixture()
             : TestEventST (
-                // Add handler
+                // Add policies
                 [this](const TestHandler &handler)
                 {
                     setHandlerMethod(handler, true);
                 },
                 
-                // Remove handler
+                // Remove policies
                 [this](const TestHandler &handler)
                 {
                     setHandlerMethod(handler, false);
@@ -164,7 +173,7 @@ TEST_F(EventFixture, TestFreeHandler)
     TestEventST.invoke(420);
     EXPECT_EQ(freeHandlerValue, 420);
     
-    // Remove handler
+    // Remove policies
     TestEventST -= handler;
     EXPECT_FALSE(freeHandlerAdded);
 }
@@ -266,7 +275,7 @@ TEST_F(EventFixture, TestAssocHandlers)
     EXPECT_EQ(memberHandlerValue,  42069666);
     EXPECT_EQ(functorHandlerValue, 42069666);
     
-    // try two through handler
+    // try two through policies
     handlerMode = HandlerMode::Free;
     TestEventST -= free_handler;
     EXPECT_FALSE(freeHandlerAdded);

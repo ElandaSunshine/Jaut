@@ -1,5 +1,14 @@
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -13,10 +22,10 @@
     You should have received a copy of the GNU General Public License
     along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-    Copyright (c) 2019 ElandaSunshine
+    Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   TypeTraits.cpp
     @date   18, April 2022
 
@@ -80,8 +89,8 @@ namespace
 //======================================================================================================================
 TEST(TypeTraitSuite, TestTemplateTraits)
 {
-    EXPECT_TRUE ((jaut::sameTypeIgnoreTemplate_v<std::vector<int>,  std::vector<bool>>));
-    EXPECT_FALSE((jaut::sameTypeIgnoreTemplate_v<std::vector<bool>, std::array<double, 3>>));
+    EXPECT_TRUE ((jaut::sameTypeIgnoreTemplate_v<std::vector,  std::vector<bool>>));
+    EXPECT_FALSE((jaut::sameTypeIgnoreTemplate_v<std::vector, std::array<double, 3>>));
     
     EXPECT_TRUE ((jaut::isTemplated_v<std::allocator<int>>));
     EXPECT_FALSE((jaut::isTemplated_v<std::mutex>));

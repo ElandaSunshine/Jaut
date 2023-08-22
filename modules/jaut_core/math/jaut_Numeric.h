@@ -39,6 +39,7 @@
 #include <jaut_core/math/jaut_SafeInteger.h>
 #include <jaut_core/math/jaut_SafeFloat.h>
 #include <jaut_core/util/jaut_TypeTraits.h>
+#include <jaut_core/util/jaut_Stringable.h>
 
 #include <bitset>
 #include <cfenv>
@@ -1211,7 +1212,19 @@ namespace jaut
         JAUT_NODISCARD
         Numeric& modify(U right, ResultType<U, T> (*func)(T, U));
     };
-
+    
+    
+    //==================================================================================================================
+    template<class T, auto V>
+    struct JAUT_API Stringable<Numeric<T, V>>
+    {
+        JAUT_NODISCARD
+        static juce::String toString(const Numeric<T, V> &object)
+        {
+            return juce::var(object.numericValue).toString();
+        }
+    };
+    
     //==================================================================================================================
     template<class T, class U, NumericCheck... Checks, class = std::enable_if_t<isValidNumeric_v<T>>>
     JAUT_NODISCARD
@@ -2075,25 +2088,27 @@ namespace jaut
         {
             return { true, parValue };
         }
-        
-        const auto result  = CastType::template cast<U>(parValue);
-        bool       success = true;
-        
-        if constexpr (checksErrors)
+        else
         {
-            if (result.code == 1)
+            const auto result  = CastType::template cast<U>(parValue);
+            bool       success = true;
+    
+            if constexpr (checksErrors)
             {
-                success = false;
-                
-                if (!dontSend)
+                if (result.code == 1)
                 {
-                    ValueOverflowed.invoke(*this);
+                    success = false;
+            
+                    if (!dontSend)
+                    {
+                        ValueOverflowed.invoke(*this);
+                    }
                 }
             }
+    
+            dontSend = false;
+            return { success, result.value };
         }
-        
-        dontSend = false;
-        return { success, result.value };
     }
     
     template<class T, NumericCheck ...CheckFlags>

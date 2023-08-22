@@ -25,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_Version.cpp
     @date   20, April 2022
     

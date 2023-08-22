@@ -176,6 +176,59 @@ namespace
 namespace jaut
 {
     //==================================================================================================================
+    template<class T>
+    auto Config::getCategory_impl(T &parConfig, const juce::String &parCategoryId)
+    {
+        const juce::String &category_id = ::getCategoryId(parConfig, parCategoryId);
+        ::validateId(category_id);
+    
+        decltype(parConfig.getCategory("")) prop = nullptr;
+        
+        if (auto cat_it = parConfig.properties.find(category_id); cat_it != parConfig.properties.end())
+        {
+            prop = &cat_it->second;
+        }
+        
+        return prop;
+    }
+    
+    template<class T>
+    auto Config::getProperty_impl(T &parConfig, const juce::String &parId, const juce::String &parCategoryId)
+    {
+        decltype(parConfig.getProperty("")) prop = nullptr;
+    
+        if (auto *const category = parConfig.getCategory(parCategoryId))
+        {
+            prop = category->getProperty(parId);
+        }
+        
+        return prop;
+    }
+    
+    template<class T>
+    auto Config::findProperty_impl(T &parConfig, const juce::String &parExpression)
+    {
+        decltype(parConfig.findProperty("")) prop = nullptr;
+        
+        if (!parExpression.contains(".") || parExpression.endsWith("."))
+        {
+            return prop;
+        }
+    
+        const juce::String property_exp = parExpression.fromFirstOccurrenceOf(".", false, true);
+        const juce::String category_id  = (parExpression.startsWith(".")
+                                               ? parConfig.options.defaultCategory
+                                               : parExpression.upToFirstOccurrenceOf(".", false, true));
+        
+        if (auto *const category = parConfig.getCategory(category_id))
+        {
+            prop = category->findProperty(property_exp);
+        }
+        
+        return prop;
+    }
+    
+    //==================================================================================================================
     Config Config::backendJson(juce::File parDirectory, Options parOptions)
     {
         return { std::move(parDirectory), std::make_unique<JsonParser>(), std::move(parOptions) };
@@ -192,56 +245,6 @@ namespace jaut
         return { std::move(parDirectory), std::make_unique<YamlParser>(), std::move(parOptions) };
     }
     #endif
-    
-    //==================================================================================================================
-    template<class T>
-    auto Config::getCategory_impl(T &parConfig, const juce::String &parCategoryId)
-        -> decltype(parConfig.getCategory(""))
-    {
-        const juce::String &category_id = ::getCategoryId(parConfig, parCategoryId);
-        ::validateId(category_id);
-    
-        if (auto cat_it = parConfig.properties.find(category_id); cat_it != parConfig.properties.end())
-        {
-            return &cat_it->second;
-        }
-        
-        return nullptr;
-    }
-    
-    template<class T>
-    auto Config::getProperty_impl(T &parConfig, const juce::String &parId, const juce::String &parCategoryId)
-        -> decltype(parConfig.getProperty("", ""))
-    {
-        if (auto *const category = parConfig.getCategory(parCategoryId))
-        {
-            return category->getProperty(parId);
-        }
-        
-        return nullptr;
-    }
-    
-    template<class T>
-    auto Config::findProperty_impl(T &parConfig, const juce::String &parExpression)
-        -> decltype(parConfig.findProperty(""))
-    {
-        if (!parExpression.contains(".") || parExpression.endsWith("."))
-        {
-            return nullptr;
-        }
-
-        const juce::String category_id  = (parExpression.startsWith(".")
-                                               ? parConfig.options.defaultCategory
-                                               : parExpression.upToFirstOccurrenceOf(".", false, true));
-        const juce::String property_exp = parExpression.fromFirstOccurrenceOf(".", false, true);
-
-        if (auto *const category = parConfig.getCategory(category_id))
-        {
-            return category->findProperty(property_exp);
-        }
-    
-        return nullptr;
-    }
     
     //==================================================================================================================
     Config::Config(juce::File parDirectory, NonNull<ConfigParserPtr> parConfigParser, Options parOptions)
@@ -288,6 +291,7 @@ namespace jaut
         
         IConfigParser::ParseAttributes<CategoryMap> attributes { config_file, properties, options };
         parser->parseConfig(std::move(attributes));
+        
         return true;
     }
     
@@ -311,6 +315,7 @@ namespace jaut
     
         IConfigParser::ParseAttributes<const CategoryMap> attributes { config_file, properties, options };
         parser->writeConfig(std::move(attributes));
+        
         return true;
     }
     
@@ -457,12 +462,12 @@ namespace jaut
         {
             return &parProperty;
         }
-    
+        
         const juce::String &id = parHierarchy.getReference(parIndex);
         ::validateId(id);
-    
+        
         auto it = parProperty.properties.find(id);
-    
+        
         if (it == parProperty.properties.end())
         {
             return nullptr;
@@ -495,8 +500,9 @@ namespace jaut
                                                                         juce::NotificationType parNotify)
     {
         ::validateId(parId);
-        const auto &[it, inserted] = properties.try_emplace(parId, internalDelegate_v, parId, parDefaultValue,
-                                                            config, this);
+        
+        const auto &[it, inserted] = properties.try_emplace(parId, internalDelegate_v, parId,
+                                                            parDefaultValue, config, this);
         
         if (inserted && parNotify != juce::dontSendNotification)
         {
@@ -563,7 +569,9 @@ namespace jaut
     juce::String Config::Property::getAbsoluteName() const
     {
         juce::StringArray names;
+        names.ensureStorageAllocated(2);
         recurseResolveHierarchy(names);
+        
         return names.joinIntoString(".");
     }
     
@@ -650,13 +658,13 @@ namespace jaut
     void Config::Property::postPropertyAdded(const Property &parProperty)
     {
         PropertyAdded.invoke(*this, parProperty);
-        config.PropertyAdded(config, *this, parProperty);
+        config.PropertyAdded.invoke(config, *this, parProperty);
     }
     
     void Config::Property::postValueChanged(const juce::var &parOldValue)
     {
         ValueChanged.invoke(*this, parOldValue);
-        config.ValueChanged(config, *this, parOldValue);
+        config.ValueChanged.invoke(config, *this, parOldValue);
     }
     
     //==================================================================================================================
@@ -676,6 +684,7 @@ namespace jaut
         
         return true;
     }
+    
     //==================================================================================================================
     // NOLINTNEXTLINE
     void Config::Property::recurseReset(juce::NotificationType parNotify)

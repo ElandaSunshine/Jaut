@@ -1,5 +1,14 @@
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -16,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_audio.cpp
     @date   29, February 2020
 
@@ -24,5 +33,6 @@
  */
 
 #include <jaut_audio/jaut_audio.h>
-#include <jaut_audio/processor/audioprocessorrack.cpp>
-// TODO include when needed #include <jaut_audio/processor/audioprocessoreffect.cpp>
+
+#include <jaut_audio/processor/jaut_AudioProcessorRack.cpp>
+#include <jaut_audio/parameter/jaut_ValueParameterAttachment.cpp>

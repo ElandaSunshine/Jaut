@@ -25,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshine.com)
+    @author Elanda
     @file   jaut_provider_define.h
     @date   08, May 2022
 
@@ -34,23 +34,10 @@
  
 #pragma once
 
-#if __has_include(<fmt/core.h>)
-    #define JAUT_OPTLIB_FMT 1
-#else
-    #define JAUT_OPTLIB_FMT 0
-#endif
+
 
 #if __has_include(<yaml-cpp/yaml.h>)
     #define JAUT_OPTLIB_YAML_CPP 1
 #else
     #define JAUT_OPTLIB_YAML_CPP 0
-#endif
-
-/** Config: JAUT_PROVIDER_STRICT_LANGUAGE_PROTOCOL
-
-    Enables the strict language protocol which means that only languages that are officially stated in the ISO standard
-    are valid names.
-*/
-#ifndef JAUT_PROVIDER_STRICT_LANGUAGE_PROTOCOL
-    #define JAUT_PROVIDER_STRICT_LANGUAGE_PROTOCOL 0
 #endif

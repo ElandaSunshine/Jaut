@@ -41,8 +41,12 @@
 
 #include <jaut_core/util/jaut_TypeEvaluator.h>
 
+#include <juce_core/juce_core.h>
+
 #include <cstddef>
 #include <type_traits>
+
+
 
 /**
  *  This macro is a quick access compile-time type checker.
@@ -75,8 +79,14 @@
 #define JAUT_UTIL_TYPE_TRAITS_DEFINE_TYPE_CHECK(NAME, TYPE) \
         template <typename Type> inline static constexpr auto NAME () -> \
         decltype (typename Type:: TYPE (), std::true_type{})  { return std::true_type{}; } \
-        inline static constexpr std::false_type NAME ()   { return std::false_type{}; } \
-        template <typename Type> inline static constexpr bool NAME##_v = NAME <Type>().value;
+        inline static constexpr std::false_type NAME ()   { return std::false_type{}; }
+
+#define JAUT_UTIL_TYPE_TRAITS_DEFINE_METHOD_CHECK(NAME) \
+        template<class T> class has_##NAME { \
+        private: \
+            template<class C> static std::uint8_t  check(decltype(&C::NAME)) {} \
+            template<class C> static std::uint16_t check(...)                {} \
+        public: static constexpr bool value = (sizeof(check<T>(0)) == sizeof(std::uint8_t)); };
 
 namespace jaut
 {
@@ -98,14 +108,11 @@ namespace jaut
      *  @tparam Required The required type
      *  @tparam Tested   The tested type
      */
-    template<class Required, class Tested>
-    struct JAUT_API sameTypeIgnoreTemplate : std::bool_constant<std::is_same_v<Required, Tested>> {};
+    template<template<class...> class Required, class Tested>
+    struct JAUT_API sameTypeIgnoreTemplate : std::false_type {};
     
-    template<template<class...> class T, class ...TypesA, class ...TypesB>
-    struct JAUT_API sameTypeIgnoreTemplate<T<TypesA...>, T<TypesB...>> : std::true_type {};
-    
-    template<template<auto...> class T, auto ...ValsA, auto ...ValsB>
-    struct JAUT_API sameTypeIgnoreTemplate<T<ValsA...>, T<ValsB...>> : std::true_type {};
+    template<template<class...> class T, class ...Types>
+    struct JAUT_API sameTypeIgnoreTemplate<T, T<Types...>> : std::true_type {};
     
     /**
      *  Determines whether TypeToCheck is of same type as TemplatedType.
@@ -125,7 +132,7 @@ namespace jaut
      *  @tparam Required The required type
      *  @tparam Tested   The tested type
      */
-    template<class Required, class Tested>
+    template<template<class...> class Required, class Tested>
     JAUT_API inline constexpr bool sameTypeIgnoreTemplate_v = sameTypeIgnoreTemplate<Required, Tested>::value;
     
     /**
@@ -721,5 +728,55 @@ namespace jaut
      *  @tparam Right The right type of the equality operator
      */
      template<class Left, class Right>
-     inline constexpr bool isEqualityComparable_v = isEqualityComparable<Left, Right>::value;
+     JAUT_API inline constexpr bool isEqualityComparable_v = isEqualityComparable<Left, Right>::value;
+    
+    //==================================================================================================================
+    /**
+     *  Checks whether type T could qualify as a string type.
+     *  Note that this does not check whether the type really is a string type, just that it could be one.
+     *  
+     *  @tparam T The type to check
+     */
+    template<class T>
+    struct JAUT_API qualifiesAsString
+        : std::bool_constant<std::is_same_v<std::decay_t<T>,                   juce::String>
+                          || std::is_same_v<std::decay_t<T>,                   juce::StringRef>
+                          || std::is_same_v<std::decay_t<T>,                   juce::String::CharPointerType>
+                          || std::is_same_v<std::decay_t<T>,                   wchar_t*>
+                          || std::is_same_v<std::decay_t<T>,                   char16_t*>
+                          || std::is_same_v<std::decay_t<T>,                   char32_t*>
+                          || std::is_same_v<std::make_signed<std::decay_t<T>>, std::make_signed<char*>>
+                          || std::is_same_v<std::make_signed<std::decay_t<T>>, std::make_signed<juce::juce_wchar*>>>
+    {};
+    
+    template<template<class...> class T, class ...Types>
+    struct JAUT_API qualifiesAsString<T<Types...>>
+        : std::bool_constant<std::is_same_v<std::decay_t<T<Types...>>, std::basic_string_view<Types...>>
+                          || std::is_same_v<std::decay_t<T<Types...>>, std::basic_string<Types...>>>
+    {};
+    
+    /**
+     *  Checks whether type T could qualify as a string type.
+     *  Note that this does not check whether the type actually is a string type, just that it could be one.
+     *  
+     *  @tparam T The type to check
+     */
+    template<class T>
+    JAUT_API inline constexpr bool qualifiesAsString_v = qualifiesAsString<T>::value;
+    
+    //==================================================================================================================
+    template<class T, class = void>
+    struct JAUT_API isIterator
+    {
+        static constexpr bool value = false;
+    };
+    
+    template<class T>
+    struct JAUT_API isIterator<T, std::enable_if_t<!std::is_same_v<typename std::iterator_traits<T>::value_type, void>>>
+    {
+        static constexpr bool value = true;
+    };
+    
+    template<class T>
+    JAUT_API inline constexpr bool isIterator_v = isIterator<T>::value;
 }

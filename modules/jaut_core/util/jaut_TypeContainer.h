@@ -44,6 +44,8 @@
 #include <tuple>
 #include <variant>
 
+
+
 namespace jaut
 {    
     template<class...> struct TypeArray;
@@ -103,6 +105,12 @@ namespace jaut
             (std::forward<Fn>(func)(TypeArrayIndex<Indices>{}), ...);
         }
     }
+    
+    template<class T>
+    struct JAUT_API LambdaType
+    {
+        using type = T;
+    };
     
     /**
      *  A useful type-list utility that declares a lot of useful helper functions to work on and with a list of types
@@ -799,4 +807,339 @@ namespace jaut
             return std::make_shared<EmptyType>();
         }
     };
+    
+    //==================================================================================================================
+    namespace detail
+    {
+        template<class Ret, class T, class ...Params>
+        inline constexpr TypeArray<Ret, T> getReturnAndClass(Ret(T::*)(Params...)) noexcept { return {}; }
+        
+        template<class Ret, class ...Params>
+        inline constexpr TypeArray<Ret> getReturnAndClass(Ret(*)(Params...)) noexcept { return {}; }
+        
+        template<bool IsNoexcept, class T, class Ret, class Params, auto Func, bool LV, bool RV, bool CN, bool VOL>
+        struct BaseMemberFunction;
+        
+        template<bool IsNoexcept, class T, class Ret, class ...Params, auto Func, bool LV, bool RV, bool CN, bool VOL>
+        struct BaseMemberFunction<IsNoexcept, T, Ret, TypeArray<Params...>, Func, LV, RV, CN, VOL>
+        {
+            /** A type list of the function's parameters. */
+            using Parameter = TypeArray<Params...>;
+            
+            /** The return type of the function. */
+            using Return = Ret;
+            
+            /** The class this is a member function of, or std::nullptr_t if it is not a member function. */
+            using Parent = T;
+            
+            /** The function pointer type. */
+            using Pointer = std::remove_reference_t<decltype(Func)>;
+            
+            //==========================================================================================================
+            /** The number of parameters the function has. */
+            static constexpr int parameterCount = sizeof...(Params);
+            
+            /** Gets whether this function pointer is a member function. */
+            static constexpr bool isMemberFunction = true;
+            
+            /** Gets whether this function is marked non-throwing. */
+            //static constexpr bool isNoexcept = IsNoexcept;
+            
+            /** 
+             *  Gets whether this function is const-qualified,
+             *  for non-member functions this will always return false.
+             */
+            static constexpr bool isConst = CN;
+            
+            /** 
+             *  Gets whether this function is volatile-qualified,
+             *  for non-member functions this will always return false.
+             */
+            static constexpr bool isVolatile = VOL;
+            
+            /** 
+             *  Gets whether this function is LValue-qualified,
+             *  for non-member functions this will always return false.
+             */
+            static constexpr bool isLValueQualified = LV;
+            
+            /** 
+             *  Gets whether this function is RValue-qualified,
+             *  for non-member functions this will always return false.
+             */
+            static constexpr bool isRValueQualified = RV;
+            
+            //==========================================================================================================
+            /**
+             *  Invokes the function pointer with the given arguments, if possible.
+             *  If this is a free function pointer, the first argument will be ignored.
+             *  
+             *  @param object The object this function pointer is a member off
+             *  @param args   The arguments to pass to the function pointer
+             *  @return The result of the function call
+             */
+            template<class U, class ...Args>
+            static constexpr auto invoke(U &&object, Args &&...args)
+                noexcept(noexcept((std::forward<U>(object).*Func)(std::forward<Args>(args)...)))
+                -> decltype((std::forward<U>(object).*Func)(std::forward<Args>(args)...))
+            {
+                return (std::forward<U>(object).*Func)(std::forward<Args>(args)...);
+            }
+            
+            /**
+             *  Invokes the function pointer with the given arguments, if possible.
+             *  If this is a free function pointer, the first argument will be ignored.
+             *  
+             *  @param object A pointer to the object this function pointer is a member off
+             *  @param args   The arguments to pass to the function pointer
+             *  @return The result of the function call
+             */
+            template<class U, class ...Args, bool IsRval = RV, std::enable_if_t<!IsRval>* = nullptr>
+            static constexpr auto invoke(U *object, Args &&...args)
+                noexcept(noexcept((object->*Func)(std::forward<Args>(args)...)))
+                -> decltype((object->*Func)(std::forward<Args>(args)...))
+            {
+                return (object->*Func)(std::forward<Args>(args)...);
+            }
+        };
+    }
+    
+    //==================================================================================================================
+    template<auto FunctionPointer, class = decltype(FunctionPointer)>
+    class JAUT_API Function;
+    
+    //==================================================================================================================
+    // Member
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...)>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, false, false, false, false>
+    {};
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) const>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, false, false, true, false>
+    {};
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) volatile>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, false, false, false, true>
+    {};
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) volatile const>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, false, false, true, true>
+    {};
+    
+    
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) &>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, true, false, false, false>
+    {};
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) const &>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, true, false, true, false>
+    {};
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) volatile &>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, true, false, false, true>
+    {};
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) volatile const &>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, true, false, true, true>
+    {};
+    
+    
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) &&>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, false, true, false, false>
+    {};
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) const &&>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, false, true, true, false>
+    {};
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) volatile &&>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, false, true, false, true>
+    {};
+    
+    template<class T, class Ret, class ...Params, Ret(T::*Func)(Params...) volatile const &&>
+    struct JAUT_API Function<Func>
+        : detail::BaseMemberFunction<false, T, Ret, TypeArray<Params...>, Func, false, true, true, true>
+    {};
+    
+    //==================================================================================================================
+    // Non Member
+    template<class Ret, class ...Params, Ret(*Func)(Params...)>
+    struct JAUT_API Function<Func>
+    {
+        /** A type list of the function's parameters. */
+        using Parameter = TypeArray<Params...>;
+        
+        /** The return type of the function. */
+        using Return = Ret;
+        
+        /** The class this is a member function of, or std::nullptr_t if it is not a member function. */
+        using Parent = std::nullptr_t;
+        
+        /** The function pointer type. */
+        using Pointer = std::remove_reference_t<decltype(Func)>;
+        
+        //==============================================================================================================
+        /** The number of parameters the function has. */
+        static constexpr int parameterCount = sizeof...(Params);
+        
+        /** Gets whether this function pointer is a member function. */
+        static constexpr bool isMemberFunction = false;
+        
+        /** Gets whether this function is marked non-throwing. */
+        //static constexpr bool isNoexcept = IsNoexcept;
+        
+        /** Gets whether this function is const-qualified, for non-member functions this will always return false. */
+        static constexpr bool isConst = false;
+        
+        /** Gets whether this function is volatile-qualified, for non-member functions this will always return false. */
+        static constexpr bool isVolatile = false;
+        
+        /** Gets whether this function is LValue-qualified, for non-member functions this will always return false. */
+        static constexpr bool isLValueQualified = false;
+        
+        /** Gets whether this function is RValue-qualified, for non-member functions this will always return false. */
+        static constexpr bool isRValueQualified = false;
+        
+        
+        //==============================================================================================================
+        /**
+         *  Invokes the function pointer with the given arguments, if possible.
+         *  If this is a free function pointer, the first argument will be ignored.
+         *  
+         *  @param object The object this function pointer is a member off
+         *  @param args   The arguments to pass to the function pointer
+         *  @return The result of the function call
+         */
+        template<class U, class ...Args>
+        static constexpr auto invoke(JAUT_MUNUSED U &&object, Args &&...args)
+            noexcept(noexcept((Func)(std::forward<Args>(args)...)))
+            -> decltype((Func)(std::forward<Args>(args)...))
+        {
+            return (Func)(std::forward<Args>(args)...);
+        }
+        
+        /**
+         *  Invokes the function pointer with the given arguments, if possible.
+         *  If this is a free function pointer, the first argument will be ignored.
+         *  
+         *  @param object A pointer to the object this function pointer is a member off
+         *  @param args   The arguments to pass to the function pointer
+         *  @return The result of the function call
+         */
+        template<class U, class ...Args>
+        static constexpr auto invoke(JAUT_MUNUSED U *object, std::nullptr_t, Args &&...args)
+            noexcept(noexcept((Func)(std::forward<Args>(args)...)))
+            -> decltype((Func)(std::forward<Args>(args)...))
+        {
+            return (Func)(std::forward<Args>(args)...);
+        }
+    };
+    
+    enum class QualifierRef
+    {
+        None,
+        LValue,
+        RValue
+    };
+    
+    enum class QualifierCv
+    {
+        None,
+        Const,
+        Volatile,
+        ConstVolatile
+    };
+    
+    namespace detail
+    {
+        template<class T>
+        struct GetMemberFunctionPtr;
+        
+        template<class Ret, class ...Params>
+        struct GetMemberFunctionPtr<Ret(Params...)>
+        {
+            template<class T>
+            using type = Ret(T::*)(Params...);
+        };
+        
+        template<class FuncType>
+        struct OverloadBase
+        {
+            /**
+             *  Gets the pointer-to-member-function of the specific overload.
+             *  
+             *  @param func The pointer-to-member-function
+             *  @return The overloaded pointer-to-member-function
+             */
+            template<class T>
+            JAUT_NODISCARD static constexpr auto from(typename GetMemberFunctionPtr<FuncType>::template type<T> func) noexcept { return func; }
+        };
+    }
+    
+    /**
+     *  Used to disambiguate function pointers that point to functions with one or more overloads.
+     *  @tparam Signature The function signature (e.g. "void(int, double)")
+     */
+    template<class Signature>
+    struct JAUT_API Overload;
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...)> : detail::OverloadBase<Ret(Params...)>
+    {
+        /**
+         *  Gets the pointer of the specific overload.
+         *  
+         *  @param func The function pointer
+         *  @return The overloaded function pointer
+         */
+        template<class T>
+        JAUT_NODISCARD static constexpr auto from(Ret(*func)(Params...)) noexcept { return func; }
+        
+    };
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) const> : detail::OverloadBase<Ret(Params...) const> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) volatile> : detail::OverloadBase<Ret(Params...) volatile> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) const volatile> : detail::OverloadBase<Ret(Params...) const volatile> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) &> : detail::OverloadBase<Ret(Params...) &> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) const &> : detail::OverloadBase<Ret(Params...) const &> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) volatile &> : detail::OverloadBase<Ret(Params...) volatile &> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) const volatile &> : detail::OverloadBase<Ret(Params...) const volatile &> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) &&> : detail::OverloadBase<Ret(Params...) &&> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) const &&> : detail::OverloadBase<Ret(Params...) const &&> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) volatile &&> : detail::OverloadBase<Ret(Params...) volatile &&> {};
+    
+    template<class Ret, class ...Params>
+    struct JAUT_API Overload<Ret(Params...) const volatile &&> : detail::OverloadBase<Ret(Params...) const volatile &&> {};
 }

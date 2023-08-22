@@ -57,4 +57,37 @@
 
     // jaut::NonNull
     #define JAUT_ASSERT_NONNULL_UNSUPPORTED_POINTER_TYPE
+    
+    // jaut::SerialisableJuceProcessorProxy
+    #define JAUT_ASSERT_SERIALISABLE_JUCE_PROCESSOR_PROXY_NOT_AUDIO_PROCESSOR \
+        "Type AudioProcessorClass must be of type juce::AudioProcessor"
+    #define JAUT_ASSERT_SERIALISABLE_JUCE_PROCESSOR_PROXY_IS_ABSTRACT \
+        "Type AudioProcessorClass cannot be an abstract class"
+
+    // jaut::AudioProcessorSet
+    #define JAUT_ASSERT_AUDIO_PROCESSOR_SET_NOT_I_SERIALISABLE_AUDIO_PROCESSOR \
+        "Processors must inherit from jaut::SerializableAudioProcessor"
+    #define JAUT_ASSERT_AUDIO_PROCESSOR_SET_NO_PROCESSORS \
+        "Must have at least one processor"
+
+    // jaut::AtomicRingBuffer
+    #define JAUT_ASSERT_ATOMIC_RING_BUFFER_INVALID_CAPACITY "BufferSize must be at least 1"
+
+    // jaut::Logger
+    #define JAUT_ASSERT_LOGGER_OBJECT_NO_TOSTRING \
+        "The given object is neither convertible to string nor does it have a 'toString()' method"
+    #define JAUT_ASSERT_LOGGER_ROTATION_MANAGER_NO_SETUP \
+        "No setup method with the given arguments found"
+    #define JAUT_ASSERT_LOGGER_WORKER_NOT_A_WORKER \
+        "Worker passed as template type is not an ILogWorker type"
+    #define JAUT_ASSERT_LOGGER_WORKER_IS_ABSTRACT \
+        "Worker passed as template type can not be an abstract class"
+
+    // jaut::Stringable
+    #define JAUT_ASSERT_STRINGABLE_NOT_CONVERTIBLE_TO_JUCE_STRING \
+        "The given type is not convertible to juce::var"
+
+    // jaut::ArgFilter
+    #define JAUT_ASSERT_ARG_FILTER_NOT_SAME_ARG_LIST \
+        "Arguments passed are different than from the jaut::ArgList template"
 #endif

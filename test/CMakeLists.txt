@@ -1,46 +1,28 @@
 ########################################################################################################################
 # Modules
-include(FetchContent)
 include(CTest)
 
 
 
 ########################################################################################################################
 # Test dependencies
-FetchContent_declare(juce
-    GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
-    GIT_TAG        origin/develop
-    GIT_PROGRESS   TRUE
-    GIT_SHALLOW    TRUE)
-FetchContent_declare(googletest
-    GIT_REPOSITORY https://github.com/google/googletest.git
-    GIT_TAG        release-1.11.0
-    GIT_PROGRESS   TRUE
-    GIT_SHALLOW    TRUE)
-FetchContent_declare(yamlcpp
-    GIT_REPOSITORY https://github.com/jbeder/yaml-cpp.git
-    GIT_PROGRESS   TRUE
-    GIT_SHALLOW    TRUE)
-FetchContent_declare(fmtlib
-    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-    GIT_PROGRESS   TRUE
-    GIT_SHALLOW    TRUE)
-
-FetchContent_MakeAvailable(juce)
-FetchContent_MakeAvailable(googletest)
-FetchContent_MakeAvailable(yamlcpp)
-FetchContent_MakeAvailable(fmtlib)
+CPMAddPackage("gh:google/googletest#main")
+CPMAddPackage("gh:jbeder/yaml-cpp#master")
 
 
 
 ########################################################################################################################
 # Test setup
 # The test list
-set(JAUT_TEST_LIST "" CACHE INTERNAL "The list of tests to run")
+set(JAUT_TEST_LIST "" CACHE STRING "The list of tests to run")
 set(JAUT_TEST_ALL TRUE)
 
 if ("${JAUT_TEST_LIST}" STREQUAL "[^ ]+")
     set(JAUT_TEST_ALL FALSE)
+endif()
+
+if (WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options(/bigobj)
 endif()
 
 
@@ -51,19 +33,19 @@ function(jaut_add_test target group)
         return()
     endif()
     
-    cmake_parse_arguments(PARG "" "" "DEPENDENCIES;ASSETS;RESOURCES" ${ARGN})
+    cmake_parse_arguments(PARG "" "" "DEPENDENCIES;ASSETS;RESOURCES;DEFINES" ${ARGN})
     
     string(TOUPPER ${target} TEST_NAME)
     set(TEST_TARGET Test${TEST_NAME})
     
-    add_executable(${TEST_TARGET} ${group}/${target}.cpp)
+    add_executable(${TEST_TARGET} ${JAUT_SOURCE_DIR}/test/${group}/${target}.cpp)
     target_compile_definitions(${TEST_TARGET}
         PRIVATE
             JUCE_STANDALONE_APPLICATION=1
             JUCE_USE_CURL=0
             JUCE_USE_WEB_BROWSER=0)
     
-    if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
+    if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_compile_definitions(${TEST_TARGET}
             PRIVATE
                 _CONSOLE=1)
@@ -85,7 +67,7 @@ function(jaut_add_test target group)
             get_filename_component(FILE_OUT_NAME ${RESOURCE} NAME)
             
             list(APPEND RESOURCE_NAMES "${FILE_OUT_NAME}")
-            list(APPEND RESOURCE_PATHS "assets/${RESOURCE}")
+            list(APPEND RESOURCE_PATHS "${JAUT_SOURCE_DIR}/test/assets/${RESOURCE}")
         endforeach()
                 
         add_custom_command(
@@ -106,11 +88,16 @@ function(jaut_add_test target group)
             VERBATIM)
         
         add_custom_target(${TEST_TARGET}_Resources
-            DEPENDS
-                ${RESOURCE_NAMES})
+            DEPENDS ${RESOURCE_NAMES})
         add_dependencies(${TEST_TARGET} ${TEST_TARGET}_Resources)
 
         add_test(${TEST_TARGET} COMMAND ${TEST_TARGET})
+    endif()
+    
+    if (DEFINED PARG_DEFINES AND NOT "DEFINES" IN_LIST PARG_KEYWORDS_MISSING_VALUES)
+        target_compile_definitions(${TEST_TARGET}
+            PRIVATE
+                ${PARG_DEFINES})
     endif()
     
     target_link_libraries(${TEST_TARGET}
@@ -129,6 +116,20 @@ function(jaut_add_test target group)
             
             ${BINARY_DATA_TARGET}
             ${PARG_DEPENDENCIES})
+    
+    if (MSVC)
+        target_compile_options(${TEST_TARGET}
+            PRIVATE
+                /W4
+                /WX)
+    else()
+        target_compile_options(${TEST_TARGET}
+            PRIVATE
+                -Wall
+                -Wextra
+                -Wpedantic
+                -Werror)
+    endif()
 endfunction()
 
 
@@ -138,15 +139,23 @@ endfunction()
 jaut_add_test(Event core
     DEPENDENCIES
         juce::juce_core)
+
 jaut_add_test(Numeric core
     DEPENDENCIES
         juce::juce_core)
+
 jaut_add_test(Preprocessor core
     DEPENDENCIES
         juce::juce_core)
+
+jaut_add_test(Stringable core
+    DEPENDENCIES
+        juce::juce_core)
+
 jaut_add_test(TypeTraits core
     DEPENDENCIES
         juce::juce_core)
+
 jaut_add_test(Version core
     DEPENDENCIES
         juce::juce_core)
@@ -156,9 +165,22 @@ jaut_add_test(Config provider
     DEPENDENCIES
         yaml-cpp
         jaut::jaut_core)
-jaut_add_test(Localisation provider
+
+# Message test
+jaut_add_test(MessageHandler message
     DEPENDENCIES
         jaut::jaut_core
-    RESOURCES
-        localisation/en_GB.lang
-        localisation/de_DE.lang)
+        juce::juce_events)
+
+# Logger test
+jaut_add_test(Logger logger
+    DEPENDENCIES
+        jaut::jaut_message)
+
+jaut_add_test(LoggerSink logger
+    DEPENDENCIES
+        jaut::jaut_message)
+
+jaut_add_test(LoggerFormat logger
+    DEPENDENCIES
+        jaut::jaut_message)

@@ -1,0 +1,14 @@
+# Target labels
+ yaml-cpp-populate
+# Source files and their labels
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/CMakeFiles/yaml-cpp-populate
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/CMakeFiles/yaml-cpp-populate.rule
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/CMakeFiles/yaml-cpp-populate-complete.rule
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-build.rule
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-configure.rule
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-download.rule
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-install.rule
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-mkdir.rule
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-patch.rule
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-test.rule
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/yaml-cpp-subbuild/yaml-cpp-populate-prefix/src/yaml-cpp-populate-stamp/yaml-cpp-populate-update.rule

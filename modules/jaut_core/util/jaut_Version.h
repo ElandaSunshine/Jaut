@@ -35,6 +35,8 @@
 #pragma once
 
 #include <jaut_core/define/jaut_Define.h>
+#include <jaut_core/util/jaut_Stringable.h>
+
 #include <juce_core/juce_core.h>
 
 #include <optional>
@@ -276,5 +278,16 @@ namespace jaut
     private:
         JAUT_NODISCARD bool parseString(const juce::String &input);
         JAUT_NODISCARD int compare(const Version &right) const noexcept;
+    };
+    
+    //==================================================================================================================
+    template<>
+    struct JAUT_API Stringable<Version>
+    {
+        JAUT_NODISCARD
+        static juce::String toString(const Version &object)
+        {
+            return object.toString();
+        }
     };
 }

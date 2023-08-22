@@ -1,0 +1,3 @@
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/juce-subbuild/CMakeFiles/juce-populate.dir
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/juce-subbuild/CMakeFiles/edit_cache.dir
+D:/Development/Coding/cpp/Jaut/build/debug/vs/_deps/juce-subbuild/CMakeFiles/rebuild_cache.dir

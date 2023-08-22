@@ -25,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshine.xyz)
+    @author Elanda
     @file   jaut_Event.h
     @date   21, March 2020
     
@@ -46,8 +46,6 @@
 #include <type_traits>
 #include <variant>
 
-#include <jaut_core/math/jaut_SafeInteger.cpp>
-
 
 
 //**********************************************************************************************************************
@@ -66,7 +64,7 @@ namespace jaut
     template<class Fn, class Handler>
     JAUT_API struct isHandlerFreeFunction
         : std::bool_constant<std::is_pointer_v<Fn> && std::is_function_v<std::remove_pointer_t<Fn>>
-                                                   && std::is_constructible_v<typename Handler::FunctionType, Fn>>
+                                                   && std::is_constructible_v<typename Handler::FreeFunction_t, Fn>>
     {};
     
     /**
@@ -88,7 +86,7 @@ namespace jaut
     template<class T, class Handler>
     JAUT_API struct isHandlerLambdaOrFunctor
         : std::bool_constant<std::is_class_v<std::remove_reference_t<T>>
-                             && Handler::EventArgs::template prepend<T>::template to<std::is_invocable>::value
+                             && Handler::EventArgs_t::template prepend<T>::template to<std::is_invocable>::value
                              && std::is_copy_constructible_v<T>>
     {};
     
@@ -103,214 +101,6 @@ namespace jaut
     JAUT_API inline constexpr bool isHandlerLambdaOrFunctor_v = isHandlerLambdaOrFunctor<T, Handler>::value;
     
     //==================================================================================================================
-    /**
-     *  The EventHandler class stores a callback to a function and makes it invocable and storeable in an Event object.
-     *  An EventHandler can have 4 different types of callable, member functions, free functions, lambdas and functors.
-     *  
-     *  Since member functions are handled differently than free functions, this will keep a pointer to the member
-     *  function internally and also the class object to which it belongs.
-     *  This makes sure that different classes with the same function pointer don't equal to functions of other classes.
-     *  
-     *  Due to how lambdas work, you can not unsubscribe from them once subscribed because there is no way to check
-     *  for equality.
-     *  However, jaut::EventHandler allows to name such handlers, which can then be unsubscribed from through
-     *  their id.
-     *  
-     *  @tparam HandlerArgs The arguments of the registrable callback
-     */
-    template <class ...HandlerArgs>
-    class JAUT_API EventHandler
-    {
-    public:
-        /**
-         *  The callback type of member functions.
-         *  @tparam Owner The owning class of the member function
-         */
-        template<class Owner>
-        using MemberType = MemberFunctionPointer_t<Owner, void, HandlerArgs...>;
-        
-        /** The callback type of free functions. */
-        using FunctionType = FunctionPointer_t<void, HandlerArgs...>;
-        
-        /** The callback type of lambda functions. */
-        using LambdaType = FunctionType;
-        
-        /** The callback type of functors. */
-        using FunctorType = FunctionType;
-        
-        /** A type array containing the event arguments. */
-        using EventArgs = TypeArray<HandlerArgs...>;
-        
-        //==============================================================================================================
-        /**
-         *  Constructs a new callback-handler from a free function.
-         *  If the callback is a lambda, it will not be associative when constructed with this constructor.
-         *  
-         *  @tparam Fn The function type
-         *  @param callback The function or lambda
-         */
-        template<class Fn, std::enable_if_t<isHandlerFreeFunction_v<Fn, EventHandler>>* = nullptr>
-        explicit EventHandler(Fn &&function);
-        
-        /**
-         *  Constructs a new callback-handler from any invocable that is not a non-static member and not a
-         *  free function.
-         *  
-         *  @tparam T
-         *  @param invocable
-         */
-        template<class T, std::enable_if_t<isHandlerLambdaOrFunctor_v<T, EventHandler>>* = nullptr>
-        explicit EventHandler(T &&invocable);
-        
-        /**
-         *  Constructs a new callback-handler from a member function.
-         *
-         *  @tparam Owner   The type containing the function
-         *  @param callback The member function
-         *  @param owner    An instance of the type holding the member function
-         */
-        template<class Owner>
-        EventHandler(MemberType<Owner> memberFunction, Owner &memberObject);
-        
-        /**
-         *  Constructs a new callback-handler from any invocable with an id.
-         *
-         *  @tparam Fn The function type
-         *  @param id       The id of the handler
-         *  @param callback The function or lambda
-         */
-        template<class T>
-        EventHandler(juce::String id, T &&invocable);
-        
-        /**
-         *  Constructs a new callback-handler from a member function with an id.
-         *
-         *  @tparam Owner The type containing the function
-         *  @param id       The id of the handler
-         *  @param callback The member function
-         *  @param owner    An instance of the type holding the member function
-         */
-        template<class Owner>
-        EventHandler(juce::String id, MemberType<Owner> memberFunction, Owner &memberObject);
-        
-        EventHandler(const EventHandler &other) noexcept;
-        EventHandler(EventHandler &&other) noexcept;
-        
-        //==============================================================================================================
-        EventHandler &operator=(EventHandler right) noexcept;
-        
-        //==============================================================================================================
-        /**
-         *  Calls the stored callback.
-         *  This does not do a null-check, so be sure to check it yourself before calling it.
-         *  
-         *  @param args The arguments to pass to the callback
-         */
-        template<class ...Args>
-        void operator()(Args &&...args) const;
-        
-        //==============================================================================================================
-        /**
-         *  Compares two EventHandler and returns whether their callbacks are equal, or, in associative mode,
-         *  their ids.
-         *  
-         *  Note that when this handler is a closure or functor handler, this will always return false,
-         *  as there is no reliable way of comparing them. (technically there is, but since they can
-         *  be rvalues, their addresses would differ)
-         *  
-         *  @param handler The handler to compare this handler with
-         *  @return True if both handlers point to the same function, false otherwise
-         */
-        JAUT_NODISCARD
-        bool operator==(const EventHandler &handler) const noexcept;
-        
-        /**
-         *  Compares two EventHandler and returns whether their callbacks are not equal.
-         *
-         *  @param handler The handler to compare this handler with
-         *  @return True if both handlers point to different functions, false if not
-         */
-        JAUT_NODISCARD
-        bool operator!=(const EventHandler &handler) const noexcept;
-        
-        //==============================================================================================================
-        /**
-         *  Determines whether the function this handler is pointing to is a member function.
-         *  @return True if it is a member function, otherwise false
-         */
-        JAUT_NODISCARD
-        bool isMemberFunction() const noexcept;
-        
-        /**
-         *  Determines whether the function this handler is pointing to is a free function.
-         *  @return True if it is a free function, otherwise false
-         */
-        JAUT_NODISCARD
-        bool isFreeFunction() const noexcept;
-        
-        /**
-         *  Determines whether the function this handler is pointing to is a functor or closure.
-         *  @return True if it is a closure or functor, otherwise false
-         */
-        JAUT_NODISCARD
-        bool isClosureOrFunctor() const noexcept;
-        
-        /**
-         *  Determines whether this handler is an associative handler or not.
-         *  @return True if the handler possesses an id, otherwise false
-         */
-        JAUT_NODISCARD
-        bool isAssociative() const noexcept;
-        
-        //==============================================================================================================
-        /**
-         *  Gets the id of the handler if it is associative, otherwise an empty string.
-         *  @return The id of the handler
-         */
-        JAUT_NODISCARD
-        juce::String getId() const noexcept;
-        
-        //==============================================================================================================
-        friend void swap(EventHandler &left, EventHandler &right) noexcept
-        {
-            using std::swap;
-        
-            swap(left.data,     right.data);
-            swap(left.callback, right.callback);
-            swap(left.owner,    right.owner);
-            swap(left.funcMode, right.funcMode);
-        }
-        
-    private:
-        enum class FuncMode
-        {
-            Free,
-            Member,
-            ClosureOrFunctor
-        };
-        
-        //==============================================================================================================
-        using MemberDataArray = std::array<char, sizeof(MemberType<EventHandler>)>;
-        using DataVar         = std::variant<FunctionType, MemberDataArray, juce::String>;
-        
-        //==============================================================================================================
-        template<class Owner>
-        JAUT_NODISCARD
-        static MemberDataArray getMemberData(MemberType<Owner> memberFunctionPointer);
-        
-        //==============================================================================================================
-        DataVar                             data;
-        std::function<void(HandlerArgs...)> callback;
-        const void                          *owner   { nullptr };
-        FuncMode                            funcMode {};
-        
-        //==============================================================================================================
-        JUCE_LEAK_DETECTOR(EventHandler)
-    };
-    
-    template<class ...Args>
-    EventHandler(FunctionPointer_t<void, Args...>) -> EventHandler<Args...>;
-    
     /**
      *  The Event class provides a simple way for listeners to subscribe to events and changes that may occur.
      *  A listener is determined by a given EventHandler object.
@@ -362,21 +152,309 @@ namespace jaut
      *  @tparam Handler         The handler type this event is defined by
      *  @tparam CriticalSection An optional critical section to guard changes to the handler list
      */
-    template<class Handler, class CriticalSection = juce::DummyCriticalSection>
+    template<class, class = juce::DummyCriticalSection>
+    class Event;
+    
+    //==================================================================================================================
+    /**
+     *  The EventHandler class stores a callback to a function and makes it invocable and storable in an Event object.
+     *  An EventHandler can have 4 different types of callable, member functions, free functions, lambdas and functors.
+     *  
+     *  Since member functions are handled differently than free functions, this will keep a pointer to the member
+     *  function internally and also the class object to which it belongs.
+     *  This makes sure that different classes with the same function pointer don't equal to functions of other classes.
+     *  
+     *  Due to how lambdas work, you can not unsubscribe from them once subscribed because there is no way to check
+     *  for equality.
+     *  However, EventHandler allows to name such handlers, which can then be unsubscribed from through
+     *  their id.
+     *  
+     *  @tparam HandlerArgs The arguments of the registrable callback
+     */
+    template <class ...HandlerArgs>
+    class JAUT_API EventHandler
+    {
+    public:
+        /**
+         *  The callback type of member functions.
+         *  @tparam Owner The owning class of the member function
+         */
+        template<class Owner>
+        using MemberFunction_t = MemberFunctionPointer_t<Owner, void, HandlerArgs...>;
+        
+        /** The callback type of free functions. */
+        using FreeFunction_t = FunctionPointer_t<void, HandlerArgs...>;
+        
+        /** The callback type of lambda functions. */
+        using LambdaFunction_t = FreeFunction_t;
+        
+        /** The callback type of functors. */
+        using Functor_t = FreeFunction_t;
+        
+        /** A type array containing the event arguments. */
+        using EventArgs_t = TypeArray<HandlerArgs...>;
+        
+        //==============================================================================================================
+        /**
+         *  Constructs a new EventHandler from a free function.
+         *  If the callback is a lambda, it will not be associative when constructed with this constructor.
+         *  
+         *  @tparam Fn The function type
+         *  @param callback The function or lambda
+         */
+        template<class Fn, std::enable_if_t<isHandlerFreeFunction_v<Fn, EventHandler>>* = nullptr>
+        explicit EventHandler(Fn &&function);
+        
+        /**
+         *  Constructs a new EventHandler from any invocable that is not a non-static member and not a
+         *  free function.
+         *  
+         *  @tparam T
+         *  @param invocable
+         */
+        template<class T, std::enable_if_t<isHandlerLambdaOrFunctor_v<T, EventHandler>>* = nullptr>
+        explicit EventHandler(T &&invocable);
+        
+        /**
+         *  Constructs a new EventHandler from another Event, allowing to chain events.
+         *  <br><br>
+         *  Be aware that this could be dangerous if the chained event is destroyed before this one,
+         *  since it only points to the chained event. So make sure to remove it again before it gets destroyed.
+         *
+         *  @param chainedEvent The event that refers to this handler
+         */
+        template<class CriticalSection>
+        explicit EventHandler(Event<EventHandler<HandlerArgs...>, CriticalSection> &chainedEvent);
+        
+        /**
+         *  Constructs a new EventHandler from a member function.
+         *
+         *  @tparam Owner   The type containing the function
+         *  @param callback The member function
+         *  @param owner    An instance of the type holding the member function
+         */
+        template<class Owner>
+        EventHandler(MemberFunction_t<Owner> memberFunction, Owner &memberObject);
+        
+        /**
+         *  Constructs a new EventHandler from any invocable with an id.
+         *
+         *  @tparam Fn The function type
+         *  @param id       The id of the handler
+         *  @param callback The function or lambda
+         */
+        template<class T>
+        EventHandler(juce::String id, T &&invocable);
+        
+        /**
+         *  Constructs a new EventHandler from a member function with an id.
+         *
+         *  @tparam Owner The type containing the function
+         *  @param id       The id of the handler
+         *  @param callback The member function
+         *  @param owner    An instance of the type holding the member function
+         */
+        template<class Owner>
+        EventHandler(juce::String id, MemberFunction_t<Owner> memberFunction, Owner &memberObject);
+        
+        EventHandler(const EventHandler &other) noexcept;
+        EventHandler(EventHandler &&other) noexcept;
+        
+        //==============================================================================================================
+        EventHandler &operator=(EventHandler right) noexcept;
+        
+        //==============================================================================================================
+        /**
+         *  Calls the stored callback.
+         *  This does not do a null-check, so be sure to check it yourself before calling it.
+         *  
+         *  @param args The arguments to pass to the callback
+         */
+        template<class ...Args>
+        void operator()(Args &&...args) const;
+        
+        //==============================================================================================================
+        /**
+         *  Compares two EventHandler and returns whether their callbacks are equal, or, in associative mode,
+         *  their ids.
+         *  
+         *  Note that when this handler is a closure or functor, this will always return false,
+         *  as there is no reliable way of comparing them. (technically there is, but since they can
+         *  be rvalues, their addresses would differ)
+         *  
+         *  @param handler The handler to compare this handler with
+         *  @return True if both handlers point to the same function, false otherwise
+         */
+        JAUT_NODISCARD
+        bool operator==(const EventHandler &handler) const noexcept;
+        
+        /**
+         *  Compares two EventHandler and returns whether their callbacks are not equal.
+         *
+         *  @param handler The handler to compare this handler with
+         *  @return True if both handlers point to different functions, false if not
+         */
+        JAUT_NODISCARD
+        bool operator!=(const EventHandler &handler) const noexcept;
+        
+        //==============================================================================================================
+        /**
+         *  Determines whether the function this handler is pointing to is a member function.
+         *  @return True if it is a member function, otherwise false
+         */
+        JAUT_NODISCARD
+        bool isMemberFunction() const noexcept;
+        
+        /**
+         *  Determines whether the function this handler is pointing to is a free function.
+         *  @return True if it is a free function, otherwise false
+         */
+        JAUT_NODISCARD
+        bool isFreeFunction() const noexcept;
+        
+        /**
+         *  Determines whether the function this handler is pointing to is a functor or closure.
+         *  @return True if it is a closure or functor, otherwise false
+         */
+        JAUT_NODISCARD
+        bool isClosureOrFunctor() const noexcept;
+        
+        /**
+         *  Determines whether this handler is a chained handler, that binds another event to this one.
+         *  @return True if this is a chained handler
+         */
+        JAUT_NODISCARD
+        bool isChained() const noexcept;
+        
+        /**
+         *  Determines whether this handler is an associative handler or not.
+         *  @return True if the handler possesses an id, otherwise false
+         */
+        JAUT_NODISCARD
+        bool isAssociative() const noexcept;
+        
+        //==============================================================================================================
+        /**
+         *  Gets the id of the handler if it is associative, otherwise an empty string.
+         *  @return The id of the handler
+         */
+        JAUT_NODISCARD
+        juce::String getId() const noexcept;
+        
+        //==============================================================================================================
+        friend void swap(EventHandler &left, EventHandler &right) noexcept
+        {
+            using std::swap;
+        
+            swap(left.data,     right.data);
+            swap(left.callback, right.callback);
+            swap(left.owner,    right.owner);
+            swap(left.funcMode, right.funcMode);
+        }
+        
+    private:
+        enum class FuncMode
+        {
+            Free,
+            Member,
+            ClosureOrFunctor,
+            Chained
+        };
+        
+        //==============================================================================================================
+        using MemberDataArray = std::array<char, sizeof(MemberFunction_t<EventHandler>)>;
+        using DataVar         = std::variant<FreeFunction_t, MemberDataArray, juce::String>;
+        
+        //==============================================================================================================
+        template<class Owner>
+        JAUT_NODISCARD
+        static MemberDataArray getMemberData(MemberFunction_t<Owner> memberFunctionPointer);
+        
+        //==============================================================================================================
+        DataVar                             data;
+        std::function<void(HandlerArgs...)> callback;
+        const void                          *owner   { nullptr };
+        FuncMode                            funcMode {};
+        
+        //==============================================================================================================
+        JUCE_LEAK_DETECTOR(EventHandler)
+    };
+    
+    template<class ...Args>
+    EventHandler(FunctionPointer_t<void, Args...>) -> EventHandler<Args...>;
+    
+    //==================================================================================================================
+    /**
+     *  A simple RAII event subscriber interface, that let's you automatically subscribe to and unsubscribe from an
+     *  event.<br><br>
+     *  Example:
+     *  @code{.cpp}
+     *  void function()
+     *  {
+     *      Event<MyHandler> myEvent;
+     *      
+     *      {
+     *          // Here the event will be subscribed to
+     *          ScopedSubscriber subscriber(myEvent, jaut::makeHandler(...));
+     *          
+     *      } // Here the event will be unsubscribed from
+     *  }
+     *  @endcode
+     *  
+     *  Note that, when the ScopedSubscriber exceeds the Event's lifetime, the behaviour of the destructor is undefined.
+     *  @tparam Handler The handler type
+     */
+    template<class Handler>
+    class JAUT_API ScopedSubscriber
+    {
+    public:
+        using EventHandler_t = Handler;
+        using Event_t        = Event<EventHandler_t>;
+        
+        //==============================================================================================================
+        ScopedSubscriber(Event_t &eventToManage, EventHandler_t handler); // NOLINT
+        ScopedSubscriber(ScopedSubscriber &&other) noexcept;
+        
+        ~ScopedSubscriber();
+        
+        //==============================================================================================================
+        ScopedSubscriber& operator=(ScopedSubscriber &&other) noexcept;
+        
+        //==============================================================================================================
+        friend void swap(ScopedSubscriber &left, ScopedSubscriber &right) noexcept
+        {
+            using std::swap;
+            
+            swap(left.event,   right.event);
+            swap(left.handler, right.handler);
+        }
+        
+    private:
+        Event_t        *event;
+        EventHandler_t handler;
+        
+        //==============================================================================================================
+        JUCE_DECLARE_NON_COPYABLE(ScopedSubscriber)
+    };
+    
+    //==================================================================================================================
+    template<class Handler, class CriticalSection>
     class JAUT_API Event
     {
     public:
         /** The EventHandler type this Event is managing. */
-        using EventHandlerType = Handler;
+        using Handler_t = Handler;
+        
+        using HandlerList_t = std::vector<Handler>;
         
         /**
          *  The event argument list of this Event's handlers.
          *  @see jaut::TypeArray
          */
-        using EventArgs = typename EventHandlerType::EventArgs;
+        using EventArgs_t = typename Handler_t::EventArgs_t;
         
         /** The type of callback for additional actions when adding or removing a handler. */
-        using AddRemoveCallback = std::function<void(const EventHandlerType&)>;
+        using AddRemoveCallback_t = std::function<void(const Handler_t&)>;
         
         //==============================================================================================================
         /**
@@ -385,8 +463,8 @@ namespace jaut
          *  @param add    The callback to call before a new handler is subscribed
          *  @param remove The callback to call before a handler is unsubscribed
          */
-        explicit Event(AddRemoveCallback add    = [](const EventHandlerType&){},
-                       AddRemoveCallback remove = [](const EventHandlerType&){});
+        explicit Event(AddRemoveCallback_t add    = [](const Handler_t&){},
+                       AddRemoveCallback_t remove = [](const Handler_t&){});
         
         Event(Event &&other) noexcept;
         
@@ -400,7 +478,7 @@ namespace jaut
          *  @param handler The handler to subscribe
          *  @return This event object
          */
-        Event& operator+=(EventHandlerType handler);
+        Event& operator+=(Handler_t handler);
         
         /**
          *  Unsubscribe a handler if it already existed.
@@ -409,7 +487,24 @@ namespace jaut
          *  @param handler The handler to unsubscribe
          *  @return This event object
          */
-        Event& operator-=(EventHandlerType handler);
+        Event& operator-=(Handler_t handler);
+        
+        /**
+         *  Subscribe multiple new handler to this event if they don't exist already.
+         *
+         *  @param handlers The handler list to subscribe
+         *  @return This event object
+         */
+        Event& operator+=(HandlerList_t handlers);
+        
+        /**
+         *  Unsubscribe multiple handler if they already existed.
+         *  Unsubscribing from lambdas is not possible, it's better to use associative handlers for this purpose.
+         *
+         *  @param handler The handler list to unsubscribe
+         *  @return This event object
+         */
+        Event& operator-=(HandlerList_t handlers);
         
         //==============================================================================================================
         /**
@@ -432,9 +527,6 @@ namespace jaut
         void invoke(Args &&...args) const;
         
         //==============================================================================================================
-        bool unsubscribeFrom(const juce::String &id);
-        
-        //==============================================================================================================
         friend void swap(Event &left, Event &right) noexcept
         {
             using std::swap;
@@ -445,19 +537,18 @@ namespace jaut
         }
         
     private:
-        static_assert(sameTypeIgnoreTemplate_v<EventHandlerType, EventHandler<>>, JAUT_ASSERT_EVENT_NOT_A_HANDLER);
+        static_assert(sameTypeIgnoreTemplate_v<EventHandler, Handler_t>, JAUT_ASSERT_EVENT_NOT_A_HANDLER);
         
         //==============================================================================================================
-        using HandlerListType   = std::vector<EventHandlerType>;
-        using IteratorType      = typename HandlerListType::iterator;
-        using ConstIteratorType = typename HandlerListType::const_iterator;
+        using Iterator_t      = typename HandlerList_t::iterator;
+        using ConstIterator_t = typename HandlerList_t::const_iterator;
         
         //==============================================================================================================
         CriticalSection criticalSection;
         
-        AddRemoveCallback addCallback;
-        AddRemoveCallback removeCallback;
-        HandlerListType   handlers;
+        AddRemoveCallback_t addCallback;
+        AddRemoveCallback_t removeCallback;
+        HandlerList_t       handlers;
         
         //==============================================================================================================
         JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(Event)
@@ -505,12 +596,14 @@ namespace jaut
     
     //==================================================================================================================
     /**
-     *  Creates a new handler from a non-static member function.
+     *  Creates a new EventHandler from a non-static member function.
      *
-     *  @tparam Obj      The owner type of the member function
-     *  @param  function The member function to link
-     *  @param  owner    An instance of the class holding the member function
-     *  @return The new handler object
+     *  @tparam Obj The owner type of the member function
+     *
+     *  @param function The member function to link
+     *  @param owner    An instance of the class holding the member function
+     *
+     *  @return The new EventHandler object
      */
     template<class Obj, class ...Args>
     JAUT_NODISCARD
@@ -521,13 +614,15 @@ namespace jaut
     }
     
     /**
-     *  Creates a new handler from a non-static member function.
+     *  Creates a new EventHandler from a non-static member function.
      *
-     *  @tparam Obj      The owner type of the member function
-     *  @tparam Args     The argument types of the handler
-     *  @param  function The member function to link
-     *  @param  owner    An instance of the class holding the member function
-     *  @return The new handler object
+     *  @tparam Obj  The owner type of the member function
+     *  @tparam Args The argument types of the handler
+     *
+     *  @param function The member function to link
+     *  @param owner    An instance of the class holding the member function
+     *
+     *  @return The new EventHandler object
      */
     template<class Obj, class ...Args>
     JAUT_NODISCARD
@@ -540,11 +635,13 @@ namespace jaut
     }
     
     /**
-     *  Creates a new handler from a free function, a lambda or a functor object.
+     *  Creates a new EventHandler from a free function, a lambda or a functor object.
      *
-     *  @tparam Args      The argument types of the handler
-     *  @param  invocable The invocable to create the handler from
-     *  @return The new handler object
+     *  @tparam Args The argument types of the handler
+     *
+     *  @param invocable The invocable to create the handler from
+     *
+     *  @return The new EventHandler object
      */
     template<class Fn>
     JAUT_NODISCARD
@@ -554,13 +651,15 @@ namespace jaut
     }
     
     /**
-     *  Creates a new associative handler from a non-static member function.
+     *  Creates a new associative EventHandler from a non-static member function.
      *
-     *  @tparam Obj      The owner type of the member function
-     *  @param  id       The id of the handler
-     *  @param  function The member function to link
-     *  @param  owner    An instance of the class holding the member function
-     *  @return The new handler object
+     *  @tparam Obj The owner type of the member function
+     *
+     *  @param id       The id of the handler
+     *  @param function The member function to link
+     *  @param owner    An instance of the class holding the member function
+     *
+     *  @return The new EventHandler object
      */
     template<class Obj, class ...Args>
     JAUT_NODISCARD
@@ -571,13 +670,15 @@ namespace jaut
     }
     
     /**
-     *  Creates a new associative handler from a non-static member function.
+     *  Creates a new associative EventHandler from a non-static member function.
      *
-     *  @tparam Obj      The owner type of the member function
-     *  @param  id       The id of the handler
-     *  @param  function The member function to link
-     *  @param  owner    An instance of the class holding the member function
-     *  @return The new handler object
+     *  @tparam Obj The owner type of the member function
+     *
+     *  @param id       The id of the handler
+     *  @param function The member function to link
+     *  @param owner    An instance of the class holding the member function
+     *
+     *  @return The new EventHandler object
      */
     template<class Obj, class ...Args>
     JAUT_NODISCARD
@@ -589,18 +690,36 @@ namespace jaut
     }
     
     /**
-     *  Creates a new associative handler from a free function, a lambda or a functor object.
+     *  Creates a new associative EventHandler from a free function, a lambda or a functor object.
      *
-     *  @tparam Args      The argument types of the handler
-     *  @param  id        The id of the handler
-     *  @param  invocable The invocable to create the handler from
-     *  @return The new handler object
+     *  @tparam Args The argument types of the handler
+     *
+     *  @param id        The id of the handler
+     *  @param invocable The invocable to create the handler from
+     *
+     *  @return The new EventHandler object
      */
     template<class Fn, class ...Args>
     JAUT_NODISCARD
     JAUT_API inline auto makeHandler(juce::String id, Fn &&invocable)
     {
         return detail::handlerResolverHelper(std::move(id), std::forward<Fn>(invocable));
+    }
+    
+    /**
+     *  Creates a new chained EventHandler from another Event.
+     *
+     *  @tparam Handler The handler of the other event
+     *
+     *  @param chainedEvent The chained event to create the handler from
+     *
+     *  @return The new EventHandler object
+     */
+    template<class Handler, class CriticalSection>
+    JAUT_NODISCARD
+    JAUT_API inline auto makeHandler(Event<Handler, CriticalSection> &chainedEvent)
+    {
+        return Handler(chainedEvent);
     }
 }
 //======================================================================================================================
@@ -613,7 +732,7 @@ namespace jaut
     template<class ...HandlerArgs>
     template<class Fn, std::enable_if_t<isHandlerFreeFunction_v<Fn, EventHandler<HandlerArgs...>>>*>
     inline EventHandler<HandlerArgs...>::EventHandler(Fn &&parFunction) // NOLINT
-        : data(parFunction),
+        : data    (parFunction),
           callback(std::forward<Fn>(parFunction)),
           funcMode(FuncMode::Free)
     {}
@@ -625,15 +744,23 @@ namespace jaut
           funcMode(FuncMode::ClosureOrFunctor)
     {}
     
+    
+    template<class ...HandlerArgs>
+    template<class CS>
+    inline EventHandler<HandlerArgs...>::EventHandler(Event<EventHandler<HandlerArgs...>, CS> &chainedEvent)
+        : callback([&e = chainedEvent](HandlerArgs ...args) { e.invoke(args...); }),
+          owner   (&chainedEvent)
+    {}
+    
     template<class ...HandlerArgs>
     template<class Owner>
-    inline EventHandler<HandlerArgs...>::EventHandler(MemberType<Owner> parMemberFunction, Owner &parMemberObject)
-        : data(getMemberData(parMemberFunction)),
+    inline EventHandler<HandlerArgs...>::EventHandler(MemberFunction_t<Owner> parMemberFunction, Owner &parMemberObject)
+        : data    (getMemberData(parMemberFunction)),
           callback([parMemberFunction, &parMemberObject](HandlerArgs ...args)
                    {
                        (parMemberObject.*parMemberFunction)(args...);
                    }),
-          owner(&parMemberObject),
+          owner   (&parMemberObject),
           funcMode(FuncMode::Member)
     {}
     
@@ -649,7 +776,7 @@ namespace jaut
     
     template<class ...HandlerArgs>
     template<class Owner>
-    inline EventHandler<HandlerArgs...>::EventHandler(juce::String parId, MemberType<Owner> parMemberFunction,
+    inline EventHandler<HandlerArgs...>::EventHandler(juce::String parId, MemberFunction_t<Owner> parMemberFunction,
                                                       Owner &parMemberObject)
         : EventHandler(parMemberFunction, parMemberObject)
     {
@@ -660,9 +787,9 @@ namespace jaut
     
     template<class ...HandlerArgs>
     inline EventHandler<HandlerArgs...>::EventHandler(const EventHandler &parOther) noexcept
-        : data(parOther.data),
+        : data    (parOther.data),
           callback(parOther.callback),
-          owner(parOther.owner),
+          owner   (parOther.owner),
           funcMode(parOther.funcMode)
     {}
     
@@ -702,12 +829,15 @@ namespace jaut
             switch (funcMode)
             {
                 case FuncMode::Free:
-                    return (std::get<FunctionType>(data) == std::get<FunctionType>(parHandler.data));
+                    return (std::get<FreeFunction_t>(data) == std::get<FreeFunction_t>(parHandler.data));
                     
                 case FuncMode::Member:
                     return (owner == parHandler.owner
                             && std::get<MemberDataArray>(data) == std::get<MemberDataArray>(parHandler.data));
-                    
+                
+                case FuncMode::Chained:
+                    return (owner == parHandler.owner);
+                
                 case FuncMode::ClosureOrFunctor: break;
             }
         }
@@ -741,6 +871,12 @@ namespace jaut
     }
     
     template<class ...HandlerArgs>
+    bool EventHandler<HandlerArgs...>::isChained() const noexcept
+    {
+        return (funcMode == FuncMode::Chained);
+    }
+    
+    template<class ...HandlerArgs>
     bool EventHandler<HandlerArgs...>::isAssociative() const noexcept
     {
         return (data.index() == 2);
@@ -756,7 +892,7 @@ namespace jaut
     //==================================================================================================================
     template<class ...HandlerArgs>
     template<class Owner>
-    auto EventHandler<HandlerArgs...>::getMemberData(MemberType<Owner> parMemberFunctionPointer)
+    auto EventHandler<HandlerArgs...>::getMemberData(MemberFunction_t<Owner> parMemberFunctionPointer)
         -> typename EventHandler<HandlerArgs...>::MemberDataArray
     {
         MemberDataArray data_array;
@@ -767,12 +903,54 @@ namespace jaut
 //======================================================================================================================
 // endregion Implementation (EventHandler)
 //**********************************************************************************************************************
+// region Implementation (ScopedSubscriber)
+//======================================================================================================================
+namespace jaut
+{
+    template<class Handler>
+    inline ScopedSubscriber<Handler>::ScopedSubscriber(Event_t &parEventToManage, EventHandler_t parHandler)
+        : event  (&parEventToManage),
+          handler(std::move(parHandler))
+    {
+        // closures can not be unsubscribed from, use an assoc handler instead
+        jassert(!handler.isClosureOrFunctor());
+        event += handler;
+    }
+    
+    template<class Handler>
+    inline ScopedSubscriber<Handler>::ScopedSubscriber(ScopedSubscriber &&other) noexcept
+        : event  (other.event),
+          handler(std::move(other.handler))
+    {
+        other.event = nullptr;
+    }
+    
+    template<class Handler>
+    inline ScopedSubscriber<Handler>::~ScopedSubscriber()
+    {
+        if (event)
+        {
+            event -= handler;
+        }
+    }
+    
+    //==================================================================================================================
+    template<class Handler>
+    inline ScopedSubscriber<Handler>& ScopedSubscriber<Handler>::operator=(ScopedSubscriber<Handler> &&other) noexcept
+    {
+        ScopedSubscriber temp(std::move(other));
+        swap(*this, temp);
+    }
+}
+//======================================================================================================================
+// endregion Implementation (ScopedSubscriber)
+//**********************************************************************************************************************
 // region Implementation (Event)
 //======================================================================================================================
 namespace jaut
 {
     template<class Handler, class CriticalSection>
-    inline Event<Handler, CriticalSection>::Event(AddRemoveCallback parAdd, AddRemoveCallback parRemove)
+    inline Event<Handler, CriticalSection>::Event(AddRemoveCallback_t parAdd, AddRemoveCallback_t parRemove)
         : addCallback(std::move(parAdd)), removeCallback(std::move(parRemove))
     {}
     
@@ -804,12 +982,12 @@ namespace jaut
     
     //==================================================================================================================
     template<class Handler, class CriticalSection>
-    inline Event<Handler, CriticalSection>& Event<Handler, CriticalSection>::operator+=(EventHandlerType handler)
+    inline Event<Handler, CriticalSection>& Event<Handler, CriticalSection>::operator+=(Handler_t handler)
     {
-        EventHandlerType temp_handler(std::move(handler));
+        Handler_t temp_handler(std::move(handler));
         
         {
-            typename CriticalSection::ScopedLockType lock(criticalSection);
+            jdscoped typename CriticalSection::ScopedLockType(criticalSection);
             
             if (std::find(handlers.begin(), handlers.end(), temp_handler) == handlers.end())
             {
@@ -822,18 +1000,63 @@ namespace jaut
     }
     
     template<class Handler, class CriticalSection>
-    inline Event<Handler, CriticalSection>& Event<Handler, CriticalSection>::operator-=(EventHandlerType handler)
+    inline Event<Handler, CriticalSection>& Event<Handler, CriticalSection>::operator-=(Handler_t handler)
     {
-        const EventHandlerType temp_handler(std::move(handler));
+        const Handler_t temp_handler(std::move(handler));
         
         {
-            typename CriticalSection::ScopedLockType lock(criticalSection);
+            jdscoped typename CriticalSection::ScopedLockType(criticalSection);
             const auto it = std::find(handlers.begin(), handlers.end(), temp_handler);
             
             if (it != handlers.end())
             {
                 removeCallback(temp_handler);
                 (void) handlers.erase(it);
+            }
+        }
+        
+        return *this;
+    }
+    
+    template<class Handler, class CriticalSection>
+    inline Event<Handler, CriticalSection>& Event<Handler, CriticalSection>::operator+=(HandlerList_t parHandlers)
+    {
+        HandlerList_t temp_handlers;
+        std::swap(temp_handlers, parHandlers);
+        
+        {
+            jdscoped typename CriticalSection::ScopedLockType(criticalSection);
+            
+            for (Handler_t &handler : temp_handlers)
+            {
+                if (std::find(handlers.begin(), handlers.end(), handler) == handlers.end())
+                {
+                    addCallback(handler);
+                    (void) handlers.emplace_back(std::move(handler));
+                }
+            }
+        }
+        
+        return *this;
+    }
+    
+    template<class Handler, class CriticalSection>
+    inline Event<Handler, CriticalSection>& Event<Handler, CriticalSection>::operator-=(HandlerList_t parHandlers)
+    {
+        HandlerList_t temp_handlers;
+        std::swap(temp_handlers, parHandlers);
+        
+        {
+            jdscoped typename CriticalSection::ScopedLockType(criticalSection);
+            
+            for (Handler_t &handler : temp_handlers)
+            {
+                if (const auto it = std::find(handlers.begin(), handlers.end(), handler);
+                    it != handlers.end())
+                {
+                    removeCallback(*it);
+                    (void) handlers.erase(it);
+                }
             }
         }
         
@@ -853,31 +1076,12 @@ namespace jaut
     template<class ...Args>
     inline void Event<Handler, CriticalSection>::invoke(Args &&...args) const
     {
-        typename CriticalSection::ScopedLockType lock(criticalSection);
+        jdscoped typename CriticalSection::ScopedLockType(criticalSection);
         
-        for (const EventHandlerType &handler : handlers)
+        for (const Handler_t &handler : handlers)
         {
             handler(std::forward<Args>(args)...);
         }
-    }
-    
-    //==================================================================================================================
-    template<class Handler, class CriticalSection>
-    inline bool Event<Handler, CriticalSection>::unsubscribeFrom(const juce::String &id)
-    {
-        for (auto it = handlers.begin(); it != handlers.end(); ++it)
-        {
-            const EventHandlerType &handler = *it;
-            
-            if (handler.isAssociative() && handler.getId() == id)
-            {
-                removeCallback(handler);
-                (void) handlers.erase(it);
-                return true;
-            }
-        }
-        
-        return false;
     }
 }
 //======================================================================================================================

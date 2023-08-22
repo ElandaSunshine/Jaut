@@ -33,12 +33,12 @@
     BEGIN_JUCE_MODULE_DECLARATION
 
     ID:                 jaut_dummy
-    vendor:             ElandaOfficial
+    vendor:             ElandaSunshine
     version:            0.1.0
     name:               JAUT Unit Test Dummy
-    description:        JAUT dummy module for unit testing purposes, you don't need this just ignore it.
+    description:        JAUT dummy module for unit testing purposes, you won't likely need this, sooo... just ignore it.
     website:            https://github.com/elandasunshine/jaut
-    license:            AGPL v3
+    license:            GPL v3
     minimumCppStandard: 17
 
     END_JUCE_MODULE_DECLARATION

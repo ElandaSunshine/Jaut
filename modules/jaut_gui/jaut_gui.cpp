@@ -25,30 +25,9 @@
 
 #include <jaut_gui/jaut_gui.h>
 
-namespace jaut
-{
-    LookAndFeel_Jaut& getDefaultLaf()
-    {
-        static LookAndFeel_Jaut laf;
-        return laf;
-    }
-}
 
-#if !DOXYGEN
-#   define JAUT_IMPL_LAF(CLASS) \
-    void CLASS ::parentHierarchyChanged() \
-    { \
-        if (!(lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getParentComponent()->getLookAndFeel()))) \
-            lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf(); \
-    } \
-    void CLASS ::lookAndFeelChanged() \
-    { \
-        if (!(lookAndFeel = dynamic_cast<LookAndFeel_Jaut*>(&getLookAndFeel()))) \
-            lookAndFeel = &LookAndFeel_Jaut::getDefaultLaf(); \
-    }
-#   define JAUT_INIT_LAF() lookAndFeelChanged();
-#endif
 
+/*
 #include <jaut_gui/component/component.cpp>
 #include <jaut_gui/mouse/mouse.cpp>
 #include <jaut_gui/util/util.cpp>
@@ -58,6 +37,26 @@ namespace jaut
 #include <jaut_gui/text/internal/jaut_format_attributes.cpp>
 #include <jaut_gui/text/internal/jaut_format_layout.cpp>
 #include <jaut_gui/text/text.cpp>
+*/
 
-#undef JAUT_IMPL_LAF
-#undef JAUT_INIT_LAF
+// Component
+#include <jaut_gui/component/jaut_ContentPane.cpp>
+#include <jaut_gui/component/jaut_DragAndDropWindow.cpp>
+#include <jaut_gui/component/jaut_ExtraComponent.cpp>
+#include <jaut_gui/component/jaut_MultiPagePanel.cpp>
+#include <jaut_gui/component/jaut_SplitPanel.cpp>
+
+// LookAndFeel
+#include <jaut_gui/lookandfeel/jaut_LookAndFeel.cpp>
+
+
+
+namespace jaut
+{
+    //==================================================================================================================
+    LookAndFeel& getDefaultLaf() noexcept
+    {
+        static LookAndFeel laf;
+        return laf;
+    }
+}

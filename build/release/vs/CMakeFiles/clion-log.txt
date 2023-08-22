@@ -1,0 +1,8 @@
+C:\Users\elend\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\222.4345.21\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM=C:/Users/elend/AppData/Local/JetBrains/Toolbox/apps/CLion/ch-0/222.4345.21/bin/ninja/win/ninja.exe -DJAUT_BUILD_TESTS=ON -DJAUT_CLONE_JUCE=ON -G Ninja -S D:\Development\Coding\cpp\Jaut -B D:\Development\Coding\cpp\Jaut\build\release\vs
+-- CPM: adding package JUCE@ (develop)
+-- Configuring juceaide
+-- Building juceaide
+-- Exporting juceaide
+-- Configuring done
+-- Generating done
+-- Build files have been written to: D:/Development/Coding/cpp/Jaut/build/release/vs

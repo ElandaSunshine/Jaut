@@ -25,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshine.com)
+    @author Elanda
     @file   jaut_ConfigException.h
     @date   26, April 2022
 

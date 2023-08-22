@@ -265,7 +265,7 @@ SafeIntDefaultExceptionHandler     - if you'd like to replace the exception hand
                                      SAFEINT_FAILFAST        - On Windows, calls __failfast, else calls abort()
                                      Default                 - Uses the SafeIntExceptionHandler class, throws a SafeIntException.
 
-                                     If you do replace the exception handler, then make sure you define:
+                                     If you do replace the exception policies, then make sure you define:
                                      
                                      SafeIntOnOverflow
                                      SafeIntOnDivZero
@@ -542,7 +542,7 @@ SAFEINT_DISABLE_ADDRESS_OPERATOR   - Disables the overload of the & operator, wh
 *                 Corrected bug in one case of GreaterThan
 *  July 22, 2004 - 1.0.4
 *                 Tightened logic in addition check (saving 2 instructions)
-*                 Pulled error handler out into function to enable user-defined replacement
+*                 Pulled error policies out into function to enable user-defined replacement
 *                 Made internal type of SafeIntException an enum (as per Niels' suggestion)
 *                 Added casts for base integer types (as per Scott Meyers' suggestion)
 *                 Updated usage information - see important new perf notes.
@@ -659,7 +659,7 @@ enum class SafeIntError
 
 
 /*
-* Error handler classes
+* Error policies classes
 * Using classes to deal with exceptions is going to allow the most
 * flexibility, and we can mix different error handlers in the same project
 * or even the same file. It isn't advisable to do this in the same function
@@ -766,7 +766,7 @@ namespace SafeIntInternal
     // Some users may have applications that do not use C++ exceptions
     // and cannot compile the following class. If that is the case,
     // either SafeInt_InvalidParameter must be defined as the default,
-    // or a custom, user-supplied exception handler must be provided.
+    // or a custom, user-supplied exception policies must be provided.
     
     template <> class SafeIntExceptionHandler < SafeIntException >
     {
@@ -832,7 +832,7 @@ typedef SafeIntInternal::SafeIntExceptionHandler < SafeIntException > CPlusPlusE
 
 typedef SafeIntInternal::SafeInt_InvalidParameter InvalidParameterExceptionHandler;
 
-// This exception handler is no longer recommended, but is left here in order not to break existing users
+// This exception policies is no longer recommended, but is left here in order not to break existing users
 #if defined _WINDOWS_
 typedef SafeIntInternal::SafeIntWin32ExceptionHandler Win32ExceptionHandler;
 #endif
@@ -843,7 +843,7 @@ typedef CPlusPlusExceptionHandler  SafeIntErrorPolicy_SafeIntException;
     typedef InvalidParameterExceptionHandler SafeIntErrorPolicy_InvalidParameter;
 #endif
 
-// If the user hasn't defined a default exception handler,
+// If the user hasn't defined a default exception policies,
 // define one now, depending on whether they would like Win32 or C++ exceptions
 
 // This library will use conditional noexcept soon, but not in this release
@@ -874,7 +874,7 @@ typedef CPlusPlusExceptionHandler  SafeIntErrorPolicy_SafeIntException;
 #define SAFEINT_EXCEPTION_HANDLER_CPP 0
 #endif
 
-// If an error handler is chosen other than C++ exceptions, such as Win32 exceptions, fail fast,
+// If an error policies is chosen other than C++ exceptions, such as Win32 exceptions, fail fast,
 // or abort, then all methods become no throw. Some teams track throw() annotations closely,
 // and the following option provides for this.
 #if SAFEINT_EXCEPTION_HANDLER_CPP
@@ -2613,7 +2613,7 @@ public:
 
         LargeIntRegMultiply< std::uint64_t, std::uint64_t >::template RegMultiplyThrow< E >( (std::uint64_t)a1, (std::uint64_t)b1, &tmp );
 
-        // The unsigned multiplication didn't overflow or we'd be in the exception handler
+        // The unsigned multiplication didn't overflow or we'd be in the exception policies
         if( aNegative ^ bNegative )
         {
             // Result must be negative

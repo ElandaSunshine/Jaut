@@ -1,5 +1,14 @@
 /**
-    ===============================================================
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+                     ░░░░░██╗░█████╗░██╗░░░██╗████████╗
+                     ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝
+                     ░░░░░██║███████║██║░░░██║░░░██║░░░
+                     ██╗░░██║██╔══██║██║░░░██║░░░██║░░░
+                     ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░
+                     ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░
+                       JUCE Augmented Utility  Toolbox
+    ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────
+    
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -24,12 +33,12 @@
     BEGIN_JUCE_MODULE_DECLARATION
 
     ID:                 jaut_audio
-    vendor:             ElandaOfficial
+    vendor:             ElandaSunshine
     version:            1.0.0
     name:               JAUT Audio & Processor Classes
     description:        Various processing and dsp related classes.
     website:            https://github.com/elandasunshine/jaut
-    license:            AGPL v3
+    license:            GPL v3
     minimumCppStandard: 17
     dependencies:       jaut_message juce_audio_processors
 
@@ -42,10 +51,9 @@
 #include <jaut_message/jaut_message.h>
 #include <juce_audio_processors/juce_audio_processors.h>
 
-#include <jaut_audio/parameter/attachments.h>
-#include <jaut_audio/parameter/virtualparameter.h>
+// Processors
+#include <jaut_audio/processor/jaut_AudioProcessorRack.h>
+#include <jaut_audio/processor/jaut_AudioProcessorSet.h>
 
-#include <jaut_audio/processor/processspec.h>
-#include <jaut_audio/processor/serialisableaudioprocessor.h>
-#include <jaut_audio/processor/audioprocessorrack.h>
-#include <jaut_audio/processor/audioprocessorset.h>
+// Parameters
+#include <jaut_audio/parameter/jaut_ValueParameterAttachment.h>

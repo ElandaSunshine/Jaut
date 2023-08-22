@@ -1,0 +1,14 @@
+# Target labels
+ googletest-populate
+# Source files and their labels
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/CMakeFiles/googletest-populate
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/CMakeFiles/googletest-populate.rule
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/CMakeFiles/googletest-populate-complete.rule
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-build.rule
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-configure.rule
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-download.rule
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-install.rule
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-mkdir.rule
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-patch.rule
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-test.rule
+D:/Development/Coding/cpp/Jaut/build/release/vs/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-update.rule

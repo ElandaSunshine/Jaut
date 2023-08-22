@@ -25,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshe.xyz)
+    @author Elanda
     @file   jaut_YamlParser.cpp
     @date   04, May 2019
     

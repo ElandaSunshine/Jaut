@@ -25,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
 
-    @author Elanda (elanda@elandasunshine.com)
+    @author Elanda
     @file   jaut_SafeInteger.h
     @date   06, April 2022
 

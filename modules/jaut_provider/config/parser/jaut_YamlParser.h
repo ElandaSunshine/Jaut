@@ -25,7 +25,7 @@
     Copyright (c) 2022 ElandaSunshine
     ===============================================================
     
-    @author Elanda (elanda@elandasunshe.xyz)
+    @author Elanda
     @file   jaut_YamlParser.h
     @date   04, May 2019
     
@@ -34,8 +34,8 @@
 
 #pragma once
 
-#include <jaut_provider/util/jaut_YamlCppCompatibility.h>
 #include <jaut_provider/config/jaut_IConfigParser.h>
+#include <jaut_provider/util/jaut_YamlCppCompatibility.h>
 
 
 
@@ -54,13 +54,13 @@ namespace jaut
         {
             //==========================================================================================================
             /**
-             *  If this is set to true, strings that contain \n will be wrapped over several lines via the
+             *  If this is set to true, strings that contain \\n will be wrapped over several lines via the
              *  '|' (pipe) YAML modifier.
              */
             bool breakStringsWithNewLinesCharacters = true;
             
             /**
-             *  If this is above 0, longer strings that do not containe any new line characters will be broken over
+             *  If this is above 0, longer strings that do not contain any new line characters will be broken over
              *  several lines with the '<' (smaller than) YAML modifier.
              *  This determines the size at which these strings should be broken.
              */
@@ -70,7 +70,7 @@ namespace jaut
             int indentationWidth = 2;
             
             //==========================================================================================================
-            Options() {} // NOLINT
+            constexpr Options() noexcept {} // NOLINT
         };
         
         //==============================================================================================================

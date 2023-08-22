@@ -34,6 +34,8 @@
 
 #pragma once
 
+
+
 /** JAUT exporter */
 #undef JAUT_API
 
@@ -56,20 +58,49 @@
     #define JAUT_API
 #endif
 
+
+
 /** Fancy helper macro for debugging */
-#ifdef JUCE_DEBUG
-    #define JAUT_DEBUGGING(x) x
-    #define JAUT_NDEBUGGING(x)
-    #define JAUT_DEBUGGING_OR(x, y) x
+#if JUCE_DEBUG == 1
+    /** Generates expression X when in debug mode, otherwise generates nothing. */
+    #define JAUT_DEBUGGING(X) X
+
+    /** Generates expression X when in release mode, otherwise generates nothing. */
+    #define JAUT_NDEBUGGING(X)
+
+    /** Generates expression X when in debug mode, otherwise expression Y. */
+    #define JAUT_DEBUGGING_OR(X, Y) X
 #else
-    #define JAUT_DEBUGGING(x)
-    #define JAUT_NDEBUGGING(x) x
-    #define JAUT_DEBUGGING_OR(x, y) y
+    /** Generates expression X when in debug mode, otherwise generates nothing. */
+    #define JAUT_DEBUGGING(X)
+
+    /** Generates expression X when in release mode, otherwise generates nothing. */
+    #define JAUT_NDEBUGGING(X) X
+
+    /** Generates expression X when in debug mode, otherwise expression Y. */
+    #define JAUT_DEBUGGING_OR(X, Y) Y
 #endif
 
-#define JAUT_NODISCARD [[nodiscard]]
 
-/** Config: JAUT_CORE_NOTNULL_HANDLE_NULLPTRS
+
+#ifndef JAUT_NODISCARD
+    /** A macro for the nodiscard compiler attribute, can be disabled by defining an empty macro by this name. */
+    #define JAUT_NODISCARD [[nodiscard]]
+#endif
+
+#ifndef JAUT_FALLTHROUGH
+    /** A macro for the fallthrough compiler attribute, can be disabled by defining an empty macro by this name. */
+    #define JAUT_FALLTHROUGH [[fallthrough]]
+#endif
+
+#ifndef JAUT_MUNUSED
+    /** A macro for the maybe_unused compiler attribute, can be disabled by defining an empty macro by this name. */
+    #define JAUT_MUNUSED [[maybe_unused]]
+#endif
+
+
+
+/** Config: JAUT_CORE_NONNULL_HANDLE_NULLPTRS
     This determines how jaut::NonNull should handle nullptrs if they were bound prior to assigning the wrapper.
     
     <table>
@@ -92,6 +123,6 @@
         </tr>
     </table>
  */
-#ifndef JAUT_CORE_NOTNULL_HANDLE_NULLPTRS
-    #define JAUT_CORE_NOTNULL_HANDLE_NULLPTRS 0
+#ifndef JAUT_CORE_NONNULL_HANDLE_NULLPTRS
+    #define JAUT_CORE_NONNULL_HANDLE_NULLPTRS 0
 #endif
