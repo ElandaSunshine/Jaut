@@ -94,7 +94,7 @@ Add the module of interest to the module section of the Projucer. (the little '+
 Since JAUT is a bigger collection of tools and utilities, it wouldn't make much sense to give details about every single thing in this section. 
 Thankfully, this repository also provides a wiki and a reference which sheds some light on the individual parts of this toolset which both can be found here:  
 - [Wiki](https://github.com/ElandaSunshine/jaut/wiki)  
-- [Documentation](https://elandasunshine.github.io/docs/jaut/develop/)
+- [Documentation](https://elandasunshine.github.io/Jaut/docs)
 
 Also take a look at the `examples` and `test` folders for indicators on how to possibly use a tool.
 
