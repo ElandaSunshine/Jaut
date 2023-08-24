@@ -44,6 +44,8 @@
 #include <type_traits>
 #include <utility>
 
+#pragma STDC FENV_ACCESS ON
+
 
 
 //**********************************************************************************************************************
@@ -233,13 +235,12 @@ namespace jaut
                           JAUT_ASSERT_SAFEFLOAT_NO_FLOAT_TYPE);
             
             std::feclearexcept(FE_OVERFLOW);
-            std::feclearexcept(FE_UNDERFLOW);
             
             const T result = (std::forward<Fn>(func))(left, right);
             
-            if (std::fetestexcept(FE_OVERFLOW) || std::fetestexcept(FE_UNDERFLOW))
+            if (std::fetestexcept(FE_OVERFLOW))
             {
-                return {1, left};
+                return {1, result};
             }
             
             return {0, result};

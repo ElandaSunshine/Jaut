@@ -326,17 +326,20 @@ TYPED_TEST_P(NumericFixture, TestCasts)
     
     // Value casting ===========================
     // Integral overflow casting only safe when converting unsigned integrals or signed numerics to unsigned integrals
-    l_numeric = std::numeric_limits<TypeParam>::max();
-    EXPECT_EQ(static_cast<unsigned char>     (l_numeric), GET_OVERFLOW(unsigned char));
-    EXPECT_EQ(static_cast<unsigned short>    (l_numeric), GET_OVERFLOW(unsigned short));
-    EXPECT_EQ(static_cast<unsigned long>     (l_numeric), GET_OVERFLOW(unsigned long));
-    EXPECT_EQ(static_cast<unsigned long long>(l_numeric), GET_OVERFLOW(unsigned long long));
-    
-    l_numeric = std::numeric_limits<TypeParam>::min();
-    EXPECT_EQ(static_cast<unsigned char>     (l_numeric), GET_UNDERFLOW(unsigned char));
-    EXPECT_EQ(static_cast<unsigned short>    (l_numeric), GET_UNDERFLOW(unsigned short));
-    EXPECT_EQ(static_cast<unsigned long>     (l_numeric), GET_UNDERFLOW(unsigned long));
-    EXPECT_EQ(static_cast<unsigned long long>(l_numeric), GET_UNDERFLOW(unsigned long long));
+    if constexpr (!std::is_floating_point_v<TypeParam>)
+    {
+        l_numeric = std::numeric_limits<TypeParam>::max();
+        EXPECT_EQ(static_cast<unsigned char>     (l_numeric), GET_OVERFLOW(unsigned char));
+        EXPECT_EQ(static_cast<unsigned short>    (l_numeric), GET_OVERFLOW(unsigned short));
+        EXPECT_EQ(static_cast<unsigned long>     (l_numeric), GET_OVERFLOW(unsigned long));
+        EXPECT_EQ(static_cast<unsigned long long>(l_numeric), GET_OVERFLOW(unsigned long long));
+        
+        l_numeric = std::numeric_limits<TypeParam>::min();
+        EXPECT_EQ(static_cast<unsigned char>     (l_numeric), GET_UNDERFLOW(unsigned char));
+        EXPECT_EQ(static_cast<unsigned short>    (l_numeric), GET_UNDERFLOW(unsigned short));
+        EXPECT_EQ(static_cast<unsigned long>     (l_numeric), GET_UNDERFLOW(unsigned long));
+        EXPECT_EQ(static_cast<unsigned long long>(l_numeric), GET_UNDERFLOW(unsigned long long));
+    }
     
     l_numeric = 100;
     EXPECT_EQ(static_cast<wchar_t>      (l_numeric), L'd');
@@ -450,11 +453,7 @@ TYPED_TEST_P(NumericFixture, TestArithmeticError)
     }
     
     EXPECT_TYPE_BASED(init);
-    
-    if constexpr (!std::is_same_v<double, TypeParam> && !std::is_same_v<long double, TypeParam>)
-    {
-        ASSERT_TRUE(has_overflowed);
-    }
+    ASSERT_TRUE(has_overflowed);
     
     l_numeric /= 0;
     

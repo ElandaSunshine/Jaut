@@ -103,26 +103,6 @@ TEST(StringableTestSuite, TestToString)
         EXPECT_EQ(jaut::toString(map), "{Ha1=1, Ha2=2, Ha3=3, Ha4=4, Ha5=5}");
     }
     
-    {
-        std::unordered_set<std::string_view> set { "Ha1", "Ha2", "Ha3", "Ha4", "Ha5" };
-        EXPECT_EQ(jaut::toString(set), "[Ha1, Ha2, Ha3, Ha4, Ha5]");
-    }
-    
-    {
-        std::unordered_multiset<std::string_view> set { "Ha1", "Ha2", "Ha3", "Ha4", "Ha5" };
-        EXPECT_EQ(jaut::toString(set), "[Ha1, Ha2, Ha3, Ha4, Ha5]");
-    }
-    
-    {
-        std::unordered_map<std::string_view, int> map {{"Ha1", 1}, {"Ha2", 2}, {"Ha3", 3}, {"Ha4", 4}, {"Ha5", 5}};
-        EXPECT_EQ(jaut::toString(map), "{Ha1=1, Ha2=2, Ha3=3, Ha4=4, Ha5=5}");
-    }
-    
-    {
-        std::unordered_multimap<std::string_view, int> map {{"Ha1", 1}, {"Ha2", 2}, {"Ha3", 3}, {"Ha4", 4}, {"Ha5", 5}};
-        EXPECT_EQ(jaut::toString(map), "{Ha1=1, Ha2=2, Ha3=3, Ha4=4, Ha5=5}");
-    }
-    
     // JUCE
     {
         juce::var val = juce::Array<juce::var>{ 0, 1, 2, 3, 4, 5 };

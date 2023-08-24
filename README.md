@@ -18,8 +18,6 @@ All we try to accomplish is a central collection of useful stuff.
 # Table of Contents
 <details><summary>Click to expand</summary>
 
-- [JAUT: JUCE Augmented Utility Toolbox](#jaut-juce-augmented-utility-toolbox)
-- [Table of Contents](#table-of-contents)
 - [Motivation](#motivation)
 - [Installation](#installation)
   - [Dependencies](#dependencies)

@@ -45,6 +45,12 @@ function(jaut_add_test target group)
             JUCE_USE_CURL=0
             JUCE_USE_WEB_BROWSER=0)
     
+    if (MSVC AND MSVC_VERSION GREATER_EQUAL 1914)
+        target_compile_options(${TEST_TARGET}
+            PRIVATE
+                "/Zc:__cplusplus")
+    endif()
+    
     if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
         target_compile_definitions(${TEST_TARGET}
             PRIVATE
