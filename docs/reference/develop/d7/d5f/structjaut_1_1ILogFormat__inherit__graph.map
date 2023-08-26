@@ -1,0 +1,11 @@
+<map id="jaut::ILogFormat" name="jaut::ILogFormat">
+<area shape="rect" id="Node000001" title="Provides an interface for custom and inbuilt sink formatters." alt="" coords="5,80,121,106"/>
+<area shape="rect" id="Node000002" href="$db/d01/classjaut_1_1LogFormatCallback.html" title="A simple formatter that can be used via a passed in lambda function or other invocable." alt="" coords="169,5,330,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,70,168,40,198,29,200,34,170,45,103,75"/>
+<area shape="rect" id="Node000003" href="$d6/d52/classjaut_1_1LogFormatJson.html" title="Provides a json formatter that will log all events as json objects." alt="" coords="180,55,319,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,80,179,74,180,80,136,86"/>
+<area shape="rect" id="Node000004" href="$da/d59/classjaut_1_1LogFormatPattern.html" title="Provides a simple and straightforward fmt pattern formatter." alt="" coords="173,104,326,130"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="136,99,173,104,172,110,135,105"/>
+<area shape="rect" id="Node000005" href="$d3/df5/classjaut_1_1LogFormatXml.html" title="Provides a json formatter that will log all events as json objects." alt="" coords="182,153,317,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="104,110,170,140,200,150,199,155,168,145,102,115"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="jaut::LookAndFeel" name="jaut::LookAndFeel">
+<area shape="rect" id="Node000001" title=" " alt="" coords="219,112,344,137"/>
+<area shape="rect" id="Node000002" href="$de/d5c/structjaut_1_1ExtraComponent_1_1LookAndFeelMethods.html" title=" " alt="" coords="11,5,165,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,50,172,57,261,109,258,113,169,61,156,55"/>
+<area shape="rect" id="Node000003" href="$d6/dc2/structjaut_1_1ContentPane_1_1LookAndFeelMethods.html" title=" " alt="" coords="14,71,162,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,104,219,111,218,116,176,109"/>
+<area shape="rect" id="Node000004" href="$db/df4/structjaut_1_1SplitPanel_1_1LookAndFeelMethods.html" title=" " alt="" coords="5,136,171,177"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="185,138,218,132,219,137,186,143"/>
+<area shape="rect" id="Node000005" href="$db/dca/structjaut_1_1MultiPagePanel_1_1LookAndFeelMethods.html" title=" " alt="" coords="11,201,165,242"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="155,193,169,186,258,135,260,140,172,191,157,198"/>
+</map>

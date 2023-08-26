@@ -1,0 +1,5 @@
+<map id="jaut::LogFormatPattern" name="jaut::LogFormatPattern">
+<area shape="rect" id="Node000001" title="Provides a simple and straightforward fmt pattern formatter." alt="" coords="5,79,159,105"/>
+<area shape="rect" id="Node000002" href="$d5/d26/structjaut_1_1ILogFormat.html" title="Provides an interface for custom and inbuilt sink formatters." alt="" coords="24,5,140,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,46,85,79,79,79,79,46"/>
+</map>

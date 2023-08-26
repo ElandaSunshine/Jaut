@@ -1,0 +1,7 @@
+<map id="jaut::ExtraComponent::ContainerStyle" name="jaut::ExtraComponent::ContainerStyle">
+<area shape="rect" id="Node000001" title="The container style options for any component inheriting from this component." alt="" coords="90,5,233,46"/>
+<area shape="rect" id="Node000002" href="$d7/df4/structjaut_1_1MultiPagePanel_1_1InitStyle.html" title="The style options for constructing this panel." alt="" coords="5,94,145,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,59,96,95,93,92,130,55"/>
+<area shape="rect" id="Node000003" href="$da/d44/structjaut_1_1SplitPanel_1_1InitStyle.html" title="The style options for constructing this panel." alt="" coords="168,102,329,127"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,55,238,99,235,103,190,59"/>
+</map>
