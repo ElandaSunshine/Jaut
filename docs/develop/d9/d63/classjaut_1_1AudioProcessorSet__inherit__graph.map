@@ -1,5 +1,0 @@
-<map id="jaut::AudioProcessorSet&lt; Processors &gt;" name="jaut::AudioProcessorSet&lt; Processors &gt;">
-<area shape="rect" id="Node000001" title="The set processor allows to define a static set of processors that will be processed at processing ti..." alt="" coords="5,94,166,135"/>
-<area shape="rect" id="Node000002" href="$dc/da3/structjaut_1_1ISerialisableAudioProcessor.html" title="A simple interface class for sub&#45;audio processors for your own processor implementation." alt="" coords="9,5,162,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,61,88,94,83,94,83,61"/>
-</map>
