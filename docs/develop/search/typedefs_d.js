@@ -10,5 +10,5 @@ var searchData=
   ['processorlist_7',['ProcessorList',['../df/de3/classjaut_1_1AudioProcessorSet.html#aa579dc29319df67244fe5025a970ae7f',1,'jaut::AudioProcessorSet']]],
   ['processorpointer_8',['ProcessorPointer',['../dd/d92/classjaut_1_1AudioProcessorRack.html#a8b083893bae28f0dcfcc4892797bf8c3',1,'jaut::AudioProcessorRack']]],
   ['processorvector_9',['ProcessorVector',['../dd/d92/classjaut_1_1AudioProcessorRack.html#aca13f446a7f5443fe1888f855cbd9023',1,'jaut::AudioProcessorRack']]],
-  ['propertyaddedhandler_10',['PropertyAddedHandler',['../d6/d32/classjaut_1_1Config.html#aa0bb6cacf247b019a35a5a5b83c1085d',1,'jaut::Config::PropertyAddedHandler'],['../d9/daa/classjaut_1_1Config_1_1Property.html#abdbed973bc5be281a6b5c30186a7e638',1,'jaut::Config::Property::PropertyAddedHandler']]]
+  ['propertyaddedhandler_10',['propertyaddedhandler',['../d6/d32/classjaut_1_1Config.html#aa0bb6cacf247b019a35a5a5b83c1085d',1,'jaut::Config::PropertyAddedHandler'],['../d9/daa/classjaut_1_1Config_1_1Property.html#abdbed973bc5be281a6b5c30186a7e638',1,'jaut::Config::Property::PropertyAddedHandler']]]
 ];

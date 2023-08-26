@@ -8,7 +8,6 @@ var jaut__Stringable_8h =
     [ "toString", "d8/de9/jaut__Stringable_8h.html#a6923b6e0516be2046ef0ac07c9e82f00", null ],
     [ "toName", "d8/de9/jaut__Stringable_8h.html#aa04b5b960e7286d6b12ab9a2f5f0107f", null ],
     [ "toName", "d8/de9/jaut__Stringable_8h.html#ae47e2363bf315312d31a8950594ef348", null ],
-    [ "addressToString", "d8/de9/jaut__Stringable_8h.html#aac3b9b103e97d6571fac7f0d612ef3dd", null ],
     [ "toString", "d8/de9/jaut__Stringable_8h.html#a2c2f50658c9aa79cbc298b92cc9c1a90", null ],
     [ "toString", "d8/de9/jaut__Stringable_8h.html#a3728c1baf12e79bfb5cc85b491e2e33e", null ],
     [ "toString", "d8/de9/jaut__Stringable_8h.html#a6e6cc64b93c7e3a4516a87e52a5f75d0", null ],

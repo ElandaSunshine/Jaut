@@ -10,9 +10,9 @@ var searchData=
   ['semverprereleasepattern_7',['semVerPreReleasePattern',['../d9/d54/classjaut_1_1Version.html#a916e7382edf230c52c81ad3dee25b635',1,'jaut::Version']]],
   ['separatorthickness_8',['separatorThickness',['../d3/dde/structjaut_1_1SplitPanel_1_1Style.html#a69c637851575e36ae7b38c7e1089af3f',1,'jaut::SplitPanel::Style']]],
   ['shared_5fconstruct_9',['shared_construct',['../d8/d02/namespacejaut.html#a04886df2438f468c4b07975e800b9c38',1,'jaut']]],
-  ['shouldcache_10',['shouldCache',['../d8/df3/structjaut_1_1LogFormatJson_1_1Options.html#ac77e18e1e75b3eba5324f55fd53216cf',1,'jaut::LogFormatJson::Options::shouldCache'],['../d6/d8f/structjaut_1_1LogFormatXml_1_1Options.html#a4507523f63c08a376dcff111be40eecf',1,'jaut::LogFormatXml::Options::shouldCache']]],
+  ['shouldcache_10',['shouldcache',['../d8/df3/structjaut_1_1LogFormatJson_1_1Options.html#ac77e18e1e75b3eba5324f55fd53216cf',1,'jaut::LogFormatJson::Options::shouldCache'],['../d6/d8f/structjaut_1_1LogFormatXml_1_1Options.html#a4507523f63c08a376dcff111be40eecf',1,'jaut::LogFormatXml::Options::shouldCache']]],
   ['size_11',['size',['../d8/d13/structjaut_1_1TypeArray_3_4.html#a0b479d9f4e39ceb3267875dbec70bd08',1,'jaut::TypeArray&lt;&gt;::size'],['../d7/d77/structjaut_1_1TypeArray.html#a41139a5c56a77dc3006e0dafdba1b2b3',1,'jaut::TypeArray::size']]],
   ['stricttyping_12',['strictTyping',['../df/dfb/structjaut_1_1Config_1_1Options.html#aa58005d1b641f62dd251d3ba75f9e721',1,'jaut::Config::Options']]],
-  ['stringrange_13',['stringRange',['../de/d3d/classjaut_1_1FormatLayout_1_1Run.html#a3ce8b75df52f82ff0ecbd94887bf14c3',1,'jaut::FormatLayout::Run::stringRange'],['../d3/d1c/classjaut_1_1FormatLayout_1_1Line.html#a96ef652d20d0db88d9b30ad35fa4170d',1,'jaut::FormatLayout::Line::stringRange']]],
+  ['stringrange_13',['stringrange',['../de/d3d/classjaut_1_1FormatLayout_1_1Run.html#a3ce8b75df52f82ff0ecbd94887bf14c3',1,'jaut::FormatLayout::Run::stringRange'],['../d3/d1c/classjaut_1_1FormatLayout_1_1Line.html#a96ef652d20d0db88d9b30ad35fa4170d',1,'jaut::FormatLayout::Line::stringRange']]],
   ['successful_14',['Successful',['../d6/d0a/jaut__OperationResult_8h.html#aebc02b3a0ed25196cd9bb8bcc6dcdd4b',1,'jaut_OperationResult.h']]]
 ];

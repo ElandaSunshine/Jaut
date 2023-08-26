@@ -21,6 +21,6 @@ var searchData=
   ['timestamp_18',['timestamp',['../d2/d73/structjaut_1_1LogMessage.html#aee6a72fcaccc15c4978c1774b10e4cc9',1,'jaut::LogMessage']]],
   ['top_19',['top',['../de/d0d/structjaut_1_1Distance.html#ae223b0053f51d43e580f2324341f4883',1,'jaut::Distance']]],
   ['totypearray_20',['toTypeArray',['../d8/d02/namespacejaut.html#a59490c5abda21adb014b1cd8567bb201',1,'jaut']]],
-  ['trypreserveinvalidlog_21',['tryPreserveInvalidLog',['../d8/df3/structjaut_1_1LogFormatJson_1_1Options.html#a1e28e415df89df2a1614eb815eb77d01',1,'jaut::LogFormatJson::Options::tryPreserveInvalidLog'],['../d6/d8f/structjaut_1_1LogFormatXml_1_1Options.html#a94810e591e793c20f659aacff93f6f6f',1,'jaut::LogFormatXml::Options::tryPreserveInvalidLog']]],
+  ['trypreserveinvalidlog_21',['trypreserveinvalidlog',['../d8/df3/structjaut_1_1LogFormatJson_1_1Options.html#a1e28e415df89df2a1614eb815eb77d01',1,'jaut::LogFormatJson::Options::tryPreserveInvalidLog'],['../d6/d8f/structjaut_1_1LogFormatXml_1_1Options.html#a94810e591e793c20f659aacff93f6f6f',1,'jaut::LogFormatXml::Options::tryPreserveInvalidLog']]],
   ['typetags_22',['typeTags',['../da/d45/structjaut_1_1XmlParser_1_1Options.html#a5169501d1fcf459de6ab9dbcc5db4fb9',1,'jaut::XmlParser::Options']]]
 ];

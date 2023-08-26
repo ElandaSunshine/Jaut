@@ -12,11 +12,11 @@ var classjaut_1_1NonNull =
     [ "get", "d6/d62/classjaut_1_1NonNull.html#a7defaff63082a2ffb3b4d35fc64d2ad9", null ],
     [ "get", "d6/d62/classjaut_1_1NonNull.html#a904f799c60fcaca149e0985878e71c05", null ],
     [ "get", "d6/d62/classjaut_1_1NonNull.html#a78555ae5f4b829970ab37bd50ac5dd99", null ],
-    [ "operator std::enable_if_t< std::is_pointer_v, ObjectType * >", "d6/d62/classjaut_1_1NonNull.html#ad45b7fc0ab9b4abd339ddd34f5a7e994", null ],
-    [ "operator std::enable_if_t<!std::is_pointer_v, ObjectType & >", "d6/d62/classjaut_1_1NonNull.html#ae4b79d64e058fe83ef43e3e38f6c6088", null ],
-    [ "operator std::enable_if_t<!std::is_pointer_v, const ObjectType & >", "d6/d62/classjaut_1_1NonNull.html#aeeeb254e5fdf99a34ff37d5b3ce55814", null ],
-    [ "operator std::enable_if_t<!std::is_pointer_v, const ObjectType & >", "d6/d62/classjaut_1_1NonNull.html#ae7a2e024185f691169dcfd611e578627", null ],
-    [ "operator std::enable_if_t<!std::is_pointer_v, ObjectType && >", "d6/d62/classjaut_1_1NonNull.html#ae58cb134a1a5f1856f9d1a4fae058233", null ],
+    [ "operator std::enable_if_t< std::is_pointer_v< Detail >, ObjectType * >", "d6/d62/classjaut_1_1NonNull.html#add434de42063967eb11bd9d7fa23ac00", null ],
+    [ "operator std::enable_if_t<!std::is_pointer_v< Detail >, ObjectType & >", "d6/d62/classjaut_1_1NonNull.html#ae8238af30887c139c9319ed28a5bd6a1", null ],
+    [ "operator std::enable_if_t<!std::is_pointer_v< Detail >, const ObjectType & >", "d6/d62/classjaut_1_1NonNull.html#a64743b12c5468a62df4dc75165ba4113", null ],
+    [ "operator std::enable_if_t<!std::is_pointer_v< Detail >, const ObjectType & >", "d6/d62/classjaut_1_1NonNull.html#a52ef4ed26c2cd5f55b15ae4545e3a8e7", null ],
+    [ "operator std::enable_if_t<!std::is_pointer_v< Detail >, ObjectType && >", "d6/d62/classjaut_1_1NonNull.html#a2fccb644dcfe0e8f2d416cd0c079e376", null ],
     [ "operator->", "d6/d62/classjaut_1_1NonNull.html#a806d69f55525e554f365d0fc2803b5a4", null ],
     [ "operator*", "d6/d62/classjaut_1_1NonNull.html#a8b3b7494cbe12fd35531269d687ea961", null ]
 ];

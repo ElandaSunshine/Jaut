@@ -1,7 +1,7 @@
 var searchData=
 [
   ['activatetabonfullpress_0',['activateTabOnFullPress',['../d2/da0/structjaut_1_1MultiPagePanel_1_1Options.html#ae97350e029c7f0849b20e119296670e9',1,'jaut::MultiPagePanel::Options']]],
-  ['actualsize_1',['actualSize',['../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ab535995b2cd8af0c64ffe3253aa60afc',1,'jaut::AtomicRingBuffer::actualSize'],['../de/d63/classjaut_1_1SimpleRingBuffer.html#ae0747e249fbf44ab98aac6596602e8a8',1,'jaut::SimpleRingBuffer::actualSize']]],
+  ['actualsize_1',['actualsize',['../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ab535995b2cd8af0c64ffe3253aa60afc',1,'jaut::AtomicRingBuffer::actualSize'],['../de/d63/classjaut_1_1SimpleRingBuffer.html#ae0747e249fbf44ab98aac6596602e8a8',1,'jaut::SimpleRingBuffer::actualSize']]],
   ['allowdragexchange_2',['allowDragExchange',['../d2/da0/structjaut_1_1MultiPagePanel_1_1Options.html#a6c7faccd71c9564b19d581cc5cedee70',1,'jaut::MultiPagePanel::Options']]],
   ['allowpageextraction_3',['allowPageExtraction',['../d2/da0/structjaut_1_1MultiPagePanel_1_1Options.html#a922b35508c0eba26ec1045fd92d19051',1,'jaut::MultiPagePanel::Options']]],
   ['allowsbitoperations_5fv_4',['allowsBitOperations_v',['../d8/d02/namespacejaut.html#ac3313a5a15ea2223b6a49d8fed663661',1,'jaut']]],

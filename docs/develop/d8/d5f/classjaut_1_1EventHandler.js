@@ -13,7 +13,6 @@ var classjaut_1_1EventHandler =
     [ "EventHandler", "d8/d5f/classjaut_1_1EventHandler.html#a5e8e42f6dfb7874c395942129b066d8f", null ],
     [ "EventHandler", "d8/d5f/classjaut_1_1EventHandler.html#ad8d2add2cfcd3a8b8bd5c81b49513c07", null ],
     [ "EventHandler", "d8/d5f/classjaut_1_1EventHandler.html#ac6c8ff9e4066249478f9a327d457f1e8", null ],
-    [ "EventHandler", "d8/d5f/classjaut_1_1EventHandler.html#aaa5d6063128d4b841f2ffd3df7eb517f", null ],
     [ "operator=", "d8/d5f/classjaut_1_1EventHandler.html#a4597da40388211f88e84a094a5893884", null ],
     [ "operator()", "d8/d5f/classjaut_1_1EventHandler.html#a108035c18629d5784cfec56cd8d06f42", null ],
     [ "operator==", "d8/d5f/classjaut_1_1EventHandler.html#a71d284dcc0aee8273869cab3c9a4982c", null ],
@@ -24,6 +23,5 @@ var classjaut_1_1EventHandler =
     [ "isChained", "d8/d5f/classjaut_1_1EventHandler.html#a612305cdf205de11493bfbf79a993277", null ],
     [ "isAssociative", "d8/d5f/classjaut_1_1EventHandler.html#aa73e6b3aa37850b44c5d88adc53ef2d0", null ],
     [ "getId", "d8/d5f/classjaut_1_1EventHandler.html#a988ceb3b7abc1f2ccf44c8e57d0265ee", null ],
-    [ "getMemberData", "d8/d5f/classjaut_1_1EventHandler.html#a635d79606fb2315b46105fb36ddb676d", null ],
     [ "swap", "d8/d5f/classjaut_1_1EventHandler.html#a41fbc1544dcffefb62686edd1ef47ffd", null ]
 ];

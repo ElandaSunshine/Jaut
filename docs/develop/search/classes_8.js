@@ -10,7 +10,7 @@ var searchData=
   ['imessagebuffer_3c_20jaut_3a_3alogmessage_20_3e_7',['IMessageBuffer&lt; jaut::LogMessage &gt;',['../dc/d1b/structjaut_1_1IMessageBuffer.html',1,'jaut']]],
   ['imessagebuffer_3c_20waybackmessage_20_3e_8',['IMessageBuffer&lt; WaybackMessage &gt;',['../dc/d1b/structjaut_1_1IMessageBuffer.html',1,'jaut']]],
   ['imessagehandler_9',['IMessageHandler',['../d7/d49/structjaut_1_1IMessageHandler.html',1,'jaut']]],
-  ['initstyle_10',['InitStyle',['../d7/df4/structjaut_1_1MultiPagePanel_1_1InitStyle.html',1,'jaut::MultiPagePanel::InitStyle'],['../da/d44/structjaut_1_1SplitPanel_1_1InitStyle.html',1,'jaut::SplitPanel::InitStyle']]],
+  ['initstyle_10',['initstyle',['../d7/df4/structjaut_1_1MultiPagePanel_1_1InitStyle.html',1,'jaut::MultiPagePanel::InitStyle'],['../da/d44/structjaut_1_1SplitPanel_1_1InitStyle.html',1,'jaut::SplitPanel::InitStyle']]],
   ['isequalitycomparable_11',['isEqualityComparable',['../da/dcc/structjaut_1_1isEqualityComparable.html',1,'jaut']]],
   ['isequalitycomparable_3c_20left_2c_20right_2c_20std_3a_3avoid_5ft_3c_20detail_3a_3aiscomparable_5fimpl_3c_20left_2c_20right_20_3e_20_3e_20_3e_12',['isEqualityComparable&lt; Left, Right, std::void_t&lt; detail::isComparable_impl&lt; Left, Right &gt; &gt; &gt;',['../db/d84/structjaut_1_1isEqualityComparable_3_01Left_00_01Right_00_01std_1_1void__t_3_01detail_1_1isCompa700dc0ab311b21ffce340ecb9e645aa0.html',1,'jaut']]],
   ['iserialisableaudioprocessor_13',['ISerialisableAudioProcessor',['../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html',1,'jaut']]],

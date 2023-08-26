@@ -12,6 +12,5 @@ var jaut__TypeEvaluator_8h =
     [ "jaut::isPredicate< PredicateAnd< Args... > >", "d8/d87/structjaut_1_1isPredicate_3_01PredicateAnd_3_01Args_8_8_8_01_4_01_4.html", null ],
     [ "jaut::isPredicate< PredicateOr< Args... > >", "d8/dc9/structjaut_1_1isPredicate_3_01PredicateOr_3_01Args_8_8_8_01_4_01_4.html", null ],
     [ "jaut::isPredicate< PredicateXor< Args... > >", "d0/d87/structjaut_1_1isPredicate_3_01PredicateXor_3_01Args_8_8_8_01_4_01_4.html", null ],
-    [ "replaceAllPlaceholders_t", "d6/d57/jaut__TypeEvaluator_8h.html#a19f2324d132701c905093b759b1e1b40", null ],
     [ "isPredicate_v", "d6/d57/jaut__TypeEvaluator_8h.html#a82c225a38b308402e81e4e30a365b535", null ]
 ];

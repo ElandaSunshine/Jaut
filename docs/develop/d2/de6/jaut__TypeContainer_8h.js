@@ -31,8 +31,6 @@ var jaut__TypeContainer_8h =
       [ "Volatile", "d2/de6/jaut__TypeContainer_8h.html#a993ecc1420482994b47022fb0950f7b5a3e3af98b6b48c7e593d8d18863e3333b", null ],
       [ "ConstVolatile", "d2/de6/jaut__TypeContainer_8h.html#a993ecc1420482994b47022fb0950f7b5a4350e326da0d749fa69bff32c63c0b66", null ]
     ] ],
-    [ "getReturnAndClass", "d2/de6/jaut__TypeContainer_8h.html#ac284ea4c1b457e59804e3b45ae95e066", null ],
-    [ "getReturnAndClass", "d2/de6/jaut__TypeContainer_8h.html#a788e36f819677dbf5b73b46a6cb8417b", null ],
     [ "toTypeArray", "d2/de6/jaut__TypeContainer_8h.html#a59490c5abda21adb014b1cd8567bb201", null ],
     [ "Function", "d2/de6/jaut__TypeContainer_8h.html#a9e4d2433451db46b14b5ee850448fc1b", null ],
     [ "Overload", "d2/de6/jaut__TypeContainer_8h.html#a07c2802655bc8af5b49c21760fc40fba", null ]

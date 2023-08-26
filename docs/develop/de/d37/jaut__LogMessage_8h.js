@@ -6,6 +6,5 @@ var jaut__LogMessage_8h =
     [ "jaut::Stringable< LogMessage::Field >", "db/d87/structjaut_1_1Stringable_3_01LogMessage_1_1Field_01_4.html", null ],
     [ "jaut::Stringable< LogMessage::ExceptionSpec >", "d7/d93/structjaut_1_1Stringable_3_01LogMessage_1_1ExceptionSpec_01_4.html", null ],
     [ "jaut::Stringable< LogMessage >", "d3/d99/structjaut_1_1Stringable_3_01LogMessage_01_4.html", null ],
-    [ "emplaceField", "de/d37/jaut__LogMessage_8h.html#ab3825e0628769100415d17731e57b385", null ],
     [ "mfield", "de/d37/jaut__LogMessage_8h.html#a52dc17913e577e483ab9aa9b330c322e", null ]
 ];
