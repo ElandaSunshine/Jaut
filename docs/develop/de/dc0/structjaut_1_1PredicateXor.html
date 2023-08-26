@@ -110,26 +110,27 @@ $(document).ready(function(){initNavTree('de/dc0/structjaut_1_1PredicateXor.html
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d6/d57/jaut__TypeEvaluator_8h_source.html">jaut_TypeEvaluator.h</a>&gt;</code></p>
+<p>Collates two conditions and returns true if only one of the conditions meet their requirements.  
+ <a href="../../de/dc0/structjaut_1_1PredicateXor.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_TypeEvaluator.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a0455f33bb210e319611ff3ad4e020e05"><td class="memTemplParams" colspan="2"><a id="a0455f33bb210e319611ff3ad4e020e05" name="a0455f33bb210e319611ff3ad4e020e05"></a>
-template&lt;class ... Replacements&gt; </td></tr>
-<tr class="memitem:a0455f33bb210e319611ff3ad4e020e05"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>eval1</b> = detail::ValidateCondition&lt;Condition1&gt;::template validate&lt;Replacements...&gt;</td></tr>
+<tr class="memitem:a0455f33bb210e319611ff3ad4e020e05"><td class="memTemplParams" colspan="2">template&lt;class ... Replacements&gt; </td></tr>
+<tr class="memitem:a0455f33bb210e319611ff3ad4e020e05"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html#a0455f33bb210e319611ff3ad4e020e05">eval1</a> = detail::ValidateCondition&lt;Condition1&gt;::template validate&lt;Replacements...&gt;</td></tr>
 <tr class="separator:a0455f33bb210e319611ff3ad4e020e05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed3a1993dbc6df9c5dd20f3cc1516a79"><td class="memTemplParams" colspan="2"><a id="aed3a1993dbc6df9c5dd20f3cc1516a79" name="aed3a1993dbc6df9c5dd20f3cc1516a79"></a>
-template&lt;class ... Replacements&gt; </td></tr>
-<tr class="memitem:aed3a1993dbc6df9c5dd20f3cc1516a79"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>eval2</b> = detail::ValidateCondition&lt;Condition2&gt;::template validate&lt;Replacements...&gt;</td></tr>
+<tr class="memitem:aed3a1993dbc6df9c5dd20f3cc1516a79"><td class="memTemplParams" colspan="2">template&lt;class ... Replacements&gt; </td></tr>
+<tr class="memitem:aed3a1993dbc6df9c5dd20f3cc1516a79"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html#aed3a1993dbc6df9c5dd20f3cc1516a79">eval2</a> = detail::ValidateCondition&lt;Condition2&gt;::template validate&lt;Replacements...&gt;</td></tr>
 <tr class="separator:aed3a1993dbc6df9c5dd20f3cc1516a79"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a67619324c1d908988b4ef4b912d08e0e"><td class="memTemplParams" colspan="2"><a id="a67619324c1d908988b4ef4b912d08e0e" name="a67619324c1d908988b4ef4b912d08e0e"></a>
-template&lt;class ... Replacements&gt; </td></tr>
-<tr class="memitem:a67619324c1d908988b4ef4b912d08e0e"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><b>value</b> = (eval1&lt;Replacements...&gt; != eval2&lt;Replacements...&gt;)</td></tr>
+<tr class="memitem:a67619324c1d908988b4ef4b912d08e0e"><td class="memTemplParams" colspan="2">template&lt;class ... Replacements&gt; </td></tr>
+<tr class="memitem:a67619324c1d908988b4ef4b912d08e0e"><td class="memTemplItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html#a67619324c1d908988b4ef4b912d08e0e">value</a> = (<a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html#a0455f33bb210e319611ff3ad4e020e05">eval1</a>&lt;Replacements...&gt; != <a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html#aed3a1993dbc6df9c5dd20f3cc1516a79">eval2</a>&lt;Replacements...&gt;)</td></tr>
 <tr class="separator:a67619324c1d908988b4ef4b912d08e0e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class Condition1, class Condition2&gt;<br />
-struct jaut::PredicateXor&lt; Condition1, Condition2 &gt;</div><p>Collates two conditions and returns true if only one of the conditions meet their requirements. Note that conditions need a compile-time static boolean "value" function to be able to be evaluated.</p>
+struct jaut::PredicateXor&lt; Condition1, Condition2 &gt;</div><p>Collates two conditions and returns true if only one of the conditions meet their requirements. </p>
+<p>Note that conditions need a compile-time static boolean "value" function to be able to be evaluated.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">Condition1</td><td>The first condition to evaluate </td></tr>
@@ -137,15 +138,94 @@ struct jaut::PredicateXor&lt; Condition1, Condition2 &gt;</div><p>Collates two c
   </table>
   </dd>
 </dl>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_core/util/<a class="el" href="../../d6/d57/jaut__TypeEvaluator_8h_source.html">jaut_TypeEvaluator.h</a></li>
+</div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a0455f33bb210e319611ff3ad4e020e05" name="a0455f33bb210e319611ff3ad4e020e05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0455f33bb210e319611ff3ad4e020e05">&#9670;&#160;</a></span>eval1</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Condition1 , class Condition2 &gt; </div>
+<div class="memtemplate">
+template&lt;class ... Replacements&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool <a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html">jaut::PredicateXor</a>&lt; Condition1, Condition2 &gt;::eval1 = detail::ValidateCondition&lt;Condition1&gt;::template validate&lt;Replacements...&gt;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aed3a1993dbc6df9c5dd20f3cc1516a79" name="aed3a1993dbc6df9c5dd20f3cc1516a79"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aed3a1993dbc6df9c5dd20f3cc1516a79">&#9670;&#160;</a></span>eval2</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Condition1 , class Condition2 &gt; </div>
+<div class="memtemplate">
+template&lt;class ... Replacements&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool <a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html">jaut::PredicateXor</a>&lt; Condition1, Condition2 &gt;::eval2 = detail::ValidateCondition&lt;Condition2&gt;::template validate&lt;Replacements...&gt;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a67619324c1d908988b4ef4b912d08e0e" name="a67619324c1d908988b4ef4b912d08e0e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a67619324c1d908988b4ef4b912d08e0e">&#9670;&#160;</a></span>value</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class Condition1 , class Condition2 &gt; </div>
+<div class="memtemplate">
+template&lt;class ... Replacements&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool <a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html">jaut::PredicateXor</a>&lt; Condition1, Condition2 &gt;::value = (<a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html#a0455f33bb210e319611ff3ad4e020e05">eval1</a>&lt;Replacements...&gt; != <a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html#aed3a1993dbc6df9c5dd20f3cc1516a79">eval2</a>&lt;Replacements...&gt;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
+<li>/github/workspace/modules/jaut_core/util/<a class="el" href="../../d6/d57/jaut__TypeEvaluator_8h.html">jaut_TypeEvaluator.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html">PredicateXor</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../de/dc0/structjaut_1_1PredicateXor.html">PredicateXor</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

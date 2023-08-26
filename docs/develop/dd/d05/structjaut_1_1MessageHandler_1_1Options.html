@@ -110,21 +110,45 @@ $(document).ready(function(){initNavTree('dd/d05/structjaut_1_1MessageHandler_1_
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../dd/d89/jaut__MessageHandler_8h_source.html">jaut_MessageHandler.h</a>&gt;</code></p>
+<p>Declares a few options for the <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html" title="A simple implementation of an thread synchronisation manager.">MessageHandler</a> class.  
+ <a href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_MessageHandler.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a137faccf09429f0d68b1534f34ac6838"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html#a137faccf09429f0d68b1534f34ac6838">maxMessagesPerLoop</a> = std::numeric_limits&lt;int&gt;::max()</td></tr>
+<tr class="memdesc:a137faccf09429f0d68b1534f34ac6838"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines the maximum amount of messages to handle when processAllMessages was called.  <br /></td></tr>
 <tr class="separator:a137faccf09429f0d68b1534f34ac6838"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3659b7ecff01437f50302f1fd686570"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html#ad3659b7ecff01437f50302f1fd686570">deferredAndGCInterval</a> = 100</td></tr>
+<tr class="memdesc:ad3659b7ecff01437f50302f1fd686570"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the time (in milliseconds) in what interval deferred and garbage collected messages should be processed.  <br /></td></tr>
 <tr class="separator:ad3659b7ecff01437f50302f1fd686570"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a98fb85a1f52b9857342cadf5961a0c1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html#a98fb85a1f52b9857342cadf5961a0c1d">enableGarbageCollecting</a> = true</td></tr>
+<tr class="memdesc:a98fb85a1f52b9857342cadf5961a0c1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether messages on the target thread should be garbage collected and transferred to the messages thread or if they should be destroyed on the thread they were handled on.  <br /></td></tr>
 <tr class="separator:a98fb85a1f52b9857342cadf5961a0c1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(BufferSize * 1.5)&gt;<br />
-struct jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;::Options</div><p>Declares a few options for the <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">MessageHandler</a> class. </p>
+struct jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;::Options</div><p>Declares a few options for the <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html" title="A simple implementation of an thread synchronisation manager.">MessageHandler</a> class. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
+<a id="a137faccf09429f0d68b1534f34ac6838" name="a137faccf09429f0d68b1534f34ac6838"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a137faccf09429f0d68b1534f34ac6838">&#9670;&#160;</a></span>maxMessagesPerLoop</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(BufferSize * 1.5)&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; BufferSize, BackBufferSize &gt;::Options::maxMessagesPerLoop = std::numeric_limits&lt;int&gt;::max()</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Determines the maximum amount of messages to handle when processAllMessages was called. </p>
+
+</div>
+</div>
 <a id="ad3659b7ecff01437f50302f1fd686570" name="ad3659b7ecff01437f50302f1fd686570"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad3659b7ecff01437f50302f1fd686570">&#9670;&#160;</a></span>deferredAndGCInterval</h2>
 
@@ -138,7 +162,10 @@ template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(Buf
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>Defines the time (in milliseconds) in what interval deferred and garbage collected messages should be processed. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a513b11f11323d9b655e72e082187e162">jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;::MessageHandler()</a>.</p>
 
 </div>
 </div>
@@ -155,36 +182,21 @@ template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(Buf
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Whether messages on the target thread should be garbage collected and transferred to the messages thread or if they should be destroyed on the thread they were handled on. (might be problematic for rt-threads) </p>
 
-</div>
-</div>
-<a id="a137faccf09429f0d68b1534f34ac6838" name="a137faccf09429f0d68b1534f34ac6838"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a137faccf09429f0d68b1534f34ac6838">&#9670;&#160;</a></span>maxMessagesPerLoop</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(BufferSize * 1.5)&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">int <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; BufferSize, BackBufferSize &gt;::Options::maxMessagesPerLoop = std::numeric_limits&lt;int&gt;::max()</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Determines the maximum amount of messages to handle when processAllMessages was called. </p>
+<p>Whether messages on the target thread should be garbage collected and transferred to the messages thread or if they should be destroyed on the thread they were handled on. </p>
+<p>(might be problematic for rt-threads) </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_message/thread/<a class="el" href="../../dd/d89/jaut__MessageHandler_8h_source.html">jaut_MessageHandler.h</a></li>
+<li>/github/workspace/modules/jaut_message/thread/<a class="el" href="../../dd/d89/jaut__MessageHandler_8h.html">jaut_MessageHandler.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">MessageHandler</a></li><li class="navelem"><a class="el" href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html">Options</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">MessageHandler</a></li><li class="navelem"><a class="el" href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html">Options</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

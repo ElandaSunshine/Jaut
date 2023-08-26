@@ -1,0 +1,5 @@
+<map id="jaut::MultiPagePanel" name="jaut::MultiPagePanel">
+<area shape="rect" id="Node000001" title="An extremely customisable component that lets you add pages that will be controlled by a tab bar." alt="" coords="7,79,147,105"/>
+<area shape="rect" id="Node000002" href="$d8/d31/classjaut_1_1ExtraComponent.html" title="A juce::Component implementation that allows basic styling of a component, such as borders margin and..." alt="" coords="5,5,149,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="80,46,80,79,74,79,74,46"/>
+</map>

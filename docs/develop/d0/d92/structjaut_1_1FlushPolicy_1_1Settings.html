@@ -110,23 +110,31 @@ $(document).ready(function(){initNavTree('d0/d92/structjaut_1_1FlushPolicy_1_1Se
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d2/da4/jaut__FlushPolicy_8h_source.html">jaut_FlushPolicy.h</a>&gt;</code></p>
+<p>A struct of data that describes the flushing behaviour for an <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html" title="A worker is a separate layer to a jaut::BasicLogger, used to actually transport messages to the loggi...">ILogWorker</a>.  
+ <a href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_FlushPolicy.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:ad14f775061d97b5d2b3db04fcb759ea0"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#ac02b588d8312125853f32432fc8abeb8">CustomFlushPolicy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#ad14f775061d97b5d2b3db04fcb759ea0">customPolicy</a> = [](const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a>&amp;) { return false; }</td></tr>
+<tr class="memdesc:ad14f775061d97b5d2b3db04fcb759ea0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback for custom flushing policies.  <br /></td></tr>
 <tr class="separator:ad14f775061d97b5d2b3db04fcb759ea0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:adf9f07993a4c50e7bbef031d2a1f9ff3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#adf9f07993a4c50e7bbef031d2a1f9ff3">interval</a> = 10</td></tr>
+<tr class="memdesc:adf9f07993a4c50e7bbef031d2a1f9ff3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The interval when the buffer should be flushed.  <br /></td></tr>
 <tr class="separator:adf9f07993a4c50e7bbef031d2a1f9ff3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab35e4744eb03bb6ca282d1092be2da67"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">LogLevel::Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#ab35e4744eb03bb6ca282d1092be2da67">level</a> = <a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836af4f4b259247845486dbe49897ebc4244">LogLevel::Warn</a></td></tr>
+<tr class="memdesc:ab35e4744eb03bb6ca282d1092be2da67"><td class="mdescLeft">&#160;</td><td class="mdescRight">The level that should instruct the buffer to be flushed.  <br /></td></tr>
 <tr class="separator:ab35e4744eb03bb6ca282d1092be2da67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a459373392346d017a4efe380d4a4114a"><td class="memItemLeft" align="right" valign="top">Bitset&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#a459373392346d017a4efe380d4a4114a">policies</a> = (1u &lt;&lt; <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#aa5287159e85d3e30a210c4d8a9230750a03261b2cd356f62c38da7eece581f5f8">Instant</a>)</td></tr>
+<tr class="memitem:a459373392346d017a4efe380d4a4114a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a0c9f3f50001984f823eefb13cc1621d1">Bitset</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#a459373392346d017a4efe380d4a4114a">policies</a> = (1u &lt;&lt; <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685ba03261b2cd356f62c38da7eece581f5f8">Instant</a>)</td></tr>
+<tr class="memdesc:a459373392346d017a4efe380d4a4114a"><td class="mdescLeft">&#160;</td><td class="mdescRight">The policy modes for when the log buffer should be flushed to the output.  <br /></td></tr>
 <tr class="separator:a459373392346d017a4efe380d4a4114a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a17a40923692125edf5bfc10e54199d1d"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#a17a40923692125edf5bfc10e54199d1d">flushOnFinalisation</a> { true }</td></tr>
+<tr class="memdesc:a17a40923692125edf5bfc10e54199d1d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether to flush as soon as the worker is marked to be finalised.  <br /></td></tr>
 <tr class="separator:a17a40923692125edf5bfc10e54199d1d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A struct of data that describes the flushing behaviour for an <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html">ILogWorker</a>. </p>
+<div class="textblock"><p>A struct of data that describes the flushing behaviour for an <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html" title="A worker is a separate layer to a jaut::BasicLogger, used to actually transport messages to the loggi...">ILogWorker</a>. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
 <a id="ad14f775061d97b5d2b3db04fcb759ea0" name="ad14f775061d97b5d2b3db04fcb759ea0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad14f775061d97b5d2b3db04fcb759ea0">&#9670;&#160;</a></span>customPolicy</h2>
@@ -139,22 +147,8 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The callback for custom flushing policies. </p>
-
-</div>
-</div>
-<a id="a17a40923692125edf5bfc10e54199d1d" name="a17a40923692125edf5bfc10e54199d1d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a17a40923692125edf5bfc10e54199d1d">&#9670;&#160;</a></span>flushOnFinalisation</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool jaut::FlushPolicy::Settings::flushOnFinalisation { true }</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Whether to flush as soon as the worker is marked to be finalised. (likely due to destruction) </p>
 
 </div>
 </div>
@@ -169,7 +163,9 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The interval when the buffer should be flushed. (in seconds) <br  />
+
+<p>The interval when the buffer should be flushed. </p>
+<p>(in seconds) <br  />
 <br  />
  This value is invalid if it is negative and having a negative value is UB as the library's way of handling negative values might change in future. </p>
 
@@ -186,6 +182,7 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The level that should instruct the buffer to be flushed. </p>
 
 </div>
@@ -197,23 +194,42 @@ Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">Bitset jaut::FlushPolicy::Settings::policies = (1u &lt;&lt; <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#aa5287159e85d3e30a210c4d8a9230750a03261b2cd356f62c38da7eece581f5f8">Instant</a>)</td>
+          <td class="memname"><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a0c9f3f50001984f823eefb13cc1621d1">Bitset</a> jaut::FlushPolicy::Settings::policies = (1u &lt;&lt; <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685ba03261b2cd356f62c38da7eece581f5f8">Instant</a>)</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The policy modes for when the log buffer should be flushed to the output. </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html">jaut::FlushPolicy</a> </dd></dl>
+
+<p>The policy modes for when the log buffer should be flushed to the output. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html" title="Determines the policy-type for when the buffer should be flushed to the output.">jaut::FlushPolicy</a> </dd></dl>
+
+</div>
+</div>
+<a id="a17a40923692125edf5bfc10e54199d1d" name="a17a40923692125edf5bfc10e54199d1d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17a40923692125edf5bfc10e54199d1d">&#9670;&#160;</a></span>flushOnFinalisation</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jaut::FlushPolicy::Settings::flushOnFinalisation { true }</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether to flush as soon as the worker is marked to be finalised. </p>
+<p>(likely due to destruction) </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../d2/da4/jaut__FlushPolicy_8h_source.html">jaut_FlushPolicy.h</a></li>
+<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../d2/da4/jaut__FlushPolicy_8h.html">jaut_FlushPolicy.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html">FlushPolicy</a></li><li class="navelem"><a class="el" href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html">Settings</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html">FlushPolicy</a></li><li class="navelem"><a class="el" href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html">Settings</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

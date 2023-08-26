@@ -25,6 +25,31 @@
 var NAVTREE =
 [
   [ "JAUT", "index.html", [
+    [ "WARNING", "index.html#autotoc_md204", null ],
+    [ "JAUT: JUCE Augmented Utility Toolbox", "index.html#autotoc_md205", null ],
+    [ "Table of Contents", "index.html#autotoc_md206", null ],
+    [ "Motivation", "index.html#autotoc_md207", null ],
+    [ "Installation", "index.html#autotoc_md208", [
+      [ "Dependencies", "index.html#autotoc_md209", [
+        [ "JUCE", "index.html#autotoc_md210", null ],
+        [ "Integrated", "index.html#autotoc_md211", null ],
+        [ "Optionals", "index.html#autotoc_md212", null ]
+      ] ],
+      [ "Setup", "index.html#autotoc_md213", [
+        [ "CMake", "index.html#autotoc_md214", null ],
+        [ "Projucer", "index.html#autotoc_md215", null ]
+      ] ]
+    ] ],
+    [ "Usage", "index.html#autotoc_md216", null ],
+    [ "License", "index.html#autotoc_md217", null ],
+    [ "Contact", "index.html#autotoc_md220", null ],
+    [ "Namespace Members", "namespacemembers.html", [
+      [ "All", "namespacemembers.html", null ],
+      [ "Functions", "namespacemembers_func.html", null ],
+      [ "Variables", "namespacemembers_vars.html", null ],
+      [ "Typedefs", "namespacemembers_type.html", null ],
+      [ "Enumerations", "namespacemembers_enum.html", null ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -32,10 +57,11 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
         [ "Functions", "functions_func.html", "functions_func" ],
-        [ "Variables", "functions_vars.html", null ],
+        [ "Variables", "functions_vars.html", "functions_vars" ],
         [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
-        [ "Enumerator", "functions_eval.html", null ]
+        [ "Enumerator", "functions_eval.html", null ],
+        [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -52,11 +78,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d2/de0/jaut__LogFormatCallback_8cpp_source.html",
-"d6/d32/classjaut_1_1Config.html#a19e02b2ef4c140d8c8fce487dfb8db00",
-"d8/dc8/jaut__PolicyPeriodic_8cpp_source.html",
-"db/df7/jaut__Event_8h.html#a07486db68ac4b42bfacd9af02d7317a7",
-"de/de2/classjaut_1_1Numeric.html#a8bae6f1bb0703fc6ad9e61dd5e8a6d02"
+"d2/d14/jaut__MessageDirection_8h.html#afee54c22810c71605b859af5c2664c26",
+"d5/d59/classjaut_1_1LogWorkerAsync.html#a71f6a532a5520ec887ac50e1425db23f",
+"d7/d07/jaut__CommonUtils_8h.html#a45faaa0a608e3e6f1afb29237761f170",
+"d9/daa/classjaut_1_1Config_1_1Property.html",
+"db/df7/jaut__Event_8h.html#a5a6c4868a430bbb3150402ef5a029c78",
+"de/daa/jaut__TypeTraits_8h.html#a27fac67fab4bd2eb84a7153604a885ec",
+"df/dd8/classjaut_1_1ConfigParseException.html#a76f4bed313a4fbf1ceea4af2b9256537"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

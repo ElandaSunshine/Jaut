@@ -111,7 +111,10 @@ $(document).ready(function(){initNavTree('d8/dc1/structjaut_1_1LogLevel.html','.
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d2/dd2/jaut__LogLevel_8h_source.html">jaut_LogLevel.h</a>&gt;</code></p>
+<p>The log level to produce.  
+ <a href="../../d8/dc1/structjaut_1_1LogLevel.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_LogLevel.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
@@ -127,11 +130,13 @@ Public Types</h2></td></tr>
 , <a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836a97315fcde6cb60121e625970e2cd122d">Off</a>
 <br />
  }</td></tr>
+<tr class="memdesc:a79dcdcc0e6c139be7b5c84bcdf8bc836"><td class="mdescLeft">&#160;</td><td class="mdescRight">The log-level priority list.  <a href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">More...</a><br /></td></tr>
 <tr class="separator:a79dcdcc0e6c139be7b5c84bcdf8bc836"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a0bb2656a273ddc134ecfb78a3c4c30a6"><td class="memItemLeft" align="right" valign="top">static constexpr std::array&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a0bb2656a273ddc134ecfb78a3c4c30a6">names</a></td></tr>
+<tr class="memdesc:a0bb2656a273ddc134ecfb78a3c4c30a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of names for each log level.  <br /></td></tr>
 <tr class="separator:a0bb2656a273ddc134ecfb78a3c4c30a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -148,14 +153,17 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The log-level priority list. </p>
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a79dcdcc0e6c139be7b5c84bcdf8bc836aba3e7042445a10dc841b0a184130d534" name="a79dcdcc0e6c139be7b5c84bcdf8bc836aba3e7042445a10dc841b0a184130d534"></a>Trace&#160;</td><td class="fielddoc"><p>For maximum fine-grained messages.<br  />
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a79dcdcc0e6c139be7b5c84bcdf8bc836aba3e7042445a10dc841b0a184130d534" name="a79dcdcc0e6c139be7b5c84bcdf8bc836aba3e7042445a10dc841b0a184130d534"></a>Trace&#160;</td><td class="fielddoc"><p>For maximum fine-grained messages. </p>
+<p><br  />
  This is the thing you will want to use when you need to trace how your application works. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a79dcdcc0e6c139be7b5c84bcdf8bc836ac19f95d5fb1623f2ce46c939c488b371" name="a79dcdcc0e6c139be7b5c84bcdf8bc836ac19f95d5fb1623f2ce46c939c488b371"></a>Debug&#160;</td><td class="fielddoc"><p>For developer messages or more fine-grained results. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a79dcdcc0e6c139be7b5c84bcdf8bc836a3623b65de61802bd9e44bef1e676529e" name="a79dcdcc0e6c139be7b5c84bcdf8bc836a3623b65de61802bd9e44bef1e676529e"></a>Verbose&#160;</td><td class="fielddoc"><p>For messages that should only be output when verbose mode is enabled. Verbose messages will also get the Verbose tag by default, this can be changed by JAUT_PROVIDER_LOGGER_VERBOSE_TAG however. </p>
+<tr><td class="fieldname"><a id="a79dcdcc0e6c139be7b5c84bcdf8bc836a3623b65de61802bd9e44bef1e676529e" name="a79dcdcc0e6c139be7b5c84bcdf8bc836a3623b65de61802bd9e44bef1e676529e"></a>Verbose&#160;</td><td class="fielddoc"><p>For messages that should only be output when verbose mode is enabled. </p>
+<p>Verbose messages will also get the Verbose tag by default, this can be changed by JAUT_PROVIDER_LOGGER_VERBOSE_TAG however. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a79dcdcc0e6c139be7b5c84bcdf8bc836a457ae2f0be00f0227c5d95a717aa1606" name="a79dcdcc0e6c139be7b5c84bcdf8bc836a457ae2f0be00f0227c5d95a717aa1606"></a>Info&#160;</td><td class="fielddoc"><p>For informative messages. </p>
 </td></tr>
@@ -165,7 +173,8 @@ Static Public Attributes</h2></td></tr>
 </td></tr>
 <tr><td class="fieldname"><a id="a79dcdcc0e6c139be7b5c84bcdf8bc836a37584e257e6c9d908a780a783b50b9a5" name="a79dcdcc0e6c139be7b5c84bcdf8bc836a37584e257e6c9d908a780a783b50b9a5"></a>Fatal&#160;</td><td class="fielddoc"><p>For problems that arise during runtime that usually end up in shutting down the process. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="a79dcdcc0e6c139be7b5c84bcdf8bc836a97315fcde6cb60121e625970e2cd122d" name="a79dcdcc0e6c139be7b5c84bcdf8bc836a97315fcde6cb60121e625970e2cd122d"></a>Off&#160;</td><td class="fielddoc"><p>No logs. Using this as level for logging a message will do absolutely nothing. </p>
+<tr><td class="fieldname"><a id="a79dcdcc0e6c139be7b5c84bcdf8bc836a97315fcde6cb60121e625970e2cd122d" name="a79dcdcc0e6c139be7b5c84bcdf8bc836a97315fcde6cb60121e625970e2cd122d"></a>Off&#160;</td><td class="fielddoc"><p>No logs. </p>
+<p>Using this as level for logging a message will do absolutely nothing. </p>
 </td></tr>
 </table>
 
@@ -200,20 +209,21 @@ Static Public Attributes</h2></td></tr>
 <div class="line">            std::string_view{ <span class="stringliteral">&quot;Error&quot;</span> },</div>
 <div class="line">            std::string_view{ <span class="stringliteral">&quot;Fatal&quot;</span> }</div>
 <div class="line">        }</div>
-<div class="ttc" id="ajaut__logger__define_8h_html_ac637691911c5c4f9e560de26036c6014"><div class="ttname"><a href="../../d3/dda/jaut__logger__define_8h.html#ac637691911c5c4f9e560de26036c6014">JAUT_LOGGER_VERBOSE_TAG</a></div><div class="ttdeci">#define JAUT_LOGGER_VERBOSE_TAG</div><div class="ttdef"><b>Definition</b> jaut_logger_define.h:44</div></div>
-</div><!-- fragment --><p>The list of names for each log level. </p>
+<div class="ttc" id="ajaut__logger__define_8h_html_ac637691911c5c4f9e560de26036c6014"><div class="ttname"><a href="../../d3/dda/jaut__logger__define_8h.html#ac637691911c5c4f9e560de26036c6014">JAUT_LOGGER_VERBOSE_TAG</a></div><div class="ttdeci">#define JAUT_LOGGER_VERBOSE_TAG</div><div class="ttdoc">Config: JAUT_LOGGER_VERBOSE_TAG.</div><div class="ttdef"><b>Definition</b> jaut_logger_define.h:44</div></div>
+</div><!-- fragment -->
+<p>The list of names for each log level. </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../d2/dd2/jaut__LogLevel_8h_source.html">jaut_LogLevel.h</a></li>
+<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../d2/dd2/jaut__LogLevel_8h.html">jaut_LogLevel.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html">LogLevel</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html">LogLevel</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

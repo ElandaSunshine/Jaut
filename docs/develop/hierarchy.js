@@ -66,7 +66,6 @@ var hierarchy =
       [ "jaut::qualifiesAsString< T >", "d2/d48/structjaut_1_1qualifiesAsString.html", null ],
       [ "jaut::qualifiesAsString< T< Types... > >", "d6/d3b/structjaut_1_1qualifiesAsString_3_01T_3_01Types_8_8_8_01_4_01_4.html", null ]
     ] ],
-    [ "jaut::CharFormat", "d8/d60/classjaut_1_1CharFormat.html", null ],
     [ "jaut::Cid", "da/d88/structjaut_1_1Cid.html", null ],
     [ "jaut::detail::CidNamespaceInternal< Id >", null, [
       [ "jaut::CidNamespace< Id >", "da/dd7/structjaut_1_1CidNamespace.html", null ]
@@ -77,33 +76,23 @@ var hierarchy =
         [ "jaut::MultiPagePanel", "d0/dea/classjaut_1_1MultiPagePanel.html", null ],
         [ "jaut::SplitPanel", "d5/dd6/classjaut_1_1SplitPanel.html", null ]
       ] ],
-      [ "jaut::MultiPagePanel::TabButton", "d9/dc3/classjaut_1_1MultiPagePanel_1_1TabButton.html", null ],
-      [ "jaut::PseudoComponent", "db/d42/classjaut_1_1PseudoComponent.html", null ]
-    ] ],
-    [ "juce::ComponentBoundsConstrainer", null, [
-      [ "jaut::SplitPanel::Pimpl::LockedAxisConstrainer", "d8/d96/classjaut_1_1SplitPanel_1_1Pimpl_1_1LockedAxisConstrainer.html", null ]
+      [ "jaut::MultiPagePanel::TabButton", "d9/dc3/classjaut_1_1MultiPagePanel_1_1TabButton.html", null ]
     ] ],
     [ "juce::ComponentListener", null, [
       [ "jaut::ExtraComponent", "d8/d31/classjaut_1_1ExtraComponent.html", null ],
-      [ "jaut::MultiPagePanel::TabButton", "d9/dc3/classjaut_1_1MultiPagePanel_1_1TabButton.html", null ],
-      [ "jaut::PseudoComponent", "db/d42/classjaut_1_1PseudoComponent.html", null ]
+      [ "jaut::MultiPagePanel::TabButton", "d9/dc3/classjaut_1_1MultiPagePanel_1_1TabButton.html", null ]
     ] ],
     [ "jaut::Config", "d6/d32/classjaut_1_1Config.html", null ],
     [ "jaut::ExtraComponent::ContainerStyle", "d2/d04/structjaut_1_1ExtraComponent_1_1ContainerStyle.html", [
       [ "jaut::MultiPagePanel::InitStyle", "d7/df4/structjaut_1_1MultiPagePanel_1_1InitStyle.html", null ],
       [ "jaut::SplitPanel::InitStyle", "da/d44/structjaut_1_1SplitPanel_1_1InitStyle.html", null ]
     ] ],
-    [ "jaut::DadeFormat", "d3/d27/structjaut_1_1DadeFormat.html", null ],
-    [ "jaut::SplitPanel::Pimpl::OrientedBounds::Data", "d4/d56/structjaut_1_1SplitPanel_1_1Pimpl_1_1OrientedBounds_1_1Data.html", null ],
     [ "jaut::DefaultCase< T >", "d0/d5f/structjaut_1_1DefaultCase.html", null ],
     [ "jaut::Distance< T >", "de/d0d/structjaut_1_1Distance.html", null ],
     [ "jaut::Distance< int >", "de/d0d/structjaut_1_1Distance.html", null ],
     [ "jaut::DistanceUtil", "d9/d5e/structjaut_1_1DistanceUtil.html", null ],
     [ "juce::DragAndDropTarget", null, [
-      [ "jaut::MultiPagePanel", "d0/dea/classjaut_1_1MultiPagePanel.html", null ],
-      [ "jaut::OverlayTarget", "d6/da7/classjaut_1_1OverlayTarget.html", [
-        [ "jaut::DockingPane", "d7/d33/classjaut_1_1DockingPane.html", null ]
-      ] ]
+      [ "jaut::MultiPagePanel", "d0/dea/classjaut_1_1MultiPagePanel.html", null ]
     ] ],
     [ "jaut::EmptyType", "d4/da0/structjaut_1_1EmptyType.html", null ],
     [ "jaut::ConfigIncompatibleTypeException::ErrorCode", "d1/d59/structjaut_1_1ConfigIncompatibleTypeException_1_1ErrorCode.html", null ],
@@ -117,7 +106,10 @@ var hierarchy =
       [ "jaut::ConfigParseException", "df/dd8/classjaut_1_1ConfigParseException.html", null ],
       [ "jaut::ConfigPropertyIdException", "d5/db5/classjaut_1_1ConfigPropertyIdException.html", null ],
       [ "jaut::LogIOException", "d0/dce/classjaut_1_1LogIOException.html", null ],
-      [ "jaut::LogRotationException", "d1/dd2/classjaut_1_1LogRotationException.html", null ]
+      [ "jaut::LogRotationException", "d1/dd2/classjaut_1_1LogRotationException.html", null ],
+      [ "std::runtime_error", null, [
+        [ "jaut::QueueSpaceExceededException", "d9/de3/classjaut_1_1QueueSpaceExceededException.html", null ]
+      ] ]
     ] ],
     [ "jaut::LogMessage::ExceptionSpec", "d7/da1/structjaut_1_1LogMessage_1_1ExceptionSpec.html", null ],
     [ "std::false_type", null, [
@@ -130,7 +122,6 @@ var hierarchy =
     ] ],
     [ "jaut::LogMessage::Field", "dc/da5/structjaut_1_1LogMessage_1_1Field.html", null ],
     [ "jaut::FlushPolicy", "dc/d7e/structjaut_1_1FlushPolicy.html", null ],
-    [ "jaut::FontFormat", "db/dcd/classjaut_1_1FontFormat.html", null ],
     [ "jaut::FormatAttributes", "db/d3b/classjaut_1_1FormatAttributes.html", null ],
     [ "jaut::FormatLayout", "d3/d6d/classjaut_1_1FormatLayout.html", null ],
     [ "jaut::getIndexOf< T, Key >", "d1/d13/structjaut_1_1getIndexOf.html", null ],
@@ -165,7 +156,6 @@ var hierarchy =
       [ "jaut::LogWorkerSimple< BufferSize, CriticalSection >", "db/d7a/classjaut_1_1LogWorkerSimple.html", null ]
     ] ],
     [ "jaut::IMessage", "dc/dd2/structjaut_1_1IMessage.html", [
-      [ "jaut::AudioProcessorRack::MessageSwap", "d7/d9e/classjaut_1_1AudioProcessorRack_1_1MessageSwap.html", null ],
       [ "jaut::message::MessageCallback", "dc/dcc/classjaut_1_1message_1_1MessageCallback.html", null ]
     ] ],
     [ "jaut::IMessageBuffer< T >", "dc/d1b/structjaut_1_1IMessageBuffer.html", [
@@ -225,9 +215,6 @@ var hierarchy =
     [ "jaut::SplitPanel::LookAndFeelMethods", "db/df4/structjaut_1_1SplitPanel_1_1LookAndFeelMethods.html", [
       [ "jaut::LookAndFeel", "d8/d60/classjaut_1_1LookAndFeel.html", null ]
     ] ],
-    [ "juce::MouseListener", null, [
-      [ "jaut::SplitPanel::Pimpl", "db/db3/classjaut_1_1SplitPanel_1_1Pimpl.html", null ]
-    ] ],
     [ "jaut::NonNull< T >", "d6/d62/classjaut_1_1NonNull.html", null ],
     [ "jaut::NonNull< RotationPolicy >", "d6/d62/classjaut_1_1NonNull.html", null ],
     [ "jaut::NonNull< RotationStrategy >", "d6/d62/classjaut_1_1NonNull.html", null ],
@@ -235,7 +222,6 @@ var hierarchy =
     [ "jaut::Numeric< T, CheckFlags >", "de/de2/classjaut_1_1Numeric.html", null ],
     [ "jaut::OperationResult", "d6/d63/classjaut_1_1OperationResult.html", null ],
     [ "jaut::BasicLogger< Worker >::Options", "df/d71/structjaut_1_1BasicLogger_1_1Options.html", null ],
-    [ "jaut::CharFormat::Options", "d4/d04/structjaut_1_1CharFormat_1_1Options.html", null ],
     [ "jaut::Config::Options", "df/dfb/structjaut_1_1Config_1_1Options.html", null ],
     [ "jaut::JsonParser::Options", "d7/d8f/structjaut_1_1JsonParser_1_1Options.html", null ],
     [ "jaut::LogFormatJson::Options", "d8/df3/structjaut_1_1LogFormatJson_1_1Options.html", null ],
@@ -247,7 +233,6 @@ var hierarchy =
     [ "jaut::SplitPanel::Options", "d0/dd7/structjaut_1_1SplitPanel_1_1Options.html", null ],
     [ "jaut::StrategyPattern::Options", "d5/d99/structjaut_1_1StrategyPattern_1_1Options.html", null ],
     [ "jaut::XmlParser::Options", "da/d45/structjaut_1_1XmlParser_1_1Options.html", null ],
-    [ "jaut::SplitPanel::Pimpl::OrientedBounds", "da/dc1/structjaut_1_1SplitPanel_1_1Pimpl_1_1OrientedBounds.html", null ],
     [ "jaut::detail::OverloadBase< FuncType >", null, [
       [ "jaut::Overload< Ret(Params...) const >", "d8/dbf/structjaut_1_1Overload_3_01Ret_07Params_8_8_8_08_01const_01_4.html", null ]
     ] ],
@@ -285,8 +270,6 @@ var hierarchy =
       [ "jaut::Overload< Ret(Params...)>", "dc/d46/structjaut_1_1Overload_3_01Ret_07Params_8_8_8_08_4.html", null ]
     ] ],
     [ "jaut::IConfigParser::ParseAttributes< MapType >", "d4/dd2/structjaut_1_1IConfigParser_1_1ParseAttributes.html", null ],
-    [ "jaut::OverlayTarget::PathElement", "d9/dbe/structjaut_1_1OverlayTarget_1_1PathElement.html", null ],
-    [ "jaut::MultiPagePanel::Pimpl", "df/d6d/classjaut_1_1MultiPagePanel_1_1Pimpl.html", null ],
     [ "jaut::PolicyCombined", "d0/dfc/classjaut_1_1PolicyCombined.html", null ],
     [ "jaut::PolicyDaily", "de/d96/classjaut_1_1PolicyDaily.html", null ],
     [ "jaut::PolicyPeriodic", "dc/d51/classjaut_1_1PolicyPeriodic.html", null ],
@@ -310,9 +293,6 @@ var hierarchy =
     [ "jaut::SafeInteger::Result< T >", "d1/dee/structjaut_1_1SafeInteger_1_1Result.html", null ],
     [ "jaut::RotationPolicyArgs", "d1/dba/structjaut_1_1RotationPolicyArgs.html", null ],
     [ "jaut::FormatLayout::Run", "de/d3d/classjaut_1_1FormatLayout_1_1Run.html", null ],
-    [ "std::runtime_error", null, [
-      [ "jaut::QueueSpaceExceededException", "d9/de3/classjaut_1_1QueueSpaceExceededException.html", null ]
-    ] ],
     [ "jaut::RwLockGuard< Mode, TryLocking >", "dd/dc3/classjaut_1_1RwLockGuard.html", null ],
     [ "jaut::SafeFloat", "d6/df8/structjaut_1_1SafeFloat.html", null ],
     [ "jaut::SafeInteger", "df/d28/structjaut_1_1SafeInteger.html", null ],
@@ -357,9 +337,6 @@ var hierarchy =
     [ "jaut::shared_construct_t", "da/d0b/structjaut_1_1shared__construct__t.html", null ],
     [ "jaut::Size< T >", "db/d3e/structjaut_1_1Size.html", null ],
     [ "jaut::Size< int >", "db/d3e/structjaut_1_1Size.html", null ],
-    [ "SplitPane", null, [
-      [ "jaut::DockingPane", "d7/d33/classjaut_1_1DockingPane.html", null ]
-    ] ],
     [ "jaut::StrategyPattern", "d4/dfe/classjaut_1_1StrategyPattern.html", null ],
     [ "jaut::Stringable< T >", "db/df0/structjaut_1_1Stringable.html", null ],
     [ "jaut::Stringable< bool >", "da/dc3/structjaut_1_1Stringable_3_01bool_01_4.html", null ],
@@ -398,11 +375,9 @@ var hierarchy =
     [ "jaut::MultiPagePanel::Style", "dc/dbd/structjaut_1_1MultiPagePanel_1_1Style.html", [
       [ "jaut::MultiPagePanel::InitStyle", "d7/df4/structjaut_1_1MultiPagePanel_1_1InitStyle.html", null ]
     ] ],
-    [ "jaut::PseudoComponent::Style", "dc/dde/structjaut_1_1PseudoComponent_1_1Style.html", null ],
     [ "jaut::SplitPanel::Style", "d3/dde/structjaut_1_1SplitPanel_1_1Style.html", [
       [ "jaut::SplitPanel::InitStyle", "da/d44/structjaut_1_1SplitPanel_1_1InitStyle.html", null ]
     ] ],
-    [ "jaut::OverlayTarget::TargetBlock", "d3/dda/structjaut_1_1OverlayTarget_1_1TargetBlock.html", null ],
     [ "juce::Thread", null, [
       [ "jaut::LogWorkerAsync< BufferSize, CriticalSection >", "d5/d59/classjaut_1_1LogWorkerAsync.html", null ]
     ] ],
@@ -410,8 +385,6 @@ var hierarchy =
       [ "jaut::MessageHandler< 16 >", "d8/da9/classjaut_1_1MessageHandler.html", null ],
       [ "jaut::MessageHandler< BufferSize, BackBufferSize >", "d8/da9/classjaut_1_1MessageHandler.html", null ]
     ] ],
-    [ "jaut::FormatLayoutHelpers::Token", "dd/d95/structjaut_1_1FormatLayoutHelpers_1_1Token.html", null ],
-    [ "jaut::FormatLayoutHelpers::TokenList", "db/dc2/structjaut_1_1FormatLayoutHelpers_1_1TokenList.html", null ],
     [ "jaut::toTypeArray< T< Types... > >", "d3/d9a/structjaut_1_1toTypeArray_3_01T_3_01Types_8_8_8_01_4_01_4.html", null ],
     [ "std::true_type", null, [
       [ "jaut::hasSameTypeList< T< Types... >, U< Types... > >", "de/d97/structjaut_1_1hasSameTypeList_3_01T_3_01Types_8_8_8_01_4_00_01U_3_01Types_8_8_8_01_4_01_4.html", null ],
@@ -432,12 +405,6 @@ var hierarchy =
     [ "jaut::TypeLadder< Cases >", "d2/da2/structjaut_1_1TypeLadder.html", null ],
     [ "jaut::XmlParser::Options::TypeTag", "dd/d12/structjaut_1_1XmlParser_1_1Options_1_1TypeTag.html", null ],
     [ "jaut::VarUtil::Undefined", "de/dfa/structjaut_1_1VarUtil_1_1Undefined.html", null ],
-    [ "juce::UndoableAction", null, [
-      [ "jaut::AudioProcessorRack::UndoableAdd", "da/ddb/classjaut_1_1AudioProcessorRack_1_1UndoableAdd.html", null ],
-      [ "jaut::AudioProcessorRack::UndoableClear", "d9/dcd/classjaut_1_1AudioProcessorRack_1_1UndoableClear.html", null ],
-      [ "jaut::AudioProcessorRack::UndoableMove", "d8/d72/classjaut_1_1AudioProcessorRack_1_1UndoableMove.html", null ],
-      [ "jaut::AudioProcessorRack::UndoableRemove", "d7/d38/classjaut_1_1AudioProcessorRack_1_1UndoableRemove.html", null ]
-    ] ],
     [ "jaut::unique_construct_t", "d2/d2b/structjaut_1_1unique__construct__t.html", null ],
     [ "jaut::VarUtil::Unknown", "d8/da6/structjaut_1_1VarUtil_1_1Unknown.html", null ],
     [ "jaut::ILogFormat::Util", "d8/ddb/structjaut_1_1ILogFormat_1_1Util.html", null ],

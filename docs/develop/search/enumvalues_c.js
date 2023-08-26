@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['reserved_0',['Reserved',['../da/d88/structjaut_1_1Cid.html#a88b1c3ad2e80e55459f3b3274a2f0f66acd9b232c102228ea4f63d3b961010205',1,'jaut::Cid']]]
+  ['off_0',['Off',['../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836a97315fcde6cb60121e625970e2cd122d',1,'jaut::LogLevel']]],
+  ['otherobject_1',['OtherObject',['../d1/db1/classjaut_1_1VarUtil.html#ac2d92061bc9b4f8c88111320830173e8a0729dbca15389a06aeba7460756c6280',1,'jaut::VarUtil']]]
 ];

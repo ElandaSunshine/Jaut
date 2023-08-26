@@ -110,35 +110,80 @@ $(document).ready(function(){initNavTree('dc/dcc/classjaut_1_1message_1_1Message
   <div class="headertitle"><div class="title">jaut::message::MessageCallback Class Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="dynheader">
-Inheritance diagram for jaut::message::MessageCallback:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.png" usemap="#jaut::message::MessageCallback_map" alt=""/>
-  <map id="jaut::message::MessageCallback_map" name="jaut::message::MessageCallback_map">
-<area href="../../dc/dd2/structjaut_1_1IMessage.html" alt="jaut::IMessage" shape="rect" coords="0,0,193,24"/>
-  </map>
-</div></div>
+
+<p><code>#include &lt;jaut_MessageCallback.h&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Inheritance diagram for jaut::message::MessageCallback:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../da/d15/classjaut_1_1message_1_1MessageCallback__inherit__graph.svg" width="222" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:ad7c59e6127f5f3957be4e6f7f874f88f"><td class="memItemLeft" align="right" valign="top"><a id="ad7c59e6127f5f3957be4e6f7f874f88f" name="ad7c59e6127f5f3957be4e6f7f874f88f"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>CallbackHandler</b> = std::function&lt; void(<a class="el" href="../../d7/d49/structjaut_1_1IMessageHandler.html">IMessageHandler</a> *context, MessageDirection messageDirection)&gt;</td></tr>
+<tr class="memitem:ad7c59e6127f5f3957be4e6f7f874f88f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#ad7c59e6127f5f3957be4e6f7f874f88f">CallbackHandler</a> = std::function&lt; void(<a class="el" href="../../d7/d49/structjaut_1_1IMessageHandler.html">IMessageHandler</a> *context, MessageDirection messageDirection)&gt;</td></tr>
 <tr class="separator:ad7c59e6127f5f3957be4e6f7f874f88f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5f3be73b59efcb4a2bdfef71a357df81"><td class="memItemLeft" align="right" valign="top"><a id="a5f3be73b59efcb4a2bdfef71a357df81" name="a5f3be73b59efcb4a2bdfef71a357df81"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>MessageCallback</b> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; CallbackHandler &gt; handler) noexcept</td></tr>
+<tr class="memitem:a5f3be73b59efcb4a2bdfef71a357df81"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#a5f3be73b59efcb4a2bdfef71a357df81">MessageCallback</a> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#ad7c59e6127f5f3957be4e6f7f874f88f">CallbackHandler</a> &gt; handler) noexcept</td></tr>
 <tr class="separator:a5f3be73b59efcb4a2bdfef71a357df81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a68660483d6f7da6d00b422781adba683"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#a68660483d6f7da6d00b422781adba683">handleMessage</a> (<a class="el" href="../../d7/d49/structjaut_1_1IMessageHandler.html">IMessageHandler</a> *context, MessageDirection messageDirection) override</td></tr>
+<tr class="memdesc:a68660483d6f7da6d00b422781adba683"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the message when it arrived on the other side of the policies.  <br /></td></tr>
 <tr class="separator:a68660483d6f7da6d00b422781adba683"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structjaut_1_1IMessage"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structjaut_1_1IMessage')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html">jaut::IMessage</a></td></tr>
+<tr class="memitem:aab691febb07cfe3dbd88192213da4309 inherit pub_methods_structjaut_1_1IMessage"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html#aab691febb07cfe3dbd88192213da4309">~IMessage</a> ()=default</td></tr>
+<tr class="separator:aab691febb07cfe3dbd88192213da4309 inherit pub_methods_structjaut_1_1IMessage"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ad69817bc02c01c308bf1be573700da inherit pub_methods_structjaut_1_1IMessage"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html#a2ad69817bc02c01c308bf1be573700da">handleMessage</a> (<a class="el" href="../../d7/d49/structjaut_1_1IMessageHandler.html">IMessageHandler</a> *context, MessageDirection messageDirection)=0</td></tr>
+<tr class="memdesc:a2ad69817bc02c01c308bf1be573700da inherit pub_methods_structjaut_1_1IMessage"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the message when it arrived on the other side of the policies.  <br /></td></tr>
 <tr class="separator:a2ad69817bc02c01c308bf1be573700da inherit pub_methods_structjaut_1_1IMessage"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39d98437c06b93c5e3393b1844bbec6f inherit pub_methods_structjaut_1_1IMessage"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html#a39d98437c06b93c5e3393b1844bbec6f">getDeferId</a> ()</td></tr>
+<tr class="memdesc:a39d98437c06b93c5e3393b1844bbec6f inherit pub_methods_structjaut_1_1IMessage"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a way to instruct the target thread to create a message without actually allocating one.  <br /></td></tr>
 <tr class="separator:a39d98437c06b93c5e3393b1844bbec6f inherit pub_methods_structjaut_1_1IMessage"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="ad7c59e6127f5f3957be4e6f7f874f88f" name="ad7c59e6127f5f3957be4e6f7f874f88f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7c59e6127f5f3957be4e6f7f874f88f">&#9670;&#160;</a></span>CallbackHandler</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#ad7c59e6127f5f3957be4e6f7f874f88f">jaut::message::MessageCallback::CallbackHandler</a> =  std::function&lt;void(<a class="el" href="../../d7/d49/structjaut_1_1IMessageHandler.html">IMessageHandler</a> *context, MessageDirection messageDirection)&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a5f3be73b59efcb4a2bdfef71a357df81" name="a5f3be73b59efcb4a2bdfef71a357df81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5f3be73b59efcb4a2bdfef71a357df81">&#9670;&#160;</a></span>MessageCallback()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">jaut::message::MessageCallback::MessageCallback </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#ad7c59e6127f5f3957be4e6f7f874f88f">CallbackHandler</a> &gt;&#160;</td>
+          <td class="paramname"><em>handler</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a68660483d6f7da6d00b422781adba683" name="a68660483d6f7da6d00b422781adba683"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a68660483d6f7da6d00b422781adba683">&#9670;&#160;</a></span>handleMessage()</h2>
@@ -169,11 +214,12 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Processes the message when it arrived on the other side of the policies.</p>
+
+<p>Processes the message when it arrived on the other side of the policies. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">context</td><td>The context, or the policies which passed the message around </td></tr>
@@ -187,14 +233,14 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_message/thread/message/inbuilt/<a class="el" href="../../dd/d12/jaut__MessageCallback_8h_source.html">jaut_MessageCallback.h</a></li>
+<li>/github/workspace/modules/jaut_message/thread/message/inbuilt/<a class="el" href="../../dd/d12/jaut__MessageCallback_8h.html">jaut_MessageCallback.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><b>message</b></li><li class="navelem"><a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html">MessageCallback</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d4/d8b/namespacejaut_1_1message.html">message</a></li><li class="navelem"><a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html">MessageCallback</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

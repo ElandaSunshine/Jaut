@@ -1,0 +1,5 @@
+<map id="jaut::LogFormatXml" name="jaut::LogFormatXml">
+<area shape="rect" id="Node000001" title="Provides a json formatter that will log all events as json objects." alt="" coords="5,79,140,105"/>
+<area shape="rect" id="Node000002" href="$d5/d26/structjaut_1_1ILogFormat.html" title="Provides an interface for custom and inbuilt sink formatters." alt="" coords="15,5,130,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="75,46,75,79,70,79,70,46"/>
+</map>

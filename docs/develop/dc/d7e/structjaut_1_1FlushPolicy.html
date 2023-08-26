@@ -111,35 +111,53 @@ $(document).ready(function(){initNavTree('dc/d7e/structjaut_1_1FlushPolicy.html'
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d2/da4/jaut__FlushPolicy_8h_source.html">jaut_FlushPolicy.h</a>&gt;</code></p>
+<p>Determines the policy-type for when the buffer should be flushed to the output.  
+ <a href="../../dc/d7e/structjaut_1_1FlushPolicy.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_FlushPolicy.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html">Settings</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A struct of data that describes the flushing behaviour for an <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html" title="A worker is a separate layer to a jaut::BasicLogger, used to actually transport messages to the loggi...">ILogWorker</a>.  <a href="../../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aa5287159e85d3e30a210c4d8a9230750"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
-&#160;&#160;<a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#aa5287159e85d3e30a210c4d8a9230750a03261b2cd356f62c38da7eece581f5f8">Instant</a>
-, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#aa5287159e85d3e30a210c4d8a9230750aaf822d53c1d240f3649e1d136cac671a">Timed</a>
-, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#aa5287159e85d3e30a210c4d8a9230750aa158b1bcaa529e4a5013656ff6026f06">Filled</a>
-, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#aa5287159e85d3e30a210c4d8a9230750a8c0f1831d68fbd67c2be8a19baad40e4">Levelled</a>
+<tr class="memitem:a3e33b41431fcc1b0360557709e2b685b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom">{ <br />
+&#160;&#160;<a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685ba03261b2cd356f62c38da7eece581f5f8">Instant</a>
+, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685baaf822d53c1d240f3649e1d136cac671a">Timed</a>
+, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685baa158b1bcaa529e4a5013656ff6026f06">Filled</a>
+, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685ba8c0f1831d68fbd67c2be8a19baad40e4">Levelled</a>
 , <br />
-&#160;&#160;<a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#aa5287159e85d3e30a210c4d8a9230750aa645414cabcdea89f891814024050568">Custom</a>
-, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#aa5287159e85d3e30a210c4d8a9230750a1a1357792633c820f2a73ce85daf1b5b">Manual</a>
+&#160;&#160;<a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685baa645414cabcdea89f891814024050568">Custom</a>
+, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685ba1a1357792633c820f2a73ce85daf1b5b">Manual</a>
 <br />
  }</td></tr>
-<tr class="separator:aa5287159e85d3e30a210c4d8a9230750"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0c9f3f50001984f823eefb13cc1621d1"><td class="memItemLeft" align="right" valign="top"><a id="a0c9f3f50001984f823eefb13cc1621d1" name="a0c9f3f50001984f823eefb13cc1621d1"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>Bitset</b> = std::bitset&lt; <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#aa5287159e85d3e30a210c4d8a9230750a1a1357792633c820f2a73ce85daf1b5b">Manual</a> &gt;</td></tr>
+<tr class="separator:a3e33b41431fcc1b0360557709e2b685b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c9f3f50001984f823eefb13cc1621d1"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a0c9f3f50001984f823eefb13cc1621d1">Bitset</a> = std::bitset&lt; <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685ba1a1357792633c820f2a73ce85daf1b5b">Manual</a> &gt;</td></tr>
 <tr class="separator:a0c9f3f50001984f823eefb13cc1621d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac02b588d8312125853f32432fc8abeb8"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#ac02b588d8312125853f32432fc8abeb8">CustomFlushPolicy</a> = std::function&lt; bool(const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;)&gt;</td></tr>
+<tr class="memdesc:ac02b588d8312125853f32432fc8abeb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">A function type for custom flushing behaviour.  <br /></td></tr>
 <tr class="separator:ac02b588d8312125853f32432fc8abeb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Determines the policy-type for when the buffer should be flushed to the output. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a0c9f3f50001984f823eefb13cc1621d1" name="a0c9f3f50001984f823eefb13cc1621d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c9f3f50001984f823eefb13cc1621d1">&#9670;&#160;</a></span>Bitset</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a0c9f3f50001984f823eefb13cc1621d1">jaut::FlushPolicy::Bitset</a> =  std::bitset&lt;<a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685ba1a1357792633c820f2a73ce85daf1b5b">Manual</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ac02b588d8312125853f32432fc8abeb8" name="ac02b588d8312125853f32432fc8abeb8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac02b588d8312125853f32432fc8abeb8">&#9670;&#160;</a></span>CustomFlushPolicy</h2>
 
@@ -151,13 +169,14 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Bitset</b> = std::bi
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>A function type for custom flushing behaviour. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Enumeration Documentation</h2>
-<a id="aa5287159e85d3e30a210c4d8a9230750" name="aa5287159e85d3e30a210c4d8a9230750"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5287159e85d3e30a210c4d8a9230750">&#9670;&#160;</a></span>anonymous enum</h2>
+<a id="a3e33b41431fcc1b0360557709e2b685b" name="a3e33b41431fcc1b0360557709e2b685b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e33b41431fcc1b0360557709e2b685b">&#9670;&#160;</a></span>anonymous enum</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -168,34 +187,35 @@ using&#160;</td><td class="memItemRight" valign="bottom"><b>Bitset</b> = std::bi
       </table>
 </div><div class="memdoc">
 <table class="fieldtable">
-<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa5287159e85d3e30a210c4d8a9230750a03261b2cd356f62c38da7eece581f5f8" name="aa5287159e85d3e30a210c4d8a9230750a03261b2cd356f62c38da7eece581f5f8"></a>Instant&#160;</td><td class="fielddoc"><p>Flush the buffer after a message has been logged. <br  />
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a3e33b41431fcc1b0360557709e2b685ba03261b2cd356f62c38da7eece581f5f8" name="a3e33b41431fcc1b0360557709e2b685ba03261b2cd356f62c38da7eece581f5f8"></a>Instant&#160;</td><td class="fielddoc"><p>Flush the buffer after a message has been logged. </p>
+<p><br  />
 <br  />
  This is the only flag that can not be combined with other flags, as every incoming message will be printed instantly.<br  />
  If combined with other flags, this will overwrite all the others. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa5287159e85d3e30a210c4d8a9230750aaf822d53c1d240f3649e1d136cac671a" name="aa5287159e85d3e30a210c4d8a9230750aaf822d53c1d240f3649e1d136cac671a"></a>Timed&#160;</td><td class="fielddoc"><p>Flush all messages after a specified interval. </p>
+<tr><td class="fieldname"><a id="a3e33b41431fcc1b0360557709e2b685baaf822d53c1d240f3649e1d136cac671a" name="a3e33b41431fcc1b0360557709e2b685baaf822d53c1d240f3649e1d136cac671a"></a>Timed&#160;</td><td class="fielddoc"><p>Flush all messages after a specified interval. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa5287159e85d3e30a210c4d8a9230750aa158b1bcaa529e4a5013656ff6026f06" name="aa5287159e85d3e30a210c4d8a9230750aa158b1bcaa529e4a5013656ff6026f06"></a>Filled&#160;</td><td class="fielddoc"><p>Flush all messages whenever the buffer is full. </p>
+<tr><td class="fieldname"><a id="a3e33b41431fcc1b0360557709e2b685baa158b1bcaa529e4a5013656ff6026f06" name="a3e33b41431fcc1b0360557709e2b685baa158b1bcaa529e4a5013656ff6026f06"></a>Filled&#160;</td><td class="fielddoc"><p>Flush all messages whenever the buffer is full. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa5287159e85d3e30a210c4d8a9230750a8c0f1831d68fbd67c2be8a19baad40e4" name="aa5287159e85d3e30a210c4d8a9230750a8c0f1831d68fbd67c2be8a19baad40e4"></a>Levelled&#160;</td><td class="fielddoc"><p>Flush all messages whenever a certain level has been logged. </p>
+<tr><td class="fieldname"><a id="a3e33b41431fcc1b0360557709e2b685ba8c0f1831d68fbd67c2be8a19baad40e4" name="a3e33b41431fcc1b0360557709e2b685ba8c0f1831d68fbd67c2be8a19baad40e4"></a>Levelled&#160;</td><td class="fielddoc"><p>Flush all messages whenever a certain level has been logged. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa5287159e85d3e30a210c4d8a9230750aa645414cabcdea89f891814024050568" name="aa5287159e85d3e30a210c4d8a9230750aa645414cabcdea89f891814024050568"></a>Custom&#160;</td><td class="fielddoc"><p>Determines through a callback whether a message triggers a flush. </p>
+<tr><td class="fieldname"><a id="a3e33b41431fcc1b0360557709e2b685baa645414cabcdea89f891814024050568" name="a3e33b41431fcc1b0360557709e2b685baa645414cabcdea89f891814024050568"></a>Custom&#160;</td><td class="fielddoc"><p>Determines through a callback whether a message triggers a flush. </p>
 </td></tr>
-<tr><td class="fieldname"><a id="aa5287159e85d3e30a210c4d8a9230750a1a1357792633c820f2a73ce85daf1b5b" name="aa5287159e85d3e30a210c4d8a9230750a1a1357792633c820f2a73ce85daf1b5b"></a>Manual&#160;</td><td class="fielddoc"><p>Flush manually </p>
+<tr><td class="fieldname"><a id="a3e33b41431fcc1b0360557709e2b685ba1a1357792633c820f2a73ce85daf1b5b" name="a3e33b41431fcc1b0360557709e2b685ba1a1357792633c820f2a73ce85daf1b5b"></a>Manual&#160;</td><td class="fielddoc"><p>Flush manually. </p>
 </td></tr>
 </table>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../d2/da4/jaut__FlushPolicy_8h_source.html">jaut_FlushPolicy.h</a></li>
+<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../d2/da4/jaut__FlushPolicy_8h.html">jaut_FlushPolicy.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html">FlushPolicy</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html">FlushPolicy</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

@@ -112,133 +112,180 @@ $(document).ready(function(){initNavTree('d0/d77/classjaut_1_1BasicLogger.html',
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d7/d55/jaut__BasicLogger_8h_source.html">jaut_BasicLogger.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for jaut::BasicLogger&lt; Worker &gt;:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../d0/d77/classjaut_1_1BasicLogger.png" usemap="#jaut::BasicLogger_3C_20Worker_20_3E_map" alt=""/>
-  <map id="jaut::BasicLogger_3C_20Worker_20_3E_map" name="jaut::BasicLogger_3C_20Worker_20_3E_map">
-<area href="../../d5/d63/classjaut_1_1AbstractLogger.html" alt="jaut::AbstractLogger" shape="rect" coords="0,0,174,24"/>
-  </map>
-</div></div>
+<p>A proper logging implementation that aims at being a bit more advanced than the juce native one.  
+ <a href="../../d0/d77/classjaut_1_1BasicLogger.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_BasicLogger.h&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Inheritance diagram for jaut::BasicLogger&lt; Worker &gt;:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d3/da0/classjaut_1_1BasicLogger__inherit__graph.svg" width="148" height="126"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/d71/structjaut_1_1BasicLogger_1_1Options.html">Options</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A set of options to use for logger construction.  <a href="../../df/d71/structjaut_1_1BasicLogger_1_1Options.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a9e2a9e4d955ecb3983fe104abdb39d8f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#a9e2a9e4d955ecb3983fe104abdb39d8f">UnexpectedThrowCallback</a> = std::function&lt; void(const std::exception &amp;exception)&gt;</td></tr>
+<tr class="memdesc:a9e2a9e4d955ecb3983fe104abdb39d8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The callback type for custom exception handlers.  <br /></td></tr>
 <tr class="separator:a9e2a9e4d955ecb3983fe104abdb39d8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_types_classjaut_1_1AbstractLogger"><td colspan="2" onclick="javascript:toggleInherit('pub_types_classjaut_1_1AbstractLogger')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html">jaut::AbstractLogger</a></td></tr>
 <tr class="memitem:a0f67458348000bd3d945a9fcdd18d1b5 inherit pub_types_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a0f67458348000bd3d945a9fcdd18d1b5">Level</a> = <a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">LogLevel::Value</a></td></tr>
+<tr class="memdesc:a0f67458348000bd3d945a9fcdd18d1b5 inherit pub_types_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience typedef for log level values.  <br /></td></tr>
 <tr class="separator:a0f67458348000bd3d945a9fcdd18d1b5 inherit pub_types_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac03081f7a42b43ec409002a779776a37 inherit pub_types_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ac03081f7a42b43ec409002a779776a37">SinkPtr</a> = std::unique_ptr&lt; <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html">ILogSink</a> &gt;</td></tr>
+<tr class="memdesc:ac03081f7a42b43ec409002a779776a37 inherit pub_types_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">The pointer type that wraps a dynamic instance to <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html" title="Sinks are the actual output implementations, they will be there to map a logger to an output stream.">jaut::ILogSink</a> objects.  <br /></td></tr>
 <tr class="separator:ac03081f7a42b43ec409002a779776a37 inherit pub_types_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a87c46f6913b76f1a83cc7df35afee11d"><td class="memTemplParams" colspan="2">template&lt;class ... Sinks&gt; </td></tr>
 <tr class="memitem:a87c46f6913b76f1a83cc7df35afee11d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#a87c46f6913b76f1a83cc7df35afee11d">BasicLogger</a> (juce::String name, Sinks ...sinks)</td></tr>
+<tr class="memdesc:a87c46f6913b76f1a83cc7df35afee11d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new logger object with the specified name.  <br /></td></tr>
 <tr class="separator:a87c46f6913b76f1a83cc7df35afee11d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ee7b44baa57af00945fbabb3dddcb81"><td class="memTemplParams" colspan="2">template&lt;class ... Sinks&gt; </td></tr>
 <tr class="memitem:a0ee7b44baa57af00945fbabb3dddcb81"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#a0ee7b44baa57af00945fbabb3dddcb81">BasicLogger</a> (juce::String name, <a class="el" href="../../df/d71/structjaut_1_1BasicLogger_1_1Options.html">Options</a> options, Sinks ...sinks)</td></tr>
+<tr class="memdesc:a0ee7b44baa57af00945fbabb3dddcb81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a new logger object with the specified name.  <br /></td></tr>
 <tr class="separator:a0ee7b44baa57af00945fbabb3dddcb81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa96c824e77d97cd52de5ee6891ad662e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#aa96c824e77d97cd52de5ee6891ad662e">~BasicLogger</a> () override</td></tr>
+<tr class="memdesc:aa96c824e77d97cd52de5ee6891ad662e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The destructor might throw internally when it makes a last flush.  <br /></td></tr>
 <tr class="separator:aa96c824e77d97cd52de5ee6891ad662e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e63f22561291fc2e031560b74221203"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#a3e63f22561291fc2e031560b74221203">log</a> (<a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> logMessage) override</td></tr>
+<tr class="memdesc:a3e63f22561291fc2e031560b74221203"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message.  <br /></td></tr>
 <tr class="separator:a3e63f22561291fc2e031560b74221203"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aebda816680db436693c219d299146762"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#aebda816680db436693c219d299146762">flush</a> () override</td></tr>
+<tr class="memdesc:aebda816680db436693c219d299146762"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force the logger to flush instantly if it is not empty.  <br /></td></tr>
 <tr class="separator:aebda816680db436693c219d299146762"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aec1810d325aef8392fb1c9641df21f70"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../df/d71/structjaut_1_1BasicLogger_1_1Options.html">Options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#aec1810d325aef8392fb1c9641df21f70">getOptions</a> () const noexcept</td></tr>
+<tr class="memdesc:aec1810d325aef8392fb1c9641df21f70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the options of the logger.  <br /></td></tr>
 <tr class="separator:aec1810d325aef8392fb1c9641df21f70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaceed25898eba39aecca627cd047f85c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html">ILogWorker</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#aaceed25898eba39aecca627cd047f85c">getWorker</a> () noexcept</td></tr>
+<tr class="memdesc:aaceed25898eba39aecca627cd047f85c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the worker this logger is using.  <br /></td></tr>
 <tr class="separator:aaceed25898eba39aecca627cd047f85c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6fcb797abce821a2cf4235488b3a4d12"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html">ILogWorker</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#a6fcb797abce821a2cf4235488b3a4d12">getWorker</a> () const noexcept</td></tr>
+<tr class="memdesc:a6fcb797abce821a2cf4235488b3a4d12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the worker this logger is using.  <br /></td></tr>
 <tr class="separator:a6fcb797abce821a2cf4235488b3a4d12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classjaut_1_1AbstractLogger"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classjaut_1_1AbstractLogger')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html">jaut::AbstractLogger</a></td></tr>
 <tr class="memitem:a54f198774ff65675cdcdc6592421c1bd inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Sinks&gt; </td></tr>
 <tr class="memitem:a54f198774ff65675cdcdc6592421c1bd inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a54f198774ff65675cdcdc6592421c1bd">AbstractLogger</a> (juce::String name, <a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">Level</a> logLevel, Sinks ...sinks)</td></tr>
 <tr class="separator:a54f198774ff65675cdcdc6592421c1bd inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2bf8951c39f9580634a3f1b15ad09e1 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../df/db6/classjaut_1_1AbstractLogger_1_1LogBuilder.html">LogBuilder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ae2bf8951c39f9580634a3f1b15ad09e1">operator&lt;&lt;</a> (<a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">Level</a> level)</td></tr>
-<tr class="separator:ae2bf8951c39f9580634a3f1b15ad09e1 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7a3a28009d2337d7dda6ea75ef778d24 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a7a3a28009d2337d7dda6ea75ef778d24">trace</a> (const juce::String &amp;message)</td></tr>
-<tr class="separator:a7a3a28009d2337d7dda6ea75ef778d24 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef87fff5efac4bdc91068abfaf87330f inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#aef87fff5efac4bdc91068abfaf87330f">debug</a> (const juce::String &amp;message)</td></tr>
-<tr class="separator:aef87fff5efac4bdc91068abfaf87330f inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a224575a144ec830eafce151946ab5ed8 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a224575a144ec830eafce151946ab5ed8">verbose</a> (const juce::String &amp;message)</td></tr>
-<tr class="separator:a224575a144ec830eafce151946ab5ed8 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52bb4f283b9caa67a4fae89b3f476630 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a52bb4f283b9caa67a4fae89b3f476630">info</a> (const juce::String &amp;message)</td></tr>
-<tr class="separator:a52bb4f283b9caa67a4fae89b3f476630 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6de45f618201d07a6d4ebfcde4d33ee inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ad6de45f618201d07a6d4ebfcde4d33ee">warn</a> (const juce::String &amp;message)</td></tr>
-<tr class="separator:ad6de45f618201d07a6d4ebfcde4d33ee inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04917d528bd493806263eb6b50f218a8 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a04917d528bd493806263eb6b50f218a8">error</a> (const juce::String &amp;message)</td></tr>
-<tr class="separator:a04917d528bd493806263eb6b50f218a8 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a99a374347ca24a42e23d801772e4e4b0 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a99a374347ca24a42e23d801772e4e4b0">fatal</a> (const juce::String &amp;message)</td></tr>
-<tr class="separator:a99a374347ca24a42e23d801772e4e4b0 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a359b7323de68ba6fb9ec09fb597ddc1f inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a359b7323de68ba6fb9ec09fb597ddc1f">trace</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
-<tr class="separator:a359b7323de68ba6fb9ec09fb597ddc1f inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a11354ede02791293d9537400b048ef5d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a11354ede02791293d9537400b048ef5d">debug</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
-<tr class="separator:a11354ede02791293d9537400b048ef5d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa714e124cce92ae6e58490b5e712fb2d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#aa714e124cce92ae6e58490b5e712fb2d">verbose</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
-<tr class="separator:aa714e124cce92ae6e58490b5e712fb2d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a37b6d240c5984119949b43ba1974121e inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a37b6d240c5984119949b43ba1974121e">info</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
-<tr class="separator:a37b6d240c5984119949b43ba1974121e inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aef9463008b799bb8953812b15efcbcb1 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#aef9463008b799bb8953812b15efcbcb1">warn</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
-<tr class="separator:aef9463008b799bb8953812b15efcbcb1 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a524bc1a25a42fc5bdea9141afaa7f3b3 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a524bc1a25a42fc5bdea9141afaa7f3b3">error</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
-<tr class="separator:a524bc1a25a42fc5bdea9141afaa7f3b3 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b6a7b6222cbc17af95d4c1f1c8f4d52 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a2b6a7b6222cbc17af95d4c1f1c8f4d52">fatal</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
-<tr class="separator:a2b6a7b6222cbc17af95d4c1f1c8f4d52 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab78b17d7cb185c1b2c6bb378cf317d7c inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; detail::FmtEnableIfCheck_v&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:af6b6ba3c0adbb0b522d59d7e006540ef inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#af6b6ba3c0adbb0b522d59d7e006540ef">~AbstractLogger</a> ()=default</td></tr>
+<tr class="separator:af6b6ba3c0adbb0b522d59d7e006540ef inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afa1f9c45cf03f37d7f06d9a826d3d473 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../df/db6/classjaut_1_1AbstractLogger_1_1LogBuilder.html">LogBuilder</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#afa1f9c45cf03f37d7f06d9a826d3d473">operator&lt;&lt;</a> (<a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">Level</a> level)</td></tr>
+<tr class="memdesc:afa1f9c45cf03f37d7f06d9a826d3d473 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new message to log with the specified log level.  <br /></td></tr>
+<tr class="separator:afa1f9c45cf03f37d7f06d9a826d3d473 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5649a12cabf96277d104a71b819df9ef inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a5649a12cabf96277d104a71b819df9ef">trace</a> (const juce::String &amp;message)</td></tr>
+<tr class="memdesc:a5649a12cabf96277d104a71b819df9ef inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the trace level.  <br /></td></tr>
+<tr class="separator:a5649a12cabf96277d104a71b819df9ef inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a59a65e2c58df5949c83c76c2a08c792a inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a59a65e2c58df5949c83c76c2a08c792a">debug</a> (const juce::String &amp;message)</td></tr>
+<tr class="memdesc:a59a65e2c58df5949c83c76c2a08c792a inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the debug level.  <br /></td></tr>
+<tr class="separator:a59a65e2c58df5949c83c76c2a08c792a inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac21ac8844f87362901ca61c48fbdfd5d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ac21ac8844f87362901ca61c48fbdfd5d">verbose</a> (const juce::String &amp;message)</td></tr>
+<tr class="memdesc:ac21ac8844f87362901ca61c48fbdfd5d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the verbose level.  <br /></td></tr>
+<tr class="separator:ac21ac8844f87362901ca61c48fbdfd5d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac49a23951c8593579b95f6ebb2f599eb inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ac49a23951c8593579b95f6ebb2f599eb">info</a> (const juce::String &amp;message)</td></tr>
+<tr class="memdesc:ac49a23951c8593579b95f6ebb2f599eb inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the info level.  <br /></td></tr>
+<tr class="separator:ac49a23951c8593579b95f6ebb2f599eb inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8a75d65876195fc9e4d15c4b86a5dc70 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a8a75d65876195fc9e4d15c4b86a5dc70">warn</a> (const juce::String &amp;message)</td></tr>
+<tr class="memdesc:a8a75d65876195fc9e4d15c4b86a5dc70 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the warn level.  <br /></td></tr>
+<tr class="separator:a8a75d65876195fc9e4d15c4b86a5dc70 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefe771ee8aaa0d80e7de4886b7cfc0ac inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#aefe771ee8aaa0d80e7de4886b7cfc0ac">error</a> (const juce::String &amp;message)</td></tr>
+<tr class="memdesc:aefe771ee8aaa0d80e7de4886b7cfc0ac inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the error level.  <br /></td></tr>
+<tr class="separator:aefe771ee8aaa0d80e7de4886b7cfc0ac inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0917d43e016eeae2be265ae5113be7e2 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a0917d43e016eeae2be265ae5113be7e2">fatal</a> (const juce::String &amp;message)</td></tr>
+<tr class="memdesc:a0917d43e016eeae2be265ae5113be7e2 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the fatal level.  <br /></td></tr>
+<tr class="separator:a0917d43e016eeae2be265ae5113be7e2 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad14922375c3e5e574b7e9189bf369804 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ad14922375c3e5e574b7e9189bf369804">trace</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
+<tr class="memdesc:ad14922375c3e5e574b7e9189bf369804 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the trace level and attaches an exception to the log compound.  <br /></td></tr>
+<tr class="separator:ad14922375c3e5e574b7e9189bf369804 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9b50491fb5d4eb50cf0a739213974b3 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ad9b50491fb5d4eb50cf0a739213974b3">debug</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
+<tr class="memdesc:ad9b50491fb5d4eb50cf0a739213974b3 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the debug level and attaches an exception to the log compound.  <br /></td></tr>
+<tr class="separator:ad9b50491fb5d4eb50cf0a739213974b3 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af5ccf43b8c16e1b7306d7a631704c2ba inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#af5ccf43b8c16e1b7306d7a631704c2ba">verbose</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
+<tr class="memdesc:af5ccf43b8c16e1b7306d7a631704c2ba inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the verbose level and attaches an exception to the log compound.  <br /></td></tr>
+<tr class="separator:af5ccf43b8c16e1b7306d7a631704c2ba inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a423013bdaa05b78284b6aa2457eab249 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a423013bdaa05b78284b6aa2457eab249">info</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
+<tr class="memdesc:a423013bdaa05b78284b6aa2457eab249 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the info level and attaches an exception to the log compound.  <br /></td></tr>
+<tr class="separator:a423013bdaa05b78284b6aa2457eab249 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a74dc18c51dcaed11e07bd4a1f56fd6a5 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a74dc18c51dcaed11e07bd4a1f56fd6a5">warn</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
+<tr class="memdesc:a74dc18c51dcaed11e07bd4a1f56fd6a5 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the warn level and attaches an exception to the log compound.  <br /></td></tr>
+<tr class="separator:a74dc18c51dcaed11e07bd4a1f56fd6a5 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7847274b82ae3f26bc15d6d3f3204546 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a7847274b82ae3f26bc15d6d3f3204546">error</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
+<tr class="memdesc:a7847274b82ae3f26bc15d6d3f3204546 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the error level and attaches an exception to the log compound.  <br /></td></tr>
+<tr class="separator:a7847274b82ae3f26bc15d6d3f3204546 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a242103f8dbbaff41d647889ad2942694 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a242103f8dbbaff41d647889ad2942694">fatal</a> (const juce::String &amp;message, const std::exception &amp;exception)</td></tr>
+<tr class="memdesc:a242103f8dbbaff41d647889ad2942694 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the fatal level and attaches an exception to the log compound.  <br /></td></tr>
+<tr class="separator:a242103f8dbbaff41d647889ad2942694 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab78b17d7cb185c1b2c6bb378cf317d7c inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; <a class="el" href="../../d0/d7d/namespacejaut_1_1detail.html#ae6ecf5e316226a86b73846e2c76ae5f5">detail::FmtEnableIfCheck_v</a>&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
 <tr class="memitem:ab78b17d7cb185c1b2c6bb378cf317d7c inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ab78b17d7cb185c1b2c6bb378cf317d7c">trace</a> (const juce::String &amp;message, Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:ab78b17d7cb185c1b2c6bb378cf317d7c inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the trace level.  <br /></td></tr>
 <tr class="separator:ab78b17d7cb185c1b2c6bb378cf317d7c inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5219aeb719991d05eb5b431d79e985a inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; detail::FmtEnableIfCheck_v&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:ad5219aeb719991d05eb5b431d79e985a inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; <a class="el" href="../../d0/d7d/namespacejaut_1_1detail.html#ae6ecf5e316226a86b73846e2c76ae5f5">detail::FmtEnableIfCheck_v</a>&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
 <tr class="memitem:ad5219aeb719991d05eb5b431d79e985a inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ad5219aeb719991d05eb5b431d79e985a">debug</a> (const juce::String &amp;message, Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:ad5219aeb719991d05eb5b431d79e985a inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the debug level.  <br /></td></tr>
 <tr class="separator:ad5219aeb719991d05eb5b431d79e985a inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2297a2197248cbef49eb1ddb66770f83 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; detail::FmtEnableIfCheck_v&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a2297a2197248cbef49eb1ddb66770f83 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; <a class="el" href="../../d0/d7d/namespacejaut_1_1detail.html#ae6ecf5e316226a86b73846e2c76ae5f5">detail::FmtEnableIfCheck_v</a>&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
 <tr class="memitem:a2297a2197248cbef49eb1ddb66770f83 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a2297a2197248cbef49eb1ddb66770f83">verbose</a> (const juce::String &amp;message, Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a2297a2197248cbef49eb1ddb66770f83 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the verbose level.  <br /></td></tr>
 <tr class="separator:a2297a2197248cbef49eb1ddb66770f83 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7e7786886808732ec371da86b088bac7 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; detail::FmtEnableIfCheck_v&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a7e7786886808732ec371da86b088bac7 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; <a class="el" href="../../d0/d7d/namespacejaut_1_1detail.html#ae6ecf5e316226a86b73846e2c76ae5f5">detail::FmtEnableIfCheck_v</a>&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
 <tr class="memitem:a7e7786886808732ec371da86b088bac7 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a7e7786886808732ec371da86b088bac7">info</a> (const juce::String &amp;message, Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a7e7786886808732ec371da86b088bac7 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the info level.  <br /></td></tr>
 <tr class="separator:a7e7786886808732ec371da86b088bac7 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a137a925b63f06693e142ebe9578cd23d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; detail::FmtEnableIfCheck_v&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a137a925b63f06693e142ebe9578cd23d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; <a class="el" href="../../d0/d7d/namespacejaut_1_1detail.html#ae6ecf5e316226a86b73846e2c76ae5f5">detail::FmtEnableIfCheck_v</a>&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
 <tr class="memitem:a137a925b63f06693e142ebe9578cd23d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a137a925b63f06693e142ebe9578cd23d">warn</a> (const juce::String &amp;message, Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a137a925b63f06693e142ebe9578cd23d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the warn level.  <br /></td></tr>
 <tr class="separator:a137a925b63f06693e142ebe9578cd23d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a31326497165b05c1297ad4e5f641f27d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; detail::FmtEnableIfCheck_v&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a31326497165b05c1297ad4e5f641f27d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; <a class="el" href="../../d0/d7d/namespacejaut_1_1detail.html#ae6ecf5e316226a86b73846e2c76ae5f5">detail::FmtEnableIfCheck_v</a>&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
 <tr class="memitem:a31326497165b05c1297ad4e5f641f27d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a31326497165b05c1297ad4e5f641f27d">error</a> (const juce::String &amp;message, Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a31326497165b05c1297ad4e5f641f27d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the error level.  <br /></td></tr>
 <tr class="separator:a31326497165b05c1297ad4e5f641f27d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16fb716a6fd377fd96714d516c6fce73 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; detail::FmtEnableIfCheck_v&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a16fb716a6fd377fd96714d516c6fce73 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplParams" colspan="2">template&lt;class ... Args, std::enable_if_t&lt; <a class="el" href="../../d0/d7d/namespacejaut_1_1detail.html#ae6ecf5e316226a86b73846e2c76ae5f5">detail::FmtEnableIfCheck_v</a>&lt; Args... &gt; &gt; *  = nullptr&gt; </td></tr>
 <tr class="memitem:a16fb716a6fd377fd96714d516c6fce73 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a16fb716a6fd377fd96714d516c6fce73">fatal</a> (const juce::String &amp;message, Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a16fb716a6fd377fd96714d516c6fce73 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message with the fatal level.  <br /></td></tr>
 <tr class="separator:a16fb716a6fd377fd96714d516c6fce73 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a547a7467bcc67874f8e7a713020bf21d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a547a7467bcc67874f8e7a713020bf21d">setLogLevel</a> (<a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">Level</a> logLevel) noexcept</td></tr>
+<tr class="memdesc:a547a7467bcc67874f8e7a713020bf21d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the current log level to be used.  <br /></td></tr>
 <tr class="separator:a547a7467bcc67874f8e7a713020bf21d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aab143f880d756ee79d2674e8f87f7e70 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">Level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#aab143f880d756ee79d2674e8f87f7e70">getLogLevel</a> () const noexcept</td></tr>
-<tr class="separator:aab143f880d756ee79d2674e8f87f7e70 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac20eeeb4e77f0444371056a4352cb213 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const juce::String &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ac20eeeb4e77f0444371056a4352cb213">getName</a> () const noexcept</td></tr>
-<tr class="separator:ac20eeeb4e77f0444371056a4352cb213 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89b845fba0d8f7ccd52dcf3ac71ed30d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const std::vector&lt; <a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ac03081f7a42b43ec409002a779776a37">SinkPtr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a89b845fba0d8f7ccd52dcf3ac71ed30d">getSinks</a> () const noexcept</td></tr>
-<tr class="separator:a89b845fba0d8f7ccd52dcf3ac71ed30d inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bdb2ed2c89f227eeac8648a836252f6 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a5bdb2ed2c89f227eeac8648a836252f6">shouldLog</a> (<a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">Level</a> logLevel) const noexcept</td></tr>
-<tr class="separator:a5bdb2ed2c89f227eeac8648a836252f6 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a492d4a613bbc2dcdbcd1b3b678c662eb inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">Level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a492d4a613bbc2dcdbcd1b3b678c662eb">getLogLevel</a> () const noexcept</td></tr>
+<tr class="memdesc:a492d4a613bbc2dcdbcd1b3b678c662eb inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the priority level of the logger.  <br /></td></tr>
+<tr class="separator:a492d4a613bbc2dcdbcd1b3b678c662eb inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7c5e81fd78d652785992ec2b95fb5353 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const juce::String &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a7c5e81fd78d652785992ec2b95fb5353">getName</a> () const noexcept</td></tr>
+<tr class="memdesc:a7c5e81fd78d652785992ec2b95fb5353 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the name of the logger.  <br /></td></tr>
+<tr class="separator:a7c5e81fd78d652785992ec2b95fb5353 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac3d42993be4f613eb945b12b0d021e5 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const std::vector&lt; <a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#ac03081f7a42b43ec409002a779776a37">SinkPtr</a> &gt; &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#aac3d42993be4f613eb945b12b0d021e5">getSinks</a> () const noexcept</td></tr>
+<tr class="memdesc:aac3d42993be4f613eb945b12b0d021e5 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the sink objects the logger has.  <br /></td></tr>
+<tr class="separator:aac3d42993be4f613eb945b12b0d021e5 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa61a9c04e38beb7be9de8470ee6f2931 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#aa61a9c04e38beb7be9de8470ee6f2931">shouldLog</a> (<a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">Level</a> logLevel) const noexcept</td></tr>
+<tr class="memdesc:aa61a9c04e38beb7be9de8470ee6f2931 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether the logger should log based on the given level.  <br /></td></tr>
+<tr class="separator:aa61a9c04e38beb7be9de8470ee6f2931 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6a602b913609982014cb0709fe5b5a8e inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a6a602b913609982014cb0709fe5b5a8e">flush</a> ()=0</td></tr>
+<tr class="memdesc:a6a602b913609982014cb0709fe5b5a8e inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Force the logger to flush instantly if it is not empty.  <br /></td></tr>
 <tr class="separator:a6a602b913609982014cb0709fe5b5a8e inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3759c35416f1dd4c8ead532468e2d674 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a3759c35416f1dd4c8ead532468e2d674">log</a> (<a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> message)=0</td></tr>
+<tr class="memdesc:a3759c35416f1dd4c8ead532468e2d674 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">Logs a message.  <br /></td></tr>
 <tr class="separator:a3759c35416f1dd4c8ead532468e2d674 inherit pub_methods_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_static_attribs_classjaut_1_1AbstractLogger"><td colspan="2" onclick="javascript:toggleInherit('pub_static_attribs_classjaut_1_1AbstractLogger')"><img src="../../closed.png" alt="-"/>&#160;Static Public Attributes inherited from <a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html">jaut::AbstractLogger</a></td></tr>
 <tr class="memitem:a27f6c474dd54a951dc22944ac260813b inherit pub_static_attribs_classjaut_1_1AbstractLogger"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">Level</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a27f6c474dd54a951dc22944ac260813b">defaultLevel</a> = <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a78b3c2dd54ac69ee0350795d1d1c1ffd">JAUT_DEBUGGING_OR</a>(<a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836ac19f95d5fb1623f2ce46c939c488b371">LogLevel::Debug</a>, Level::Info)</td></tr>
+<tr class="memdesc:a27f6c474dd54a951dc22944ac260813b inherit pub_static_attribs_classjaut_1_1AbstractLogger"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default log level used, based on the configuration it was compiled with.  <br /></td></tr>
 <tr class="separator:a27f6c474dd54a951dc22944ac260813b inherit pub_static_attribs_classjaut_1_1AbstractLogger"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:af1127e6b25ffe4b2e1a18e1b04e0ff7e"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#af1127e6b25ffe4b2e1a18e1b04e0ff7e">handleException</a> (const std::exception &amp;exception) const =0</td></tr>
+<tr class="memdesc:af1127e6b25ffe4b2e1a18e1b04e0ff7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles exceptions inside flushing destructors.  <br /></td></tr>
 <tr class="separator:af1127e6b25ffe4b2e1a18e1b04e0ff7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class Worker&gt;<br />
-class jaut::BasicLogger&lt; Worker &gt;</div><p>A proper logging implementation that aims at being a bit more advanced than the juce native one. The implementation of this logger is heavily inspired by Apache's log4j and gabime's spdlog, so you will find some similarities here and there. <br  />
+class jaut::BasicLogger&lt; Worker &gt;</div><p>A proper logging implementation that aims at being a bit more advanced than the juce native one. </p>
+<p>The implementation of this logger is heavily inspired by Apache's log4j and gabime's spdlog, so you will find some similarities here and there. <br  />
 <br  />
  Do note that loggers are immutable, so any options you give it can only be changed when re-constructing the logger. </p>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
@@ -255,6 +302,7 @@ template&lt;class Worker &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The callback type for custom exception handlers. </p>
 
 </div>
@@ -297,7 +345,8 @@ template&lt;class ... Sinks&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Create a new logger object with the specified name.</p>
+
+<p>Create a new logger object with the specified name. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>The name of the logger </td></tr>
@@ -343,7 +392,8 @@ template&lt;class ... Sinks&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Create a new logger object with the specified name.</p>
+
+<p>Create a new logger object with the specified name. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">name</td><td>The name of the logger </td></tr>
@@ -352,6 +402,8 @@ template&lt;class ... Sinks&gt; </div>
   </table>
   </dd>
 </dl>
+
+<p class="reference">References <a class="el" href="../../df/d71/structjaut_1_1BasicLogger_1_1Options.html#a8fdbe7bfbb00960d75eac4dc9c2069f6">jaut::BasicLogger&lt; Worker &gt;::Options::flushPolicySettings</a>.</p>
 
 </div>
 </div>
@@ -376,12 +428,54 @@ template&lt;class T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>The destructor might throw internally when it makes a last flush.<br  />
- For this cases there is the <a class="el" href="../../df/d71/structjaut_1_1BasicLogger_1_1Options.html#a6f999849e13c82760e24edf6d14b281b">jaut::BasicLogger::Options::onUnexpectedThrow</a> callback that can be used to handle them. </p>
+
+<p>The destructor might throw internally when it makes a last flush. </p>
+<p><br  />
+ For this cases there is the <a class="el" href="../../df/d71/structjaut_1_1BasicLogger_1_1Options.html#a6f999849e13c82760e24edf6d14b281b" title="This event occurs when a vital exception was thrown inside a destructor.">jaut::BasicLogger::Options::onUnexpectedThrow</a> callback that can be used to handle them. </p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3e63f22561291fc2e031560b74221203" name="a3e63f22561291fc2e031560b74221203"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e63f22561291fc2e031560b74221203">&#9670;&#160;</a></span>log()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html">jaut::BasicLogger</a>&lt; T &gt;::log </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a>&#160;</td>
+          <td class="paramname"><em>message</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Logs a message. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">message</td><td>The message compound to be logged </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a3759c35416f1dd4c8ead532468e2d674">jaut::AbstractLogger</a>.</p>
+
+<p class="reference">References <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html#ab46067f75a49a69681d625ab9935f70ba24aa4117da86c41684ad25742832dfa6">jaut::ILogWorker::Async</a>, <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3e15d9fdf488255131908fb3f1527b16">JAUT_FALLTHROUGH</a>, <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html#ae37780a56494d79a166cdb68becb5280">jaut::LogMessage::level</a>, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685ba8c0f1831d68fbd67c2be8a19baad40e4">jaut::FlushPolicy::Levelled</a>, <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html#ab46067f75a49a69681d625ab9935f70badd353567e8118a2b8df4e822e59084ab">jaut::ILogWorker::NotReady</a>, <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html#ab46067f75a49a69681d625ab9935f70ba30ae8fff8898dc197acd49d9c0797d20">jaut::ILogWorker::Successful</a>, <a class="el" href="../../dc/d7e/structjaut_1_1FlushPolicy.html#a3e33b41431fcc1b0360557709e2b685baaf822d53c1d240f3649e1d136cac671a">jaut::FlushPolicy::Timed</a>, and <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html#ab46067f75a49a69681d625ab9935f70ba500ada6743997288e65fb5a71e850928">jaut::ILogWorker::Unsuccessful</a>.</p>
+
+</div>
+</div>
 <a id="aebda816680db436693c219d299146762" name="aebda816680db436693c219d299146762"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aebda816680db436693c219d299146762">&#9670;&#160;</a></span>flush()</h2>
 
@@ -406,6 +500,7 @@ template&lt;class T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
+
 <p>Force the logger to flush instantly if it is not empty. </p>
 
 <p>Implements <a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a6a602b913609982014cb0709fe5b5a8e">jaut::AbstractLogger</a>.</p>
@@ -433,37 +528,14 @@ template&lt;class T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Get the options of the logger. </p><dl class="section return"><dt>Returns</dt><dd>The Logger's options </dd></dl>
 
-</div>
-</div>
-<a id="a6fcb797abce821a2cf4235488b3a4d12" name="a6fcb797abce821a2cf4235488b3a4d12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6fcb797abce821a2cf4235488b3a4d12">&#9670;&#160;</a></span>getWorker() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html">ILogWorker</a> &amp; <a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html">jaut::BasicLogger</a>&lt; T &gt;::getWorker</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gets the worker this logger is using. </p><dl class="section return"><dt>Returns</dt><dd>The worker instance </dd></dl>
+<p>Get the options of the logger. </p>
+<dl class="section return"><dt>Returns</dt><dd>The Logger's options </dd></dl>
 
 </div>
 </div>
 <a id="aaceed25898eba39aecca627cd047f85c" name="aaceed25898eba39aecca627cd047f85c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aaceed25898eba39aecca627cd047f85c">&#9670;&#160;</a></span>getWorker() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#aaceed25898eba39aecca627cd047f85c">&#9670;&#160;</a></span>getWorker() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -483,12 +555,14 @@ template&lt;class T &gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Gets the worker this logger is using. </p><dl class="section return"><dt>Returns</dt><dd>The worker instance </dd></dl>
+
+<p>Gets the worker this logger is using. </p>
+<dl class="section return"><dt>Returns</dt><dd>The worker instance </dd></dl>
 
 </div>
 </div>
-<a id="a3e63f22561291fc2e031560b74221203" name="a3e63f22561291fc2e031560b74221203"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e63f22561291fc2e031560b74221203">&#9670;&#160;</a></span>log()</h2>
+<a id="a6fcb797abce821a2cf4235488b3a4d12" name="a6fcb797abce821a2cf4235488b3a4d12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6fcb797abce821a2cf4235488b3a4d12">&#9670;&#160;</a></span>getWorker() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -499,39 +573,30 @@ template&lt;class T &gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html">jaut::BasicLogger</a>&lt; T &gt;::log </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a>&#160;</td>
-          <td class="paramname"><em>message</em></td><td>)</td>
-          <td></td>
+          <td class="memname">const <a class="el" href="../../db/d69/structjaut_1_1ILogWorker.html">ILogWorker</a> &amp; <a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html">jaut::BasicLogger</a>&lt; T &gt;::getWorker</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Logs a message. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">message</td><td>The message compound to be logged </td></tr>
-  </table>
-  </dd>
-</dl>
 
-<p>Implements <a class="el" href="../../d5/d63/classjaut_1_1AbstractLogger.html#a3759c35416f1dd4c8ead532468e2d674">jaut::AbstractLogger</a>.</p>
+<p>Gets the worker this logger is using. </p>
+<dl class="section return"><dt>Returns</dt><dd>The worker instance </dd></dl>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../d7/d55/jaut__BasicLogger_8h_source.html">jaut_BasicLogger.h</a></li>
+<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../d7/d55/jaut__BasicLogger_8h.html">jaut_BasicLogger.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html">BasicLogger</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html">BasicLogger</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

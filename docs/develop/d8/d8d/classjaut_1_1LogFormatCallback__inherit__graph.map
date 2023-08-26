@@ -1,0 +1,5 @@
+<map id="jaut::LogFormatCallback" name="jaut::LogFormatCallback">
+<area shape="rect" id="Node000001" title="A simple formatter that can be used via a passed in lambda function or other invocable." alt="" coords="5,79,167,105"/>
+<area shape="rect" id="Node000002" href="$d5/d26/structjaut_1_1ILogFormat.html" title="Provides an interface for custom and inbuilt sink formatters." alt="" coords="28,5,144,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="89,46,89,79,83,79,83,46"/>
+</map>

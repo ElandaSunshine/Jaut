@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['paneid_0',['PaneId',['../d5/dd6/classjaut_1_1SplitPanel.html#a4b730948667c06243e0332269de341db',1,'jaut::SplitPanel']]],
-  ['policytarget_1',['PolicyTarget',['../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d',1,'jaut::Config::Options']]],
-  ['propertytype_2',['PropertyType',['../d9/daa/classjaut_1_1Config_1_1Property.html#abdde9c6f0770f659d3e994253af1b9bc',1,'jaut::Config::Property']]]
+  ['orientation_0',['Orientation',['../d5/dd6/classjaut_1_1SplitPanel.html#abb4dc67ba94e8fe956920ba03c0980cc',1,'jaut::SplitPanel']]]
 ];

@@ -112,106 +112,111 @@ $(document).ready(function(){initNavTree('df/de3/classjaut_1_1AudioProcessorSet.
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../de/ded/jaut__AudioProcessorSet_8h_source.html">jaut_AudioProcessorSet.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for jaut::AudioProcessorSet&lt; Processors &gt;:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../df/de3/classjaut_1_1AudioProcessorSet.png" usemap="#jaut::AudioProcessorSet_3C_20Processors_20_3E_map" alt=""/>
-  <map id="jaut::AudioProcessorSet_3C_20Processors_20_3E_map" name="jaut::AudioProcessorSet_3C_20Processors_20_3E_map">
-<area href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html" alt="jaut::ISerialisableAudioProcessor" shape="rect" coords="0,0,235,24"/>
-  </map>
-</div></div>
+<p>The set processor allows to define a static set of processors that will be processed at processing time.  
+ <a href="../../df/de3/classjaut_1_1AudioProcessorSet.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_AudioProcessorSet.h&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Inheritance diagram for jaut::AudioProcessorSet&lt; Processors &gt;:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d9/d63/classjaut_1_1AudioProcessorSet__inherit__graph.svg" width="171" height="140"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:aa579dc29319df67244fe5025a970ae7f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#aa579dc29319df67244fe5025a970ae7f">ProcessorList</a> = <a class="el" href="../../d7/d77/structjaut_1_1TypeArray.html">TypeArray</a>&lt; Processors... &gt;</td></tr>
+<tr class="memdesc:aa579dc29319df67244fe5025a970ae7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type that represents the list of processors as a <a class="el" href="../../d7/d77/structjaut_1_1TypeArray.html" title="A useful type-list utility that declares a lot of useful helper functions to work on and with a list ...">TypeArray</a>.  <br /></td></tr>
 <tr class="separator:aa579dc29319df67244fe5025a970ae7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a85e07fef86a7283b77c2585787242ef2"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a85e07fef86a7283b77c2585787242ef2">ProcessorArray</a> = typename <a class="el" href="../../d7/d77/structjaut_1_1TypeArray.html#a92aef882e9f647f68cb4c40d8c7bf6e7">ProcessorList::toArray</a></td></tr>
+<tr class="memdesc:a85e07fef86a7283b77c2585787242ef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The array containing the processors.  <br /></td></tr>
 <tr class="separator:a85e07fef86a7283b77c2585787242ef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a145adca891d73f68dc87595ab365e30d"><td class="memTemplParams" colspan="2"><a id="a145adca891d73f68dc87595ab365e30d" name="a145adca891d73f68dc87595ab365e30d"></a>
-template&lt;class Fn &gt; </td></tr>
-<tr class="memitem:a145adca891d73f68dc87595ab365e30d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>AudioProcessorSet</b> (Fn &amp;&amp;initialiserCallback, const juce::ParameterID &amp;indexParameterId, const juce::String &amp;indexParameterName, const juce::AudioParameterIntAttributes &amp;indexParameterAttributes={})</td></tr>
+<tr class="memitem:a145adca891d73f68dc87595ab365e30d"><td class="memTemplParams" colspan="2">template&lt;class Fn &gt; </td></tr>
+<tr class="memitem:a145adca891d73f68dc87595ab365e30d"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a145adca891d73f68dc87595ab365e30d">AudioProcessorSet</a> (Fn &amp;&amp;initialiserCallback, const juce::ParameterID &amp;indexParameterId, const juce::String &amp;indexParameterName, const juce::AudioParameterIntAttributes &amp;indexParameterAttributes={})</td></tr>
 <tr class="separator:a145adca891d73f68dc87595ab365e30d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24cf5de03b3c9fdb065d19dff7caef2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a24cf5de03b3c9fdb065d19dff7caef2c">prepare</a> (<a class="el" href="../../d9/d1f/structjaut_1_1ProcessSpec.html">ProcessSpec</a> spec) override</td></tr>
+<tr class="memdesc:a24cf5de03b3c9fdb065d19dff7caef2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called before any playback is about to happen.  <br /></td></tr>
 <tr class="separator:a24cf5de03b3c9fdb065d19dff7caef2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a26f1ed4b1f9e0ae8514a4e577945c8eb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a26f1ed4b1f9e0ae8514a4e577945c8eb">release</a> () override</td></tr>
+<tr class="memdesc:a26f1ed4b1f9e0ae8514a4e577945c8eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called after any playback has happened.  <br /></td></tr>
 <tr class="separator:a26f1ed4b1f9e0ae8514a4e577945c8eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87a881249cfbec67909d476c12f6b8ad"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a87a881249cfbec67909d476c12f6b8ad">process</a> (juce::AudioBuffer&lt; float &gt; &amp;buffer, juce::MidiBuffer &amp;midiMessages) override</td></tr>
+<tr class="memdesc:a87a881249cfbec67909d476c12f6b8ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the current block with single-precisions and gives back the modified data.  <br /></td></tr>
 <tr class="separator:a87a881249cfbec67909d476c12f6b8ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a37b57599b71c54e3b03ace1828ca0a12"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a37b57599b71c54e3b03ace1828ca0a12">process</a> (juce::AudioBuffer&lt; double &gt; &amp;buffer, juce::MidiBuffer &amp;midiMessages) override</td></tr>
+<tr class="memdesc:a37b57599b71c54e3b03ace1828ca0a12"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the current block with double-precisions and gives back the modified data.  <br /></td></tr>
 <tr class="separator:a37b57599b71c54e3b03ace1828ca0a12"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a10cc4871ce6027546e45afdba33917c9"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a10cc4871ce6027546e45afdba33917c9">reset</a> () override</td></tr>
+<tr class="memdesc:a10cc4871ce6027546e45afdba33917c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">It is unclear when this is called by the host or if it is called at all.  <br /></td></tr>
 <tr class="separator:a10cc4871ce6027546e45afdba33917c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad15d0479b6b236b2db6aff1db246511a"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#ad15d0479b6b236b2db6aff1db246511a">getName</a> () const override</td></tr>
+<tr class="memdesc:ad15d0479b6b236b2db6aff1db246511a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the name of this processor object.  <br /></td></tr>
 <tr class="separator:ad15d0479b6b236b2db6aff1db246511a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61b59691935b2be2b83adf0b640b0bf8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::AudioParameterInt &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a61b59691935b2be2b83adf0b640b0bf8">getSelectedIndexParameter</a> () noexcept</td></tr>
+<tr class="memdesc:a61b59691935b2be2b83adf0b640b0bf8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the created audio parameter for this processor, which will hold the selected index.  <br /></td></tr>
 <tr class="separator:a61b59691935b2be2b83adf0b640b0bf8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abb19548ef515b552afd0d88e37f2caf1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const juce::AudioParameterInt &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#abb19548ef515b552afd0d88e37f2caf1">getSelectedIndexParameter</a> () const noexcept</td></tr>
+<tr class="memdesc:abb19548ef515b552afd0d88e37f2caf1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the created audio parameter for this processor, which will hold the selected index.  <br /></td></tr>
 <tr class="separator:abb19548ef515b552afd0d88e37f2caf1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae889ec90f9750a68cf178af2a28fbf1c"><td class="memItemLeft" align="right" valign="top"><a id="ae889ec90f9750a68cf178af2a28fbf1c" name="ae889ec90f9750a68cf178af2a28fbf1c"></a>
-<a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> int&#160;</td><td class="memItemRight" valign="bottom"><b>size</b> () const noexcept</td></tr>
+<tr class="memitem:ae889ec90f9750a68cf178af2a28fbf1c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#ae889ec90f9750a68cf178af2a28fbf1c">size</a> () const noexcept</td></tr>
 <tr class="separator:ae889ec90f9750a68cf178af2a28fbf1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92efae4ece79800d9abc81db6d096862"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a92efae4ece79800d9abc81db6d096862">readData</a> (juce::ValueTree state) override</td></tr>
+<tr class="memdesc:a92efae4ece79800d9abc81db6d096862"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the loaded state and applies it to the audio processor.  <br /></td></tr>
 <tr class="separator:a92efae4ece79800d9abc81db6d096862"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3d6d93fb99de33ec348864244909afea"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a3d6d93fb99de33ec348864244909afea">writeData</a> (juce::ValueTree state) override</td></tr>
+<tr class="memdesc:a3d6d93fb99de33ec348864244909afea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write data to the state object which was read from the audio processor.  <br /></td></tr>
 <tr class="separator:a3d6d93fb99de33ec348864244909afea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structjaut_1_1ISerialisableAudioProcessor')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html">jaut::ISerialisableAudioProcessor</a></td></tr>
+<tr class="memitem:a1bb5afa7889cfe5aa99c63112241bd44 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a1bb5afa7889cfe5aa99c63112241bd44">~ISerialisableAudioProcessor</a> ()=default</td></tr>
+<tr class="separator:a1bb5afa7889cfe5aa99c63112241bd44 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a916716038f97d2c28f69356d5da75be0 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a916716038f97d2c28f69356d5da75be0">process</a> (juce::AudioBuffer&lt; float &gt; &amp;buffer, juce::MidiBuffer &amp;midiBuffer)=0</td></tr>
+<tr class="memdesc:a916716038f97d2c28f69356d5da75be0 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the current block with single-precisions and gives back the modified data.  <br /></td></tr>
 <tr class="separator:a916716038f97d2c28f69356d5da75be0 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab89f5d7ea0f751444d37748460bdb484 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#ab89f5d7ea0f751444d37748460bdb484">process</a> (juce::AudioBuffer&lt; double &gt; &amp;buffer, juce::MidiBuffer &amp;midiBuffer)</td></tr>
+<tr class="memdesc:ab89f5d7ea0f751444d37748460bdb484 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the current block with double-precisions and gives back the modified data.  <br /></td></tr>
 <tr class="separator:ab89f5d7ea0f751444d37748460bdb484 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abe742b9837bec543b87f8d1637df0737 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#abe742b9837bec543b87f8d1637df0737">getName</a> () const =0</td></tr>
+<tr class="memdesc:abe742b9837bec543b87f8d1637df0737 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the name of this processor object.  <br /></td></tr>
 <tr class="separator:abe742b9837bec543b87f8d1637df0737 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a30c14de6fcaef504daa6f4321196d0d5 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> std::unique_ptr&lt; juce::Component &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a30c14de6fcaef504daa6f4321196d0d5">createComponent</a> () const</td></tr>
+<tr class="memdesc:a30c14de6fcaef504daa6f4321196d0d5 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">If this processor creates a component, it can be embedded by overriding this method.  <br /></td></tr>
 <tr class="separator:a30c14de6fcaef504daa6f4321196d0d5 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae1d5ff9767c8d8907db22750a571cbf5 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#ae1d5ff9767c8d8907db22750a571cbf5">prepare</a> (<a class="el" href="../../d9/d1f/structjaut_1_1ProcessSpec.html">ProcessSpec</a> specs)=0</td></tr>
+<tr class="memdesc:ae1d5ff9767c8d8907db22750a571cbf5 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called before any playback is about to happen.  <br /></td></tr>
 <tr class="separator:ae1d5ff9767c8d8907db22750a571cbf5 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6895e0c785777b856ad62f8d2cd66689 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a6895e0c785777b856ad62f8d2cd66689">release</a> ()=0</td></tr>
+<tr class="memdesc:a6895e0c785777b856ad62f8d2cd66689 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is called after any playback has happened.  <br /></td></tr>
 <tr class="separator:a6895e0c785777b856ad62f8d2cd66689 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a02073fe8fd047c22cbd3d0b6c8c22c1a inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a02073fe8fd047c22cbd3d0b6c8c22c1a">reset</a> ()</td></tr>
+<tr class="memdesc:a02073fe8fd047c22cbd3d0b6c8c22c1a inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">It is unclear when this is called by the host or if it is called at all.  <br /></td></tr>
 <tr class="separator:a02073fe8fd047c22cbd3d0b6c8c22c1a inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2029821d81813b988cd1d9e23ecfb801 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a2029821d81813b988cd1d9e23ecfb801">readData</a> (juce::ValueTree state)=0</td></tr>
+<tr class="memdesc:a2029821d81813b988cd1d9e23ecfb801 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads data from the loaded state and applies it to the audio processor.  <br /></td></tr>
 <tr class="separator:a2029821d81813b988cd1d9e23ecfb801 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf6e5596fd53b6c5a5ad1baa72cbe274 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#acf6e5596fd53b6c5a5ad1baa72cbe274">writeData</a> (juce::ValueTree state)=0</td></tr>
+<tr class="memdesc:acf6e5596fd53b6c5a5ad1baa72cbe274 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write data to the state object which was read from the audio processor.  <br /></td></tr>
 <tr class="separator:acf6e5596fd53b6c5a5ad1baa72cbe274 inherit pub_methods_structjaut_1_1ISerialisableAudioProcessor"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a4cc71b3486c9c502e930215f3baec1f9"><td class="memItemLeft" align="right" valign="top"><a id="a4cc71b3486c9c502e930215f3baec1f9" name="a4cc71b3486c9c502e930215f3baec1f9"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>numProcessors</b> = sizeof...(Processors)</td></tr>
+<tr class="memitem:a4cc71b3486c9c502e930215f3baec1f9"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html#a4cc71b3486c9c502e930215f3baec1f9">numProcessors</a> = sizeof...(Processors)</td></tr>
 <tr class="separator:a4cc71b3486c9c502e930215f3baec1f9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class ... Processors&gt;<br />
-class jaut::AudioProcessorSet&lt; Processors &gt;</div><p>The set processor allows to define a static set of processors that will be processed at processing time. Other than juce's juce::dsp::ProcessorChain, however, this does not process all processors but only a selected instance.</p>
+class jaut::AudioProcessorSet&lt; Processors &gt;</div><p>The set processor allows to define a static set of processors that will be processed at processing time. </p>
+<p>Other than juce's juce::dsp::ProcessorChain, however, this does not process all processors but only a selected instance.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Processors</td><td>The static list of processors, every processor needs to be a valid <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html">jaut::ISerialisableAudioProcessor</a> </td></tr>
+    <tr><td class="paramname">Processors</td><td>The static list of processors, every processor needs to be a valid <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html" title="A simple interface class for sub-audio processors for your own processor implementation.">jaut::ISerialisableAudioProcessor</a> </td></tr>
   </table>
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
-<a id="a85e07fef86a7283b77c2585787242ef2" name="a85e07fef86a7283b77c2585787242ef2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a85e07fef86a7283b77c2585787242ef2">&#9670;&#160;</a></span>ProcessorArray</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ... Processors&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; Processors &gt;::ProcessorArray =  typename <a class="el" href="../../d7/d77/structjaut_1_1TypeArray.html#a92aef882e9f647f68cb4c40d8c7bf6e7">ProcessorList::toArray</a></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The array containing the processors. </p>
-
-</div>
-</div>
 <a id="aa579dc29319df67244fe5025a970ae7f" name="aa579dc29319df67244fe5025a970ae7f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa579dc29319df67244fe5025a970ae7f">&#9670;&#160;</a></span>ProcessorList</h2>
 
@@ -225,91 +230,83 @@ template&lt;class ... Processors&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The type that represents the list of processors as a <a class="el" href="../../d7/d77/structjaut_1_1TypeArray.html">TypeArray</a>. </p>
+
+<p>The type that represents the list of processors as a <a class="el" href="../../d7/d77/structjaut_1_1TypeArray.html" title="A useful type-list utility that declares a lot of useful helper functions to work on and with a list ...">TypeArray</a>. </p>
+
+</div>
+</div>
+<a id="a85e07fef86a7283b77c2585787242ef2" name="a85e07fef86a7283b77c2585787242ef2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a85e07fef86a7283b77c2585787242ef2">&#9670;&#160;</a></span>ProcessorArray</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ... Processors&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; Processors &gt;::ProcessorArray =  typename <a class="el" href="../../d7/d77/structjaut_1_1TypeArray.html#a92aef882e9f647f68cb4c40d8c7bf6e7">ProcessorList::toArray</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The array containing the processors. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a145adca891d73f68dc87595ab365e30d" name="a145adca891d73f68dc87595ab365e30d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a145adca891d73f68dc87595ab365e30d">&#9670;&#160;</a></span>AudioProcessorSet()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ... T&gt; </div>
+<div class="memtemplate">
+template&lt;class Fn &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::AudioProcessorSet </td>
+          <td>(</td>
+          <td class="paramtype">Fn &amp;&amp;&#160;</td>
+          <td class="paramname"><em>initialiserCallback</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::ParameterID &amp;&#160;</td>
+          <td class="paramname"><em>indexParameterId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>indexParameterName</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::AudioParameterIntAttributes &amp;&#160;</td>
+          <td class="paramname"><em>indexParameterAttributes</em> = <code>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="ad15d0479b6b236b2db6aff1db246511a" name="ad15d0479b6b236b2db6aff1db246511a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad15d0479b6b236b2db6aff1db246511a">&#9670;&#160;</a></span>getName()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::String <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::getName </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gets the name of this processor object. </p><dl class="section return"><dt>Returns</dt><dd>The processor name </dd></dl>
-
-<p>Implements <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#abe742b9837bec543b87f8d1637df0737">jaut::ISerialisableAudioProcessor</a>.</p>
-
-</div>
-</div>
-<a id="abb19548ef515b552afd0d88e37f2caf1" name="abb19548ef515b552afd0d88e37f2caf1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abb19548ef515b552afd0d88e37f2caf1">&#9670;&#160;</a></span>getSelectedIndexParameter() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const juce::AudioParameterInt &amp; <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::getSelectedIndexParameter</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gets the created audio parameter for this processor, which will hold the selected index. </p><dl class="section return"><dt>Returns</dt><dd>The parameter </dd></dl>
-
-</div>
-</div>
-<a id="a61b59691935b2be2b83adf0b640b0bf8" name="a61b59691935b2be2b83adf0b640b0bf8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a61b59691935b2be2b83adf0b640b0bf8">&#9670;&#160;</a></span>getSelectedIndexParameter() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::AudioParameterInt &amp; <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::getSelectedIndexParameter</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gets the created audio parameter for this processor, which will hold the selected index. </p><dl class="section return"><dt>Returns</dt><dd>The parameter </dd></dl>
-
-</div>
-</div>
 <a id="a24cf5de03b3c9fdb065d19dff7caef2c" name="a24cf5de03b3c9fdb065d19dff7caef2c"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a24cf5de03b3c9fdb065d19dff7caef2c">&#9670;&#160;</a></span>prepare()</h2>
 
@@ -331,11 +328,13 @@ template&lt;class ... T&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>This is called before any playback is about to happen. Mainly used for preparing resources like allocating buffers and/or storing temporary values that are needed inside the processing routine.</p>
+
+<p>This is called before any playback is about to happen. </p>
+<p>Mainly used for preparing resources like allocating buffers and/or storing temporary values that are needed inside the processing routine.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">specs</td><td>A struct containing basic records about playback </td></tr>
@@ -347,8 +346,8 @@ template&lt;class ... T&gt; </div>
 
 </div>
 </div>
-<a id="a37b57599b71c54e3b03ace1828ca0a12" name="a37b57599b71c54e3b03ace1828ca0a12"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a37b57599b71c54e3b03ace1828ca0a12">&#9670;&#160;</a></span>process() <span class="overload">[1/2]</span></h2>
+<a id="a26f1ed4b1f9e0ae8514a4e577945c8eb" name="a26f1ed4b1f9e0ae8514a4e577945c8eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a26f1ed4b1f9e0ae8514a4e577945c8eb">&#9670;&#160;</a></span>release()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -359,44 +358,28 @@ template&lt;class ... T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::process </td>
+          <td class="memname">void <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::release </td>
           <td>(</td>
-          <td class="paramtype">juce::AudioBuffer&lt; double &gt; &amp;&#160;</td>
-          <td class="paramname"><em>buffer</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
-          <td class="paramtype">juce::MidiBuffer &amp;&#160;</td>
-          <td class="paramname"><em>midiBuffer</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Processes the current block with double-precisions and gives back the modified data.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">buffer</td><td>The buffer containing the sample data </td></tr>
-    <tr><td class="paramname">midiBuffer</td><td>The buffer containing the midi messages </td></tr>
-  </table>
-  </dd>
-</dl>
 
-<p>Reimplemented from <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#ab89f5d7ea0f751444d37748460bdb484">jaut::ISerialisableAudioProcessor</a>.</p>
+<p>This is called after any playback has happened. </p>
+<p>Here the resources previously used can be cleaned up and deallocated, made ready for the next playback. </p>
+
+<p>Implements <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a6895e0c785777b856ad62f8d2cd66689">jaut::ISerialisableAudioProcessor</a>.</p>
 
 </div>
 </div>
 <a id="a87a881249cfbec67909d476c12f6b8ad" name="a87a881249cfbec67909d476c12f6b8ad"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87a881249cfbec67909d476c12f6b8ad">&#9670;&#160;</a></span>process() <span class="overload">[2/2]</span></h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a87a881249cfbec67909d476c12f6b8ad">&#9670;&#160;</a></span>process() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -426,11 +409,12 @@ template&lt;class ... T&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Processes the current block with single-precisions and gives back the modified data.</p>
+
+<p>Processes the current block with single-precisions and gives back the modified data. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">buffer</td><td>The buffer containing the sample data </td></tr>
@@ -440,6 +424,194 @@ template&lt;class ... T&gt; </div>
 </dl>
 
 <p>Implements <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a916716038f97d2c28f69356d5da75be0">jaut::ISerialisableAudioProcessor</a>.</p>
+
+</div>
+</div>
+<a id="a37b57599b71c54e3b03ace1828ca0a12" name="a37b57599b71c54e3b03ace1828ca0a12"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37b57599b71c54e3b03ace1828ca0a12">&#9670;&#160;</a></span>process() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ... T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::process </td>
+          <td>(</td>
+          <td class="paramtype">juce::AudioBuffer&lt; double &gt; &amp;&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">juce::MidiBuffer &amp;&#160;</td>
+          <td class="paramname"><em>midiBuffer</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Processes the current block with double-precisions and gives back the modified data. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">buffer</td><td>The buffer containing the sample data </td></tr>
+    <tr><td class="paramname">midiBuffer</td><td>The buffer containing the midi messages </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Reimplemented from <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#ab89f5d7ea0f751444d37748460bdb484">jaut::ISerialisableAudioProcessor</a>.</p>
+
+</div>
+</div>
+<a id="a10cc4871ce6027546e45afdba33917c9" name="a10cc4871ce6027546e45afdba33917c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10cc4871ce6027546e45afdba33917c9">&#9670;&#160;</a></span>reset()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ... T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::reset</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>It is unclear when this is called by the host or if it is called at all. </p>
+<p>See juce::AudioProcessor::reset() for a better explanation on how this method behaves. </p>
+
+<p>Reimplemented from <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a02073fe8fd047c22cbd3d0b6c8c22c1a">jaut::ISerialisableAudioProcessor</a>.</p>
+
+</div>
+</div>
+<a id="ad15d0479b6b236b2db6aff1db246511a" name="ad15d0479b6b236b2db6aff1db246511a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad15d0479b6b236b2db6aff1db246511a">&#9670;&#160;</a></span>getName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ... T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::getName </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the name of this processor object. </p>
+<dl class="section return"><dt>Returns</dt><dd>The processor name </dd></dl>
+
+<p>Implements <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#abe742b9837bec543b87f8d1637df0737">jaut::ISerialisableAudioProcessor</a>.</p>
+
+</div>
+</div>
+<a id="a61b59691935b2be2b83adf0b640b0bf8" name="a61b59691935b2be2b83adf0b640b0bf8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a61b59691935b2be2b83adf0b640b0bf8">&#9670;&#160;</a></span>getSelectedIndexParameter() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ... T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::AudioParameterInt &amp; <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::getSelectedIndexParameter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the created audio parameter for this processor, which will hold the selected index. </p>
+<dl class="section return"><dt>Returns</dt><dd>The parameter </dd></dl>
+
+</div>
+</div>
+<a id="abb19548ef515b552afd0d88e37f2caf1" name="abb19548ef515b552afd0d88e37f2caf1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb19548ef515b552afd0d88e37f2caf1">&#9670;&#160;</a></span>getSelectedIndexParameter() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ... T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const juce::AudioParameterInt &amp; <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::getSelectedIndexParameter</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the created audio parameter for this processor, which will hold the selected index. </p>
+<dl class="section return"><dt>Returns</dt><dd>The parameter </dd></dl>
+
+</div>
+</div>
+<a id="ae889ec90f9750a68cf178af2a28fbf1c" name="ae889ec90f9750a68cf178af2a28fbf1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae889ec90f9750a68cf178af2a28fbf1c">&#9670;&#160;</a></span>size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ... T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::size</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -464,11 +636,13 @@ template&lt;class ... T&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Reads data from the loaded state and applies it to the audio processor. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Reads data from the loaded state and applies it to the audio processor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>The state object to read from </td></tr>
   </table>
@@ -477,62 +651,7 @@ template&lt;class ... T&gt; </div>
 
 <p>Implements <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a2029821d81813b988cd1d9e23ecfb801">jaut::ISerialisableAudioProcessor</a>.</p>
 
-</div>
-</div>
-<a id="a26f1ed4b1f9e0ae8514a4e577945c8eb" name="a26f1ed4b1f9e0ae8514a4e577945c8eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a26f1ed4b1f9e0ae8514a4e577945c8eb">&#9670;&#160;</a></span>release()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::release </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>This is called after any playback has happened. Here the resources previously used can be cleaned up and deallocated, made ready for the next playback. </p>
-
-<p>Implements <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a6895e0c785777b856ad62f8d2cd66689">jaut::ISerialisableAudioProcessor</a>.</p>
-
-</div>
-</div>
-<a id="a10cc4871ce6027546e45afdba33917c9" name="a10cc4871ce6027546e45afdba33917c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a10cc4871ce6027546e45afdba33917c9">&#9670;&#160;</a></span>reset()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class ... T&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; T &gt;::reset</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>It is unclear when this is called by the host or if it is called at all. See juce::AudioProcessor::reset() for a better explanation on how this method behaves. </p>
-
-<p>Reimplemented from <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a02073fe8fd047c22cbd3d0b6c8c22c1a">jaut::ISerialisableAudioProcessor</a>.</p>
+<p class="reference">References <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#a2029821d81813b988cd1d9e23ecfb801">jaut::ISerialisableAudioProcessor::readData()</a>.</p>
 
 </div>
 </div>
@@ -557,11 +676,13 @@ template&lt;class ... T&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Write data to the state object which was read from the audio processor. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Write data to the state object which was read from the audio processor. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">state</td><td>The state object to write to </td></tr>
   </table>
@@ -570,17 +691,44 @@ template&lt;class ... T&gt; </div>
 
 <p>Implements <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#acf6e5596fd53b6c5a5ad1baa72cbe274">jaut::ISerialisableAudioProcessor</a>.</p>
 
+<p class="reference">References <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#acf6e5596fd53b6c5a5ad1baa72cbe274">jaut::ISerialisableAudioProcessor::writeData()</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a4cc71b3486c9c502e930215f3baec1f9" name="a4cc71b3486c9c502e930215f3baec1f9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4cc71b3486c9c502e930215f3baec1f9">&#9670;&#160;</a></span>numProcessors</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class ... Processors&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int <a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">jaut::AudioProcessorSet</a>&lt; Processors &gt;::numProcessors = sizeof...(Processors)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_audio/processor/<a class="el" href="../../de/ded/jaut__AudioProcessorSet_8h_source.html">jaut_AudioProcessorSet.h</a></li>
+<li>/github/workspace/modules/jaut_audio/processor/<a class="el" href="../../de/ded/jaut__AudioProcessorSet_8h.html">jaut_AudioProcessorSet.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">AudioProcessorSet</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../df/de3/classjaut_1_1AudioProcessorSet.html">AudioProcessorSet</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

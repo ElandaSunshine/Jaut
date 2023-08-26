@@ -2,11 +2,13 @@ var classjaut_1_1OperationResult =
 [
     [ "OperationResult", "d6/d63/classjaut_1_1OperationResult.html#ad5322a75bcf0cd2effd2331dd800caad", null ],
     [ "OperationResult", "d6/d63/classjaut_1_1OperationResult.html#aacc7eeb54409918e1dd9c945d6b2eafc", null ],
-    [ "failed", "d6/d63/classjaut_1_1OperationResult.html#a3824e3bb665a1230c1a3af123825ca49", null ],
-    [ "getCode", "d6/d63/classjaut_1_1OperationResult.html#a0745ac0acbdc81734c30692d52a4bdb9", null ],
-    [ "getMessage", "d6/d63/classjaut_1_1OperationResult.html#a26d5e893cafc11651af7259e89911edf", null ],
-    [ "getResult", "d6/d63/classjaut_1_1OperationResult.html#a31610d08b1330fdbd199cd08067e9162", null ],
-    [ "operator bool", "d6/d63/classjaut_1_1OperationResult.html#a252b86d207c41fc9c05a2f2a33513b34", null ],
-    [ "operator!", "d6/d63/classjaut_1_1OperationResult.html#afc1faf6753cf5ba6ab91d21cd1ca2df4", null ],
-    [ "success", "d6/d63/classjaut_1_1OperationResult.html#a5060d5fc30a0817ee10e580c24025ccb", null ]
+    [ "success", "d6/d63/classjaut_1_1OperationResult.html#a4e6702d3600bebac24108085c6e4049c", null ],
+    [ "failed", "d6/d63/classjaut_1_1OperationResult.html#ab98b9d1bb174e1b575e3dbc1775e2f38", null ],
+    [ "operator bool", "d6/d63/classjaut_1_1OperationResult.html#ab444eefc6ef0f12b909025d37a207950", null ],
+    [ "operator!", "d6/d63/classjaut_1_1OperationResult.html#a349653fc5baab3726f3bde174227de60", null ],
+    [ "operator==", "d6/d63/classjaut_1_1OperationResult.html#a39a5b6ca4199a1c12a8beb23cfb0dec2", null ],
+    [ "operator!=", "d6/d63/classjaut_1_1OperationResult.html#acb6c2d78d60d6ae5a8fb06e8d8d07ab4", null ],
+    [ "getCode", "d6/d63/classjaut_1_1OperationResult.html#aaa2a0aad1143e8c631774fd9db9ae0ce", null ],
+    [ "getMessage", "d6/d63/classjaut_1_1OperationResult.html#a9c587bbae412b502ad5e14ec2999fc0e", null ],
+    [ "getResult", "d6/d63/classjaut_1_1OperationResult.html#a591c1501bb373b544a8268ced496bbec", null ]
 ];

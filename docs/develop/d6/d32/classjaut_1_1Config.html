@@ -115,11 +115,15 @@ $(document).ready(function(){initNavTree('d6/d32/classjaut_1_1Config.html','../.
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../df/d89/jaut__Config_8h_source.html">jaut_Config.h</a>&gt;</code></p>
+<p>The <a class="el" href="../../d6/d32/classjaut_1_1Config.html" title="The Config class provides a toolset for reading/writing from/to config files on the local file system...">Config</a> class provides a toolset for reading/writing from/to config files on the local file system.  
+ <a href="../../d6/d32/classjaut_1_1Config.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_Config.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">This struct provides basic options the config file uses and needs to operate as supposed to.  <a href="../../df/dfb/structjaut_1_1Config_1_1Options.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -129,87 +133,96 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a47ad2eb6deebd3231a3f507b2536bc13"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a47ad2eb6deebd3231a3f507b2536bc13">CategoryMap</a> = std::map&lt; juce::String, <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &gt;</td></tr>
+<tr class="memdesc:a47ad2eb6deebd3231a3f507b2536bc13"><td class="mdescLeft">&#160;</td><td class="mdescRight">The category map type.  <br /></td></tr>
 <tr class="separator:a47ad2eb6deebd3231a3f507b2536bc13"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a708480d3e97df287c83cc3dc57e0cc9d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a708480d3e97df287c83cc3dc57e0cc9d">ConfigParserPtr</a> = std::unique_ptr&lt; <a class="el" href="../../d3/d7d/structjaut_1_1IConfigParser.html">IConfigParser</a> &gt;</td></tr>
+<tr class="memdesc:a708480d3e97df287c83cc3dc57e0cc9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">The config parser pointer type.  <br /></td></tr>
 <tr class="separator:a708480d3e97df287c83cc3dc57e0cc9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4510124040ca319b455aa5eef00a5190"><td class="memItemLeft" align="right" valign="top"><a id="a4510124040ca319b455aa5eef00a5190" name="a4510124040ca319b455aa5eef00a5190"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>ValueChangedHandler</b> = <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">jaut::EventHandler</a>&lt; const <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> &amp;, const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp;, const juce::var &amp; &gt;</td></tr>
+<tr class="memitem:a4510124040ca319b455aa5eef00a5190"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a4510124040ca319b455aa5eef00a5190">ValueChangedHandler</a> = <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">jaut::EventHandler</a>&lt; const <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> &amp;, const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp;, const juce::var &amp; &gt;</td></tr>
 <tr class="separator:a4510124040ca319b455aa5eef00a5190"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0bb6cacf247b019a35a5a5b83c1085d"><td class="memItemLeft" align="right" valign="top"><a id="aa0bb6cacf247b019a35a5a5b83c1085d" name="aa0bb6cacf247b019a35a5a5b83c1085d"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>PropertyAddedHandler</b> = <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">jaut::EventHandler</a>&lt; const <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> &amp;, const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp;, const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp; &gt;</td></tr>
+<tr class="memitem:aa0bb6cacf247b019a35a5a5b83c1085d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#aa0bb6cacf247b019a35a5a5b83c1085d">PropertyAddedHandler</a> = <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">jaut::EventHandler</a>&lt; const <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> &amp;, const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp;, const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp; &gt;</td></tr>
 <tr class="separator:aa0bb6cacf247b019a35a5a5b83c1085d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c62d7d34b58fde517c47ae2c9184219"><td class="memItemLeft" align="right" valign="top"><a id="a3c62d7d34b58fde517c47ae2c9184219" name="a3c62d7d34b58fde517c47ae2c9184219"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>SavedAutomaticallyHandler</b> = <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">jaut::EventHandler</a>&lt; const <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> &amp; &gt;</td></tr>
+<tr class="memitem:a3c62d7d34b58fde517c47ae2c9184219"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a3c62d7d34b58fde517c47ae2c9184219">SavedAutomaticallyHandler</a> = <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">jaut::EventHandler</a>&lt; const <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> &amp; &gt;</td></tr>
 <tr class="separator:a3c62d7d34b58fde517c47ae2c9184219"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a9de1789eb0d90becd7a1d8b77a167f61"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a9de1789eb0d90becd7a1d8b77a167f61">Config</a> (juce::File directory, <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a708480d3e97df287c83cc3dc57e0cc9d">ConfigParserPtr</a> &gt; configParser, <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> options={})</td></tr>
+<tr class="memdesc:a9de1789eb0d90becd7a1d8b77a167f61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="../../d6/d32/classjaut_1_1Config.html" title="The Config class provides a toolset for reading/writing from/to config files on the local file system...">Config</a> object.  <br /></td></tr>
 <tr class="separator:a9de1789eb0d90becd7a1d8b77a167f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b728d5e475daf7a7131b34b712050c9"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a5b728d5e475daf7a7131b34b712050c9">load</a> ()</td></tr>
+<tr class="memdesc:a5b728d5e475daf7a7131b34b712050c9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to load data from the config file stored on your local file system.  <br /></td></tr>
 <tr class="separator:a5b728d5e475daf7a7131b34b712050c9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3f01f2399508eee5609429ae047ffe89"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a3f01f2399508eee5609429ae047ffe89">save</a> () const</td></tr>
+<tr class="memdesc:a3f01f2399508eee5609429ae047ffe89"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to write data to the config file stored on your local file system.  <br /></td></tr>
 <tr class="separator:a3f01f2399508eee5609429ae047ffe89"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a713cd0646472ed7cdbd5604c27491222"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a713cd0646472ed7cdbd5604c27491222">findProperty</a> (const juce::String &amp;expression)</td></tr>
-<tr class="separator:a713cd0646472ed7cdbd5604c27491222"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b9fb48d77a181dcb2ac3100526102ec"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a8b9fb48d77a181dcb2ac3100526102ec">findProperty</a> (const juce::String &amp;expression) const</td></tr>
-<tr class="separator:a8b9fb48d77a181dcb2ac3100526102ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac30eb1a8c70130450fff65554b4e838c"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ac30eb1a8c70130450fff65554b4e838c">getConfigName</a> (bool withoutExtension=false) const</td></tr>
-<tr class="separator:ac30eb1a8c70130450fff65554b4e838c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2929a1cda3a3806d5a3882133b35ef5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ae2929a1cda3a3806d5a3882133b35ef5">getProperty</a> (const juce::String &amp;id, const juce::String &amp;categoryId=<a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a>)</td></tr>
-<tr class="separator:ae2929a1cda3a3806d5a3882133b35ef5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace3c53c73ca4e6c1c14ce28aece982a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ace3c53c73ca4e6c1c14ce28aece982a4">getProperty</a> (const juce::String &amp;id, const juce::String &amp;categoryId=<a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a>) const</td></tr>
-<tr class="separator:ace3c53c73ca4e6c1c14ce28aece982a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a72f67eb96db17a2130d61fa0794a90a2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a72f67eb96db17a2130d61fa0794a90a2">getCategoryComment</a> (const juce::String &amp;categoryId) const</td></tr>
-<tr class="separator:a72f67eb96db17a2130d61fa0794a90a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d87e463d431e5f79a49b4c299d102fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a0d87e463d431e5f79a49b4c299d102fc">getOptions</a> () const noexcept</td></tr>
-<tr class="separator:a0d87e463d431e5f79a49b4c299d102fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac21e1ad14c6c20e8891a1dc89b683d97"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const juce::File &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ac21e1ad14c6c20e8891a1dc89b683d97">getConfigFile</a> () const noexcept</td></tr>
-<tr class="separator:ac21e1ad14c6c20e8891a1dc89b683d97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ade826e4438185a9519ebe08ed1b70659"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ade826e4438185a9519ebe08ed1b70659">findProperty</a> (const juce::String &amp;expression)</td></tr>
+<tr class="memdesc:ade826e4438185a9519ebe08ed1b70659"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to find a child property that satisfies the search expression.  <br /></td></tr>
+<tr class="separator:ade826e4438185a9519ebe08ed1b70659"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae8f19c28a969cd94b6740759f87d3166"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ae8f19c28a969cd94b6740759f87d3166">findProperty</a> (const juce::String &amp;expression) const</td></tr>
+<tr class="memdesc:ae8f19c28a969cd94b6740759f87d3166"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to find a child property that satisfies the search expression.  <br /></td></tr>
+<tr class="separator:ae8f19c28a969cd94b6740759f87d3166"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3e8cddb8ec4707f9eecd5201f469ecb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ad3e8cddb8ec4707f9eecd5201f469ecb">getConfigName</a> (bool withoutExtension=false) const</td></tr>
+<tr class="memdesc:ad3e8cddb8ec4707f9eecd5201f469ecb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the config file name.  <br /></td></tr>
+<tr class="separator:ad3e8cddb8ec4707f9eecd5201f469ecb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab4d72217397b0424ed800c4fb581327b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab4d72217397b0424ed800c4fb581327b">getProperty</a> (const juce::String &amp;id, const juce::String &amp;categoryId=<a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a>)</td></tr>
+<tr class="memdesc:ab4d72217397b0424ed800c4fb581327b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a property from the category map.  <br /></td></tr>
+<tr class="separator:ab4d72217397b0424ed800c4fb581327b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aff6868ad7e8f6e74a9a757ac844520d3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#aff6868ad7e8f6e74a9a757ac844520d3">getProperty</a> (const juce::String &amp;id, const juce::String &amp;categoryId=<a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a>) const</td></tr>
+<tr class="memdesc:aff6868ad7e8f6e74a9a757ac844520d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets a property from the category map.  <br /></td></tr>
+<tr class="separator:aff6868ad7e8f6e74a9a757ac844520d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a650f17c37f7a5e809f0cd7425ea456fc"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a650f17c37f7a5e809f0cd7425ea456fc">getCategoryComment</a> (const juce::String &amp;categoryId) const</td></tr>
+<tr class="memdesc:a650f17c37f7a5e809f0cd7425ea456fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the comment of a category.  <br /></td></tr>
+<tr class="separator:a650f17c37f7a5e809f0cd7425ea456fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa87aaed5a39c8b31349bf8a270356f63"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#aa87aaed5a39c8b31349bf8a270356f63">getOptions</a> () const noexcept</td></tr>
+<tr class="memdesc:aa87aaed5a39c8b31349bf8a270356f63"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the options for this config object.  <br /></td></tr>
+<tr class="separator:aa87aaed5a39c8b31349bf8a270356f63"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac11dfa3a7795eb3728a6a5b318c26cc3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const juce::File &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ac11dfa3a7795eb3728a6a5b318c26cc3">getConfigFile</a> () const noexcept</td></tr>
+<tr class="memdesc:ac11dfa3a7795eb3728a6a5b318c26cc3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the config file.  <br /></td></tr>
+<tr class="separator:ac11dfa3a7795eb3728a6a5b318c26cc3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a19e02b2ef4c140d8c8fce487dfb8db00"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a19e02b2ef4c140d8c8fce487dfb8db00">setCategoryComment</a> (const juce::String &amp;categoryId, const juce::String &amp;comment)</td></tr>
+<tr class="memdesc:a19e02b2ef4c140d8c8fce487dfb8db00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the comment for a certain category.  <br /></td></tr>
 <tr class="separator:a19e02b2ef4c140d8c8fce487dfb8db00"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64fe67bacf7fe801f906f19413ec7694"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a64fe67bacf7fe801f906f19413ec7694">createProperty</a> (const juce::String &amp;id, const juce::var &amp;defaultValue={}, const juce::String &amp;categoryId=<a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a>, juce::NotificationType notify=juce::sendNotification)</td></tr>
-<tr class="separator:a64fe67bacf7fe801f906f19413ec7694"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a087e2176d4cf30bfe2c6fe3c6e8f118c"><td class="memItemLeft" align="right" valign="top">std::pair&lt; bool, <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a087e2176d4cf30bfe2c6fe3c6e8f118c">createProperty</a> (const juce::String &amp;id, const juce::var &amp;defaultValue={}, const juce::String &amp;categoryId=<a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a>, juce::NotificationType notify=juce::sendNotification)</td></tr>
+<tr class="memdesc:a087e2176d4cf30bfe2c6fe3c6e8f118c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new property and adds it to the config.  <br /></td></tr>
+<tr class="separator:a087e2176d4cf30bfe2c6fe3c6e8f118c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4ec06a91bf0cc84214417496992262fd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a4ec06a91bf0cc84214417496992262fd">resetCategory</a> (const juce::String &amp;categoryId, juce::NotificationType notify=juce::sendNotification)</td></tr>
+<tr class="memdesc:a4ec06a91bf0cc84214417496992262fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets a whole category's properties (and children) to their defaults.  <br /></td></tr>
 <tr class="separator:a4ec06a91bf0cc84214417496992262fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeadc785015f0dffb09d63c7a13fc610d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#aeadc785015f0dffb09d63c7a13fc610d">resetAll</a> (juce::NotificationType notify=juce::sendNotification)</td></tr>
+<tr class="memdesc:aeadc785015f0dffb09d63c7a13fc610d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets all category's properties (and children) to their defaults.  <br /></td></tr>
 <tr class="separator:aeadc785015f0dffb09d63c7a13fc610d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa3c54eadbefdda084cef87133d4b6860"><td class="memTemplParams" colspan="2"><a id="aa3c54eadbefdda084cef87133d4b6860" name="aa3c54eadbefdda084cef87133d4b6860"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:aa3c54eadbefdda084cef87133d4b6860"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>getCategory_impl</b> (T &amp;parConfig, const juce::String &amp;parCategoryId)</td></tr>
-<tr class="separator:aa3c54eadbefdda084cef87133d4b6860"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aabbbc50508c731ce5d9700798e8842d2"><td class="memTemplParams" colspan="2"><a id="aabbbc50508c731ce5d9700798e8842d2" name="aabbbc50508c731ce5d9700798e8842d2"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:aabbbc50508c731ce5d9700798e8842d2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>getProperty_impl</b> (T &amp;parConfig, const juce::String &amp;parId, const juce::String &amp;parCategoryId)</td></tr>
-<tr class="separator:aabbbc50508c731ce5d9700798e8842d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d85d8e6645072def450ccdb33c9696c"><td class="memTemplParams" colspan="2"><a id="a9d85d8e6645072def450ccdb33c9696c" name="a9d85d8e6645072def450ccdb33c9696c"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a9d85d8e6645072def450ccdb33c9696c"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>findProperty_impl</b> (T &amp;parConfig, const juce::String &amp;parExpression)</td></tr>
-<tr class="separator:a9d85d8e6645072def450ccdb33c9696c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a2552f05e2bf839c92cd7adf6cc7bf599"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a2552f05e2bf839c92cd7adf6cc7bf599">backendJson</a> (juce::File directory, <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> options={})</td></tr>
-<tr class="separator:a2552f05e2bf839c92cd7adf6cc7bf599"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5590e2964009265897bb37828535a5d"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#aa5590e2964009265897bb37828535a5d">backendXml</a> (juce::File directory, <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> options={})</td></tr>
-<tr class="separator:aa5590e2964009265897bb37828535a5d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb55b489848256c5a77a4b2ab145667e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#abb55b489848256c5a77a4b2ab145667e">backendJson</a> (juce::File directory, <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> options={})</td></tr>
+<tr class="memdesc:abb55b489848256c5a77a4b2ab145667e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a config instance with a json parsing backend.  <br /></td></tr>
+<tr class="separator:abb55b489848256c5a77a4b2ab145667e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9bf0a77eb1dd0a3b9891203ff9697694"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a9bf0a77eb1dd0a3b9891203ff9697694">backendXml</a> (juce::File directory, <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> options={})</td></tr>
+<tr class="memdesc:a9bf0a77eb1dd0a3b9891203ff9697694"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a config instance with a xml parsing backend.  <br /></td></tr>
+<tr class="separator:a9bf0a77eb1dd0a3b9891203ff9697694"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a6d70dde1b25c4467c224c46d36fb3c69"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt; <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">ValueChangedHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a6d70dde1b25c4467c224c46d36fb3c69">ValueChanged</a></td></tr>
+<tr class="memitem:a6d70dde1b25c4467c224c46d36fb3c69"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt; <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a4510124040ca319b455aa5eef00a5190">ValueChangedHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a6d70dde1b25c4467c224c46d36fb3c69">ValueChanged</a></td></tr>
+<tr class="memdesc:a6d70dde1b25c4467c224c46d36fb3c69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dispatched whenever the value of this property has changed.  <br /></td></tr>
 <tr class="separator:a6d70dde1b25c4467c224c46d36fb3c69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2b69893a2bffbf57e4e409170e55d858"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt; <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">PropertyAddedHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a2b69893a2bffbf57e4e409170e55d858">PropertyAdded</a></td></tr>
+<tr class="memitem:a2b69893a2bffbf57e4e409170e55d858"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt; <a class="el" href="../../d6/d32/classjaut_1_1Config.html#aa0bb6cacf247b019a35a5a5b83c1085d">PropertyAddedHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a2b69893a2bffbf57e4e409170e55d858">PropertyAdded</a></td></tr>
+<tr class="memdesc:a2b69893a2bffbf57e4e409170e55d858"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dispatched whenever a property was added.  <br /></td></tr>
 <tr class="separator:a2b69893a2bffbf57e4e409170e55d858"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a16bb68736a5a542caa22f503a82d3f25"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt; <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">SavedAutomaticallyHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a16bb68736a5a542caa22f503a82d3f25">SavedAutomatically</a></td></tr>
+<tr class="memitem:a16bb68736a5a542caa22f503a82d3f25"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt; <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a3c62d7d34b58fde517c47ae2c9184219">SavedAutomaticallyHandler</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#a16bb68736a5a542caa22f503a82d3f25">SavedAutomatically</a></td></tr>
+<tr class="memdesc:a16bb68736a5a542caa22f503a82d3f25"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dispatched whenever the config was saved automatically.  <br /></td></tr>
 <tr class="separator:a16bb68736a5a542caa22f503a82d3f25"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:ab54320be06817ab34ed9ac84d7454d49"><td class="memItemLeft" align="right" valign="top">static constexpr const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:ab54320be06817ab34ed9ac84d7454d49"><td class="mdescLeft">&#160;</td><td class="mdescRight">This is just an identifier for category-id parameters used to denote default categories.  <br /></td></tr>
 <tr class="separator:ab54320be06817ab34ed9ac84d7454d49"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> class provides a toolset for reading/writing from/to config files on the local file system. The config file contains properties holding data to the properties defined in the config file.</p>
+<div class="textblock"><p>The <a class="el" href="../../d6/d32/classjaut_1_1Config.html" title="The Config class provides a toolset for reading/writing from/to config files on the local file system...">Config</a> class provides a toolset for reading/writing from/to config files on the local file system. </p>
+<p>The config file contains properties holding data to the properties defined in the config file.</p>
 <p><a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> IDs are case-insensitive and whitespace-less internally, so make sure you are using correct IDs for your properties.</p>
 <p>This class is not thread-safe.</p>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">jaut::Config::Property</a> </dd></dl>
@@ -225,6 +238,7 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The category map type. </p>
 
 </div>
@@ -240,7 +254,50 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The config parser pointer type. </p>
+
+</div>
+</div>
+<a id="a4510124040ca319b455aa5eef00a5190" name="a4510124040ca319b455aa5eef00a5190"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4510124040ca319b455aa5eef00a5190">&#9670;&#160;</a></span>ValueChangedHandler</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a4510124040ca319b455aa5eef00a5190">jaut::Config::ValueChangedHandler</a> =  <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">jaut::EventHandler</a>&lt;const <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a>&amp;, const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a>&amp;, const juce::var&amp;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa0bb6cacf247b019a35a5a5b83c1085d" name="aa0bb6cacf247b019a35a5a5b83c1085d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa0bb6cacf247b019a35a5a5b83c1085d">&#9670;&#160;</a></span>PropertyAddedHandler</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d6/d32/classjaut_1_1Config.html#aa0bb6cacf247b019a35a5a5b83c1085d">jaut::Config::PropertyAddedHandler</a> =  <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">jaut::EventHandler</a>&lt;const <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a>&amp;, const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a>&amp;, const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a>&amp;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3c62d7d34b58fde517c47ae2c9184219" name="a3c62d7d34b58fde517c47ae2c9184219"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c62d7d34b58fde517c47ae2c9184219">&#9670;&#160;</a></span>SavedAutomaticallyHandler</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a3c62d7d34b58fde517c47ae2c9184219">jaut::Config::SavedAutomaticallyHandler</a> =  <a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">jaut::EventHandler</a>&lt;const <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a>&amp;&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -276,12 +333,14 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Constructs a new <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> object. Note, if the parser is null, any IO call will result in UB as the config class assumes it is valid.</p>
+
+<p>Constructs a new <a class="el" href="../../d6/d32/classjaut_1_1Config.html" title="The Config class provides a toolset for reading/writing from/to config files on the local file system...">Config</a> object. </p>
+<p>Note, if the parser is null, any IO call will result in UB as the config class assumes it is valid.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">directory</td><td>The directory in which the config will be saved </td></tr>
     <tr><td class="paramname">parser</td><td>The parser object to parse and process config files </td></tr>
-    <tr><td class="paramname">options</td><td><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> of the config class</td></tr>
+    <tr><td class="paramname">options</td><td><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html" title="This struct provides basic options the config file uses and needs to operate as supposed to.">Options</a> of the config class</td></tr>
   </table>
   </dd>
 </dl>
@@ -297,8 +356,8 @@ Static Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a2552f05e2bf839c92cd7adf6cc7bf599" name="a2552f05e2bf839c92cd7adf6cc7bf599"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2552f05e2bf839c92cd7adf6cc7bf599">&#9670;&#160;</a></span>backendJson()</h2>
+<a id="abb55b489848256c5a77a4b2ab145667e" name="abb55b489848256c5a77a4b2ab145667e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb55b489848256c5a77a4b2ab145667e">&#9670;&#160;</a></span>backendJson()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -307,7 +366,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> jaut::Config::backendJson </td>
+          <td class="memname">static <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> jaut::Config::backendJson </td>
           <td>(</td>
           <td class="paramtype">juce::File&#160;</td>
           <td class="paramname"><em>directory</em>, </td>
@@ -330,11 +389,12 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Creates a config instance with a json parsing backend.</p>
+
+<p>Creates a config instance with a json parsing backend. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">directory</td><td>The directory in which the config will be saved </td></tr>
-    <tr><td class="paramname">options</td><td><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> of the config class </td></tr>
+    <tr><td class="paramname">options</td><td><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html" title="This struct provides basic options the config file uses and needs to operate as supposed to.">Options</a> of the config class </td></tr>
   </table>
   </dd>
 </dl>
@@ -342,8 +402,8 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aa5590e2964009265897bb37828535a5d" name="aa5590e2964009265897bb37828535a5d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa5590e2964009265897bb37828535a5d">&#9670;&#160;</a></span>backendXml()</h2>
+<a id="a9bf0a77eb1dd0a3b9891203ff9697694" name="a9bf0a77eb1dd0a3b9891203ff9697694"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9bf0a77eb1dd0a3b9891203ff9697694">&#9670;&#160;</a></span>backendXml()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -352,7 +412,7 @@ Static Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> jaut::Config::backendXml </td>
+          <td class="memname">static <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> jaut::Config::backendXml </td>
           <td>(</td>
           <td class="paramtype">juce::File&#160;</td>
           <td class="paramname"><em>directory</em>, </td>
@@ -375,11 +435,12 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Creates a config instance with a xml parsing backend.</p>
+
+<p>Creates a config instance with a xml parsing backend. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">directory</td><td>The directory in which the config will be saved </td></tr>
-    <tr><td class="paramname">options</td><td><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> of the config class </td></tr>
+    <tr><td class="paramname">options</td><td><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html" title="This struct provides basic options the config file uses and needs to operate as supposed to.">Options</a> of the config class </td></tr>
   </table>
   </dd>
 </dl>
@@ -387,14 +448,381 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a64fe67bacf7fe801f906f19413ec7694" name="a64fe67bacf7fe801f906f19413ec7694"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64fe67bacf7fe801f906f19413ec7694">&#9670;&#160;</a></span>createProperty()</h2>
+<a id="a5b728d5e475daf7a7131b34b712050c9" name="a5b728d5e475daf7a7131b34b712050c9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b728d5e475daf7a7131b34b712050c9">&#9670;&#160;</a></span>load()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">std::pair&lt; bool, <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Config::Property</a> &amp; &gt; jaut::Config::createProperty </td>
+          <td class="memname">bool jaut::Config::load </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tries to load data from the config file stored on your local file system. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the config-file could be read, otherwise false (if file didn't exist)</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../df/dd8/classjaut_1_1ConfigParseException.html">jaut::ConfigParseException</a></td><td>If an exception occurred during parsing of the config file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3f01f2399508eee5609429ae047ffe89" name="a3f01f2399508eee5609429ae047ffe89"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3f01f2399508eee5609429ae047ffe89">&#9670;&#160;</a></span>save()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jaut::Config::save </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tries to write data to the config file stored on your local file system. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if the config was successfully saved, false if the file didn't exist and automatic file creation was disabled</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d1/df2/classjaut_1_1ConfigIOException.html">jaut::ConfigIOException</a></td><td>If an exception occurred during creating the config file </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ade826e4438185a9519ebe08ed1b70659" name="ade826e4438185a9519ebe08ed1b70659"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade826e4438185a9519ebe08ed1b70659">&#9670;&#160;</a></span>findProperty() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> * jaut::Config::findProperty </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>expression</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tries to find a child property that satisfies the search expression. </p>
+<p>If you want a shortcut to search in the default category, you can start the expression with a dot.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">expression</td><td>The search expression </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The child property if it was found, otherwise nullptr</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If any of the ids in the expression were invalid </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae8f19c28a969cd94b6740759f87d3166" name="ae8f19c28a969cd94b6740759f87d3166"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae8f19c28a969cd94b6740759f87d3166">&#9670;&#160;</a></span>findProperty() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> * jaut::Config::findProperty </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>expression</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tries to find a child property that satisfies the search expression. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">expression</td><td>The search expression </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The child property if it was found, otherwise nullptr</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If any of the ids in the expression were invalid </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad3e8cddb8ec4707f9eecd5201f469ecb" name="ad3e8cddb8ec4707f9eecd5201f469ecb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3e8cddb8ec4707f9eecd5201f469ecb">&#9670;&#160;</a></span>getConfigName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String jaut::Config::getConfigName </td>
+          <td>(</td>
+          <td class="paramtype">bool&#160;</td>
+          <td class="paramname"><em>withoutExtension</em> = <code>false</code></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the config file name. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">withoutExtension</td><td>If this is false, the returned name will keep the file extension if it has one </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The name of the config file </dd></dl>
+
+</div>
+</div>
+<a id="ab4d72217397b0424ed800c4fb581327b" name="ab4d72217397b0424ed800c4fb581327b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab4d72217397b0424ed800c4fb581327b">&#9670;&#160;</a></span>getProperty() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> * jaut::Config::getProperty </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>categoryId</em> = <code><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a property from the category map. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The id of the property </td></tr>
+    <tr><td class="paramname">categoryId</td><td>The name of the category the property is in, or empty for the default category </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The property if it exists, otherwise nullptr</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If either property or category id were invalid </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aff6868ad7e8f6e74a9a757ac844520d3" name="aff6868ad7e8f6e74a9a757ac844520d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aff6868ad7e8f6e74a9a757ac844520d3">&#9670;&#160;</a></span>getProperty() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> * jaut::Config::getProperty </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>id</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>categoryId</em> = <code><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a></code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets a property from the category map. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">id</td><td>The name of the property </td></tr>
+    <tr><td class="paramname">categoryId</td><td>The name of the category the property is in, or empty for the default category </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The property if it exists, otherwise nullptr</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If either property or category id were invalid </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a650f17c37f7a5e809f0cd7425ea456fc" name="a650f17c37f7a5e809f0cd7425ea456fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a650f17c37f7a5e809f0cd7425ea456fc">&#9670;&#160;</a></span>getCategoryComment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String jaut::Config::getCategoryComment </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>categoryId</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Gets the comment of a category. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">categoryId</td><td>The category of the comment, or empty for the default category </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The comment if it exists, otherwise an empty string</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If category was an invalid id </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa87aaed5a39c8b31349bf8a270356f63" name="aa87aaed5a39c8b31349bf8a270356f63"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa87aaed5a39c8b31349bf8a270356f63">&#9670;&#160;</a></span>getOptions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a> &amp; jaut::Config::getOptions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the options for this config object. </p>
+<dl class="section return"><dt>Returns</dt><dd>The options object </dd></dl>
+
+</div>
+</div>
+<a id="ac11dfa3a7795eb3728a6a5b318c26cc3" name="ac11dfa3a7795eb3728a6a5b318c26cc3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac11dfa3a7795eb3728a6a5b318c26cc3">&#9670;&#160;</a></span>getConfigFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const juce::File &amp; jaut::Config::getConfigFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the config file. </p>
+<dl class="section return"><dt>Returns</dt><dd>The config filepath </dd></dl>
+
+</div>
+</div>
+<a id="a19e02b2ef4c140d8c8fce487dfb8db00" name="a19e02b2ef4c140d8c8fce487dfb8db00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19e02b2ef4c140d8c8fce487dfb8db00">&#9670;&#160;</a></span>setCategoryComment()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jaut::Config::setCategoryComment </td>
+          <td>(</td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>categoryId</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>comment</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Sets the comment for a certain category. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">categoryId</td><td>The category for the comment, or empty if the default category should be used </td></tr>
+    <tr><td class="paramname">comment</td><td>The comment for the category </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>True if the category was found, otherwise false</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If category was an invalid id </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a087e2176d4cf30bfe2c6fe3c6e8f118c" name="a087e2176d4cf30bfe2c6fe3c6e8f118c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a087e2176d4cf30bfe2c6fe3c6e8f118c">&#9670;&#160;</a></span>createProperty()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::pair&lt; bool, <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp; &gt; jaut::Config::createProperty </td>
           <td>(</td>
           <td class="paramtype">const juce::String &amp;&#160;</td>
           <td class="paramname"><em>id</em>, </td>
@@ -424,7 +852,9 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Creates a new property and adds it to the config. If the property already exists it will return the existing one.</p>
+
+<p>Creates a new property and adds it to the config. </p>
+<p>If the property already exists it will return the existing one.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>The name of the new property </td></tr>
@@ -438,314 +868,6 @@ Static Public Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If either property or category id were invalid </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a713cd0646472ed7cdbd5604c27491222" name="a713cd0646472ed7cdbd5604c27491222"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a713cd0646472ed7cdbd5604c27491222">&#9670;&#160;</a></span>findProperty() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Config::Property</a> * jaut::Config::findProperty </td>
-          <td>(</td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>expression</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Tries to find a child property that satisfies the search expression. If you want a shortcut to search in the default category, you can start the expression with a dot.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">expression</td><td>The search expression </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The child property if it was found, otherwise nullptr</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If any of the ids in the expression were invalid </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a8b9fb48d77a181dcb2ac3100526102ec" name="a8b9fb48d77a181dcb2ac3100526102ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b9fb48d77a181dcb2ac3100526102ec">&#9670;&#160;</a></span>findProperty() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Config::Property</a> * jaut::Config::findProperty </td>
-          <td>(</td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>expression</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Tries to find a child property that satisfies the search expression.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">expression</td><td>The search expression </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The child property if it was found, otherwise nullptr</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If any of the ids in the expression were invalid </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a72f67eb96db17a2130d61fa0794a90a2" name="a72f67eb96db17a2130d61fa0794a90a2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72f67eb96db17a2130d61fa0794a90a2">&#9670;&#160;</a></span>getCategoryComment()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::String jaut::Config::getCategoryComment </td>
-          <td>(</td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>categoryId</em></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Gets the comment of a category.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">categoryId</td><td>The category of the comment, or empty for the default category </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The comment if it exists, otherwise an empty string</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If category was an invalid id </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ac21e1ad14c6c20e8891a1dc89b683d97" name="ac21e1ad14c6c20e8891a1dc89b683d97"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac21e1ad14c6c20e8891a1dc89b683d97">&#9670;&#160;</a></span>getConfigFile()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const juce::File &amp; jaut::Config::getConfigFile </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gets the config file. </p><dl class="section return"><dt>Returns</dt><dd>The config filepath </dd></dl>
-
-</div>
-</div>
-<a id="ac30eb1a8c70130450fff65554b4e838c" name="ac30eb1a8c70130450fff65554b4e838c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac30eb1a8c70130450fff65554b4e838c">&#9670;&#160;</a></span>getConfigName()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::String jaut::Config::getConfigName </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>withoutExtension</em> = <code>false</code></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Gets the config file name.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">withoutExtension</td><td>If this is false, the returned name will keep the file extension if it has one </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The name of the config file </dd></dl>
-
-</div>
-</div>
-<a id="a0d87e463d431e5f79a49b4c299d102fc" name="a0d87e463d431e5f79a49b4c299d102fc"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d87e463d431e5f79a49b4c299d102fc">&#9670;&#160;</a></span>getOptions()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Config::Options</a> &amp; jaut::Config::getOptions </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gets the options for this config object. </p><dl class="section return"><dt>Returns</dt><dd>The options object </dd></dl>
-
-</div>
-</div>
-<a id="ae2929a1cda3a3806d5a3882133b35ef5" name="ae2929a1cda3a3806d5a3882133b35ef5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae2929a1cda3a3806d5a3882133b35ef5">&#9670;&#160;</a></span>getProperty() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Config::Property</a> * jaut::Config::getProperty </td>
-          <td>(</td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>categoryId</em> = <code><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a></code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Gets a property from the category map.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">id</td><td>The id of the property </td></tr>
-    <tr><td class="paramname">categoryId</td><td>The name of the category the property is in, or empty for the default category </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The property if it exists, otherwise nullptr</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If either property or category id were invalid </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ace3c53c73ca4e6c1c14ce28aece982a4" name="ace3c53c73ca4e6c1c14ce28aece982a4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace3c53c73ca4e6c1c14ce28aece982a4">&#9670;&#160;</a></span>getProperty() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Config::Property</a> * jaut::Config::getProperty </td>
-          <td>(</td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>id</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>categoryId</em> = <code><a class="el" href="../../d6/d32/classjaut_1_1Config.html#ab54320be06817ab34ed9ac84d7454d49">defaultCategory</a></code>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td> const</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Gets a property from the category map.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">id</td><td>The name of the property </td></tr>
-    <tr><td class="paramname">categoryId</td><td>The name of the category the property is in, or empty for the default category </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The property if it exists, otherwise nullptr</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If either property or category id were invalid </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a5b728d5e475daf7a7131b34b712050c9" name="a5b728d5e475daf7a7131b34b712050c9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5b728d5e475daf7a7131b34b712050c9">&#9670;&#160;</a></span>load()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool jaut::Config::load </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Tries to load data from the config file stored on your local file system. </p><dl class="section return"><dt>Returns</dt><dd>True if the config-file could be read, otherwise false (if file didn't exist)</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../df/dd8/classjaut_1_1ConfigParseException.html">jaut::ConfigParseException</a></td><td>If an exception occurred during parsing of the config file </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="aeadc785015f0dffb09d63c7a13fc610d" name="aeadc785015f0dffb09d63c7a13fc610d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeadc785015f0dffb09d63c7a13fc610d">&#9670;&#160;</a></span>resetAll()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void jaut::Config::resetAll </td>
-          <td>(</td>
-          <td class="paramtype">juce::NotificationType&#160;</td>
-          <td class="paramname"><em>notify</em> = <code>juce::sendNotification</code></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Resets all category's properties (and children) to their defaults. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">notify</td><td>Whether to send the change to all listeners </td></tr>
   </table>
   </dd>
 </dl>
@@ -777,7 +899,9 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Resets a whole category's properties (and children) to their defaults. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Resets a whole category's properties (and children) to their defaults. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">category</td><td>The category to reset, or empty for the default category </td></tr>
     <tr><td class="paramname">notify</td><td>Whether to send the change to all listeners </td></tr>
@@ -787,67 +911,26 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3f01f2399508eee5609429ae047ffe89" name="a3f01f2399508eee5609429ae047ffe89"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3f01f2399508eee5609429ae047ffe89">&#9670;&#160;</a></span>save()</h2>
+<a id="aeadc785015f0dffb09d63c7a13fc610d" name="aeadc785015f0dffb09d63c7a13fc610d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeadc785015f0dffb09d63c7a13fc610d">&#9670;&#160;</a></span>resetAll()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">bool jaut::Config::save </td>
+          <td class="memname">void jaut::Config::resetAll </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td class="paramtype">juce::NotificationType&#160;</td>
+          <td class="paramname"><em>notify</em> = <code>juce::sendNotification</code></td><td>)</td>
+          <td></td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Tries to write data to the config file stored on your local file system. </p><dl class="section return"><dt>Returns</dt><dd>True if the config was successfully saved, false if the file didn't exist and automatic file creation was disabled</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d1/df2/classjaut_1_1ConfigIOException.html">jaut::ConfigIOException</a></td><td>If an exception occurred during creating the config file </td></tr>
-  </table>
-  </dd>
-</dl>
 
-</div>
-</div>
-<a id="a19e02b2ef4c140d8c8fce487dfb8db00" name="a19e02b2ef4c140d8c8fce487dfb8db00"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a19e02b2ef4c140d8c8fce487dfb8db00">&#9670;&#160;</a></span>setCategoryComment()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool jaut::Config::setCategoryComment </td>
-          <td>(</td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>categoryId</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>comment</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Sets the comment for a certain category.</p>
+<p>Resets all category's properties (and children) to their defaults. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">categoryId</td><td>The category for the comment, or empty if the default category should be used </td></tr>
-    <tr><td class="paramname">comment</td><td>The comment for the category </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>True if the category was found, otherwise false</dd></dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d5/db5/classjaut_1_1ConfigPropertyIdException.html">jaut::ConfigPropertyIdException</a></td><td>If category was an invalid id </td></tr>
+    <tr><td class="paramname">notify</td><td>Whether to send the change to all listeners </td></tr>
   </table>
   </dd>
 </dl>
@@ -874,7 +957,32 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
 <p>This is just an identifier for category-id parameters used to denote default categories. </p>
+
+</div>
+</div>
+<a id="a6d70dde1b25c4467c224c46d36fb3c69" name="a6d70dde1b25c4467c224c46d36fb3c69"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6d70dde1b25c4467c224c46d36fb3c69">&#9670;&#160;</a></span>ValueChanged</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt;<a class="el" href="../../d6/d32/classjaut_1_1Config.html#a4510124040ca319b455aa5eef00a5190">ValueChangedHandler</a>&gt; jaut::Config::ValueChanged</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Dispatched whenever the value of this property has changed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">par1</td><td>The config object which raised the event </td></tr>
+    <tr><td class="paramname">par2</td><td>The property which has changed </td></tr>
+    <tr><td class="paramname">par3</td><td>The old value before the update </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -885,11 +993,12 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt;<a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">PropertyAddedHandler</a>&gt; jaut::Config::PropertyAdded</td>
+          <td class="memname"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt;<a class="el" href="../../d6/d32/classjaut_1_1Config.html#aa0bb6cacf247b019a35a5a5b83c1085d">PropertyAddedHandler</a>&gt; jaut::Config::PropertyAdded</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Dispatched whenever a property was added.</p>
+
+<p>Dispatched whenever a property was added. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">par1</td><td>The config object which raised the event </td></tr>
@@ -908,11 +1017,13 @@ Static Public Attributes</h2></td></tr>
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt;<a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">SavedAutomaticallyHandler</a>&gt; jaut::Config::SavedAutomatically</td>
+          <td class="memname"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt;<a class="el" href="../../d6/d32/classjaut_1_1Config.html#a3c62d7d34b58fde517c47ae2c9184219">SavedAutomaticallyHandler</a>&gt; jaut::Config::SavedAutomatically</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Dispatched whenever the config was saved automatically. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Dispatched whenever the config was saved automatically. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">par</td><td>The config object </td></tr>
   </table>
@@ -921,39 +1032,15 @@ Static Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6d70dde1b25c4467c224c46d36fb3c69" name="a6d70dde1b25c4467c224c46d36fb3c69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6d70dde1b25c4467c224c46d36fb3c69">&#9670;&#160;</a></span>ValueChanged</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d0/dfc/classjaut_1_1Event.html">Event</a>&lt;<a class="el" href="../../d8/d5f/classjaut_1_1EventHandler.html">ValueChangedHandler</a>&gt; jaut::Config::ValueChanged</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Dispatched whenever the value of this property has changed.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">par1</td><td>The config object which raised the event </td></tr>
-    <tr><td class="paramname">par2</td><td>The property which has changed </td></tr>
-    <tr><td class="paramname">par3</td><td>The old value before the update </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/github/workspace/modules/jaut_provider/config/<a class="el" href="../../df/d89/jaut__Config_8h_source.html">jaut_Config.h</a></li>
-<li>/github/workspace/modules/jaut_provider/config/<a class="el" href="../../d7/d31/jaut__Config_8cpp_source.html">jaut_Config.cpp</a></li>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/github/workspace/modules/jaut_provider/config/<a class="el" href="../../df/d89/jaut__Config_8h.html">jaut_Config.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

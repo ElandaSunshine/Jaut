@@ -110,30 +110,34 @@ $(document).ready(function(){initNavTree('dc/dd2/structjaut_1_1IMessage.html','.
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d6/dc6/jaut__IMessage_8h_source.html">jaut_IMessage.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for jaut::IMessage:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../dc/dd2/structjaut_1_1IMessage.png" usemap="#jaut::IMessage_map" alt=""/>
-  <map id="jaut::IMessage_map" name="jaut::IMessage_map">
-<area href="../../d7/d9e/classjaut_1_1AudioProcessorRack_1_1MessageSwap.html" alt="jaut::AudioProcessorRack::MessageSwap" shape="rect" coords="0,56,245,80"/>
-<area href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html" alt="jaut::message::MessageCallback" shape="rect" coords="255,56,500,80"/>
-  </map>
-</div></div>
+<p>Implements a message policies that should be passed on to the policies.  
+ <a href="../../dc/dd2/structjaut_1_1IMessage.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_IMessage.h&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Inheritance diagram for jaut::IMessage:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/db1/structjaut_1_1IMessage__inherit__graph.svg" width="222" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:aab691febb07cfe3dbd88192213da4309"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html#aab691febb07cfe3dbd88192213da4309">~IMessage</a> ()=default</td></tr>
+<tr class="separator:aab691febb07cfe3dbd88192213da4309"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ad69817bc02c01c308bf1be573700da"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html#a2ad69817bc02c01c308bf1be573700da">handleMessage</a> (<a class="el" href="../../d7/d49/structjaut_1_1IMessageHandler.html">IMessageHandler</a> *context, MessageDirection messageDirection)=0</td></tr>
+<tr class="memdesc:a2ad69817bc02c01c308bf1be573700da"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the message when it arrived on the other side of the policies.  <br /></td></tr>
 <tr class="separator:a2ad69817bc02c01c308bf1be573700da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39d98437c06b93c5e3393b1844bbec6f"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html#a39d98437c06b93c5e3393b1844bbec6f">getDeferId</a> ()</td></tr>
+<tr class="memdesc:a39d98437c06b93c5e3393b1844bbec6f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a way to instruct the target thread to create a message without actually allocating one.  <br /></td></tr>
 <tr class="separator:a39d98437c06b93c5e3393b1844bbec6f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implements a message policies that should be passed on to the policies. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a39d98437c06b93c5e3393b1844bbec6f" name="a39d98437c06b93c5e3393b1844bbec6f"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a39d98437c06b93c5e3393b1844bbec6f">&#9670;&#160;</a></span>getDeferId()</h2>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aab691febb07cfe3dbd88192213da4309" name="aab691febb07cfe3dbd88192213da4309"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab691febb07cfe3dbd88192213da4309">&#9670;&#160;</a></span>~IMessage()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -142,7 +146,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual int jaut::IMessage::getDeferId </td>
+          <td class="memname">virtual jaut::IMessage::~IMessage </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -150,18 +154,14 @@ Public Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Provides a way to instruct the target thread to create a message without actually allocating one.</p>
-<p>On the target thread, you can write the data into the passed on data object and the policies will send it back to the message thread which will then handle the message.</p>
-<p>Deferred messages sent from the target thread, will be treated like normal messages.</p>
-<p>This method can be override to provide a numerical id for a deferred message. If this is above or equal 0, it will be treated as a deferred message, everything below is a normal message.</p>
-<dl class="section return"><dt>Returns</dt><dd>The id of the deferred message, or -1 for normal messages </dd></dl>
 
 </div>
 </div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="a2ad69817bc02c01c308bf1be573700da" name="a2ad69817bc02c01c308bf1be573700da"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2ad69817bc02c01c308bf1be573700da">&#9670;&#160;</a></span>handleMessage()</h2>
 
@@ -195,7 +195,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Processes the message when it arrived on the other side of the policies.</p>
+
+<p>Processes the message when it arrived on the other side of the policies. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">context</td><td>The context, or the policies which passed the message around </td></tr>
@@ -204,19 +205,52 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#a68660483d6f7da6d00b422781adba683">jaut::message::MessageCallback</a>, and <a class="el" href="../../d7/d9e/classjaut_1_1AudioProcessorRack_1_1MessageSwap.html#a5b92d9d9beeaf7b97841ef6d088cf0be">jaut::AudioProcessorRack::MessageSwap</a>.</p>
+<p>Implemented in <a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#a68660483d6f7da6d00b422781adba683">jaut::message::MessageCallback</a>.</p>
+
+<p class="reference">Referenced by <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9">jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;::handleMessage()</a>.</p>
+
+</div>
+</div>
+<a id="a39d98437c06b93c5e3393b1844bbec6f" name="a39d98437c06b93c5e3393b1844bbec6f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a39d98437c06b93c5e3393b1844bbec6f">&#9670;&#160;</a></span>getDeferId()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int jaut::IMessage::getDeferId </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Provides a way to instruct the target thread to create a message without actually allocating one. </p>
+<p>On the target thread, you can write the data into the passed on data object and the policies will send it back to the message thread which will then handle the message.</p>
+<p>Deferred messages sent from the target thread, will be treated like normal messages.</p>
+<p>This method can be override to provide a numerical id for a deferred message. If this is above or equal 0, it will be treated as a deferred message, everything below is a normal message.</p>
+<dl class="section return"><dt>Returns</dt><dd>The id of the deferred message, or -1 for normal messages </dd></dl>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_message/thread/message/<a class="el" href="../../d6/dc6/jaut__IMessage_8h_source.html">jaut_IMessage.h</a></li>
+<li>/github/workspace/modules/jaut_message/thread/message/<a class="el" href="../../d6/dc6/jaut__IMessage_8h.html">jaut_IMessage.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html">IMessage</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html">IMessage</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

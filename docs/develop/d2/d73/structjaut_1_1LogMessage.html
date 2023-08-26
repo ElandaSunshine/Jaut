@@ -111,52 +111,49 @@ $(document).ready(function(){initNavTree('d2/d73/structjaut_1_1LogMessage.html',
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../de/d37/jaut__LogMessage_8h_source.html">jaut_LogMessage.h</a>&gt;</code></p>
+<p>The message container a single log-entry will be composed off.  
+ <a href="../../d2/d73/structjaut_1_1LogMessage.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_LogMessage.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/da1/structjaut_1_1LogMessage_1_1ExceptionSpec.html">ExceptionSpec</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/da5/structjaut_1_1LogMessage_1_1Field.html">Field</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A tag denoting some sort of information for the entry.  <a href="../../dc/da5/structjaut_1_1LogMessage_1_1Field.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:afe9b5a3c1b4d4166f7b80fd320da66d8"><td class="memItemLeft" align="right" valign="top">std::vector&lt; <a class="el" href="../../dc/da5/structjaut_1_1LogMessage_1_1Field.html">Field</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html#afe9b5a3c1b4d4166f7b80fd320da66d8">fields</a></td></tr>
+<tr class="memdesc:afe9b5a3c1b4d4166f7b80fd320da66d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The list of additional fields.  <br /></td></tr>
 <tr class="separator:afe9b5a3c1b4d4166f7b80fd320da66d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a829290ccc65e397276ad7a45a0f9cac0"><td class="memItemLeft" align="right" valign="top">std::optional&lt; <a class="el" href="../../d7/da1/structjaut_1_1LogMessage_1_1ExceptionSpec.html">ExceptionSpec</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html#a829290ccc65e397276ad7a45a0f9cac0">exception</a></td></tr>
+<tr class="memdesc:a829290ccc65e397276ad7a45a0f9cac0"><td class="mdescLeft">&#160;</td><td class="mdescRight">The exception if one was thrown.  <br /></td></tr>
 <tr class="separator:a829290ccc65e397276ad7a45a0f9cac0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21c2d380bae75f14fbbec9b42e4c72d8"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html#a21c2d380bae75f14fbbec9b42e4c72d8">message</a></td></tr>
+<tr class="memdesc:a21c2d380bae75f14fbbec9b42e4c72d8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The actual log message.  <br /></td></tr>
 <tr class="separator:a21c2d380bae75f14fbbec9b42e4c72d8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1cac98cb675fb2c81142546137c953c7"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html#a1cac98cb675fb2c81142546137c953c7">name</a></td></tr>
+<tr class="memdesc:a1cac98cb675fb2c81142546137c953c7"><td class="mdescLeft">&#160;</td><td class="mdescRight">The logger name.  <br /></td></tr>
 <tr class="separator:a1cac98cb675fb2c81142546137c953c7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab41815051876eed769136df1df046678"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html#ab41815051876eed769136df1df046678">threadName</a></td></tr>
+<tr class="memdesc:ab41815051876eed769136df1df046678"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the thread or empty if no name was set.  <br /></td></tr>
 <tr class="separator:ab41815051876eed769136df1df046678"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa122101122c7258cbc90fadedd7f30e4"><td class="memItemLeft" align="right" valign="top">std::thread::id&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html#aa122101122c7258cbc90fadedd7f30e4">threadId</a></td></tr>
+<tr class="memdesc:aa122101122c7258cbc90fadedd7f30e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The id of the thread.  <br /></td></tr>
 <tr class="separator:aa122101122c7258cbc90fadedd7f30e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aee6a72fcaccc15c4978c1774b10e4cc9"><td class="memItemLeft" align="right" valign="top">juce::Time&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html#aee6a72fcaccc15c4978c1774b10e4cc9">timestamp</a></td></tr>
+<tr class="memdesc:aee6a72fcaccc15c4978c1774b10e4cc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">The timestamp of the message of when it has been posted.  <br /></td></tr>
 <tr class="separator:aee6a72fcaccc15c4978c1774b10e4cc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae37780a56494d79a166cdb68becb5280"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">LogLevel::Value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html#ae37780a56494d79a166cdb68becb5280">level</a></td></tr>
+<tr class="memdesc:ae37780a56494d79a166cdb68becb5280"><td class="mdescLeft">&#160;</td><td class="mdescRight">The priority of the message.  <br /></td></tr>
 <tr class="separator:ae37780a56494d79a166cdb68becb5280"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>The message container a single log-entry will be composed off. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a829290ccc65e397276ad7a45a0f9cac0" name="a829290ccc65e397276ad7a45a0f9cac0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a829290ccc65e397276ad7a45a0f9cac0">&#9670;&#160;</a></span>exception</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::optional&lt;<a class="el" href="../../d7/da1/structjaut_1_1LogMessage_1_1ExceptionSpec.html">ExceptionSpec</a>&gt; jaut::LogMessage::exception</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The exception if one was thrown. </p>
-
-</div>
-</div>
 <a id="afe9b5a3c1b4d4166f7b80fd320da66d8" name="afe9b5a3c1b4d4166f7b80fd320da66d8"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afe9b5a3c1b4d4166f7b80fd320da66d8">&#9670;&#160;</a></span>fields</h2>
 
@@ -168,22 +165,28 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The list of additional fields. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../df/db6/classjaut_1_1AbstractLogger_1_1LogBuilder.html#a8aa1d744167cd5086355eaa5930456b7">jaut::AbstractLogger::LogBuilder::operator&lt;&lt;()</a>, and <a class="el" href="../../d3/d99/structjaut_1_1Stringable_3_01LogMessage_01_4.html#a1bc3f493c17ffbd78d5314c2af43ac43">jaut::Stringable&lt; LogMessage &gt;::toString()</a>.</p>
 
 </div>
 </div>
-<a id="ae37780a56494d79a166cdb68becb5280" name="ae37780a56494d79a166cdb68becb5280"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae37780a56494d79a166cdb68becb5280">&#9670;&#160;</a></span>level</h2>
+<a id="a829290ccc65e397276ad7a45a0f9cac0" name="a829290ccc65e397276ad7a45a0f9cac0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a829290ccc65e397276ad7a45a0f9cac0">&#9670;&#160;</a></span>exception</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">LogLevel::Value</a> jaut::LogMessage::level</td>
+          <td class="memname">std::optional&lt;<a class="el" href="../../d7/da1/structjaut_1_1LogMessage_1_1ExceptionSpec.html">ExceptionSpec</a>&gt; jaut::LogMessage::exception</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The priority of the message. </p>
+
+<p>The exception if one was thrown. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../df/db6/classjaut_1_1AbstractLogger_1_1LogBuilder.html#a8aa1d744167cd5086355eaa5930456b7">jaut::AbstractLogger::LogBuilder::operator&lt;&lt;()</a>, and <a class="el" href="../../d3/d99/structjaut_1_1Stringable_3_01LogMessage_01_4.html#a1bc3f493c17ffbd78d5314c2af43ac43">jaut::Stringable&lt; LogMessage &gt;::toString()</a>.</p>
 
 </div>
 </div>
@@ -198,7 +201,10 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The actual log message. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../df/db6/classjaut_1_1AbstractLogger_1_1LogBuilder.html#a8aa1d744167cd5086355eaa5930456b7">jaut::AbstractLogger::LogBuilder::operator&lt;&lt;()</a>, <a class="el" href="../../dc/d84/classjaut_1_1LogSinkOstream.html#accdad1f4885bddf8d1b8681305f9ae6f">jaut::LogSinkOstream&lt; CriticalSection &gt;::print()</a>, and <a class="el" href="../../d3/d99/structjaut_1_1Stringable_3_01LogMessage_01_4.html#a1bc3f493c17ffbd78d5314c2af43ac43">jaut::Stringable&lt; LogMessage &gt;::toString()</a>.</p>
 
 </div>
 </div>
@@ -213,22 +219,10 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The logger name. </p>
 
-</div>
-</div>
-<a id="aa122101122c7258cbc90fadedd7f30e4" name="aa122101122c7258cbc90fadedd7f30e4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa122101122c7258cbc90fadedd7f30e4">&#9670;&#160;</a></span>threadId</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::thread::id jaut::LogMessage::threadId</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The id of the thread. </p>
+<p class="reference">Referenced by <a class="el" href="../../d3/d99/structjaut_1_1Stringable_3_01LogMessage_01_4.html#a1bc3f493c17ffbd78d5314c2af43ac43">jaut::Stringable&lt; LogMessage &gt;::toString()</a>.</p>
 
 </div>
 </div>
@@ -243,7 +237,28 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The name of the thread or empty if no name was set. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../d3/d99/structjaut_1_1Stringable_3_01LogMessage_01_4.html#a1bc3f493c17ffbd78d5314c2af43ac43">jaut::Stringable&lt; LogMessage &gt;::toString()</a>.</p>
+
+</div>
+</div>
+<a id="aa122101122c7258cbc90fadedd7f30e4" name="aa122101122c7258cbc90fadedd7f30e4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa122101122c7258cbc90fadedd7f30e4">&#9670;&#160;</a></span>threadId</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">std::thread::id jaut::LogMessage::threadId</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The id of the thread. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../d3/d99/structjaut_1_1Stringable_3_01LogMessage_01_4.html#a1bc3f493c17ffbd78d5314c2af43ac43">jaut::Stringable&lt; LogMessage &gt;::toString()</a>.</p>
 
 </div>
 </div>
@@ -258,19 +273,40 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The timestamp of the message of when it has been posted. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../d3/d99/structjaut_1_1Stringable_3_01LogMessage_01_4.html#a1bc3f493c17ffbd78d5314c2af43ac43">jaut::Stringable&lt; LogMessage &gt;::toString()</a>.</p>
+
+</div>
+</div>
+<a id="ae37780a56494d79a166cdb68becb5280" name="ae37780a56494d79a166cdb68becb5280"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae37780a56494d79a166cdb68becb5280">&#9670;&#160;</a></span>level</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d8/dc1/structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836">LogLevel::Value</a> jaut::LogMessage::level</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The priority of the message. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../d0/d77/classjaut_1_1BasicLogger.html#a3e63f22561291fc2e031560b74221203">jaut::BasicLogger&lt; Worker &gt;::log()</a>, <a class="el" href="../../df/db6/classjaut_1_1AbstractLogger_1_1LogBuilder.html#a8aa1d744167cd5086355eaa5930456b7">jaut::AbstractLogger::LogBuilder::operator&lt;&lt;()</a>, <a class="el" href="../../d3/d99/structjaut_1_1Stringable_3_01LogMessage_01_4.html#a1bc3f493c17ffbd78d5314c2af43ac43">jaut::Stringable&lt; LogMessage &gt;::toString()</a>, <a class="el" href="../../d5/d59/classjaut_1_1LogWorkerAsync.html#abb1ec1da7f5c7d4ae7188f58bd36d42a">jaut::LogWorkerAsync&lt; BufferSize, CriticalSection &gt;::tryFlush()</a>, and <a class="el" href="../../db/d7a/classjaut_1_1LogWorkerSimple.html#ae8dc038bb8df8af12947c86ecd2bf5e1">jaut::LogWorkerSimple&lt; BufferSize, CriticalSection &gt;::tryFlush()</a>.</p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../de/d37/jaut__LogMessage_8h_source.html">jaut_LogMessage.h</a></li>
+<li>/github/workspace/modules/jaut_logger/<a class="el" href="../../de/d37/jaut__LogMessage_8h.html">jaut_LogMessage.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

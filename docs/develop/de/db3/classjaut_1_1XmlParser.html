@@ -111,16 +111,17 @@ $(document).ready(function(){initNavTree('de/db3/classjaut_1_1XmlParser.html','.
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d5/d69/jaut__XmlParser_8h_source.html">jaut_XmlParser.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for jaut::XmlParser:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../de/db3/classjaut_1_1XmlParser.png" usemap="#jaut::XmlParser_map" alt=""/>
-  <map id="jaut::XmlParser_map" name="jaut::XmlParser_map">
-<area href="../../d3/d7d/structjaut_1_1IConfigParser.html" alt="jaut::IConfigParser" shape="rect" coords="0,0,116,24"/>
-  </map>
-</div></div>
+<p>The <a class="el" href="../../de/db3/classjaut_1_1XmlParser.html" title="The XmlParser is an in-built parser for the Config class used for parsing Xml style config files.">XmlParser</a> is an in-built parser for the <a class="el" href="../../d6/d32/classjaut_1_1Config.html" title="The Config class provides a toolset for reading/writing from/to config files on the local file system...">Config</a> class used for parsing Xml style config files.  
+ <a href="../../de/db3/classjaut_1_1XmlParser.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_XmlParser.h&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Inheritance diagram for jaut::XmlParser:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d3/d8f/classjaut_1_1XmlParser__inherit__graph.svg" width="138" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -129,21 +130,55 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a826dc00f96d8fd8dba9d10981f8a9b30"><td class="memItemLeft" align="right" valign="top"><a id="a826dc00f96d8fd8dba9d10981f8a9b30" name="a826dc00f96d8fd8dba9d10981f8a9b30"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>XmlParser</b> (<a class="el" href="../../da/d45/structjaut_1_1XmlParser_1_1Options.html">Options</a> options={}) noexcept</td></tr>
+<tr class="memitem:a826dc00f96d8fd8dba9d10981f8a9b30"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/db3/classjaut_1_1XmlParser.html#a826dc00f96d8fd8dba9d10981f8a9b30">XmlParser</a> (<a class="el" href="../../da/d45/structjaut_1_1XmlParser_1_1Options.html">Options</a> options={}) noexcept</td></tr>
 <tr class="separator:a826dc00f96d8fd8dba9d10981f8a9b30"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad67f243f50de4ddcfdeb35b3bf9ac7f5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/db3/classjaut_1_1XmlParser.html#ad67f243f50de4ddcfdeb35b3bf9ac7f5">parseConfig</a> (<a class="el" href="../../d4/dd2/structjaut_1_1IConfigParser_1_1ParseAttributes.html">ParseAttributes</a>&lt; <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a47ad2eb6deebd3231a3f507b2536bc13">Config::CategoryMap</a> &gt; attributes) override</td></tr>
+<tr class="memdesc:ad67f243f50de4ddcfdeb35b3bf9ac7f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the config from a config file.  <br /></td></tr>
 <tr class="separator:ad67f243f50de4ddcfdeb35b3bf9ac7f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a62e8b0be9a098986783ae34210011b2c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../de/db3/classjaut_1_1XmlParser.html#a62e8b0be9a098986783ae34210011b2c">writeConfig</a> (<a class="el" href="../../d4/dd2/structjaut_1_1IConfigParser_1_1ParseAttributes.html">ParseAttributes</a>&lt; const <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a47ad2eb6deebd3231a3f507b2536bc13">Config::CategoryMap</a> &gt; attributes) const override</td></tr>
+<tr class="memdesc:a62e8b0be9a098986783ae34210011b2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the config to a file.  <br /></td></tr>
 <tr class="separator:a62e8b0be9a098986783ae34210011b2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e9056903f4ce8e8bc84652fa8e3c60f"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d7d/structjaut_1_1IConfigParser.html#a3e9056903f4ce8e8bc84652fa8e3c60f">parseConfig</a> (<a class="el" href="../../d4/dd2/structjaut_1_1IConfigParser_1_1ParseAttributes.html">ParseAttributes</a>&lt; <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a47ad2eb6deebd3231a3f507b2536bc13">Config::CategoryMap</a> &gt; attributes)=0</td></tr>
-<tr class="separator:a3e9056903f4ce8e8bc84652fa8e3c60f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a44fc1b2d4eb1e616b3dea6a484552353"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d7d/structjaut_1_1IConfigParser.html#a44fc1b2d4eb1e616b3dea6a484552353">writeConfig</a> (<a class="el" href="../../d4/dd2/structjaut_1_1IConfigParser_1_1ParseAttributes.html">ParseAttributes</a>&lt; const <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a47ad2eb6deebd3231a3f507b2536bc13">Config::CategoryMap</a> &gt; attributes) const =0</td></tr>
-<tr class="separator:a44fc1b2d4eb1e616b3dea6a484552353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="inherit_header pub_methods_structjaut_1_1IConfigParser"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structjaut_1_1IConfigParser')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d3/d7d/structjaut_1_1IConfigParser.html">jaut::IConfigParser</a></td></tr>
+<tr class="memitem:a4284b7f077d226087ba6459be3652c13 inherit pub_methods_structjaut_1_1IConfigParser"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d7d/structjaut_1_1IConfigParser.html#a4284b7f077d226087ba6459be3652c13">~IConfigParser</a> ()=default</td></tr>
+<tr class="separator:a4284b7f077d226087ba6459be3652c13 inherit pub_methods_structjaut_1_1IConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e9056903f4ce8e8bc84652fa8e3c60f inherit pub_methods_structjaut_1_1IConfigParser"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d7d/structjaut_1_1IConfigParser.html#a3e9056903f4ce8e8bc84652fa8e3c60f">parseConfig</a> (<a class="el" href="../../d4/dd2/structjaut_1_1IConfigParser_1_1ParseAttributes.html">ParseAttributes</a>&lt; <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a47ad2eb6deebd3231a3f507b2536bc13">Config::CategoryMap</a> &gt; attributes)=0</td></tr>
+<tr class="memdesc:a3e9056903f4ce8e8bc84652fa8e3c60f inherit pub_methods_structjaut_1_1IConfigParser"><td class="mdescLeft">&#160;</td><td class="mdescRight">Parse the config from a config file.  <br /></td></tr>
+<tr class="separator:a3e9056903f4ce8e8bc84652fa8e3c60f inherit pub_methods_structjaut_1_1IConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44fc1b2d4eb1e616b3dea6a484552353 inherit pub_methods_structjaut_1_1IConfigParser"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d3/d7d/structjaut_1_1IConfigParser.html#a44fc1b2d4eb1e616b3dea6a484552353">writeConfig</a> (<a class="el" href="../../d4/dd2/structjaut_1_1IConfigParser_1_1ParseAttributes.html">ParseAttributes</a>&lt; const <a class="el" href="../../d6/d32/classjaut_1_1Config.html#a47ad2eb6deebd3231a3f507b2536bc13">Config::CategoryMap</a> &gt; attributes) const =0</td></tr>
+<tr class="memdesc:a44fc1b2d4eb1e616b3dea6a484552353 inherit pub_methods_structjaut_1_1IConfigParser"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes the config to a file.  <br /></td></tr>
+<tr class="separator:a44fc1b2d4eb1e616b3dea6a484552353 inherit pub_methods_structjaut_1_1IConfigParser"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The <a class="el" href="../../de/db3/classjaut_1_1XmlParser.html">XmlParser</a> is an in-built parser for the <a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a> class used for parsing Xml style config files. You may use it for yourself too though. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
+<div class="textblock"><p>The <a class="el" href="../../de/db3/classjaut_1_1XmlParser.html" title="The XmlParser is an in-built parser for the Config class used for parsing Xml style config files.">XmlParser</a> is an in-built parser for the <a class="el" href="../../d6/d32/classjaut_1_1Config.html" title="The Config class provides a toolset for reading/writing from/to config files on the local file system...">Config</a> class used for parsing Xml style config files. </p>
+<p>You may use it for yourself too though. </p>
+</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a826dc00f96d8fd8dba9d10981f8a9b30" name="a826dc00f96d8fd8dba9d10981f8a9b30"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a826dc00f96d8fd8dba9d10981f8a9b30">&#9670;&#160;</a></span>XmlParser()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">jaut::XmlParser::XmlParser </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../da/d45/structjaut_1_1XmlParser_1_1Options.html">Options</a>&#160;</td>
+          <td class="paramname"><em>options</em> = <code>{}</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
 <a id="ad67f243f50de4ddcfdeb35b3bf9ac7f5" name="ad67f243f50de4ddcfdeb35b3bf9ac7f5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ad67f243f50de4ddcfdeb35b3bf9ac7f5">&#9670;&#160;</a></span>parseConfig()</h2>
 
@@ -167,7 +202,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Parse the config from a config file.</p>
+
+<p>Parse the config from a config file. </p>
 <p>It is ill-advised to add/remove properties from the map or any of the child properties, however, if you know what you are doing it should be fine. This is just a disclaimer that things might not work as expected anymore.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
@@ -210,7 +246,9 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Writes the config to a file. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Writes the config to a file. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">attributes</td><td>The parser attributes</td></tr>
   </table>
@@ -227,16 +265,15 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/github/workspace/modules/jaut_provider/config/parser/<a class="el" href="../../d5/d69/jaut__XmlParser_8h_source.html">jaut_XmlParser.h</a></li>
-<li>/github/workspace/modules/jaut_provider/config/parser/<a class="el" href="../../d6/d1a/jaut__XmlParser_8cpp_source.html">jaut_XmlParser.cpp</a></li>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/github/workspace/modules/jaut_provider/config/parser/<a class="el" href="../../d5/d69/jaut__XmlParser_8h.html">jaut_XmlParser.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../de/db3/classjaut_1_1XmlParser.html">XmlParser</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../de/db3/classjaut_1_1XmlParser.html">XmlParser</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

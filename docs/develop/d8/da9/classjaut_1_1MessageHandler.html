@@ -115,80 +115,92 @@ $(document).ready(function(){initNavTree('d8/da9/classjaut_1_1MessageHandler.htm
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../dd/d89/jaut__MessageHandler_8h_source.html">jaut_MessageHandler.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../d8/da9/classjaut_1_1MessageHandler.png" usemap="#jaut::MessageHandler_3C_20BufferSize_2C_20BackBufferSize_20_3E_map" alt=""/>
-  <map id="jaut::MessageHandler_3C_20BufferSize_2C_20BackBufferSize_20_3E_map" name="jaut::MessageHandler_3C_20BufferSize_2C_20BackBufferSize_20_3E_map">
-<area href="../../d7/d49/structjaut_1_1IMessageHandler.html" alt="jaut::IMessageHandler" shape="rect" coords="0,0,313,24"/>
-  </map>
-</div></div>
+<p>A simple implementation of an thread synchronisation manager.  
+ <a href="../../d8/da9/classjaut_1_1MessageHandler.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_MessageHandler.h&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Inheritance diagram for jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../dd/d62/classjaut_1_1MessageHandler__inherit__graph.svg" width="210" height="126"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html">Options</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declares a few options for the <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html" title="A simple implementation of an thread synchronisation manager.">MessageHandler</a> class.  <a href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aa4e2cb8146b3d61ed57800163d6185bc"><td class="memItemLeft" align="right" valign="top"><a id="aa4e2cb8146b3d61ed57800163d6185bc" name="aa4e2cb8146b3d61ed57800163d6185bc"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>BufferType</b> = <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html">AtomicRingBuffer</a>&lt; BufferSize &gt;</td></tr>
+<tr class="memitem:aa4e2cb8146b3d61ed57800163d6185bc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa4e2cb8146b3d61ed57800163d6185bc">BufferType</a> = <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html">AtomicRingBuffer</a>&lt; BufferSize &gt;</td></tr>
 <tr class="separator:aa4e2cb8146b3d61ed57800163d6185bc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5edb844060a4cd14656e3437e4387596"><td class="memItemLeft" align="right" valign="top"><a id="a5edb844060a4cd14656e3437e4387596" name="a5edb844060a4cd14656e3437e4387596"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>MessagePointer</b> = typename <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">BufferType::Message</a></td></tr>
+<tr class="memitem:a5edb844060a4cd14656e3437e4387596"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a5edb844060a4cd14656e3437e4387596">MessagePointer</a> = typename <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">BufferType::Message</a></td></tr>
 <tr class="separator:a5edb844060a4cd14656e3437e4387596"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2d775a79a190ca38dde722afe6fec7a3"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a2d775a79a190ca38dde722afe6fec7a3">DeferredMessageInitHandler</a> = std::function&lt; bool(<a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html">IMessage</a> *)&gt;</td></tr>
+<tr class="memdesc:a2d775a79a190ca38dde722afe6fec7a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The deferred message init policies callback type.  <br /></td></tr>
 <tr class="separator:a2d775a79a190ca38dde722afe6fec7a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a513b11f11323d9b655e72e082187e162"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a513b11f11323d9b655e72e082187e162">MessageHandler</a> (<a class="el" href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html">Options</a> options=<a class="el" href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html">Options</a>())</td></tr>
+<tr class="memdesc:a513b11f11323d9b655e72e082187e162"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructs a new <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html" title="A simple implementation of an thread synchronisation manager.">MessageHandler</a> instance.  <br /></td></tr>
 <tr class="separator:a513b11f11323d9b655e72e082187e162"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0d0cedacd692c0f0db2f9654471427ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a0d0cedacd692c0f0db2f9654471427ab">send</a> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; MessagePointer &gt; message)</td></tr>
+<tr class="memitem:a0d0cedacd692c0f0db2f9654471427ab"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a0d0cedacd692c0f0db2f9654471427ab">send</a> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a5edb844060a4cd14656e3437e4387596">MessagePointer</a> &gt; message)</td></tr>
+<tr class="memdesc:a0d0cedacd692c0f0db2f9654471427ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Schedules a new message for the target-thread and pushes it into the message buffer.  <br /></td></tr>
 <tr class="separator:a0d0cedacd692c0f0db2f9654471427ab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3a0b2db76333b58dfccbbd5d58280cd0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a3a0b2db76333b58dfccbbd5d58280cd0">send</a> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; message::MessageCallback::CallbackHandler &gt; callback)</td></tr>
+<tr class="memitem:a3a0b2db76333b58dfccbbd5d58280cd0"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a3a0b2db76333b58dfccbbd5d58280cd0">send</a> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#ad7c59e6127f5f3957be4e6f7f874f88f">message::MessageCallback::CallbackHandler</a> &gt; callback)</td></tr>
+<tr class="memdesc:a3a0b2db76333b58dfccbbd5d58280cd0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Schedules a new message for the target-thread and pushes it into the message buffer.  <br /></td></tr>
 <tr class="separator:a3a0b2db76333b58dfccbbd5d58280cd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8a5d04a9c94aa5375225aaf165cb3814"><td class="memTemplParams" colspan="2">template&lt;class MessageType , class... Args&gt; </td></tr>
 <tr class="memitem:a8a5d04a9c94aa5375225aaf165cb3814"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a8a5d04a9c94aa5375225aaf165cb3814">send</a> (Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:a8a5d04a9c94aa5375225aaf165cb3814"><td class="mdescLeft">&#160;</td><td class="mdescRight">Schedules a new message for the target-thread and pushes it into the message buffer.  <br /></td></tr>
 <tr class="separator:a8a5d04a9c94aa5375225aaf165cb3814"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78b9006aecd656493078efa59916e577"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a78b9006aecd656493078efa59916e577">sendAll</a> (std::vector&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; MessagePointer &gt; &gt; messages)</td></tr>
+<tr class="memitem:a78b9006aecd656493078efa59916e577"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a78b9006aecd656493078efa59916e577">sendAll</a> (std::vector&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a5edb844060a4cd14656e3437e4387596">MessagePointer</a> &gt; &gt; messages)</td></tr>
+<tr class="memdesc:a78b9006aecd656493078efa59916e577"><td class="mdescLeft">&#160;</td><td class="mdescRight">Schedules a list of messages to send to the target-thread and pushes them into the buffer.  <br /></td></tr>
 <tr class="separator:a78b9006aecd656493078efa59916e577"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1024001b93f330a98347578217a6b03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#ad1024001b93f330a98347578217a6b03">sendAll</a> (std::vector&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; message::MessageCallback::CallbackHandler &gt; &gt; messages)</td></tr>
+<tr class="memitem:ad1024001b93f330a98347578217a6b03"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#ad1024001b93f330a98347578217a6b03">sendAll</a> (std::vector&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#ad7c59e6127f5f3957be4e6f7f874f88f">message::MessageCallback::CallbackHandler</a> &gt; &gt; messages)</td></tr>
+<tr class="memdesc:ad1024001b93f330a98347578217a6b03"><td class="mdescLeft">&#160;</td><td class="mdescRight">Schedules a list of messages to send to the target-thread and pushes them into the buffer.  <br /></td></tr>
 <tr class="separator:ad1024001b93f330a98347578217a6b03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28429d2682409ee6d9654a8a4269e6b3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a28429d2682409ee6d9654a8a4269e6b3">hasPendingMessages</a> () const noexcept</td></tr>
+<tr class="memdesc:a28429d2682409ee6d9654a8a4269e6b3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether there are any pending messages in the message to target buffer.  <br /></td></tr>
 <tr class="separator:a28429d2682409ee6d9654a8a4269e6b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8218a752792905773f9aec7feb992899"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a8218a752792905773f9aec7feb992899">processNextMessage</a> ()</td></tr>
+<tr class="memdesc:a8218a752792905773f9aec7feb992899"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes the next message in the buffer to the target-thread and calls <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9" title="Handles the message.">handleMessage()</a>.  <br /></td></tr>
 <tr class="separator:a8218a752792905773f9aec7feb992899"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bb2a4c33487fc49d602c1de31007274"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a8bb2a4c33487fc49d602c1de31007274">processAllMessages</a> ()</td></tr>
+<tr class="memdesc:a8bb2a4c33487fc49d602c1de31007274"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes all messages in the buffer to the target-thread and calls <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9" title="Handles the message.">handleMessage()</a>.  <br /></td></tr>
 <tr class="separator:a8bb2a4c33487fc49d602c1de31007274"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3e88f05eeed924360435e29f43bebce3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a3e88f05eeed924360435e29f43bebce3">cancelPendingMessages</a> ()</td></tr>
+<tr class="memdesc:a3e88f05eeed924360435e29f43bebce3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Cancels all pending messages in the buffer to the target currently scheduled.  <br /></td></tr>
 <tr class="separator:a3e88f05eeed924360435e29f43bebce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a09fd6e581a7e204e9577f646e3251548"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a2d775a79a190ca38dde722afe6fec7a3">DeferredMessageInitHandler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a09fd6e581a7e204e9577f646e3251548">deferredMessageInitHandler</a> = [](<a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html">IMessage</a>*){ return true; }</td></tr>
+<tr class="memdesc:a09fd6e581a7e204e9577f646e3251548"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the callback for initialising deferred messages on the audio thread to be sent back to the message thread and handled there.  <br /></td></tr>
 <tr class="separator:a09fd6e581a7e204e9577f646e3251548"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:aa177d496b49b8aa2102d5fdeeaca2a87"><td class="memItemLeft" align="right" valign="top"><a id="aa177d496b49b8aa2102d5fdeeaca2a87" name="aa177d496b49b8aa2102d5fdeeaca2a87"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>bufferSize</b> = BufferSize</td></tr>
+<tr class="memitem:aa177d496b49b8aa2102d5fdeeaca2a87"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa177d496b49b8aa2102d5fdeeaca2a87">bufferSize</a> = BufferSize</td></tr>
 <tr class="separator:aa177d496b49b8aa2102d5fdeeaca2a87"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acbde068be705317ab8019ddd7e7f8ba0"><td class="memItemLeft" align="right" valign="top"><a id="acbde068be705317ab8019ddd7e7f8ba0" name="acbde068be705317ab8019ddd7e7f8ba0"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>backBufferSize</b> = BackBufferSize</td></tr>
+<tr class="memitem:acbde068be705317ab8019ddd7e7f8ba0"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#acbde068be705317ab8019ddd7e7f8ba0">backBufferSize</a> = BackBufferSize</td></tr>
 <tr class="separator:acbde068be705317ab8019ddd7e7f8ba0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pro-methods" name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
 <tr class="memitem:aa09b5725ca1004b355f03a84f826ccc9"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9">handleMessage</a> (<a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html">IMessage</a> *message, MessageDirection direction)</td></tr>
+<tr class="memdesc:aa09b5725ca1004b355f03a84f826ccc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handles the message.  <br /></td></tr>
 <tr class="separator:aa09b5725ca1004b355f03a84f826ccc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(BufferSize * 1.5)&gt;<br />
-class jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;</div><p>A simple implementation of an thread synchronisation manager. The <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">MessageHandler</a> class helps sending messages from the message-thread to any other (real-time) thread.</p>
-<p>To get started with this class, simply inherit from this class and, if needed, override <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9">handleMessage(IMessage*, MessageDirection)</a> if message receiving needs to be handled manually.</p>
+class jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;</div><p>A simple implementation of an thread synchronisation manager. </p>
+<p>The <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html" title="A simple implementation of an thread synchronisation manager.">MessageHandler</a> class helps sending messages from the message-thread to any other (real-time) thread.</p>
+<p>To get started with this class, simply inherit from this class and, if needed, override <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9" title="Handles the message.">handleMessage(IMessage*, MessageDirection)</a> if message receiving needs to be handled manually.</p>
 <p>The back-buffer serves in two ways, one is as garbage collector and another is sending messages to the message thread.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
@@ -198,6 +210,38 @@ class jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;</div><p>A simple 
   </dd>
 </dl>
 </div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="aa4e2cb8146b3d61ed57800163d6185bc" name="aa4e2cb8146b3d61ed57800163d6185bc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4e2cb8146b3d61ed57800163d6185bc">&#9670;&#160;</a></span>BufferType</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(BufferSize * 1.5)&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; BufferSize, BackBufferSize &gt;::BufferType =  <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html">AtomicRingBuffer</a>&lt;BufferSize&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5edb844060a4cd14656e3437e4387596" name="a5edb844060a4cd14656e3437e4387596"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5edb844060a4cd14656e3437e4387596">&#9670;&#160;</a></span>MessagePointer</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(BufferSize * 1.5)&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; BufferSize, BackBufferSize &gt;::MessagePointer =  typename <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">BufferType::Message</a></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a2d775a79a190ca38dde722afe6fec7a3" name="a2d775a79a190ca38dde722afe6fec7a3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a2d775a79a190ca38dde722afe6fec7a3">&#9670;&#160;</a></span>DeferredMessageInitHandler</h2>
 
@@ -211,6 +255,7 @@ template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(Buf
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The deferred message init policies callback type. </p>
 
 </div>
@@ -237,14 +282,15 @@ template&lt;int N, int M&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">explicit</span></span>  </td>
+<span class="mlabels"><span class="mlabel">explicit</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Constructs a new <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">MessageHandler</a> instance.</p>
+
+<p>Constructs a new <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html" title="A simple implementation of an thread synchronisation manager.">MessageHandler</a> instance. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">options</td><td>The options for this <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">MessageHandler</a> instance </td></tr>
+    <tr><td class="paramname">options</td><td>The options for this <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html" title="A simple implementation of an thread synchronisation manager.">MessageHandler</a> instance </td></tr>
   </table>
   </dd>
 </dl>
@@ -255,11 +301,222 @@ template&lt;int N, int M&gt; </div>
   </dd>
 </dl>
 
+<p class="reference">References <a class="el" href="../../dd/d05/structjaut_1_1MessageHandler_1_1Options.html#ad3659b7ecff01437f50302f1fd686570">jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;::Options::deferredAndGCInterval</a>.</p>
+
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a3e88f05eeed924360435e29f43bebce3" name="a3e88f05eeed924360435e29f43bebce3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3e88f05eeed924360435e29f43bebce3">&#9670;&#160;</a></span>cancelPendingMessages()</h2>
+<a id="a0d0cedacd692c0f0db2f9654471427ab" name="a0d0cedacd692c0f0db2f9654471427ab"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0d0cedacd692c0f0db2f9654471427ab">&#9670;&#160;</a></span>send() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int N, int M&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::send </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a5edb844060a4cd14656e3437e4387596">MessagePointer</a> &gt;&#160;</td>
+          <td class="paramname"><em>message</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Schedules a new message for the target-thread and pushes it into the message buffer. </p>
+<p>If the message buffer is full, it will return false. <br  />
+<br  />
+ This will start the garbage collector if it wasn't scheduled already. <br  />
+<br  />
+ Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">message</td><td>The message to send to the target-thread </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html" title="Gets thrown inside jaut::MessageHandler if pushing another message could not be done due to lack of s...">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a3c554d53c852daf8935b5a006944f4b9">jaut::NonNull&lt; T &gt;::get()</a>.</p>
+
+</div>
+</div>
+<a id="a3a0b2db76333b58dfccbbd5d58280cd0" name="a3a0b2db76333b58dfccbbd5d58280cd0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3a0b2db76333b58dfccbbd5d58280cd0">&#9670;&#160;</a></span>send() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int N, int M&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::send </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#ad7c59e6127f5f3957be4e6f7f874f88f">message::MessageCallback::CallbackHandler</a> &gt;&#160;</td>
+          <td class="paramname"><em>callback</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Schedules a new message for the target-thread and pushes it into the message buffer. </p>
+<p>If the message buffer is full, this won't do anything. <br  />
+<br  />
+ This will start the garbage collector if it wasn't scheduled already. <br  />
+<br  />
+ Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">message</td><td>The message to send to the target-thread </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html" title="Gets thrown inside jaut::MessageHandler if pushing another message could not be done due to lack of s...">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p class="reference">References <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a3c554d53c852daf8935b5a006944f4b9">jaut::NonNull&lt; T &gt;::get()</a>.</p>
+
+</div>
+</div>
+<a id="a8a5d04a9c94aa5375225aaf165cb3814" name="a8a5d04a9c94aa5375225aaf165cb3814"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a5d04a9c94aa5375225aaf165cb3814">&#9670;&#160;</a></span>send() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int N, int M&gt; </div>
+<div class="memtemplate">
+template&lt;class MessageType , class... Args&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::send </td>
+          <td>(</td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Schedules a new message for the target-thread and pushes it into the message buffer. </p>
+<p>If the message buffer is full, this won't do anything. <br  />
+<br  />
+ This will start the garbage collector if it wasn't scheduled already. <br  />
+<br  />
+ Other than send(std::shared_ptr&lt;IMessage&gt;), this constructs a new message from its constructor's parameters and pushes it into the buffer. You should always prefer this function over the other. <br  />
+<br  />
+ Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">MessageType</td><td>The message class </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">args</td><td>The arguments to pass to the message's constructor</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html" title="Gets thrown inside jaut::MessageHandler if pushing another message could not be done due to lack of s...">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a78b9006aecd656493078efa59916e577" name="a78b9006aecd656493078efa59916e577"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78b9006aecd656493078efa59916e577">&#9670;&#160;</a></span>sendAll() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int N, int M&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::sendAll </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a5edb844060a4cd14656e3437e4387596">MessagePointer</a> &gt; &gt;&#160;</td>
+          <td class="paramname"><em>messages</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Schedules a list of messages to send to the target-thread and pushes them into the buffer. </p>
+<p>All the messages that don't fit into the buffer anymore, will be ignored and destroyed. <br  />
+<br  />
+ This will start the garbage collector if it wasn't scheduled already. <br  />
+<br  />
+ Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">messages</td><td>The list of messages to schedule </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html" title="Gets thrown inside jaut::MessageHandler if pushing another message could not be done due to lack of s...">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ad1024001b93f330a98347578217a6b03" name="ad1024001b93f330a98347578217a6b03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad1024001b93f330a98347578217a6b03">&#9670;&#160;</a></span>sendAll() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int N, int M&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::sendAll </td>
+          <td>(</td>
+          <td class="paramtype">std::vector&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../dc/dcc/classjaut_1_1message_1_1MessageCallback.html#ad7c59e6127f5f3957be4e6f7f874f88f">message::MessageCallback::CallbackHandler</a> &gt; &gt;&#160;</td>
+          <td class="paramname"><em>messages</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Schedules a list of messages to send to the target-thread and pushes them into the buffer. </p>
+<p>All the messages that don't fit into the buffer anymore, will be ignored and destroyed. <br  />
+<br  />
+ This will start the garbage collector if it wasn't scheduled already. <br  />
+<br  />
+ Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">messages</td><td>The list of messages to schedule </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html" title="Gets thrown inside jaut::MessageHandler if pushing another message could not be done due to lack of s...">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a28429d2682409ee6d9654a8a4269e6b3" name="a28429d2682409ee6d9654a8a4269e6b3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28429d2682409ee6d9654a8a4269e6b3">&#9670;&#160;</a></span>hasPendingMessages()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -270,16 +527,75 @@ template&lt;int N, int M&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::cancelPendingMessages</td>
+          <td class="memname">bool <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::hasPendingMessages</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Cancels all pending messages in the buffer to the target currently scheduled. If there are no messages, this will do nothing. <br  />
+
+<p>Returns whether there are any pending messages in the message to target buffer. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if there are messages in the buffer, false if not </dd></dl>
+
+</div>
+</div>
+<a id="a8218a752792905773f9aec7feb992899" name="a8218a752792905773f9aec7feb992899"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8218a752792905773f9aec7feb992899">&#9670;&#160;</a></span>processNextMessage()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int N, int M&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::processNextMessage</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Processes the next message in the buffer to the target-thread and calls <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9" title="Handles the message.">handleMessage()</a>. </p>
+<p>After the message was handled, it will, if and only if the garbage collector is enabled, push it into the garbage collector and schedule it for disposal. </p>
+
+</div>
+</div>
+<a id="a8bb2a4c33487fc49d602c1de31007274" name="a8bb2a4c33487fc49d602c1de31007274"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8bb2a4c33487fc49d602c1de31007274">&#9670;&#160;</a></span>processAllMessages()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int N, int M&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::processAllMessages</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Processes all messages in the buffer to the target-thread and calls <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9" title="Handles the message.">handleMessage()</a>. </p>
+<p>After the message was handled, it will, if and only if the garbage collector is enabled, push it into the garbage collector and schedule it for disposal. </p>
+
+</div>
+</div>
+<a id="a3e88f05eeed924360435e29f43bebce3" name="a3e88f05eeed924360435e29f43bebce3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e88f05eeed924360435e29f43bebce3">&#9670;&#160;</a></span>cancelPendingMessages()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int N, int M&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::cancelPendingMessages</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Cancels all pending messages in the buffer to the target currently scheduled. </p>
+<p>If there are no messages, this will do nothing. <br  />
 <br  />
  Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on. </p>
 
@@ -316,11 +632,13 @@ template&lt;int N, int M&gt; </div>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
+<span class="mlabels"><span class="mlabel">protected</span><span class="mlabel">virtual</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Handles the message. This can be override, if needed for cases where messages need to be intercepted. However, only do that if you know what you are doing.</p>
+
+<p>Handles the message. </p>
+<p>This can be override, if needed for cases where messages need to be intercepted. However, only do that if you know what you are doing.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">message</td><td>The message to handle </td></tr>
@@ -329,319 +647,59 @@ template&lt;int N, int M&gt; </div>
   </dd>
 </dl>
 
-</div>
-</div>
-<a id="a28429d2682409ee6d9654a8a4269e6b3" name="a28429d2682409ee6d9654a8a4269e6b3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a28429d2682409ee6d9654a8a4269e6b3">&#9670;&#160;</a></span>hasPendingMessages()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int N, int M&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::hasPendingMessages</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Returns whether there are any pending messages in the message to target buffer. </p><dl class="section return"><dt>Returns</dt><dd>True if there are messages in the buffer, false if not </dd></dl>
-
-</div>
-</div>
-<a id="a8bb2a4c33487fc49d602c1de31007274" name="a8bb2a4c33487fc49d602c1de31007274"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8bb2a4c33487fc49d602c1de31007274">&#9670;&#160;</a></span>processAllMessages()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int N, int M&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::processAllMessages</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Processes all messages in the buffer to the target-thread and calls <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9">handleMessage()</a>. After the message was handled, it will, if and only if the garbage collector is enabled, push it into the garbage collector and schedule it for disposal. </p>
-
-</div>
-</div>
-<a id="a8218a752792905773f9aec7feb992899" name="a8218a752792905773f9aec7feb992899"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8218a752792905773f9aec7feb992899">&#9670;&#160;</a></span>processNextMessage()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int N, int M&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::processNextMessage</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Processes the next message in the buffer to the target-thread and calls <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#aa09b5725ca1004b355f03a84f826ccc9">handleMessage()</a>. After the message was handled, it will, if and only if the garbage collector is enabled, push it into the garbage collector and schedule it for disposal. </p>
-
-</div>
-</div>
-<a id="a8a5d04a9c94aa5375225aaf165cb3814" name="a8a5d04a9c94aa5375225aaf165cb3814"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a5d04a9c94aa5375225aaf165cb3814">&#9670;&#160;</a></span>send() <span class="overload">[1/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int N, int M&gt; </div>
-<div class="memtemplate">
-template&lt;class MessageType , class... Args&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::send </td>
-          <td>(</td>
-          <td class="paramtype">Args &amp;&amp;...&#160;</td>
-          <td class="paramname"><em>args</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Schedules a new message for the target-thread and pushes it into the message buffer. If the message buffer is full, this won't do anything. <br  />
-<br  />
- This will start the garbage collector if it wasn't scheduled already. <br  />
-<br  />
- Other than send(std::shared_ptr&lt;IMessage&gt;), this constructs a new message from its constructor's parameters and pushes it into the buffer. You should always prefer this function over the other. <br  />
-<br  />
- Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">MessageType</td><td>The message class </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">args</td><td>The arguments to pass to the message's constructor</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a3a0b2db76333b58dfccbbd5d58280cd0" name="a3a0b2db76333b58dfccbbd5d58280cd0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3a0b2db76333b58dfccbbd5d58280cd0">&#9670;&#160;</a></span>send() <span class="overload">[2/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int N, int M&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::send </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; message::MessageCallback::CallbackHandler &gt;&#160;</td>
-          <td class="paramname"><em>callback</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Schedules a new message for the target-thread and pushes it into the message buffer. If the message buffer is full, this won't do anything. <br  />
-<br  />
- This will start the garbage collector if it wasn't scheduled already. <br  />
-<br  />
- Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">message</td><td>The message to send to the target-thread </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a0d0cedacd692c0f0db2f9654471427ab" name="a0d0cedacd692c0f0db2f9654471427ab"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0d0cedacd692c0f0db2f9654471427ab">&#9670;&#160;</a></span>send() <span class="overload">[3/3]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int N, int M&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::send </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; MessagePointer &gt;&#160;</td>
-          <td class="paramname"><em>message</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Schedules a new message for the target-thread and pushes it into the message buffer. If the message buffer is full, it will return false. <br  />
-<br  />
- This will start the garbage collector if it wasn't scheduled already. <br  />
-<br  />
- Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">message</td><td>The message to send to the target-thread </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="ad1024001b93f330a98347578217a6b03" name="ad1024001b93f330a98347578217a6b03"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad1024001b93f330a98347578217a6b03">&#9670;&#160;</a></span>sendAll() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int N, int M&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::sendAll </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; message::MessageCallback::CallbackHandler &gt; &gt;&#160;</td>
-          <td class="paramname"><em>messages</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Schedules a list of messages to send to the target-thread and pushes them into the buffer. All the messages that don't fit into the buffer anymore, will be ignored and destroyed. <br  />
-<br  />
- This will start the garbage collector if it wasn't scheduled already. <br  />
-<br  />
- Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">messages</td><td>The list of messages to schedule </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a78b9006aecd656493078efa59916e577" name="a78b9006aecd656493078efa59916e577"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a78b9006aecd656493078efa59916e577">&#9670;&#160;</a></span>sendAll() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;int N, int M&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; N, M &gt;::sendAll </td>
-          <td>(</td>
-          <td class="paramtype">std::vector&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; MessagePointer &gt; &gt;&#160;</td>
-          <td class="paramname"><em>messages</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Schedules a list of messages to send to the target-thread and pushes them into the buffer. All the messages that don't fit into the buffer anymore, will be ignored and destroyed. <br  />
-<br  />
- This will start the garbage collector if it wasn't scheduled already. <br  />
-<br  />
- Note: You shouldn't call this on a real-time thread as it locks to get the thread it is on.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">messages</td><td>The list of messages to schedule </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="exception"><dt>Exceptions</dt><dd>
-  <table class="exception">
-    <tr><td class="paramname"><a class="el" href="../../d9/de3/classjaut_1_1QueueSpaceExceededException.html">jaut::QueueSpaceExceededException</a></td><td>If the queue was full </td></tr>
-  </table>
-  </dd>
-</dl>
+<p class="reference">References <a class="el" href="../../dc/dd2/structjaut_1_1IMessage.html#a2ad69817bc02c01c308bf1be573700da">jaut::IMessage::handleMessage()</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa177d496b49b8aa2102d5fdeeaca2a87" name="aa177d496b49b8aa2102d5fdeeaca2a87"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa177d496b49b8aa2102d5fdeeaca2a87">&#9670;&#160;</a></span>bufferSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(BufferSize * 1.5)&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; BufferSize, BackBufferSize &gt;::bufferSize = BufferSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acbde068be705317ab8019ddd7e7f8ba0" name="acbde068be705317ab8019ddd7e7f8ba0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acbde068be705317ab8019ddd7e7f8ba0">&#9670;&#160;</a></span>backBufferSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(BufferSize * 1.5)&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">jaut::MessageHandler</a>&lt; BufferSize, BackBufferSize &gt;::backBufferSize = BackBufferSize</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a09fd6e581a7e204e9577f646e3251548" name="a09fd6e581a7e204e9577f646e3251548"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a09fd6e581a7e204e9577f646e3251548">&#9670;&#160;</a></span>deferredMessageInitHandler</h2>
 
@@ -655,20 +713,21 @@ template&lt;int BufferSize = 16, int BackBufferSize = static_cast&lt;int&gt;(Buf
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Defines the callback for initialising deferred messages on the audio thread to be sent back to the message thread and handled there.</p>
+
+<p>Defines the callback for initialising deferred messages on the audio thread to be sent back to the message thread and handled there. </p>
 <p>If this callback returns true, then the message will be enqueued for the message thread, returning false however cancels the message and it will be returned to be garbage collected. </p>
 
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_message/thread/<a class="el" href="../../dd/d89/jaut__MessageHandler_8h_source.html">jaut_MessageHandler.h</a></li>
+<li>/github/workspace/modules/jaut_message/thread/<a class="el" href="../../dd/d89/jaut__MessageHandler_8h.html">jaut_MessageHandler.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">MessageHandler</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html">MessageHandler</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

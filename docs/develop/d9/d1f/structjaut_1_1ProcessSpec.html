@@ -110,32 +110,41 @@ $(document).ready(function(){initNavTree('d9/d1f/structjaut_1_1ProcessSpec.html'
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d2/d80/jaut__ProcessSpec_8h_source.html">jaut_ProcessSpec.h</a>&gt;</code></p>
+<p>A quick wrapper class which gets passed to <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#ae1d5ff9767c8d8907db22750a571cbf5" title="This is called before any playback is about to happen.">jaut::ISerialisableAudioProcessor::prepare(ProcessSpec)</a>.  
+ <a href="../../d9/d1f/structjaut_1_1ProcessSpec.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_ProcessSpec.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:afd63e24e05e9cb6ed0a7da11f99b6366"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d1f/structjaut_1_1ProcessSpec.html#afd63e24e05e9cb6ed0a7da11f99b6366">sampleRate</a></td></tr>
+<tr class="memdesc:afd63e24e05e9cb6ed0a7da11f99b6366"><td class="mdescLeft">&#160;</td><td class="mdescRight">The current sample rate.  <br /></td></tr>
 <tr class="separator:afd63e24e05e9cb6ed0a7da11f99b6366"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a18889dc77cdaf760caa23d70c9b3d208"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d1f/structjaut_1_1ProcessSpec.html#a18889dc77cdaf760caa23d70c9b3d208">maxSamplesPerBlock</a></td></tr>
+<tr class="memdesc:a18889dc77cdaf760caa23d70c9b3d208"><td class="mdescLeft">&#160;</td><td class="mdescRight">The amount of samples per audio block.  <br /></td></tr>
 <tr class="separator:a18889dc77cdaf760caa23d70c9b3d208"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a21036f9907a726f80e09a7da550e6677"><td class="memItemLeft" align="right" valign="top">juce::AudioProcessor::BusesLayout&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d9/d1f/structjaut_1_1ProcessSpec.html#a21036f9907a726f80e09a7da550e6677">buses</a></td></tr>
+<tr class="memdesc:a21036f9907a726f80e09a7da550e6677"><td class="mdescLeft">&#160;</td><td class="mdescRight">The bus-layout of the main processor.  <br /></td></tr>
 <tr class="separator:a21036f9907a726f80e09a7da550e6677"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A quick wrapper class which gets passed to <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#ae1d5ff9767c8d8907db22750a571cbf5">jaut::ISerialisableAudioProcessor::prepare(ProcessSpec)</a>. </p>
+<div class="textblock"><p>A quick wrapper class which gets passed to <a class="el" href="../../dc/da3/structjaut_1_1ISerialisableAudioProcessor.html#ae1d5ff9767c8d8907db22750a571cbf5" title="This is called before any playback is about to happen.">jaut::ISerialisableAudioProcessor::prepare(ProcessSpec)</a>. </p>
 </div><h2 class="groupheader">Member Data Documentation</h2>
-<a id="a21036f9907a726f80e09a7da550e6677" name="a21036f9907a726f80e09a7da550e6677"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a21036f9907a726f80e09a7da550e6677">&#9670;&#160;</a></span>buses</h2>
+<a id="afd63e24e05e9cb6ed0a7da11f99b6366" name="afd63e24e05e9cb6ed0a7da11f99b6366"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afd63e24e05e9cb6ed0a7da11f99b6366">&#9670;&#160;</a></span>sampleRate</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">juce::AudioProcessor::BusesLayout jaut::ProcessSpec::buses</td>
+          <td class="memname">double jaut::ProcessSpec::sampleRate</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The bus-layout of the main processor. </p>
+
+<p>The current sample rate. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../d3/d4a/classjaut_1_1SerialisableJuceProcessorProxy.html#a564797adb682ec2e40a8dae7d467fa13">jaut::SerialisableJuceProcessorProxy&lt; InternalAudioProcessor &gt;::prepare()</a>.</p>
 
 </div>
 </div>
@@ -150,34 +159,38 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The amount of samples per audio block. </p>
+
+<p class="reference">Referenced by <a class="el" href="../../d3/d4a/classjaut_1_1SerialisableJuceProcessorProxy.html#a564797adb682ec2e40a8dae7d467fa13">jaut::SerialisableJuceProcessorProxy&lt; InternalAudioProcessor &gt;::prepare()</a>.</p>
 
 </div>
 </div>
-<a id="afd63e24e05e9cb6ed0a7da11f99b6366" name="afd63e24e05e9cb6ed0a7da11f99b6366"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#afd63e24e05e9cb6ed0a7da11f99b6366">&#9670;&#160;</a></span>sampleRate</h2>
+<a id="a21036f9907a726f80e09a7da550e6677" name="a21036f9907a726f80e09a7da550e6677"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a21036f9907a726f80e09a7da550e6677">&#9670;&#160;</a></span>buses</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">double jaut::ProcessSpec::sampleRate</td>
+          <td class="memname">juce::AudioProcessor::BusesLayout jaut::ProcessSpec::buses</td>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>The current sample rate. </p>
+
+<p>The bus-layout of the main processor. </p>
 
 </div>
 </div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_audio/processor/<a class="el" href="../../d2/d80/jaut__ProcessSpec_8h_source.html">jaut_ProcessSpec.h</a></li>
+<li>/github/workspace/modules/jaut_audio/processor/<a class="el" href="../../d2/d80/jaut__ProcessSpec_8h.html">jaut_ProcessSpec.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d9/d1f/structjaut_1_1ProcessSpec.html">ProcessSpec</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d9/d1f/structjaut_1_1ProcessSpec.html">ProcessSpec</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

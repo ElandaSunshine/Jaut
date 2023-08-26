@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['backendjson_0',['backendJson',['../d6/d32/classjaut_1_1Config.html#a2552f05e2bf839c92cd7adf6cc7bf599',1,'jaut::Config']]],
-  ['backendxml_1',['backendXml',['../d6/d32/classjaut_1_1Config.html#aa5590e2964009265897bb37828535a5d',1,'jaut::Config']]],
+  ['backendjson_0',['backendJson',['../d6/d32/classjaut_1_1Config.html#abb55b489848256c5a77a4b2ab145667e',1,'jaut::Config']]],
+  ['backendxml_1',['backendXml',['../d6/d32/classjaut_1_1Config.html#a9bf0a77eb1dd0a3b9891203ff9697694',1,'jaut::Config']]],
   ['basiclogger_2',['BasicLogger',['../d0/d77/classjaut_1_1BasicLogger.html#a87c46f6913b76f1a83cc7df35afee11d',1,'jaut::BasicLogger::BasicLogger(juce::String name, Sinks ...sinks)'],['../d0/d77/classjaut_1_1BasicLogger.html#a0ee7b44baa57af00945fbabb3dddcb81',1,'jaut::BasicLogger::BasicLogger(juce::String name, Options options, Sinks ...sinks)']]],
-  ['bitand_3',['bitAnd',['../df/d28/structjaut_1_1SafeInteger.html#ae5ab33add0b9f9b276ed9165575201b4',1,'jaut::SafeInteger']]],
-  ['bitor_4',['bitOr',['../df/d28/structjaut_1_1SafeInteger.html#aaef29e2210fff62b47f7e14ddf807da4',1,'jaut::SafeInteger']]],
-  ['bitxor_5',['bitXor',['../df/d28/structjaut_1_1SafeInteger.html#a6607a3f7ec8c0ef2c39ee617ec450d8a',1,'jaut::SafeInteger']]],
-  ['borderpathfromthickness_6',['borderPathFromThickness',['../d9/d5e/structjaut_1_1DistanceUtil.html#a4657d02d3f7e04b9d91bd30fde1e1a2b',1,'jaut::DistanceUtil']]]
+  ['begin_3',['begin',['../d3/d6d/classjaut_1_1FormatLayout.html#aa1d216ee18a9fb012604ee9cf9dfdff3',1,'jaut::FormatLayout::begin()'],['../d3/d6d/classjaut_1_1FormatLayout.html#a3f3a99596bbcd18ad8909228adf96dbf',1,'jaut::FormatLayout::begin() const'],['../d9/daa/classjaut_1_1Config_1_1Property.html#ab75a59794a8269e25144b1cdd995f108',1,'jaut::Config::Property::begin() noexcept'],['../d9/daa/classjaut_1_1Config_1_1Property.html#ac67ce21ee6bf0d18dd0928ab5dff0b33',1,'jaut::Config::Property::begin() const noexcept']]],
+  ['bitand_4',['bitAnd',['../df/d28/structjaut_1_1SafeInteger.html#ae5ab33add0b9f9b276ed9165575201b4',1,'jaut::SafeInteger::bitAnd()'],['../de/de2/classjaut_1_1Numeric.html#a92bb0634a5357c94064b3549fcc34f51',1,'jaut::Numeric::bitAnd()']]],
+  ['bitor_5',['bitOr',['../df/d28/structjaut_1_1SafeInteger.html#aaef29e2210fff62b47f7e14ddf807da4',1,'jaut::SafeInteger::bitOr()'],['../de/de2/classjaut_1_1Numeric.html#aa0d97f00ad822bd7e04700552dec18fe',1,'jaut::Numeric::bitOr()']]],
+  ['bitxor_6',['bitXor',['../df/d28/structjaut_1_1SafeInteger.html#a6607a3f7ec8c0ef2c39ee617ec450d8a',1,'jaut::SafeInteger::bitXor()'],['../de/de2/classjaut_1_1Numeric.html#ae12748ba8785e8722671090d49cb74ac',1,'jaut::Numeric::bitXor()']]],
+  ['borderpathfromthickness_7',['borderPathFromThickness',['../d9/d5e/structjaut_1_1DistanceUtil.html#a4657d02d3f7e04b9d91bd30fde1e1a2b',1,'jaut::DistanceUtil::borderPathFromThickness(const juce::Rectangle&lt; T &gt; &amp;area, Thickness&lt; T &gt; thickness)'],['../d9/d5e/structjaut_1_1DistanceUtil.html#a08cb8cf72de28ef4ef1eabf44b20bc8a',1,'jaut::DistanceUtil::borderPathFromThickness(const juce::Rectangle&lt; T &gt; &amp;area, Thickness&lt; T &gt; thickness)']]]
 ];

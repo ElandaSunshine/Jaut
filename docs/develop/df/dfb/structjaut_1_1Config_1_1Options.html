@@ -105,6 +105,7 @@ $(document).ready(function(){initNavTree('df/dfb/structjaut_1_1Config_1_1Options
 <div class="header">
   <div class="summary">
 <a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="../../d2/d8b/structjaut_1_1Config_1_1Options-members.html">List of all members</a>  </div>
@@ -112,37 +113,55 @@ $(document).ready(function(){initNavTree('df/dfb/structjaut_1_1Config_1_1Options
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../df/d89/jaut__Config_8h_source.html">jaut_Config.h</a>&gt;</code></p>
+<p>This struct provides basic options the config file uses and needs to operate as supposed to.  
+ <a href="../../df/dfb/structjaut_1_1Config_1_1Options.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_Config.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:aa5dcca97e7dc0542cb92fdc485baa45d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d">PolicyTarget</a> { <b>PropertyAdded</b>
-, <b>ValueChanged</b>
+<tr class="memitem:aa5dcca97e7dc0542cb92fdc485baa45d"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d">PolicyTarget</a> { <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45da7386297719e899c5b31e097d2ba00865">PropertyAdded</a>
+, <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45daa72ca94385e8f515adeac34b9e23d32c">ValueChanged</a>
  }</td></tr>
+<tr class="memdesc:aa5dcca97e7dc0542cb92fdc485baa45d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Defines the cause of a probable auto-save.  <a href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d">More...</a><br /></td></tr>
 <tr class="separator:aa5dcca97e7dc0542cb92fdc485baa45d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a222bb18e6419ea02d93b2f03e68c7b18"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#a222bb18e6419ea02d93b2f03e68c7b18">AutoSavePolicy</a> = std::function&lt; bool(const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a> &amp;modifiedProperty, <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d">PolicyTarget</a> target)&gt;</td></tr>
+<tr class="memdesc:a222bb18e6419ea02d93b2f03e68c7b18"><td class="mdescLeft">&#160;</td><td class="mdescRight">The policy for when the config should be getting auto-saved.  <br /></td></tr>
 <tr class="separator:a222bb18e6419ea02d93b2f03e68c7b18"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:ae4e5a0e2940d5087ab9fd27e313679b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#ae4e5a0e2940d5087ab9fd27e313679b7">Options</a> ()</td></tr>
+<tr class="separator:ae4e5a0e2940d5087ab9fd27e313679b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a6ccc4588ffb26690b10ec3198bd3ab1b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#a222bb18e6419ea02d93b2f03e68c7b18">AutoSavePolicy</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#a6ccc4588ffb26690b10ec3198bd3ab1b">autoSavePolicy</a> = nullptr</td></tr>
+<tr class="memdesc:a6ccc4588ffb26690b10ec3198bd3ab1b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The custom policy that will determine when the config should be auto-saved.  <br /></td></tr>
 <tr class="separator:a6ccc4588ffb26690b10ec3198bd3ab1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c77c605c9a61ef585006ef7affca760"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#a0c77c605c9a61ef585006ef7affca760">configNotice</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:a0c77c605c9a61ef585006ef7affca760"><td class="mdescLeft">&#160;</td><td class="mdescRight">A brief summary or notice which should be, dependent on the parser, prepended in the config file.  <br /></td></tr>
 <tr class="separator:a0c77c605c9a61ef585006ef7affca760"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab5a8a886276f72ac10467eb3b75faaf2"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#ab5a8a886276f72ac10467eb3b75faaf2">defaultCategory</a> = &quot;general&quot;</td></tr>
+<tr class="memdesc:ab5a8a886276f72ac10467eb3b75faaf2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default category the config file defines, allowed are only alphanumeric characters and underscores.  <br /></td></tr>
 <tr class="separator:ab5a8a886276f72ac10467eb3b75faaf2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a92a15ebca586e6af96ae89ae380ccef2"><td class="memItemLeft" align="right" valign="top">juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#a92a15ebca586e6af96ae89ae380ccef2">fileName</a> = &quot;&quot;</td></tr>
+<tr class="memdesc:a92a15ebca586e6af96ae89ae380ccef2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The name of the config file.  <br /></td></tr>
 <tr class="separator:a92a15ebca586e6af96ae89ae380ccef2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa58005d1b641f62dd251d3ba75f9e721"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa58005d1b641f62dd251d3ba75f9e721">strictTyping</a> = true</td></tr>
+<tr class="memdesc:aa58005d1b641f62dd251d3ba75f9e721"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the config should act-up on incompatible value modifications.  <br /></td></tr>
 <tr class="separator:aa58005d1b641f62dd251d3ba75f9e721"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a426dcc6808d8a8d980fc2af88fa01cde"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#a426dcc6808d8a8d980fc2af88fa01cde">createFileIfNotExists</a> = true</td></tr>
+<tr class="memdesc:a426dcc6808d8a8d980fc2af88fa01cde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the config file should be automatically created if it doesn't exist.  <br /></td></tr>
 <tr class="separator:a426dcc6808d8a8d980fc2af88fa01cde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
 <tr class="memitem:a72508d3e19e9afeff6d7d433e3aeba47"><td class="memItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#a72508d3e19e9afeff6d7d433e3aeba47">policyOnValueChange</a></td></tr>
+<tr class="memdesc:a72508d3e19e9afeff6d7d433e3aeba47"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default auto-save policy, triggered on every change that has been recorded but not on additions.  <br /></td></tr>
 <tr class="separator:a72508d3e19e9afeff6d7d433e3aeba47"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3727a1735926010fe8894964ff37749"><td class="memItemLeft" align="right" valign="top">static constexpr auto&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#ab3727a1735926010fe8894964ff37749">policyOnAnyChange</a> = [](const <a class="el" href="../../d9/daa/classjaut_1_1Config_1_1Property.html">Property</a>&amp;, <a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d">PolicyTarget</a>) { return true; }</td></tr>
+<tr class="memdesc:ab3727a1735926010fe8894964ff37749"><td class="mdescLeft">&#160;</td><td class="mdescRight">An alternative auto-save policy, triggered on every change that has been recorded, even on additions.  <br /></td></tr>
 <tr class="separator:ab3727a1735926010fe8894964ff37749"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -159,6 +178,7 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The policy for when the config should be getting auto-saved. </p>
 
 </div>
@@ -183,84 +203,61 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
 <p>Defines the cause of a probable auto-save. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="aa5dcca97e7dc0542cb92fdc485baa45da7386297719e899c5b31e097d2ba00865" name="aa5dcca97e7dc0542cb92fdc485baa45da7386297719e899c5b31e097d2ba00865"></a>PropertyAdded&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="aa5dcca97e7dc0542cb92fdc485baa45daa72ca94385e8f515adeac34b9e23d32c" name="aa5dcca97e7dc0542cb92fdc485baa45daa72ca94385e8f515adeac34b9e23d32c"></a>ValueChanged&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="ae4e5a0e2940d5087ab9fd27e313679b7" name="ae4e5a0e2940d5087ab9fd27e313679b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4e5a0e2940d5087ab9fd27e313679b7">&#9670;&#160;</a></span>Options()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">jaut::Config::Options::Options </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a6ccc4588ffb26690b10ec3198bd3ab1b" name="a6ccc4588ffb26690b10ec3198bd3ab1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6ccc4588ffb26690b10ec3198bd3ab1b">&#9670;&#160;</a></span>autoSavePolicy</h2>
+<a id="a72508d3e19e9afeff6d7d433e3aeba47" name="a72508d3e19e9afeff6d7d433e3aeba47"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72508d3e19e9afeff6d7d433e3aeba47">&#9670;&#160;</a></span>policyOnValueChange</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#a222bb18e6419ea02d93b2f03e68c7b18">AutoSavePolicy</a> jaut::Config::Options::autoSavePolicy = nullptr</td>
+          <td class="memname">constexpr auto jaut::Config::Options::policyOnValueChange</td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
-<p>The custom policy that will determine when the config should be auto-saved. If this is nullptr, auto-save will be disabled. </p>
-
-</div>
-</div>
-<a id="a0c77c605c9a61ef585006ef7affca760" name="a0c77c605c9a61ef585006ef7affca760"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0c77c605c9a61ef585006ef7affca760">&#9670;&#160;</a></span>configNotice</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::String jaut::Config::Options::configNotice = &quot;&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A brief summary or notice which should be, dependent on the parser, prepended in the config file. </p>
-
-</div>
-</div>
-<a id="a426dcc6808d8a8d980fc2af88fa01cde" name="a426dcc6808d8a8d980fc2af88fa01cde"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a426dcc6808d8a8d980fc2af88fa01cde">&#9670;&#160;</a></span>createFileIfNotExists</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">bool jaut::Config::Options::createFileIfNotExists = true</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Whether the config file should be automatically created if it doesn't exist. </p>
-
-</div>
-</div>
-<a id="ab5a8a886276f72ac10467eb3b75faaf2" name="ab5a8a886276f72ac10467eb3b75faaf2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5a8a886276f72ac10467eb3b75faaf2">&#9670;&#160;</a></span>defaultCategory</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::String jaut::Config::Options::defaultCategory = &quot;general&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The default category the config file defines, allowed are only alphanumeric characters and underscores. This id, as all the others too, must be non-empty. </p>
-
-</div>
-</div>
-<a id="a92a15ebca586e6af96ae89ae380ccef2" name="a92a15ebca586e6af96ae89ae380ccef2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a92a15ebca586e6af96ae89ae380ccef2">&#9670;&#160;</a></span>fileName</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">juce::String jaut::Config::Options::fileName = &quot;&quot;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>The name of the config file. (including extension)</p>
-<p>If this name is empty, the config class will name the file "config" and will try to guess the extension from the parser. If the extension could not be guessed, it will just use "conf" as extension. </p>
+<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> Property&amp;, <a class="code hl_enumeration" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d">PolicyTarget</a> target)</div>
+<div class="line">            {</div>
+<div class="line">                <span class="keywordflow">return</span> (target == <a class="code hl_enumvalue" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45daa72ca94385e8f515adeac34b9e23d32c">PolicyTarget::ValueChanged</a>);</div>
+<div class="line">            }</div>
+<div class="ttc" id="astructjaut_1_1Config_1_1Options_html_aa5dcca97e7dc0542cb92fdc485baa45d"><div class="ttname"><a href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d">jaut::Config::Options::PolicyTarget</a></div><div class="ttdeci">PolicyTarget</div><div class="ttdoc">Defines the cause of a probable auto-save.</div><div class="ttdef"><b>Definition</b> jaut_Config.h:89</div></div>
+<div class="ttc" id="astructjaut_1_1Config_1_1Options_html_aa5dcca97e7dc0542cb92fdc485baa45daa72ca94385e8f515adeac34b9e23d32c"><div class="ttname"><a href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45daa72ca94385e8f515adeac34b9e23d32c">jaut::Config::Options::PolicyTarget::ValueChanged</a></div><div class="ttdeci">@ ValueChanged</div></div>
+</div><!-- fragment -->
+<p>The default auto-save policy, triggered on every change that has been recorded but not on additions. </p>
 
 </div>
 </div>
@@ -283,35 +280,76 @@ Static Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
 <p>An alternative auto-save policy, triggered on every change that has been recorded, even on additions. </p>
 
 </div>
 </div>
-<a id="a72508d3e19e9afeff6d7d433e3aeba47" name="a72508d3e19e9afeff6d7d433e3aeba47"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a72508d3e19e9afeff6d7d433e3aeba47">&#9670;&#160;</a></span>policyOnValueChange</h2>
+<a id="a6ccc4588ffb26690b10ec3198bd3ab1b" name="a6ccc4588ffb26690b10ec3198bd3ab1b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6ccc4588ffb26690b10ec3198bd3ab1b">&#9670;&#160;</a></span>autoSavePolicy</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr auto jaut::Config::Options::policyOnValueChange</td>
+          <td class="memname"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#a222bb18e6419ea02d93b2f03e68c7b18">AutoSavePolicy</a> jaut::Config::Options::autoSavePolicy = nullptr</td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
-<b>Initial value:</b><div class="fragment"><div class="line">= [](<span class="keyword">const</span> Property&amp;, <a class="code hl_enumeration" href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d">PolicyTarget</a> target)</div>
-<div class="line">            {</div>
-<div class="line">                <span class="keywordflow">return</span> (target == PolicyTarget::ValueChanged);</div>
-<div class="line">            }</div>
-<div class="ttc" id="astructjaut_1_1Config_1_1Options_html_aa5dcca97e7dc0542cb92fdc485baa45d"><div class="ttname"><a href="../../df/dfb/structjaut_1_1Config_1_1Options.html#aa5dcca97e7dc0542cb92fdc485baa45d">jaut::Config::Options::PolicyTarget</a></div><div class="ttdeci">PolicyTarget</div><div class="ttdef"><b>Definition</b> jaut_Config.h:89</div></div>
-</div><!-- fragment --><p>The default auto-save policy, triggered on every change that has been recorded but not on additions. </p>
+
+<p>The custom policy that will determine when the config should be auto-saved. </p>
+<p>If this is nullptr, auto-save will be disabled. </p>
+
+</div>
+</div>
+<a id="a0c77c605c9a61ef585006ef7affca760" name="a0c77c605c9a61ef585006ef7affca760"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0c77c605c9a61ef585006ef7affca760">&#9670;&#160;</a></span>configNotice</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String jaut::Config::Options::configNotice = &quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>A brief summary or notice which should be, dependent on the parser, prepended in the config file. </p>
+
+</div>
+</div>
+<a id="ab5a8a886276f72ac10467eb3b75faaf2" name="ab5a8a886276f72ac10467eb3b75faaf2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab5a8a886276f72ac10467eb3b75faaf2">&#9670;&#160;</a></span>defaultCategory</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String jaut::Config::Options::defaultCategory = &quot;general&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The default category the config file defines, allowed are only alphanumeric characters and underscores. </p>
+<p>This id, as all the others too, must be non-empty. </p>
+
+</div>
+</div>
+<a id="a92a15ebca586e6af96ae89ae380ccef2" name="a92a15ebca586e6af96ae89ae380ccef2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a92a15ebca586e6af96ae89ae380ccef2">&#9670;&#160;</a></span>fileName</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">juce::String jaut::Config::Options::fileName = &quot;&quot;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The name of the config file. </p>
+<p>(including extension)</p>
+<p>If this name is empty, the config class will name the file "config" and will try to guess the extension from the parser. If the extension could not be guessed, it will just use "conf" as extension. </p>
 
 </div>
 </div>
@@ -326,20 +364,37 @@ Static Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Whether the config should act-up on incompatible value modifications.</p>
+
+<p>Whether the config should act-up on incompatible value modifications. </p>
 <p>If a property's value has been set to a type it is not valid for, then properties will throw a <a class="el" href="../../d4/d7f/classjaut_1_1ConfigIncompatibleTypeException.html">jaut::ConfigIncompatibleTypeException</a>. </p>
 
 </div>
 </div>
+<a id="a426dcc6808d8a8d980fc2af88fa01cde" name="a426dcc6808d8a8d980fc2af88fa01cde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a426dcc6808d8a8d980fc2af88fa01cde">&#9670;&#160;</a></span>createFileIfNotExists</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool jaut::Config::Options::createFileIfNotExists = true</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Whether the config file should be automatically created if it doesn't exist. </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_provider/config/<a class="el" href="../../df/d89/jaut__Config_8h_source.html">jaut_Config.h</a></li>
+<li>/github/workspace/modules/jaut_provider/config/<a class="el" href="../../df/d89/jaut__Config_8h.html">jaut_Config.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a></li><li class="navelem"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d6/d32/classjaut_1_1Config.html">Config</a></li><li class="navelem"><a class="el" href="../../df/dfb/structjaut_1_1Config_1_1Options.html">Options</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

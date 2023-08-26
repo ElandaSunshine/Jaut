@@ -1,14 +1,7 @@
 var searchData=
 [
-  ['padding_0',['padding',['../d2/d04/structjaut_1_1ExtraComponent_1_1ContainerStyle.html#a38d63e4877f67e9a9e9012710cfb0998',1,'jaut::ExtraComponent::ContainerStyle']]],
-  ['pageviewmargin_1',['pageViewMargin',['../dc/dbd/structjaut_1_1MultiPagePanel_1_1Style.html#ade4a046e4fe9cd522bac2b2e78224754',1,'jaut::MultiPagePanel::Style']]],
-  ['parametercount_2',['parameterCount',['../dd/d47/structjaut_1_1Function_3_01Func_01_4.html#ab76225f0a45fbb41f0621efc57a94fcf',1,'jaut::Function&lt; Func &gt;']]],
-  ['patch_3',['patch',['../d9/d54/classjaut_1_1Version.html#aefbd9c9afdaaffebb37b88dc28cccf2a',1,'jaut::Version']]],
-  ['policies_4',['policies',['../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#a459373392346d017a4efe380d4a4114a',1,'jaut::FlushPolicy::Settings']]],
-  ['policyonanychange_5',['policyOnAnyChange',['../df/dfb/structjaut_1_1Config_1_1Options.html#ab3727a1735926010fe8894964ff37749',1,'jaut::Config::Options']]],
-  ['policyonvaluechange_6',['policyOnValueChange',['../df/dfb/structjaut_1_1Config_1_1Options.html#a72508d3e19e9afeff6d7d433e3aeba47',1,'jaut::Config::Options']]],
-  ['preferreplacingformatter_7',['preferReplacingFormatter',['../d8/df3/structjaut_1_1LogFormatJson_1_1Options.html#a7901a4f63e18e9a07e22f1d30f2b717d',1,'jaut::LogFormatJson::Options::preferReplacingFormatter'],['../d6/d8f/structjaut_1_1LogFormatXml_1_1Options.html#aaa4ad14bfa533e5dbc37698ce126eb68',1,'jaut::LogFormatXml::Options::preferReplacingFormatter']]],
-  ['prerelease_8',['preRelease',['../d9/d54/classjaut_1_1Version.html#a77a61d61e9dd0ec96a1cbf4b334a361a',1,'jaut::Version']]],
-  ['prettyprint_9',['prettyPrint',['../d8/df3/structjaut_1_1LogFormatJson_1_1Options.html#a4d44ef09ae3f398e340311dea92c2f06',1,'jaut::LogFormatJson::Options']]],
-  ['propertyadded_10',['PropertyAdded',['../d6/d32/classjaut_1_1Config.html#a2b69893a2bffbf57e4e409170e55d858',1,'jaut::Config::PropertyAdded'],['../d9/daa/classjaut_1_1Config_1_1Property.html#a32042cab300bc01d1baa4deccb82ddaf',1,'jaut::Config::Property::PropertyAdded']]]
+  ['name_0',['name',['../dc/da5/structjaut_1_1LogMessage_1_1Field.html#aade10e0575235ac0ef9fc1d8bd26d51e',1,'jaut::LogMessage::Field::name'],['../d7/da1/structjaut_1_1LogMessage_1_1ExceptionSpec.html#afbedcc34940741177921a8c2ff1cf328',1,'jaut::LogMessage::ExceptionSpec::name'],['../d2/d73/structjaut_1_1LogMessage.html#a1cac98cb675fb2c81142546137c953c7',1,'jaut::LogMessage::name']]],
+  ['names_1',['names',['../d8/dc1/structjaut_1_1LogLevel.html#a0bb2656a273ddc134ecfb78a3c4c30a6',1,'jaut::LogLevel']]],
+  ['numericvalue_2',['numericValue',['../de/de2/classjaut_1_1Numeric.html#ab25c9ae057b11d5cc4e859d507b121a0',1,'jaut::Numeric']]],
+  ['numprocessors_3',['numProcessors',['../df/de3/classjaut_1_1AudioProcessorSet.html#a4cc71b3486c9c502e930215f3baec1f9',1,'jaut::AudioProcessorSet']]]
 ];

@@ -112,16 +112,17 @@ $(document).ready(function(){initNavTree('d7/d04/classjaut_1_1LogSinkFile.html',
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d8/d8e/jaut__LogSinkFile_8h_source.html">jaut_LogSinkFile.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for jaut::LogSinkFile:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../d7/d04/classjaut_1_1LogSinkFile.png" usemap="#jaut::LogSinkFile_map" alt=""/>
-  <map id="jaut::LogSinkFile_map" name="jaut::LogSinkFile_map">
-<area href="../../da/dfa/structjaut_1_1ILogSink.html" alt="jaut::ILogSink" shape="rect" coords="0,0,104,24"/>
-  </map>
-</div></div>
+<p>A Logger output sink for log files.  
+ <a href="../../d7/d04/classjaut_1_1LogSinkFile.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_LogSinkFile.h&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Inheritance diagram for jaut::LogSinkFile:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d2/dfc/classjaut_1_1LogSinkFile__inherit__graph.svg" width="128" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
@@ -131,57 +132,75 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a143b15e39d57473e41ae76d0967d8a9b"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#a143b15e39d57473e41ae76d0967d8a9b">LogSinkFile</a> (juce::File logFile)</td></tr>
+<tr class="memdesc:a143b15e39d57473e41ae76d0967d8a9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new file logging sink.  <br /></td></tr>
 <tr class="separator:a143b15e39d57473e41ae76d0967d8a9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7a034346e73fdc8abd6a662b158bdde4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#a7a034346e73fdc8abd6a662b158bdde4">LogSinkFile</a> (juce::File logFile, <a class="el" href="../../d5/d46/structjaut_1_1LogSinkFile_1_1Options.html">Options</a> options)</td></tr>
+<tr class="memdesc:a7a034346e73fdc8abd6a662b158bdde4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new file logging sink.  <br /></td></tr>
 <tr class="separator:a7a034346e73fdc8abd6a662b158bdde4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd46de473acf900cff28fcff66cfcd56"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#abd46de473acf900cff28fcff66cfcd56">~LogSinkFile</a> () override</td></tr>
+<tr class="separator:abd46de473acf900cff28fcff66cfcd56"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3588180bd7973436d42e60bdba3bdc39"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#a3588180bd7973436d42e60bdba3bdc39">print</a> (const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;logMessage) override</td></tr>
+<tr class="memdesc:a3588180bd7973436d42e60bdba3bdc39"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the message.  <br /></td></tr>
 <tr class="separator:a3588180bd7973436d42e60bdba3bdc39"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:afd9b36cbe2b1022779e0fe7b99f71f69"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#afd9b36cbe2b1022779e0fe7b99f71f69">flush</a> () override</td></tr>
+<tr class="memdesc:afd9b36cbe2b1022779e0fe7b99f71f69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes the stream if the sink manages a buffer.  <br /></td></tr>
 <tr class="separator:afd9b36cbe2b1022779e0fe7b99f71f69"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8f24edd60748c429a81f8611fcbde438"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#a8f24edd60748c429a81f8611fcbde438">onOpen</a> () override</td></tr>
+<tr class="memdesc:a8f24edd60748c429a81f8611fcbde438"><td class="mdescLeft">&#160;</td><td class="mdescRight">An optional method that should be used to prepare a sink before it can be used.  <br /></td></tr>
 <tr class="separator:a8f24edd60748c429a81f8611fcbde438"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e344bdb0d59a56d7f2caaef48700944"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#a5e344bdb0d59a56d7f2caaef48700944">onClose</a> () override</td></tr>
+<tr class="memdesc:a5e344bdb0d59a56d7f2caaef48700944"><td class="mdescLeft">&#160;</td><td class="mdescRight">An optional method that should be used to close off a sink before destruction.  <br /></td></tr>
 <tr class="separator:a5e344bdb0d59a56d7f2caaef48700944"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2dd69012a5cd76a1378515c4556e3a69"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const juce::File &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#a2dd69012a5cd76a1378515c4556e3a69">getLogFile</a> () const noexcept</td></tr>
-<tr class="separator:a2dd69012a5cd76a1378515c4556e3a69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa0e6c031e39a431e3f0d208e7f251c61"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d5/d46/structjaut_1_1LogSinkFile_1_1Options.html">Options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#aa0e6c031e39a431e3f0d208e7f251c61">getOptions</a> () const noexcept</td></tr>
-<tr class="separator:aa0e6c031e39a431e3f0d208e7f251c61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8fe9780d82e94a89149e397f1fa514b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html">ILogFormat</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#af8fe9780d82e94a89149e397f1fa514b">getFormatter</a> () const override</td></tr>
-<tr class="separator:af8fe9780d82e94a89149e397f1fa514b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a747f7f55641b7eb147fef4db74e705f3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const juce::File &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#a747f7f55641b7eb147fef4db74e705f3">getLogFile</a> () const noexcept</td></tr>
+<tr class="memdesc:a747f7f55641b7eb147fef4db74e705f3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the file that has been set to be the log file.  <br /></td></tr>
+<tr class="separator:a747f7f55641b7eb147fef4db74e705f3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1a468699dbc0c9e5a426377bf78f7f5"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d5/d46/structjaut_1_1LogSinkFile_1_1Options.html">Options</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#ae1a468699dbc0c9e5a426377bf78f7f5">getOptions</a> () const noexcept</td></tr>
+<tr class="memdesc:ae1a468699dbc0c9e5a426377bf78f7f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the options of this file sink.  <br /></td></tr>
+<tr class="separator:ae1a468699dbc0c9e5a426377bf78f7f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab9c0af05d151a263a1f653f9ede4ec8f"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html">ILogFormat</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#ab9c0af05d151a263a1f653f9ede4ec8f">getFormatter</a> () const override</td></tr>
+<tr class="memdesc:ab9c0af05d151a263a1f653f9ede4ec8f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the formatter for this sink.  <br /></td></tr>
+<tr class="separator:ab9c0af05d151a263a1f653f9ede4ec8f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structjaut_1_1ILogSink"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structjaut_1_1ILogSink')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html">jaut::ILogSink</a></td></tr>
+<tr class="memitem:adea1fef281232f1f46fc98d5ca08626a inherit pub_methods_structjaut_1_1ILogSink"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#adea1fef281232f1f46fc98d5ca08626a">~ILogSink</a> ()=default</td></tr>
+<tr class="separator:adea1fef281232f1f46fc98d5ca08626a inherit pub_methods_structjaut_1_1ILogSink"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad3a31391ed297e5139e306a4bdfb7296 inherit pub_methods_structjaut_1_1ILogSink"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#ad3a31391ed297e5139e306a4bdfb7296">print</a> (const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;message)=0</td></tr>
+<tr class="memdesc:ad3a31391ed297e5139e306a4bdfb7296 inherit pub_methods_structjaut_1_1ILogSink"><td class="mdescLeft">&#160;</td><td class="mdescRight">Prints the message.  <br /></td></tr>
 <tr class="separator:ad3a31391ed297e5139e306a4bdfb7296 inherit pub_methods_structjaut_1_1ILogSink"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0e2019f05d7258d153740a32922ba6d6 inherit pub_methods_structjaut_1_1ILogSink"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#a0e2019f05d7258d153740a32922ba6d6">prepare</a> (int numLines)</td></tr>
+<tr class="memdesc:a0e2019f05d7258d153740a32922ba6d6 inherit pub_methods_structjaut_1_1ILogSink"><td class="mdescLeft">&#160;</td><td class="mdescRight">If there is an internal buffer for this sink, you can use this to pre-allocate it.  <br /></td></tr>
 <tr class="separator:a0e2019f05d7258d153740a32922ba6d6 inherit pub_methods_structjaut_1_1ILogSink"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a904947691b0b0f8127d0f4b9fdcf547f inherit pub_methods_structjaut_1_1ILogSink"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#a904947691b0b0f8127d0f4b9fdcf547f">flush</a> ()</td></tr>
+<tr class="memdesc:a904947691b0b0f8127d0f4b9fdcf547f inherit pub_methods_structjaut_1_1ILogSink"><td class="mdescLeft">&#160;</td><td class="mdescRight">Flushes the stream if the sink manages a buffer.  <br /></td></tr>
 <tr class="separator:a904947691b0b0f8127d0f4b9fdcf547f inherit pub_methods_structjaut_1_1ILogSink"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05f10cbf1fda4d2e428487116bd5baf8 inherit pub_methods_structjaut_1_1ILogSink"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#a05f10cbf1fda4d2e428487116bd5baf8">onOpen</a> ()</td></tr>
+<tr class="memdesc:a05f10cbf1fda4d2e428487116bd5baf8 inherit pub_methods_structjaut_1_1ILogSink"><td class="mdescLeft">&#160;</td><td class="mdescRight">An optional method that should be used to prepare a sink before it can be used.  <br /></td></tr>
 <tr class="separator:a05f10cbf1fda4d2e428487116bd5baf8 inherit pub_methods_structjaut_1_1ILogSink"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa86cc0fe6129f33247ca00cfb017f998 inherit pub_methods_structjaut_1_1ILogSink"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#aa86cc0fe6129f33247ca00cfb017f998">onClose</a> ()</td></tr>
+<tr class="memdesc:aa86cc0fe6129f33247ca00cfb017f998 inherit pub_methods_structjaut_1_1ILogSink"><td class="mdescLeft">&#160;</td><td class="mdescRight">An optional method that should be used to close off a sink before destruction.  <br /></td></tr>
 <tr class="separator:aa86cc0fe6129f33247ca00cfb017f998 inherit pub_methods_structjaut_1_1ILogSink"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab6a0155aa18cf650e47644c635d245e7 inherit pub_methods_structjaut_1_1ILogSink"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html">ILogFormat</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#ab6a0155aa18cf650e47644c635d245e7">getFormatter</a> () const =0</td></tr>
+<tr class="memdesc:ab6a0155aa18cf650e47644c635d245e7 inherit pub_methods_structjaut_1_1ILogSink"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the formatter for this sink.  <br /></td></tr>
 <tr class="separator:ab6a0155aa18cf650e47644c635d245e7 inherit pub_methods_structjaut_1_1ILogSink"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:aef82a1e89f6ad82088213d1dfca402dc"><td class="memItemLeft" align="right" valign="top"><a id="aef82a1e89f6ad82088213d1dfca402dc" name="aef82a1e89f6ad82088213d1dfca402dc"></a>
-static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>default_buffered</b> = true</td></tr>
+<tr class="memitem:aef82a1e89f6ad82088213d1dfca402dc"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#aef82a1e89f6ad82088213d1dfca402dc">default_buffered</a> = true</td></tr>
 <tr class="separator:aef82a1e89f6ad82088213d1dfca402dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad5e462823875dce18b9b43a1a5384e9b"><td class="memItemLeft" align="right" valign="top"><a id="ad5e462823875dce18b9b43a1a5384e9b" name="ad5e462823875dce18b9b43a1a5384e9b"></a>
-static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><b>default_bufferSize</b> = 4096</td></tr>
+<tr class="memitem:ad5e462823875dce18b9b43a1a5384e9b"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#ad5e462823875dce18b9b43a1a5384e9b">default_bufferSize</a> = 4096</td></tr>
 <tr class="separator:ad5e462823875dce18b9b43a1a5384e9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a82bdbf17eaceab579dfae7cb2c61b420"><td class="memItemLeft" align="right" valign="top"><a id="a82bdbf17eaceab579dfae7cb2c61b420" name="a82bdbf17eaceab579dfae7cb2c61b420"></a>
-static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><b>default_append</b> = true</td></tr>
+<tr class="memitem:a82bdbf17eaceab579dfae7cb2c61b420"><td class="memItemLeft" align="right" valign="top">static constexpr bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html#a82bdbf17eaceab579dfae7cb2c61b420">default_append</a> = true</td></tr>
 <tr class="separator:a82bdbf17eaceab579dfae7cb2c61b420"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="inherited" name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_structjaut_1_1ILogSink"><td colspan="2" onclick="javascript:toggleInherit('pub_types_structjaut_1_1ILogSink')"><img src="../../closed.png" alt="-"/>&#160;Public Types inherited from <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html">jaut::ILogSink</a></td></tr>
 <tr class="memitem:a065c8f679474033f5aaf3b64be71841d inherit pub_types_structjaut_1_1ILogSink"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#a065c8f679474033f5aaf3b64be71841d">DefaultFormatterType</a> = <a class="el" href="../../da/d59/classjaut_1_1LogFormatPattern.html">LogFormatPattern</a></td></tr>
+<tr class="memdesc:a065c8f679474033f5aaf3b64be71841d inherit pub_types_structjaut_1_1ILogSink"><td class="mdescLeft">&#160;</td><td class="mdescRight">The default formatting type used for inbuilt-sinks.  <br /></td></tr>
 <tr class="separator:a065c8f679474033f5aaf3b64be71841d inherit pub_types_structjaut_1_1ILogSink"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>A Logger output sink for log files.<br  />
+<div class="textblock"><p>A Logger output sink for log files. </p>
+<p><br  />
  This sink supports replacing formatters. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a143b15e39d57473e41ae76d0967d8a9b" name="a143b15e39d57473e41ae76d0967d8a9b"></a>
@@ -207,7 +226,9 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Creates a new file logging sink. </p><dl class="params"><dt>Parameters</dt><dd>
+
+<p>Creates a new file logging sink. </p>
+<dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">logFile</td><td>The file to log to</td></tr>
   </table>
@@ -247,7 +268,8 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Creates a new file logging sink.</p>
+
+<p>Creates a new file logging sink. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">logFile</td><td>The file to log to </td></tr>
@@ -264,7 +286,71 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="abd46de473acf900cff28fcff66cfcd56" name="abd46de473acf900cff28fcff66cfcd56"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd46de473acf900cff28fcff66cfcd56">&#9670;&#160;</a></span>~LogSinkFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">jaut::LogSinkFile::~LogSinkFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3588180bd7973436d42e60bdba3bdc39" name="a3588180bd7973436d42e60bdba3bdc39"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3588180bd7973436d42e60bdba3bdc39">&#9670;&#160;</a></span>print()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void jaut::LogSinkFile::print </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;&#160;</td>
+          <td class="paramname"><em>message</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Prints the message. </p>
+<p>If the sink manages a buffer, this should add the message to the buffer instead of directly outputting it. <br  />
+<br  />
+ Note that, if there is a buffer for this sink, the buffer should not be managing mere references to the data; it is not said the objects will still exist at the point of flushing.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">message</td><td>The message content </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#ad3a31391ed297e5139e306a4bdfb7296">jaut::ILogSink</a>.</p>
+
+</div>
+</div>
 <a id="afd9b36cbe2b1022779e0fe7b99f71f69" name="afd9b36cbe2b1022779e0fe7b99f71f69"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afd9b36cbe2b1022779e0fe7b99f71f69">&#9670;&#160;</a></span>flush()</h2>
 
@@ -287,119 +373,10 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
 <p>Flushes the stream if the sink manages a buffer. </p>
 
 <p>Reimplemented from <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#a904947691b0b0f8127d0f4b9fdcf547f">jaut::ILogSink</a>.</p>
-
-</div>
-</div>
-<a id="af8fe9780d82e94a89149e397f1fa514b" name="af8fe9780d82e94a89149e397f1fa514b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af8fe9780d82e94a89149e397f1fa514b">&#9670;&#160;</a></span>getFormatter()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html">ILogFormat</a> * jaut::LogSinkFile::getFormatter </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gets the formatter for this sink. If no formatter is found, the message will be as is or the way the sink formats it.</p>
-<dl class="section return"><dt>Returns</dt><dd>The sink formatter or nullptr if no formatter was given </dd></dl>
-
-<p>Implements <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#ab6a0155aa18cf650e47644c635d245e7">jaut::ILogSink</a>.</p>
-
-</div>
-</div>
-<a id="a2dd69012a5cd76a1378515c4556e3a69" name="a2dd69012a5cd76a1378515c4556e3a69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2dd69012a5cd76a1378515c4556e3a69">&#9670;&#160;</a></span>getLogFile()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const juce::File &amp; jaut::LogSinkFile::getLogFile </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gets the file that has been set to be the log file. </p><dl class="section return"><dt>Returns</dt><dd>The current log file </dd></dl>
-
-</div>
-</div>
-<a id="aa0e6c031e39a431e3f0d208e7f251c61" name="aa0e6c031e39a431e3f0d208e7f251c61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa0e6c031e39a431e3f0d208e7f251c61">&#9670;&#160;</a></span>getOptions()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">const <a class="el" href="../../d5/d46/structjaut_1_1LogSinkFile_1_1Options.html">LogSinkFile::Options</a> &amp; jaut::LogSinkFile::getOptions </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td> const</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Gets the options of this file sink. </p><dl class="section return"><dt>Returns</dt><dd>The options </dd></dl>
-
-</div>
-</div>
-<a id="a5e344bdb0d59a56d7f2caaef48700944" name="a5e344bdb0d59a56d7f2caaef48700944"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e344bdb0d59a56d7f2caaef48700944">&#9670;&#160;</a></span>onClose()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void jaut::LogSinkFile::onClose </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>An optional method that should be used to close off a sink before destruction.<br  />
- </p>
-
-<p>Reimplemented from <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#aa86cc0fe6129f33247ca00cfb017f998">jaut::ILogSink</a>.</p>
 
 </div>
 </div>
@@ -425,15 +402,17 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>An optional method that should be used to prepare a sink before it can be used.<br  />
+
+<p>An optional method that should be used to prepare a sink before it can be used. </p>
+<p><br  />
  </p>
 
 <p>Reimplemented from <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#a05f10cbf1fda4d2e428487116bd5baf8">jaut::ILogSink</a>.</p>
 
 </div>
 </div>
-<a id="a3588180bd7973436d42e60bdba3bdc39" name="a3588180bd7973436d42e60bdba3bdc39"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3588180bd7973436d42e60bdba3bdc39">&#9670;&#160;</a></span>print()</h2>
+<a id="a5e344bdb0d59a56d7f2caaef48700944" name="a5e344bdb0d59a56d7f2caaef48700944"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5e344bdb0d59a56d7f2caaef48700944">&#9670;&#160;</a></span>onClose()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -442,10 +421,9 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void jaut::LogSinkFile::print </td>
+          <td class="memname">void jaut::LogSinkFile::onClose </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;&#160;</td>
-          <td class="paramname"><em>message</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -455,30 +433,178 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Prints the message. If the sink manages a buffer, this should add the message to the buffer instead of directly outputting it. <br  />
-<br  />
- Note that, if there is a buffer for this sink, the buffer should not be managing mere references to the data; it is not said the objects will still exist at the point of flushing.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">message</td><td>The message content </td></tr>
-  </table>
-  </dd>
-</dl>
 
-<p>Implements <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#ad3a31391ed297e5139e306a4bdfb7296">jaut::ILogSink</a>.</p>
+<p>An optional method that should be used to close off a sink before destruction. </p>
+<p><br  />
+ </p>
+
+<p>Reimplemented from <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#aa86cc0fe6129f33247ca00cfb017f998">jaut::ILogSink</a>.</p>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/github/workspace/modules/jaut_logger/sink/<a class="el" href="../../d8/d8e/jaut__LogSinkFile_8h_source.html">jaut_LogSinkFile.h</a></li>
-<li>/github/workspace/modules/jaut_logger/sink/<a class="el" href="../../df/dd6/jaut__LogSinkFile_8cpp_source.html">jaut_LogSinkFile.cpp</a></li>
+<a id="a747f7f55641b7eb147fef4db74e705f3" name="a747f7f55641b7eb147fef4db74e705f3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a747f7f55641b7eb147fef4db74e705f3">&#9670;&#160;</a></span>getLogFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const juce::File &amp; jaut::LogSinkFile::getLogFile </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the file that has been set to be the log file. </p>
+<dl class="section return"><dt>Returns</dt><dd>The current log file </dd></dl>
+
+</div>
+</div>
+<a id="ae1a468699dbc0c9e5a426377bf78f7f5" name="ae1a468699dbc0c9e5a426377bf78f7f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1a468699dbc0c9e5a426377bf78f7f5">&#9670;&#160;</a></span>getOptions()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d5/d46/structjaut_1_1LogSinkFile_1_1Options.html">Options</a> &amp; jaut::LogSinkFile::getOptions </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the options of this file sink. </p>
+<dl class="section return"><dt>Returns</dt><dd>The options </dd></dl>
+
+</div>
+</div>
+<a id="ab9c0af05d151a263a1f653f9ede4ec8f" name="ab9c0af05d151a263a1f653f9ede4ec8f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9c0af05d151a263a1f653f9ede4ec8f">&#9670;&#160;</a></span>getFormatter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> const <a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html">ILogFormat</a> * jaut::LogSinkFile::getFormatter </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the formatter for this sink. </p>
+<p>If no formatter is found, the message will be as is or the way the sink formats it.</p>
+<dl class="section return"><dt>Returns</dt><dd>The sink formatter or nullptr if no formatter was given </dd></dl>
+
+<p>Implements <a class="el" href="../../da/dfa/structjaut_1_1ILogSink.html#ab6a0155aa18cf650e47644c635d245e7">jaut::ILogSink</a>.</p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aef82a1e89f6ad82088213d1dfca402dc" name="aef82a1e89f6ad82088213d1dfca402dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aef82a1e89f6ad82088213d1dfca402dc">&#9670;&#160;</a></span>default_buffered</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool jaut::LogSinkFile::default_buffered = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad5e462823875dce18b9b43a1a5384e9b" name="ad5e462823875dce18b9b43a1a5384e9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5e462823875dce18b9b43a1a5384e9b">&#9670;&#160;</a></span>default_bufferSize</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr int jaut::LogSinkFile::default_bufferSize = 4096</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a82bdbf17eaceab579dfae7cb2c61b420" name="a82bdbf17eaceab579dfae7cb2c61b420"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82bdbf17eaceab579dfae7cb2c61b420">&#9670;&#160;</a></span>default_append</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr bool jaut::LogSinkFile::default_append = true</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/github/workspace/modules/jaut_logger/sink/<a class="el" href="../../d8/d8e/jaut__LogSinkFile_8h.html">jaut_LogSinkFile.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html">LogSinkFile</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d7/d04/classjaut_1_1LogSinkFile.html">LogSinkFile</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

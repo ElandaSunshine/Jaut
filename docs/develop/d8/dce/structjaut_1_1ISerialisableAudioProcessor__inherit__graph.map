@@ -1,0 +1,9 @@
+<map id="jaut::ISerialisableAudioProcessor" name="jaut::ISerialisableAudioProcessor">
+<area shape="rect" id="Node000001" title="A simple interface class for sub&#45;audio processors for your own processor implementation." alt="" coords="5,55,158,96"/>
+<area shape="rect" id="Node000002" href="$dd/d92/classjaut_1_1AudioProcessorRack.html" title="The rack processor keeps an internal collection of AudioProcessor objects and plays them either in se..." alt="" coords="226,5,396,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,49,205,41,253,29,255,34,206,46,173,55"/>
+<area shape="rect" id="Node000003" href="$df/de3/classjaut_1_1AudioProcessorSet.html" title="The set processor allows to define a static set of processors that will be processed at processing ti..." alt="" coords="231,55,391,96"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,73,230,73,230,78,173,78"/>
+<area shape="rect" id="Node000004" href="$d3/d4a/classjaut_1_1SerialisableJuceProcessorProxy.html" title="The SerialisableJuceProcessorProxy is an ISerializableAudioProcessor wrapper that wraps any other ins..." alt="" coords="206,121,416,161"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="170,98,237,117,236,122,168,103"/>
+</map>

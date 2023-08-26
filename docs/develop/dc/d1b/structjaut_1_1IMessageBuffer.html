@@ -111,46 +111,51 @@ $(document).ready(function(){initNavTree('dc/d1b/structjaut_1_1IMessageBuffer.ht
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../db/d42/jaut__IMessageBuffer_8h_source.html">jaut_IMessageBuffer.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for jaut::IMessageBuffer&lt; T &gt;:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../dc/d1b/structjaut_1_1IMessageBuffer.png" usemap="#jaut::IMessageBuffer_3C_20T_20_3E_map" alt=""/>
-  <map id="jaut::IMessageBuffer_3C_20T_20_3E_map" name="jaut::IMessageBuffer_3C_20T_20_3E_map">
-<area href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html" alt="jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;" shape="rect" coords="0,56,465,80"/>
-<area href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html" alt="jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;" shape="rect" coords="475,56,940,80"/>
-<area href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html" alt="jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;" shape="rect" coords="950,56,1415,80"/>
-<area href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html" alt="jaut::AtomicRingBuffer&lt; 16 &gt;" shape="rect" coords="1425,56,1890,80"/>
-<area href="../../de/d63/classjaut_1_1SimpleRingBuffer.html" alt="jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;" shape="rect" coords="1900,56,2365,80"/>
-<area href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html" alt="jaut::AtomicRingBuffer&lt; BufferSize, T &gt;" shape="rect" coords="2375,56,2840,80"/>
-<area href="../../de/d63/classjaut_1_1SimpleRingBuffer.html" alt="jaut::SimpleRingBuffer&lt; BufferSize, T &gt;" shape="rect" coords="2850,56,3315,80"/>
-  </map>
-</div></div>
+<p>The <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html" title="The IMessageBuffer interface declares all needed virtual functions to craft your own message buffer.">IMessageBuffer</a> interface declares all needed virtual functions to craft your own message buffer.  
+ <a href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_IMessageBuffer.h&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Inheritance diagram for jaut::IMessageBuffer&lt; T &gt;:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../df/da4/structjaut_1_1IMessageBuffer__inherit__graph.svg" width="424" height="471"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:a5bff5e7b2b76feb0167a116aeca4c11f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">Message</a> = T</td></tr>
+<tr class="memdesc:a5bff5e7b2b76feb0167a116aeca4c11f"><td class="mdescLeft">&#160;</td><td class="mdescRight">The message type.  <br /></td></tr>
 <tr class="separator:a5bff5e7b2b76feb0167a116aeca4c11f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
+<tr class="memitem:a3e33e6e8cc8e1446cb0d960e820e18a4"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a3e33e6e8cc8e1446cb0d960e820e18a4">~IMessageBuffer</a> ()=default</td></tr>
+<tr class="separator:a3e33e6e8cc8e1446cb0d960e820e18a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae0d9684a665a4f7b6176faba9233ac46"><td class="memItemLeft" align="right" valign="top">virtual int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#ae0d9684a665a4f7b6176faba9233ac46">push</a> (<a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">Message</a> message)=0</td></tr>
+<tr class="memdesc:ae0d9684a665a4f7b6176faba9233ac46"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pushes a new Message onto the buffer.  <br /></td></tr>
 <tr class="separator:ae0d9684a665a4f7b6176faba9233ac46"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2ecfe05e02ae5611e049b98e4a195be8"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">Message</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a2ecfe05e02ae5611e049b98e4a195be8">pop</a> ()=0</td></tr>
+<tr class="memdesc:a2ecfe05e02ae5611e049b98e4a195be8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pops a previously pushed message from the buffer and returns it.  <br /></td></tr>
 <tr class="separator:a2ecfe05e02ae5611e049b98e4a195be8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7621613e23c240844ec085d89a2f3856"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a7621613e23c240844ec085d89a2f3856">isEmpty</a> () const =0</td></tr>
+<tr class="memdesc:a7621613e23c240844ec085d89a2f3856"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether the buffer is empty.  <br /></td></tr>
 <tr class="separator:a7621613e23c240844ec085d89a2f3856"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3ec6d5f47fcb20635b76cd8dc210be00"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a3ec6d5f47fcb20635b76cd8dc210be00">isFull</a> () const =0</td></tr>
+<tr class="memdesc:a3ec6d5f47fcb20635b76cd8dc210be00"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines whether the buffer is full.  <br /></td></tr>
 <tr class="separator:a3ec6d5f47fcb20635b76cd8dc210be00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a695f3837adb8ef4569f46e38d4795603"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a695f3837adb8ef4569f46e38d4795603">size</a> () const =0</td></tr>
+<tr class="memdesc:a695f3837adb8ef4569f46e38d4795603"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the current amount of elements in the buffer.  <br /></td></tr>
 <tr class="separator:a695f3837adb8ef4569f46e38d4795603"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a271a91ad7d3db02880763139d5fc55a8"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a271a91ad7d3db02880763139d5fc55a8">capacity</a> () const =0</td></tr>
+<tr class="memdesc:a271a91ad7d3db02880763139d5fc55a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the absolute amount of elements this buffer can contain.  <br /></td></tr>
 <tr class="separator:a271a91ad7d3db02880763139d5fc55a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class T = std::unique_ptr&lt;IMessage&gt;&gt;<br />
-struct jaut::IMessageBuffer&lt; T &gt;</div><p>The <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">IMessageBuffer</a> interface declares all needed virtual functions to craft your own message buffer. </p><dl class="tparams"><dt>Template Parameters</dt><dd>
+struct jaut::IMessageBuffer&lt; T &gt;</div><p>The <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html" title="The IMessageBuffer interface declares all needed virtual functions to craft your own message buffer.">IMessageBuffer</a> interface declares all needed virtual functions to craft your own message buffer. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>The type of the message to send </td></tr>
   </table>
@@ -170,13 +175,14 @@ template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The message type. </p>
 
 </div>
 </div>
-<h2 class="groupheader">Member Function Documentation</h2>
-<a id="a271a91ad7d3db02880763139d5fc55a8" name="a271a91ad7d3db02880763139d5fc55a8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a271a91ad7d3db02880763139d5fc55a8">&#9670;&#160;</a></span>capacity()</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a3e33e6e8cc8e1446cb0d960e820e18a4" name="a3e33e6e8cc8e1446cb0d960e820e18a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3e33e6e8cc8e1446cb0d960e820e18a4">&#9670;&#160;</a></span>~IMessageBuffer()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -187,10 +193,39 @@ template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> int <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">jaut::IMessageBuffer</a>&lt; T &gt;::capacity </td>
+          <td class="memname">virtual <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">jaut::IMessageBuffer</a>&lt; T &gt;::~<a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">IMessageBuffer</a> </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
-          <td> const</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="ae0d9684a665a4f7b6176faba9233ac46" name="ae0d9684a665a4f7b6176faba9233ac46"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae0d9684a665a4f7b6176faba9233ac46">&#9670;&#160;</a></span>push()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual int <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">jaut::IMessageBuffer</a>&lt; T &gt;::push </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">Message</a>&#160;</td>
+          <td class="paramname"><em>message</em></td><td>)</td>
+          <td></td>
         </tr>
       </table>
   </td>
@@ -199,9 +234,49 @@ template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Gets the absolute amount of elements this buffer can contain. </p><dl class="section return"><dt>Returns</dt><dd>The capacity of the buffer </dd></dl>
 
-<p>Implemented in <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; 16 &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a1eb22b8aff095a5e1d6b59886731f1f9">jaut::SimpleRingBuffer&lt; BufferSize, T &gt;</a>, and <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a1eb22b8aff095a5e1d6b59886731f1f9">jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;</a>.</p>
+<p>Pushes a new Message onto the buffer. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">message</td><td>The message to push </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The position the message was enqueued in, -1 if the buffer was full </dd></dl>
+
+<p>Implemented in <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; 16 &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a57c273192956d2713f5dae985413f647">jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a57c273192956d2713f5dae985413f647">jaut::SimpleRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;</a>, and <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;</a>.</p>
+
+</div>
+</div>
+<a id="a2ecfe05e02ae5611e049b98e4a195be8" name="a2ecfe05e02ae5611e049b98e4a195be8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ecfe05e02ae5611e049b98e4a195be8">&#9670;&#160;</a></span>pop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">Message</a> <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">jaut::IMessageBuffer</a>&lt; T &gt;::pop </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Pops a previously pushed message from the buffer and returns it. </p>
+<dl class="section return"><dt>Returns</dt><dd>The popped message </dd></dl>
+
+<p>Implemented in <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; 16 &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#afa11968ac2516bbf310ded3445057dd9">jaut::SimpleRingBuffer&lt; BufferSize, T &gt;</a>, and <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#afa11968ac2516bbf310ded3445057dd9">jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;</a>.</p>
 
 </div>
 </div>
@@ -229,7 +304,9 @@ template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Determines whether the buffer is empty. </p><dl class="section return"><dt>Returns</dt><dd>True if empty, false if not </dd></dl>
+
+<p>Determines whether the buffer is empty. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if empty, false if not </dd></dl>
 
 <p>Implemented in <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a24fc05906e99ffc1df6e4c42e050c8e6">jaut::AtomicRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a24fc05906e99ffc1df6e4c42e050c8e6">jaut::AtomicRingBuffer&lt; 16 &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a24fc05906e99ffc1df6e4c42e050c8e6">jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a24fc05906e99ffc1df6e4c42e050c8e6">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a24fc05906e99ffc1df6e4c42e050c8e6">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a9c6f28079f818a1bb3d2dab1ae797b63">jaut::SimpleRingBuffer&lt; BufferSize, T &gt;</a>, and <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a9c6f28079f818a1bb3d2dab1ae797b63">jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;</a>.</p>
 
@@ -259,77 +336,11 @@ template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Determines whether the buffer is full. </p><dl class="section return"><dt>Returns</dt><dd>True if full, false if not </dd></dl>
+
+<p>Determines whether the buffer is full. </p>
+<dl class="section return"><dt>Returns</dt><dd>True if full, false if not </dd></dl>
 
 <p>Implemented in <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac0b9e878c3d9afd8d593ab34ae20dbca">jaut::AtomicRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac0b9e878c3d9afd8d593ab34ae20dbca">jaut::AtomicRingBuffer&lt; 16 &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac0b9e878c3d9afd8d593ab34ae20dbca">jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac0b9e878c3d9afd8d593ab34ae20dbca">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac0b9e878c3d9afd8d593ab34ae20dbca">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#afe759fb601dc690989854e193445c7d5">jaut::SimpleRingBuffer&lt; BufferSize, T &gt;</a>, and <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#afe759fb601dc690989854e193445c7d5">jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;</a>.</p>
-
-</div>
-</div>
-<a id="a2ecfe05e02ae5611e049b98e4a195be8" name="a2ecfe05e02ae5611e049b98e4a195be8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a2ecfe05e02ae5611e049b98e4a195be8">&#9670;&#160;</a></span>pop()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">Message</a> <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">jaut::IMessageBuffer</a>&lt; T &gt;::pop </td>
-          <td>(</td>
-          <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Pops a previously pushed message from the buffer and returns it. </p><dl class="section return"><dt>Returns</dt><dd>The popped message </dd></dl>
-
-<p>Implemented in <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; 16 &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a256455dbdc4054834a7bbc353d92712f">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#afa11968ac2516bbf310ded3445057dd9">jaut::SimpleRingBuffer&lt; BufferSize, T &gt;</a>, and <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#afa11968ac2516bbf310ded3445057dd9">jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;</a>.</p>
-
-</div>
-</div>
-<a id="ae0d9684a665a4f7b6176faba9233ac46" name="ae0d9684a665a4f7b6176faba9233ac46"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0d9684a665a4f7b6176faba9233ac46">&#9670;&#160;</a></span>push()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">virtual int <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">jaut::IMessageBuffer</a>&lt; T &gt;::push </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html#a5bff5e7b2b76feb0167a116aeca4c11f">Message</a>&#160;</td>
-          <td class="paramname"><em>message</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Pushes a new Message onto the buffer.</p>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">message</td><td>The message to push </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The position the message was enqueued in, -1 if the buffer was full </dd></dl>
-
-<p>Implemented in <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; 16 &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a57c273192956d2713f5dae985413f647">jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a57c273192956d2713f5dae985413f647">jaut::SimpleRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;</a>, and <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#a4d0b9d198a9c3d39fa5f5148b6eb4af5">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;</a>.</p>
 
 </div>
 </div>
@@ -357,21 +368,55 @@ template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Gets the current amount of elements in the buffer. </p><dl class="section return"><dt>Returns</dt><dd>The number of pushed messages </dd></dl>
+
+<p>Gets the current amount of elements in the buffer. </p>
+<dl class="section return"><dt>Returns</dt><dd>The number of pushed messages </dd></dl>
 
 <p>Implemented in <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac2726cbaea9ef287e519c442c68f6e66">jaut::AtomicRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac2726cbaea9ef287e519c442c68f6e66">jaut::AtomicRingBuffer&lt; 16 &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac2726cbaea9ef287e519c442c68f6e66">jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac2726cbaea9ef287e519c442c68f6e66">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ac2726cbaea9ef287e519c442c68f6e66">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#ab72e0b75c7442f78a3e0ac49b0717771">jaut::SimpleRingBuffer&lt; BufferSize, T &gt;</a>, and <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#ab72e0b75c7442f78a3e0ac49b0717771">jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;</a>.</p>
 
 </div>
 </div>
+<a id="a271a91ad7d3db02880763139d5fc55a8" name="a271a91ad7d3db02880763139d5fc55a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a271a91ad7d3db02880763139d5fc55a8">&#9670;&#160;</a></span>capacity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T  = std::unique_ptr&lt;IMessage&gt;&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> int <a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">jaut::IMessageBuffer</a>&lt; T &gt;::capacity </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Gets the absolute amount of elements this buffer can contain. </p>
+<dl class="section return"><dt>Returns</dt><dd>The capacity of the buffer </dd></dl>
+
+<p>Implemented in <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; BufferSize, T &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; 16 &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; 512, jaut::LogMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(16 *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../d2/d9c/classjaut_1_1AtomicRingBuffer.html#ae43382bdbe2c1abe1ec9c6225806299f">jaut::AtomicRingBuffer&lt; static_cast&lt; int &gt;(BufferSize *1.5), WaybackMessage &gt;</a>, <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a1eb22b8aff095a5e1d6b59886731f1f9">jaut::SimpleRingBuffer&lt; BufferSize, T &gt;</a>, and <a class="el" href="../../de/d63/classjaut_1_1SimpleRingBuffer.html#a1eb22b8aff095a5e1d6b59886731f1f9">jaut::SimpleRingBuffer&lt; 512, jaut::LogMessage &gt;</a>.</p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_message/thread/message/<a class="el" href="../../db/d42/jaut__IMessageBuffer_8h_source.html">jaut_IMessageBuffer.h</a></li>
+<li>/github/workspace/modules/jaut_message/thread/message/<a class="el" href="../../db/d42/jaut__IMessageBuffer_8h.html">jaut_IMessageBuffer.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">IMessageBuffer</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../dc/d1b/structjaut_1_1IMessageBuffer.html">IMessageBuffer</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

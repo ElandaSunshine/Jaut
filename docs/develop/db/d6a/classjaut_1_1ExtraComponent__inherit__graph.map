@@ -1,0 +1,9 @@
+<map id="jaut::ExtraComponent" name="jaut::ExtraComponent">
+<area shape="rect" id="Node000001" title="A juce::Component implementation that allows basic styling of a component, such as borders margin and..." alt="" coords="151,5,295,31"/>
+<area shape="rect" id="Node000002" href="$d1/d16/classjaut_1_1ContentPane.html" title="A simple component that contains another component and stretches it to a parent." alt="" coords="5,79,129,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,40,95,81,92,76,182,35"/>
+<area shape="rect" id="Node000003" href="$d0/dea/classjaut_1_1MultiPagePanel.html" title="An extremely customisable component that lets you add pages that will be controlled by a tab bar." alt="" coords="153,79,293,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="226,46,226,79,220,79,220,46"/>
+<area shape="rect" id="Node000004" href="$d5/dd6/classjaut_1_1SplitPanel.html" title="A component that contains two components that can be resized with a separator in&#45;between." alt="" coords="317,79,425,105"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="262,35,347,76,345,81,260,40"/>
+</map>

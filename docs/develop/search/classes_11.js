@@ -64,5 +64,5 @@ var searchData=
   ['stringable_3c_20t_20_2a_20_3e_61',['Stringable&lt; T * &gt;',['../da/d6a/structjaut_1_1Stringable_3_01T_01_5_01_4.html',1,'jaut']]],
   ['stringable_3c_20t_20_2a_26_20_3e_62',['Stringable&lt; T *&amp; &gt;',['../d0/dc5/structjaut_1_1Stringable_3_01T_01_5_6_01_4.html',1,'jaut']]],
   ['stringable_3c_20version_20_3e_63',['Stringable&lt; Version &gt;',['../d4/d84/structjaut_1_1Stringable_3_01Version_01_4.html',1,'jaut']]],
-  ['style_64',['Style',['../dc/dbd/structjaut_1_1MultiPagePanel_1_1Style.html',1,'jaut::MultiPagePanel::Style'],['../dc/dde/structjaut_1_1PseudoComponent_1_1Style.html',1,'jaut::PseudoComponent::Style'],['../d3/dde/structjaut_1_1SplitPanel_1_1Style.html',1,'jaut::SplitPanel::Style']]]
+  ['style_64',['Style',['../dc/dbd/structjaut_1_1MultiPagePanel_1_1Style.html',1,'jaut::MultiPagePanel::Style'],['../d3/dde/structjaut_1_1SplitPanel_1_1Style.html',1,'jaut::SplitPanel::Style']]]
 ];

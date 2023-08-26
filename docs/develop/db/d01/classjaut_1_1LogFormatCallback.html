@@ -111,45 +111,57 @@ $(document).ready(function(){initNavTree('db/d01/classjaut_1_1LogFormatCallback.
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../da/d09/jaut__LogFormatCallback_8h_source.html">jaut_LogFormatCallback.h</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for jaut::LogFormatCallback:</div>
-<div class="dyncontent">
- <div class="center">
-  <img src="../../db/d01/classjaut_1_1LogFormatCallback.png" usemap="#jaut::LogFormatCallback_map" alt=""/>
-  <map id="jaut::LogFormatCallback_map" name="jaut::LogFormatCallback_map">
-<area href="../../d5/d26/structjaut_1_1ILogFormat.html" alt="jaut::ILogFormat" shape="rect" coords="0,0,147,24"/>
-  </map>
-</div></div>
+<p>A simple formatter that can be used via a passed in lambda function or other invocable.  
+ <a href="../../db/d01/classjaut_1_1LogFormatCallback.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_LogFormatCallback.h&gt;</code></p>
+<div id="dynsection-0" onclick="return toggleVisibility(this)" class="dynheader closed" style="cursor:pointer;">
+  <img id="dynsection-0-trigger" src="../../closed.png" alt="+"/> Inheritance diagram for jaut::LogFormatCallback:</div>
+<div id="dynsection-0-summary" class="dynsummary" style="display:block;">
+</div>
+<div id="dynsection-0-content" class="dyncontent" style="display:none;">
+<div class="center"><iframe scrolling="no" frameborder="0" src="../../d8/d8d/classjaut_1_1LogFormatCallback__inherit__graph.svg" width="172" height="111"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:adeb4473344c3db7bee8d85f5156192fa"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#adeb4473344c3db7bee8d85f5156192fa">FormatAppenderType</a> = std::function&lt; juce::String(const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;)&gt;</td></tr>
+<tr class="memdesc:adeb4473344c3db7bee8d85f5156192fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the appending format call.  <br /></td></tr>
 <tr class="separator:adeb4473344c3db7bee8d85f5156192fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a77df4bf99af6483f94ed808538bd11bf"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#a77df4bf99af6483f94ed808538bd11bf">FormatReplacerType</a> = std::function&lt; juce::String(const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;, const juce::String &amp;)&gt;</td></tr>
+<tr class="memdesc:a77df4bf99af6483f94ed808538bd11bf"><td class="mdescLeft">&#160;</td><td class="mdescRight">The type of the replacing format call.  <br /></td></tr>
 <tr class="separator:a77df4bf99af6483f94ed808538bd11bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:a91fed85b7087526b2a36c9f63387626e"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#a91fed85b7087526b2a36c9f63387626e">LogFormatCallback</a> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; <a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#adeb4473344c3db7bee8d85f5156192fa">FormatAppenderType</a> &gt; appendCallback, <a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#a77df4bf99af6483f94ed808538bd11bf">FormatReplacerType</a> replaceCallback=nullptr)</td></tr>
+<tr class="memdesc:a91fed85b7087526b2a36c9f63387626e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new instance of the callback formatter.  <br /></td></tr>
 <tr class="separator:a91fed85b7087526b2a36c9f63387626e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7f824bdee6eda6aeb7a0c93f90f484a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#aa7f824bdee6eda6aeb7a0c93f90f484a">format</a> (const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;logMessage) const override</td></tr>
-<tr class="separator:aa7f824bdee6eda6aeb7a0c93f90f484a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a188a6fffac65f77c4255e4ebc4f4a90e"><td class="memItemLeft" align="right" valign="top"><a id="a188a6fffac65f77c4255e4ebc4f4a90e" name="a188a6fffac65f77c4255e4ebc4f4a90e"></a>
-<a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><b>formatReplace</b> (const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">jaut::LogMessage</a> &amp;logMessage, const juce::String &amp;content) override</td></tr>
-<tr class="separator:a188a6fffac65f77c4255e4ebc4f4a90e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a52c4161517ec6eb6ea899fa2705387c6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#a52c4161517ec6eb6ea899fa2705387c6">supportsReplacingFormatter</a> () const override</td></tr>
-<tr class="separator:a52c4161517ec6eb6ea899fa2705387c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a484c542e29794c7f53816133a9bd0d99"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#a484c542e29794c7f53816133a9bd0d99">format</a> (const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;logMessage) const override</td></tr>
+<tr class="memdesc:a484c542e29794c7f53816133a9bd0d99"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats the incoming message and appends it to the output.  <br /></td></tr>
+<tr class="separator:a484c542e29794c7f53816133a9bd0d99"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:accc46668f1397671b08f97c33ee86fc4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#accc46668f1397671b08f97c33ee86fc4">formatReplace</a> (const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">jaut::LogMessage</a> &amp;logMessage, const juce::String &amp;content) override</td></tr>
+<tr class="separator:accc46668f1397671b08f97c33ee86fc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d4d961b0e29cb41a1ffcdec0621fff1"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html#a9d4d961b0e29cb41a1ffcdec0621fff1">supportsReplacingFormatter</a> () const override</td></tr>
+<tr class="memdesc:a9d4d961b0e29cb41a1ffcdec0621fff1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether this formatter supports replace-formatting.  <br /></td></tr>
+<tr class="separator:a9d4d961b0e29cb41a1ffcdec0621fff1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_structjaut_1_1ILogFormat"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_structjaut_1_1ILogFormat')"><img src="../../closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html">jaut::ILogFormat</a></td></tr>
+<tr class="memitem:a8dc997096d69c12638364f8bf005f27f inherit pub_methods_structjaut_1_1ILogFormat"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html#a8dc997096d69c12638364f8bf005f27f">~ILogFormat</a> ()=default</td></tr>
+<tr class="separator:a8dc997096d69c12638364f8bf005f27f inherit pub_methods_structjaut_1_1ILogFormat"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aef57066dacec03062b5edfc198eb5838 inherit pub_methods_structjaut_1_1ILogFormat"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html#aef57066dacec03062b5edfc198eb5838">format</a> (const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;logMessage) const =0</td></tr>
+<tr class="memdesc:aef57066dacec03062b5edfc198eb5838 inherit pub_methods_structjaut_1_1ILogFormat"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats the incoming message and appends it to the output.  <br /></td></tr>
 <tr class="separator:aef57066dacec03062b5edfc198eb5838 inherit pub_methods_structjaut_1_1ILogFormat"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95d28d2ffa26e7a62e3529c743f8b36f inherit pub_methods_structjaut_1_1ILogFormat"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html#a95d28d2ffa26e7a62e3529c743f8b36f">formatReplace</a> (<a class="el" href="../../d3/d9e/jaut__Define_8h.html#a378648d70b8953efd61491409603599f">JAUT_MUNUSED</a> const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;logMessage, <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a378648d70b8953efd61491409603599f">JAUT_MUNUSED</a> const juce::String &amp;content)</td></tr>
+<tr class="memdesc:a95d28d2ffa26e7a62e3529c743f8b36f inherit pub_methods_structjaut_1_1ILogFormat"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats the incoming message together with all the last log events and formats the stream so that it can be replaced together with the latest log event.  <br /></td></tr>
 <tr class="separator:a95d28d2ffa26e7a62e3529c743f8b36f inherit pub_methods_structjaut_1_1ILogFormat"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a7b86004f72e1bcb855924c287d08e38a inherit pub_methods_structjaut_1_1ILogFormat"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html#a7b86004f72e1bcb855924c287d08e38a">getHeader</a> () const</td></tr>
+<tr class="memdesc:a7b86004f72e1bcb855924c287d08e38a inherit pub_methods_structjaut_1_1ILogFormat"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the header that will be printed on construction of the sink.  <br /></td></tr>
 <tr class="separator:a7b86004f72e1bcb855924c287d08e38a inherit pub_methods_structjaut_1_1ILogFormat"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aadb2053fb6054e717de02eefe44a861c inherit pub_methods_structjaut_1_1ILogFormat"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html#aadb2053fb6054e717de02eefe44a861c">getFooter</a> () const</td></tr>
+<tr class="memdesc:aadb2053fb6054e717de02eefe44a861c inherit pub_methods_structjaut_1_1ILogFormat"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the footer that will be printed on destruction of the sink.  <br /></td></tr>
 <tr class="separator:aadb2053fb6054e717de02eefe44a861c inherit pub_methods_structjaut_1_1ILogFormat"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a79b4a9b39217722d661ad3784e5e2d61 inherit pub_methods_structjaut_1_1ILogFormat"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d5/d26/structjaut_1_1ILogFormat.html#a79b4a9b39217722d661ad3784e5e2d61">supportsReplacingFormatter</a> () const =0</td></tr>
+<tr class="memdesc:a79b4a9b39217722d661ad3784e5e2d61 inherit pub_methods_structjaut_1_1ILogFormat"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether this formatter supports replace-formatting.  <br /></td></tr>
 <tr class="separator:a79b4a9b39217722d661ad3784e5e2d61 inherit pub_methods_structjaut_1_1ILogFormat"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -166,6 +178,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The type of the appending format call. </p>
 
 </div>
@@ -181,6 +194,7 @@ Public Member Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The type of the replacing format call. </p>
 
 </div>
@@ -219,7 +233,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Creates a new instance of the callback formatter.</p>
+
+<p>Creates a new instance of the callback formatter. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">appendCallback</td><td>The appending formatter callback </td></tr>
@@ -231,8 +246,8 @@ Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aa7f824bdee6eda6aeb7a0c93f90f484a" name="aa7f824bdee6eda6aeb7a0c93f90f484a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa7f824bdee6eda6aeb7a0c93f90f484a">&#9670;&#160;</a></span>format()</h2>
+<a id="a484c542e29794c7f53816133a9bd0d99" name="a484c542e29794c7f53816133a9bd0d99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a484c542e29794c7f53816133a9bd0d99">&#9670;&#160;</a></span>format()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,7 +256,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">juce::String jaut::LogFormatCallback::format </td>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String jaut::LogFormatCallback::format </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">LogMessage</a> &amp;&#160;</td>
           <td class="paramname"><em>logMessage</em></td><td>)</td>
@@ -254,7 +269,8 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Formats the incoming message and appends it to the output.</p>
+
+<p>Formats the incoming message and appends it to the output. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">logMessage</td><td>The log event </td></tr>
@@ -267,8 +283,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a52c4161517ec6eb6ea899fa2705387c6" name="a52c4161517ec6eb6ea899fa2705387c6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a52c4161517ec6eb6ea899fa2705387c6">&#9670;&#160;</a></span>supportsReplacingFormatter()</h2>
+<a id="accc46668f1397671b08f97c33ee86fc4" name="accc46668f1397671b08f97c33ee86fc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#accc46668f1397671b08f97c33ee86fc4">&#9670;&#160;</a></span>formatReplace()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -277,7 +293,43 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool jaut::LogFormatCallback::supportsReplacingFormatter </td>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String jaut::LogFormatCallback::formatReplace </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="../../d2/d73/structjaut_1_1LogMessage.html">jaut::LogMessage</a> &amp;&#160;</td>
+          <td class="paramname"><em>logMessage</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const juce::String &amp;&#160;</td>
+          <td class="paramname"><em>content</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9d4d961b0e29cb41a1ffcdec0621fff1" name="a9d4d961b0e29cb41a1ffcdec0621fff1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d4d961b0e29cb41a1ffcdec0621fff1">&#9670;&#160;</a></span>supportsReplacingFormatter()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> bool jaut::LogFormatCallback::supportsReplacingFormatter </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -289,7 +341,9 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Whether this formatter supports replace-formatting.<br  />
+
+<p>Whether this formatter supports replace-formatting. </p>
+<p><br  />
  Note that you can also use this to determine that a formatter, that is in fact a replacing formatter, wants to disable replace formatting through a flag or similar means.</p>
 <dl class="section return"><dt>Returns</dt><dd>True if replace-formatting is supported, false if not </dd></dl>
 
@@ -297,16 +351,15 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>/github/workspace/modules/jaut_logger/format/<a class="el" href="../../da/d09/jaut__LogFormatCallback_8h_source.html">jaut_LogFormatCallback.h</a></li>
-<li>/github/workspace/modules/jaut_logger/format/<a class="el" href="../../d2/de0/jaut__LogFormatCallback_8cpp_source.html">jaut_LogFormatCallback.cpp</a></li>
+<hr/>The documentation for this class was generated from the following file:<ul>
+<li>/github/workspace/modules/jaut_logger/format/<a class="el" href="../../da/d09/jaut__LogFormatCallback_8h.html">jaut_LogFormatCallback.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html">LogFormatCallback</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../db/d01/classjaut_1_1LogFormatCallback.html">LogFormatCallback</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

@@ -111,84 +111,72 @@ $(document).ready(function(){initNavTree('d6/d62/classjaut_1_1NonNull.html','../
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="../../d7/d07/jaut__CommonUtils_8h_source.html">jaut_CommonUtils.h</a>&gt;</code></p>
+<p>Allows to pass a pointer that should not be assigned nullptr.  
+ <a href="../../d6/d62/classjaut_1_1NonNull.html#details">More...</a></p>
+
+<p><code>#include &lt;jaut_CommonUtils.h&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
 Public Types</h2></td></tr>
 <tr class="memitem:af12c2506cc1fc97adc3aadfd053f305e"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> = T</td></tr>
+<tr class="memdesc:af12c2506cc1fc97adc3aadfd053f305e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The full type passed to the class.  <br /></td></tr>
 <tr class="separator:af12c2506cc1fc97adc3aadfd053f305e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5645a3e0fb6ef89210d4d0adf58f59b6"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a5645a3e0fb6ef89210d4d0adf58f59b6">ValueType</a> = typename detail::PointerResolver&lt; T &gt;::Type</td></tr>
+<tr class="memdesc:a5645a3e0fb6ef89210d4d0adf58f59b6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The content type passed to the class.  <br /></td></tr>
 <tr class="separator:a5645a3e0fb6ef89210d4d0adf58f59b6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a7856194062e9d20787787b6bf7c2656d"><td class="memItemLeft" align="right" valign="top"><a id="a7856194062e9d20787787b6bf7c2656d" name="a7856194062e9d20787787b6bf7c2656d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>NonNull</b> (std::nullptr_t)=delete</td></tr>
+<tr class="memitem:a7856194062e9d20787787b6bf7c2656d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a7856194062e9d20787787b6bf7c2656d">NonNull</a> (std::nullptr_t)=delete</td></tr>
 <tr class="separator:a7856194062e9d20787787b6bf7c2656d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5d12ec426e2627d8e6da9ff4d6eaa465"><td class="memTemplParams" colspan="2"><a id="a5d12ec426e2627d8e6da9ff4d6eaa465" name="a5d12ec426e2627d8e6da9ff4d6eaa465"></a>
-template&lt;class U , std::enable_if_t&lt; std::is_constructible_v&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a>, U &gt; &gt; *  = nullptr&gt; </td></tr>
-<tr class="memitem:a5d12ec426e2627d8e6da9ff4d6eaa465"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>NonNull</b> (U &amp;&amp;obj)</td></tr>
+<tr class="memitem:a5d12ec426e2627d8e6da9ff4d6eaa465"><td class="memTemplParams" colspan="2">template&lt;class U , std::enable_if_t&lt; std::is_constructible_v&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a>, U &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a5d12ec426e2627d8e6da9ff4d6eaa465"><td class="memTemplItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a5d12ec426e2627d8e6da9ff4d6eaa465">NonNull</a> (U &amp;&amp;obj)</td></tr>
 <tr class="separator:a5d12ec426e2627d8e6da9ff4d6eaa465"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a88cdb35513c9bed0267c5a8fc0d1dc1a"><td class="memItemLeft" align="right" valign="top"><a id="a88cdb35513c9bed0267c5a8fc0d1dc1a" name="a88cdb35513c9bed0267c5a8fc0d1dc1a"></a>
-<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (std::nullptr_t)=delete</td></tr>
+<tr class="memitem:a88cdb35513c9bed0267c5a8fc0d1dc1a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a88cdb35513c9bed0267c5a8fc0d1dc1a">operator=</a> (std::nullptr_t)=delete</td></tr>
 <tr class="separator:a88cdb35513c9bed0267c5a8fc0d1dc1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acc2befdf59a8a94fa198779691c91829"><td class="memTemplParams" colspan="2"><a id="acc2befdf59a8a94fa198779691c91829" name="acc2befdf59a8a94fa198779691c91829"></a>
-template&lt;class U , std::enable_if_t&lt; std::is_convertible_v&lt; U, <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &gt; &gt; *  = nullptr&gt; </td></tr>
-<tr class="memitem:acc2befdf59a8a94fa198779691c91829"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator=</b> (U &amp;&amp;obj)</td></tr>
+<tr class="memitem:acc2befdf59a8a94fa198779691c91829"><td class="memTemplParams" colspan="2">template&lt;class U , std::enable_if_t&lt; std::is_convertible_v&lt; U, <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:acc2befdf59a8a94fa198779691c91829"><td class="memTemplItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#acc2befdf59a8a94fa198779691c91829">operator=</a> (U &amp;&amp;obj)</td></tr>
 <tr class="separator:acc2befdf59a8a94fa198779691c91829"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aedaed64a8777569734bb5de43c0878b0"><td class="memItemLeft" align="right" valign="top"><a id="aedaed64a8777569734bb5de43c0878b0" name="aedaed64a8777569734bb5de43c0878b0"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>operator bool</b> ()=delete</td></tr>
+<tr class="memitem:aedaed64a8777569734bb5de43c0878b0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#aedaed64a8777569734bb5de43c0878b0">operator bool</a> ()=delete</td></tr>
 <tr class="separator:aedaed64a8777569734bb5de43c0878b0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3c554d53c852daf8935b5a006944f4b9"><td class="memTemplParams" colspan="2"><a id="a3c554d53c852daf8935b5a006944f4b9" name="a3c554d53c852daf8935b5a006944f4b9"></a>
-template&lt;class Detail  = T, std::enable_if_t&lt; std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
-<tr class="memitem:a3c554d53c852daf8935b5a006944f4b9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> () const noexcept</td></tr>
+<tr class="memitem:a3c554d53c852daf8935b5a006944f4b9"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T, std::enable_if_t&lt; std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a3c554d53c852daf8935b5a006944f4b9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> *&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a3c554d53c852daf8935b5a006944f4b9">get</a> () const noexcept</td></tr>
 <tr class="separator:a3c554d53c852daf8935b5a006944f4b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae5cacab928cc21332d04cdac806da444"><td class="memTemplParams" colspan="2"><a id="ae5cacab928cc21332d04cdac806da444" name="ae5cacab928cc21332d04cdac806da444"></a>
-template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
-<tr class="memitem:ae5cacab928cc21332d04cdac806da444"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> () &amp;noexcept</td></tr>
+<tr class="memitem:ae5cacab928cc21332d04cdac806da444"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:ae5cacab928cc21332d04cdac806da444"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#ae5cacab928cc21332d04cdac806da444">get</a> () &amp;noexcept</td></tr>
 <tr class="separator:ae5cacab928cc21332d04cdac806da444"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7defaff63082a2ffb3b4d35fc64d2ad9"><td class="memTemplParams" colspan="2"><a id="a7defaff63082a2ffb3b4d35fc64d2ad9" name="a7defaff63082a2ffb3b4d35fc64d2ad9"></a>
-template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
-<tr class="memitem:a7defaff63082a2ffb3b4d35fc64d2ad9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr const <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> () const &amp;noexcept</td></tr>
+<tr class="memitem:a7defaff63082a2ffb3b4d35fc64d2ad9"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a7defaff63082a2ffb3b4d35fc64d2ad9"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr const <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a7defaff63082a2ffb3b4d35fc64d2ad9">get</a> () const &amp;noexcept</td></tr>
 <tr class="separator:a7defaff63082a2ffb3b4d35fc64d2ad9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a904f799c60fcaca149e0985878e71c05"><td class="memTemplParams" colspan="2"><a id="a904f799c60fcaca149e0985878e71c05" name="a904f799c60fcaca149e0985878e71c05"></a>
-template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
-<tr class="memitem:a904f799c60fcaca149e0985878e71c05"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> () &amp;&amp;</td></tr>
+<tr class="memitem:a904f799c60fcaca149e0985878e71c05"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a904f799c60fcaca149e0985878e71c05"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a904f799c60fcaca149e0985878e71c05">get</a> () &amp;&amp;</td></tr>
 <tr class="separator:a904f799c60fcaca149e0985878e71c05"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a78555ae5f4b829970ab37bd50ac5dd99"><td class="memTemplParams" colspan="2"><a id="a78555ae5f4b829970ab37bd50ac5dd99" name="a78555ae5f4b829970ab37bd50ac5dd99"></a>
-template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
-<tr class="memitem:a78555ae5f4b829970ab37bd50ac5dd99"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr const <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><b>get</b> () const &amp;&amp;noexcept</td></tr>
+<tr class="memitem:a78555ae5f4b829970ab37bd50ac5dd99"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </td></tr>
+<tr class="memitem:a78555ae5f4b829970ab37bd50ac5dd99"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr const <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp;&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a78555ae5f4b829970ab37bd50ac5dd99">get</a> () const &amp;&amp;noexcept</td></tr>
 <tr class="separator:a78555ae5f4b829970ab37bd50ac5dd99"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad45b7fc0ab9b4abd339ddd34f5a7e994"><td class="memTemplParams" colspan="2"><a id="ad45b7fc0ab9b4abd339ddd34f5a7e994" name="ad45b7fc0ab9b4abd339ddd34f5a7e994"></a>
-template&lt;class Detail  = T&gt; </td></tr>
-<tr class="memitem:ad45b7fc0ab9b4abd339ddd34f5a7e994"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator std::enable_if_t&lt; std::is_pointer_v, ObjectType * &gt;</b> () const noexcept</td></tr>
+<tr class="memitem:ad45b7fc0ab9b4abd339ddd34f5a7e994"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T&gt; </td></tr>
+<tr class="memitem:ad45b7fc0ab9b4abd339ddd34f5a7e994"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#ad45b7fc0ab9b4abd339ddd34f5a7e994">operator std::enable_if_t&lt; std::is_pointer_v, ObjectType * &gt;</a> () const noexcept</td></tr>
 <tr class="separator:ad45b7fc0ab9b4abd339ddd34f5a7e994"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4b79d64e058fe83ef43e3e38f6c6088"><td class="memTemplParams" colspan="2"><a id="ae4b79d64e058fe83ef43e3e38f6c6088" name="ae4b79d64e058fe83ef43e3e38f6c6088"></a>
-template&lt;class Detail  = T&gt; </td></tr>
-<tr class="memitem:ae4b79d64e058fe83ef43e3e38f6c6088"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator std::enable_if_t&lt;!std::is_pointer_v, ObjectType &amp; &gt;</b> () &amp;noexcept</td></tr>
+<tr class="memitem:ae4b79d64e058fe83ef43e3e38f6c6088"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T&gt; </td></tr>
+<tr class="memitem:ae4b79d64e058fe83ef43e3e38f6c6088"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#ae4b79d64e058fe83ef43e3e38f6c6088">operator std::enable_if_t&lt;!std::is_pointer_v, ObjectType &amp; &gt;</a> () &amp;noexcept</td></tr>
 <tr class="separator:ae4b79d64e058fe83ef43e3e38f6c6088"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeeeb254e5fdf99a34ff37d5b3ce55814"><td class="memTemplParams" colspan="2"><a id="aeeeb254e5fdf99a34ff37d5b3ce55814" name="aeeeb254e5fdf99a34ff37d5b3ce55814"></a>
-template&lt;class Detail  = T&gt; </td></tr>
-<tr class="memitem:aeeeb254e5fdf99a34ff37d5b3ce55814"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator std::enable_if_t&lt;!std::is_pointer_v, const ObjectType &amp; &gt;</b> () const &amp;noexcept</td></tr>
+<tr class="memitem:aeeeb254e5fdf99a34ff37d5b3ce55814"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T&gt; </td></tr>
+<tr class="memitem:aeeeb254e5fdf99a34ff37d5b3ce55814"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#aeeeb254e5fdf99a34ff37d5b3ce55814">operator std::enable_if_t&lt;!std::is_pointer_v, const ObjectType &amp; &gt;</a> () const &amp;noexcept</td></tr>
 <tr class="separator:aeeeb254e5fdf99a34ff37d5b3ce55814"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae7a2e024185f691169dcfd611e578627"><td class="memTemplParams" colspan="2"><a id="ae7a2e024185f691169dcfd611e578627" name="ae7a2e024185f691169dcfd611e578627"></a>
-template&lt;class Detail  = T&gt; </td></tr>
-<tr class="memitem:ae7a2e024185f691169dcfd611e578627"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator std::enable_if_t&lt;!std::is_pointer_v, const ObjectType &amp; &gt;</b> () const &amp;&amp;noexcept</td></tr>
+<tr class="memitem:ae7a2e024185f691169dcfd611e578627"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T&gt; </td></tr>
+<tr class="memitem:ae7a2e024185f691169dcfd611e578627"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#ae7a2e024185f691169dcfd611e578627">operator std::enable_if_t&lt;!std::is_pointer_v, const ObjectType &amp; &gt;</a> () const &amp;&amp;noexcept</td></tr>
 <tr class="separator:ae7a2e024185f691169dcfd611e578627"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae58cb134a1a5f1856f9d1a4fae058233"><td class="memTemplParams" colspan="2"><a id="ae58cb134a1a5f1856f9d1a4fae058233" name="ae58cb134a1a5f1856f9d1a4fae058233"></a>
-template&lt;class Detail  = T&gt; </td></tr>
-<tr class="memitem:ae58cb134a1a5f1856f9d1a4fae058233"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><b>operator std::enable_if_t&lt;!std::is_pointer_v, ObjectType &amp;&amp; &gt;</b> () &amp;&amp;</td></tr>
+<tr class="memitem:ae58cb134a1a5f1856f9d1a4fae058233"><td class="memTemplParams" colspan="2">template&lt;class Detail  = T&gt; </td></tr>
+<tr class="memitem:ae58cb134a1a5f1856f9d1a4fae058233"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#ae58cb134a1a5f1856f9d1a4fae058233">operator std::enable_if_t&lt;!std::is_pointer_v, ObjectType &amp;&amp; &gt;</a> () &amp;&amp;</td></tr>
 <tr class="separator:ae58cb134a1a5f1856f9d1a4fae058233"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a806d69f55525e554f365d0fc2803b5a4"><td class="memItemLeft" align="right" valign="top"><a id="a806d69f55525e554f365d0fc2803b5a4" name="a806d69f55525e554f365d0fc2803b5a4"></a>
-<a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a5645a3e0fb6ef89210d4d0adf58f59b6">ValueType</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const</td></tr>
+<tr class="memitem:a806d69f55525e554f365d0fc2803b5a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a5645a3e0fb6ef89210d4d0adf58f59b6">ValueType</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a806d69f55525e554f365d0fc2803b5a4">operator-&gt;</a> () const</td></tr>
 <tr class="separator:a806d69f55525e554f365d0fc2803b5a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8b3b7494cbe12fd35531269d687ea961"><td class="memItemLeft" align="right" valign="top"><a id="a8b3b7494cbe12fd35531269d687ea961" name="a8b3b7494cbe12fd35531269d687ea961"></a>
-<a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a5645a3e0fb6ef89210d4d0adf58f59b6">ValueType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const</td></tr>
+<tr class="memitem:a8b3b7494cbe12fd35531269d687ea961"><td class="memItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a5645a3e0fb6ef89210d4d0adf58f59b6">ValueType</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a8b3b7494cbe12fd35531269d687ea961">operator*</a> () const</td></tr>
 <tr class="separator:a8b3b7494cbe12fd35531269d687ea961"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><div class="compoundTemplParams">template&lt;class T&gt;<br />
-class jaut::NonNull&lt; T &gt;</div><p>Allows to pass a pointer that should not be assigned nullptr.</p>
+class jaut::NonNull&lt; T &gt;</div><p>Allows to pass a pointer that should not be assigned nullptr. </p>
 <p>Note that if pointers that were nullptr assigned prior to passing, this will make a runtime check and responds correspondingly depending on the mode that was set with JAUT_CORE_NONNULL_HANDLE_NULLPTRS.</p>
 <table class="doxtable">
 <caption>There is three possible approaches</caption>
@@ -222,6 +210,7 @@ template&lt;class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The full type passed to the class. </p>
 
 </div>
@@ -239,19 +228,511 @@ template&lt;class T &gt; </div>
         </tr>
       </table>
 </div><div class="memdoc">
+
 <p>The content type passed to the class. </p>
 
 </div>
 </div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a7856194062e9d20787787b6bf7c2656d" name="a7856194062e9d20787787b6bf7c2656d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7856194062e9d20787787b6bf7c2656d">&#9670;&#160;</a></span>NonNull() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::NonNull </td>
+          <td>(</td>
+          <td class="paramtype">std::nullptr_t&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5d12ec426e2627d8e6da9ff4d6eaa465" name="a5d12ec426e2627d8e6da9ff4d6eaa465"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d12ec426e2627d8e6da9ff4d6eaa465">&#9670;&#160;</a></span>NonNull() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class U , std::enable_if_t&lt; std::is_constructible_v&lt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a>, U &gt; &gt; *  = nullptr&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::NonNull </td>
+          <td>(</td>
+          <td class="paramtype">U &amp;&amp;&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a88cdb35513c9bed0267c5a8fc0d1dc1a" name="a88cdb35513c9bed0267c5a8fc0d1dc1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a88cdb35513c9bed0267c5a8fc0d1dc1a">&#9670;&#160;</a></span>operator=() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a> &amp; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype">std::nullptr_t&#160;</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="acc2befdf59a8a94fa198779691c91829" name="acc2befdf59a8a94fa198779691c91829"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc2befdf59a8a94fa198779691c91829">&#9670;&#160;</a></span>operator=() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class U , std::enable_if_t&lt; std::is_convertible_v&lt; U, <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &gt; &gt; *  = nullptr&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a> &amp; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator= </td>
+          <td>(</td>
+          <td class="paramtype">U &amp;&amp;&#160;</td>
+          <td class="paramname"><em>obj</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aedaed64a8777569734bb5de43c0878b0" name="aedaed64a8777569734bb5de43c0878b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedaed64a8777569734bb5de43c0878b0">&#9670;&#160;</a></span>operator bool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator bool </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">delete</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a3c554d53c852daf8935b5a006944f4b9" name="a3c554d53c852daf8935b5a006944f4b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c554d53c852daf8935b5a006944f4b9">&#9670;&#160;</a></span>get() <span class="overload">[1/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T, std::enable_if_t&lt; std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> * <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p class="reference">Referenced by <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a3a0b2db76333b58dfccbbd5d58280cd0">jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;::send()</a>, and <a class="el" href="../../d8/da9/classjaut_1_1MessageHandler.html#a0d0cedacd692c0f0db2f9654471427ab">jaut::MessageHandler&lt; BufferSize, BackBufferSize &gt;::send()</a>.</p>
+
+</div>
+</div>
+<a id="ae5cacab928cc21332d04cdac806da444" name="ae5cacab928cc21332d04cdac806da444"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae5cacab928cc21332d04cdac806da444">&#9670;&#160;</a></span>get() <span class="overload">[2/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a7defaff63082a2ffb3b4d35fc64d2ad9" name="a7defaff63082a2ffb3b4d35fc64d2ad9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7defaff63082a2ffb3b4d35fc64d2ad9">&#9670;&#160;</a></span>get() <span class="overload">[3/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr const <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a904f799c60fcaca149e0985878e71c05" name="a904f799c60fcaca149e0985878e71c05"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a904f799c60fcaca149e0985878e71c05">&#9670;&#160;</a></span>get() <span class="overload">[4/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a78555ae5f4b829970ab37bd50ac5dd99" name="a78555ae5f4b829970ab37bd50ac5dd99"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a78555ae5f4b829970ab37bd50ac5dd99">&#9670;&#160;</a></span>get() <span class="overload">[5/5]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T, std::enable_if_t&lt;!std::is_pointer_v&lt; Detail &gt; &gt; *  = nullptr&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr const <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad45b7fc0ab9b4abd339ddd34f5a7e994" name="ad45b7fc0ab9b4abd339ddd34f5a7e994"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad45b7fc0ab9b4abd339ddd34f5a7e994">&#9670;&#160;</a></span>operator std::enable_if_t&lt; std::is_pointer_v, ObjectType * &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator std::enable_if_t&lt; std::is_pointer_v, <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> * &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae4b79d64e058fe83ef43e3e38f6c6088" name="ae4b79d64e058fe83ef43e3e38f6c6088"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4b79d64e058fe83ef43e3e38f6c6088">&#9670;&#160;</a></span>operator std::enable_if_t&lt;!std::is_pointer_v, ObjectType &amp; &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator std::enable_if_t&lt;!std::is_pointer_v, <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp; &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeeeb254e5fdf99a34ff37d5b3ce55814" name="aeeeb254e5fdf99a34ff37d5b3ce55814"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeeeb254e5fdf99a34ff37d5b3ce55814">&#9670;&#160;</a></span>operator std::enable_if_t&lt;!std::is_pointer_v, const ObjectType &amp; &gt;() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator std::enable_if_t&lt;!std::is_pointer_v, const <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp; &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const &amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae7a2e024185f691169dcfd611e578627" name="ae7a2e024185f691169dcfd611e578627"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7a2e024185f691169dcfd611e578627">&#9670;&#160;</a></span>operator std::enable_if_t&lt;!std::is_pointer_v, const ObjectType &amp; &gt;() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator std::enable_if_t&lt;!std::is_pointer_v, const <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp; &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae58cb134a1a5f1856f9d1a4fae058233" name="ae58cb134a1a5f1856f9d1a4fae058233"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae58cb134a1a5f1856f9d1a4fae058233">&#9670;&#160;</a></span>operator std::enable_if_t&lt;!std::is_pointer_v, ObjectType &amp;&amp; &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<div class="memtemplate">
+template&lt;class Detail  = T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator std::enable_if_t&lt;!std::is_pointer_v, <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#af12c2506cc1fc97adc3aadfd053f305e">ObjectType</a> &amp;&amp; &gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> &amp;&amp;</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">explicit</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a806d69f55525e554f365d0fc2803b5a4" name="a806d69f55525e554f365d0fc2803b5a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a806d69f55525e554f365d0fc2803b5a4">&#9670;&#160;</a></span>operator-&gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a5645a3e0fb6ef89210d4d0adf58f59b6">ValueType</a> * <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator-&gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b3b7494cbe12fd35531269d687ea961" name="a8b3b7494cbe12fd35531269d687ea961"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b3b7494cbe12fd35531269d687ea961">&#9670;&#160;</a></span>operator*()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;class T &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> constexpr <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html#a5645a3e0fb6ef89210d4d0adf58f59b6">ValueType</a> &amp; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull</a>&lt; T &gt;::operator* </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>/github/workspace/modules/jaut_core/util/<a class="el" href="../../d7/d07/jaut__CommonUtils_8h_source.html">jaut_CommonUtils.h</a></li>
+<li>/github/workspace/modules/jaut_core/util/<a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html">jaut_CommonUtils.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><b>jaut</b></li><li class="navelem"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a></li>
+    <li class="navelem"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></li><li class="navelem"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="../../doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.7 </li>
   </ul>
 </div>

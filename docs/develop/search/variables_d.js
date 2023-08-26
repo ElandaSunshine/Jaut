@@ -1,12 +1,14 @@
 var searchData=
 [
-  ['same_0',['same',['../d7/d77/structjaut_1_1TypeArray.html#a58044627833abc81311206d329fb21d0',1,'jaut::TypeArray::same'],['../d8/d13/structjaut_1_1TypeArray_3_4.html#a4f676c2d84913dd4b7d4fc9994573fcd',1,'jaut::TypeArray&lt;&gt;::same']]],
-  ['samplerate_1',['sampleRate',['../d9/d1f/structjaut_1_1ProcessSpec.html#afd63e24e05e9cb6ed0a7da11f99b6366',1,'jaut::ProcessSpec']]],
-  ['savedautomatically_2',['SavedAutomatically',['../d6/d32/classjaut_1_1Config.html#a16bb68736a5a542caa22f503a82d3f25',1,'jaut::Config']]],
-  ['semverfullpattern_3',['semVerFullPattern',['../d9/d54/classjaut_1_1Version.html#ad7d5ae6bbf25b2d07d3989835eb247ef',1,'jaut::Version']]],
-  ['separatorthickness_4',['separatorThickness',['../d3/dde/structjaut_1_1SplitPanel_1_1Style.html#a69c637851575e36ae7b38c7e1089af3f',1,'jaut::SplitPanel::Style']]],
-  ['shouldcache_5',['shouldCache',['../d8/df3/structjaut_1_1LogFormatJson_1_1Options.html#ac77e18e1e75b3eba5324f55fd53216cf',1,'jaut::LogFormatJson::Options::shouldCache'],['../d6/d8f/structjaut_1_1LogFormatXml_1_1Options.html#a4507523f63c08a376dcff111be40eecf',1,'jaut::LogFormatXml::Options::shouldCache']]],
-  ['size_6',['size',['../d7/d77/structjaut_1_1TypeArray.html#a41139a5c56a77dc3006e0dafdba1b2b3',1,'jaut::TypeArray::size'],['../d8/d13/structjaut_1_1TypeArray_3_4.html#a0b479d9f4e39ceb3267875dbec70bd08',1,'jaut::TypeArray&lt;&gt;::size']]],
-  ['stricttyping_7',['strictTyping',['../df/dfb/structjaut_1_1Config_1_1Options.html#aa58005d1b641f62dd251d3ba75f9e721',1,'jaut::Config::Options']]],
-  ['successful_8',['Successful',['../d6/d0a/jaut__OperationResult_8h.html#aebc02b3a0ed25196cd9bb8bcc6dcdd4b',1,'jaut_OperationResult.h']]]
+  ['padding_0',['padding',['../d2/d04/structjaut_1_1ExtraComponent_1_1ContainerStyle.html#a38d63e4877f67e9a9e9012710cfb0998',1,'jaut::ExtraComponent::ContainerStyle']]],
+  ['pageviewmargin_1',['pageViewMargin',['../dc/dbd/structjaut_1_1MultiPagePanel_1_1Style.html#ade4a046e4fe9cd522bac2b2e78224754',1,'jaut::MultiPagePanel::Style']]],
+  ['parametercount_2',['parameterCount',['../dd/d47/structjaut_1_1Function_3_01Func_01_4.html#ab76225f0a45fbb41f0621efc57a94fcf',1,'jaut::Function&lt; Func &gt;']]],
+  ['patch_3',['patch',['../d9/d54/classjaut_1_1Version.html#aefbd9c9afdaaffebb37b88dc28cccf2a',1,'jaut::Version']]],
+  ['policies_4',['policies',['../d0/d92/structjaut_1_1FlushPolicy_1_1Settings.html#a459373392346d017a4efe380d4a4114a',1,'jaut::FlushPolicy::Settings']]],
+  ['policyonanychange_5',['policyOnAnyChange',['../df/dfb/structjaut_1_1Config_1_1Options.html#ab3727a1735926010fe8894964ff37749',1,'jaut::Config::Options']]],
+  ['policyonvaluechange_6',['policyOnValueChange',['../df/dfb/structjaut_1_1Config_1_1Options.html#a72508d3e19e9afeff6d7d433e3aeba47',1,'jaut::Config::Options']]],
+  ['preferreplacingformatter_7',['preferReplacingFormatter',['../d8/df3/structjaut_1_1LogFormatJson_1_1Options.html#a7901a4f63e18e9a07e22f1d30f2b717d',1,'jaut::LogFormatJson::Options::preferReplacingFormatter'],['../d6/d8f/structjaut_1_1LogFormatXml_1_1Options.html#aaa4ad14bfa533e5dbc37698ce126eb68',1,'jaut::LogFormatXml::Options::preferReplacingFormatter']]],
+  ['prerelease_8',['preRelease',['../d9/d54/classjaut_1_1Version.html#a77a61d61e9dd0ec96a1cbf4b334a361a',1,'jaut::Version']]],
+  ['prettyprint_9',['prettyPrint',['../d8/df3/structjaut_1_1LogFormatJson_1_1Options.html#a4d44ef09ae3f398e340311dea92c2f06',1,'jaut::LogFormatJson::Options']]],
+  ['propertyadded_10',['PropertyAdded',['../d6/d32/classjaut_1_1Config.html#a2b69893a2bffbf57e4e409170e55d858',1,'jaut::Config::PropertyAdded'],['../d9/daa/classjaut_1_1Config_1_1Property.html#a32042cab300bc01d1baa4deccb82ddaf',1,'jaut::Config::Property::PropertyAdded']]]
 ];

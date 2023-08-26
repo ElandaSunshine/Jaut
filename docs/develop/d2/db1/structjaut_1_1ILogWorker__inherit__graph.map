@@ -1,0 +1,7 @@
+<map id="jaut::ILogWorker" name="jaut::ILogWorker">
+<area shape="rect" id="Node000001" title="A worker is a separate layer to a jaut::BasicLogger, used to actually transport messages to the loggi..." alt="" coords="5,46,121,72"/>
+<area shape="rect" id="Node000002" href="$d5/d59/classjaut_1_1LogWorkerAsync.html" title="The async log worker, which works asynchronously to the threads the logger is used by." alt="" coords="169,5,362,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,45,168,39,169,44,136,50"/>
+<area shape="rect" id="Node000003" href="$db/d7a/classjaut_1_1LogWorkerSimple.html" title="The simple log worker which works synchronously to the thread the logger is owned by." alt="" coords="169,71,362,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="136,68,169,73,168,78,135,73"/>
+</map>

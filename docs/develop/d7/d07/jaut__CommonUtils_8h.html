@@ -105,6 +105,7 @@ $(document).ready(function(){initNavTree('d7/d07/jaut__CommonUtils_8h.html','../
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#define-members">Macros</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
 <a href="#func-members">Functions</a> &#124;
@@ -112,109 +113,143 @@ $(document).ready(function(){initNavTree('d7/d07/jaut__CommonUtils_8h.html','../
   <div class="headertitle"><div class="title">jaut_CommonUtils.h File Reference</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><code>#include &lt;<a class="el" href="../../d3/d9e/jaut__Define_8h_source.html">jaut_core/define/jaut_Define.h</a>&gt;</code><br />
-<code>#include &lt;jaut_core/util/jaut_TypeContainer.h&gt;</code><br />
-<code>#include &lt;stdexcept&gt;</code><br />
-</div>
-<p><a href="../../d7/d07/jaut__CommonUtils_8h_source.html">Go to the source code of this file.</a></p>
+
+<p>─────────────────────────────── ⋆⋅☆⋅⋆ ─────────────────────────────── ░░░░░██╗░█████╗░██╗░░░██╗████████╗ ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝ ░░░░░██║███████║██║░░░██║░░░██║░░░ ██╗░░██║██╔══██║██║░░░██║░░░██║░░░ ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░ ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░ JUCE Augmented Utility Toolbox ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="nested-classes" name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">jaut::NonNull&lt; T &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Allows to pass a pointer that should not be assigned nullptr.  <a href="../../d6/d62/classjaut_1_1NonNull.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d2/d2b/structjaut_1_1unique__construct__t.html">jaut::unique_construct_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type used for optional function overloads to instruct to allocate the object as std::unique_ptr.  <a href="../../d2/d2b/structjaut_1_1unique__construct__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../da/d0b/structjaut_1_1shared__construct__t.html">jaut::shared_construct_t</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A type used for optional function overloads to instruct to allocate the object as std::shared_ptr.  <a href="../../da/d0b/structjaut_1_1shared__construct__t.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../dc/d70/structjaut_1_1ArgFilter.html">jaut::ArgFilter&lt; Predicate, Args &gt;</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Provides a filter for variadic function templates, which allows, based on the given predicate, to filter out a set of arguments and process them whatever way needed.  <a href="../../dc/d70/structjaut_1_1ArgFilter.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="namespaces" name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:d8/d02/namespacejaut"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html">jaut</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:d0/d7d/namespacejaut_1_1detail"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d0/d7d/namespacejaut_1_1detail.html">jaut::detail</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a8b8eb2a5a171aca8fe79060ae3eca222"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a8b8eb2a5a171aca8fe79060ae3eca222">dbgassertfalse</a>(MSG)</td></tr>
+<tr class="memdesc:a8b8eb2a5a171aca8fe79060ae3eca222"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses JUCE's jasserts to always assert false, but prints a message first.  <br /></td></tr>
 <tr class="separator:a8b8eb2a5a171aca8fe79060ae3eca222"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a28086e1f4101f318ded2d2f45a5ca807"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a28086e1f4101f318ded2d2f45a5ca807">dbgassert</a>(COND,  MSG)</td></tr>
+<tr class="memdesc:a28086e1f4101f318ded2d2f45a5ca807"><td class="mdescLeft">&#160;</td><td class="mdescRight">Uses JUCE's jasserts to assert false if the condition was not true, but prints a message first.  <br /></td></tr>
 <tr class="separator:a28086e1f4101f318ded2d2f45a5ca807"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
 <tr class="memitem:a7bd0624d1142801f5fdc9896d64ee018"><td class="memTemplParams" colspan="2">template&lt;class Ret , class ... Types&gt; </td></tr>
-<tr class="memitem:a7bd0624d1142801f5fdc9896d64ee018"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a7bd0624d1142801f5fdc9896d64ee018">jaut::FunctionPointer_t</a> = Ret(*)(Types...)</td></tr>
+<tr class="memitem:a7bd0624d1142801f5fdc9896d64ee018"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#a7bd0624d1142801f5fdc9896d64ee018">jaut::FunctionPointer_t</a> = Ret(*)(Types...)</td></tr>
+<tr class="memdesc:a7bd0624d1142801f5fdc9896d64ee018"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience type-wrapper for function pointers.  <br /></td></tr>
 <tr class="separator:a7bd0624d1142801f5fdc9896d64ee018"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a037076626db7e3316654747da6f06cd2"><td class="memTemplParams" colspan="2">template&lt;class Obj , class Ret , class ... Types&gt; </td></tr>
-<tr class="memitem:a037076626db7e3316654747da6f06cd2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a037076626db7e3316654747da6f06cd2">jaut::MemberFunctionPointer_t</a> = Ret(Obj::*)(Types...)</td></tr>
+<tr class="memitem:a037076626db7e3316654747da6f06cd2"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#a037076626db7e3316654747da6f06cd2">jaut::MemberFunctionPointer_t</a> = Ret(Obj::*)(Types...)</td></tr>
+<tr class="memdesc:a037076626db7e3316654747da6f06cd2"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience type-wrapper for pointer-to-member functions.  <br /></td></tr>
 <tr class="separator:a037076626db7e3316654747da6f06cd2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a852780d3cb551fbcd80dd137b884e979"><td class="memTemplParams" colspan="2">template&lt;class Obj , class T &gt; </td></tr>
-<tr class="memitem:a852780d3cb551fbcd80dd137b884e979"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a852780d3cb551fbcd80dd137b884e979">jaut::MemberDataPointer_t</a> = T Obj::*</td></tr>
+<tr class="memitem:a852780d3cb551fbcd80dd137b884e979"><td class="memTemplItemLeft" align="right" valign="top">using&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#a852780d3cb551fbcd80dd137b884e979">jaut::MemberDataPointer_t</a> = T Obj::*</td></tr>
+<tr class="memdesc:a852780d3cb551fbcd80dd137b884e979"><td class="mdescLeft">&#160;</td><td class="mdescRight">A convenience type-wrapper for pointer-to-member objects.  <br /></td></tr>
 <tr class="separator:a852780d3cb551fbcd80dd137b884e979"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a45c0260c401e798c23f24c47bfe20918"><td class="memTemplParams" colspan="2"><a id="a45c0260c401e798c23f24c47bfe20918" name="a45c0260c401e798c23f24c47bfe20918"></a>
-template&lt;class ... Args&gt; </td></tr>
-<tr class="memitem:a45c0260c401e798c23f24c47bfe20918"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a1fc819887cbf8401f88dc3de442259c6">JAUT_API</a> constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><b>jaut::ignore</b> (Args &amp;&amp;...)</td></tr>
+<tr class="memitem:a45c0260c401e798c23f24c47bfe20918"><td class="memTemplParams" colspan="2">template&lt;class ... Args&gt; </td></tr>
+<tr class="memitem:a45c0260c401e798c23f24c47bfe20918"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a1fc819887cbf8401f88dc3de442259c6">JAUT_API</a> constexpr void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#a45c0260c401e798c23f24c47bfe20918">jaut::ignore</a> (Args &amp;&amp;...)</td></tr>
 <tr class="separator:a45c0260c401e798c23f24c47bfe20918"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a3131516ce2a494a5b95fd820f26525"><td class="memTemplParams" colspan="2"><a id="a0a3131516ce2a494a5b95fd820f26525" name="a0a3131516ce2a494a5b95fd820f26525"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:a0a3131516ce2a494a5b95fd820f26525"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memTemplItemRight" valign="bottom"><b>jaut::getActualTypeName</b> (<a class="el" href="../../d3/d9e/jaut__Define_8h.html#a378648d70b8953efd61491409603599f">JAUT_MUNUSED</a> T *const type)</td></tr>
+<tr class="memitem:a0a3131516ce2a494a5b95fd820f26525"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:a0a3131516ce2a494a5b95fd820f26525"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#a0a3131516ce2a494a5b95fd820f26525">jaut::getActualTypeName</a> (<a class="el" href="../../d3/d9e/jaut__Define_8h.html#a378648d70b8953efd61491409603599f">JAUT_MUNUSED</a> T *const type)</td></tr>
 <tr class="separator:a0a3131516ce2a494a5b95fd820f26525"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4ce4bb74ea73e3c75ee03627f0eccdb"><td class="memTemplParams" colspan="2"><a id="ad4ce4bb74ea73e3c75ee03627f0eccdb" name="ad4ce4bb74ea73e3c75ee03627f0eccdb"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:ad4ce4bb74ea73e3c75ee03627f0eccdb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memTemplItemRight" valign="bottom"><b>jaut::getActualTypeName</b> ()</td></tr>
+<tr class="memitem:ad4ce4bb74ea73e3c75ee03627f0eccdb"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ad4ce4bb74ea73e3c75ee03627f0eccdb"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#ad4ce4bb74ea73e3c75ee03627f0eccdb">jaut::getActualTypeName</a> ()</td></tr>
 <tr class="separator:ad4ce4bb74ea73e3c75ee03627f0eccdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af8df8c13ed582f62e0f15dec12bcdc36"><td class="memTemplParams" colspan="2"><a id="af8df8c13ed582f62e0f15dec12bcdc36" name="af8df8c13ed582f62e0f15dec12bcdc36"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:af8df8c13ed582f62e0f15dec12bcdc36"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memTemplItemRight" valign="bottom"><b>jaut::getActualTypeName</b> (<a class="el" href="../../d3/d9e/jaut__Define_8h.html#a378648d70b8953efd61491409603599f">JAUT_MUNUSED</a> T &amp;type)</td></tr>
+<tr class="memitem:af8df8c13ed582f62e0f15dec12bcdc36"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:af8df8c13ed582f62e0f15dec12bcdc36"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> juce::String&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#af8df8c13ed582f62e0f15dec12bcdc36">jaut::getActualTypeName</a> (<a class="el" href="../../d3/d9e/jaut__Define_8h.html#a378648d70b8953efd61491409603599f">JAUT_MUNUSED</a> T &amp;type)</td></tr>
 <tr class="separator:af8df8c13ed582f62e0f15dec12bcdc36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:afce036eb8e9ff8b48721c3665c3104d4"><td class="memTemplParams" colspan="2"><a id="afce036eb8e9ff8b48721c3665c3104d4" name="afce036eb8e9ff8b48721c3665c3104d4"></a>
-template&lt;class U &gt; </td></tr>
-<tr class="memitem:afce036eb8e9ff8b48721c3665c3104d4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>jaut::NonNull</b> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; U &gt; &amp;) -&gt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; U &gt;</td></tr>
+<tr class="memitem:afce036eb8e9ff8b48721c3665c3104d4"><td class="memTemplParams" colspan="2">template&lt;class U &gt; </td></tr>
+<tr class="memitem:afce036eb8e9ff8b48721c3665c3104d4"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#afce036eb8e9ff8b48721c3665c3104d4">jaut::NonNull</a> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; U &gt; &amp;) -&gt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; U &gt;</td></tr>
 <tr class="separator:afce036eb8e9ff8b48721c3665c3104d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a597b54878b7683f0f325614cc30b3341"><td class="memTemplParams" colspan="2"><a id="a597b54878b7683f0f325614cc30b3341" name="a597b54878b7683f0f325614cc30b3341"></a>
-template&lt;class U &gt; </td></tr>
-<tr class="memitem:a597b54878b7683f0f325614cc30b3341"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>jaut::NonNull</b> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; U &gt; &amp;&amp;) -&gt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; U &gt;</td></tr>
+<tr class="memitem:a597b54878b7683f0f325614cc30b3341"><td class="memTemplParams" colspan="2">template&lt;class U &gt; </td></tr>
+<tr class="memitem:a597b54878b7683f0f325614cc30b3341"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#a597b54878b7683f0f325614cc30b3341">jaut::NonNull</a> (<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; U &gt; &amp;&amp;) -&gt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; U &gt;</td></tr>
 <tr class="separator:a597b54878b7683f0f325614cc30b3341"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac1c06e6762e6ac65fd9be29ea63d7426"><td class="memTemplParams" colspan="2"><a id="ac1c06e6762e6ac65fd9be29ea63d7426" name="ac1c06e6762e6ac65fd9be29ea63d7426"></a>
-template&lt;class T &gt; </td></tr>
-<tr class="memitem:ac1c06e6762e6ac65fd9be29ea63d7426"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a1fc819887cbf8401f88dc3de442259c6">JAUT_API</a> auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>jaut::makeNonNull</b> (T &amp;&amp;obj) noexcept(noexcept(<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>(std::forward&lt; T &gt;(obj)))) -&gt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; T &gt;</td></tr>
+<tr class="memitem:ac1c06e6762e6ac65fd9be29ea63d7426"><td class="memTemplParams" colspan="2">template&lt;class T &gt; </td></tr>
+<tr class="memitem:ac1c06e6762e6ac65fd9be29ea63d7426"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> <a class="el" href="../../d3/d9e/jaut__Define_8h.html#a1fc819887cbf8401f88dc3de442259c6">JAUT_API</a> auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#ac1c06e6762e6ac65fd9be29ea63d7426">jaut::makeNonNull</a> (T &amp;&amp;obj) noexcept(noexcept(<a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>(std::forward&lt; T &gt;(obj)))) -&gt; <a class="el" href="../../d6/d62/classjaut_1_1NonNull.html">NonNull</a>&lt; T &gt;</td></tr>
 <tr class="separator:ac1c06e6762e6ac65fd9be29ea63d7426"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ac4ab89f242e38c232b37fd14eb1689"><td class="memTemplParams" colspan="2"><a id="a2ac4ab89f242e38c232b37fd14eb1689" name="a2ac4ab89f242e38c232b37fd14eb1689"></a>
-template&lt;class Fn , class ... Args, int ... Indices, class TypeList  = TypeArray&lt;Args...&gt;&gt; </td></tr>
-<tr class="memitem:a2ac4ab89f242e38c232b37fd14eb1689"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><b>jaut::detail::filterArguments</b> (std::integer_sequence&lt; int, Indices... &gt;, Fn &amp;&amp;invocable, std::tuple&lt; Args... &gt; &amp;&amp;tuple) noexcept(noexcept(std::forward&lt; Fn &gt;(invocable)(std::forward&lt; typename TypeList::template at&lt; Indices &gt; &gt;(std::get&lt; Indices &gt;(tuple))...)))</td></tr>
+<tr class="memitem:a2ac4ab89f242e38c232b37fd14eb1689"><td class="memTemplParams" colspan="2">template&lt;class Fn , class ... Args, int ... Indices, class TypeList  = TypeArray&lt;Args...&gt;&gt; </td></tr>
+<tr class="memitem:a2ac4ab89f242e38c232b37fd14eb1689"><td class="memTemplItemLeft" align="right" valign="top">constexpr decltype(auto)&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d0/d7d/namespacejaut_1_1detail.html#a2ac4ab89f242e38c232b37fd14eb1689">jaut::detail::filterArguments</a> (std::integer_sequence&lt; int, Indices... &gt;, Fn &amp;&amp;invocable, std::tuple&lt; Args... &gt; &amp;&amp;tuple) noexcept(noexcept(std::forward&lt; Fn &gt;(invocable)(std::forward&lt; typename TypeList::template at&lt; Indices &gt; &gt;(std::get&lt; Indices &gt;(tuple))...)))</td></tr>
 <tr class="separator:a2ac4ab89f242e38c232b37fd14eb1689"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae57f6401a7ce99eba81873bd7f07b7d"><td class="memTemplParams" colspan="2">template&lt;class Derived , class Base &gt; </td></tr>
-<tr class="memitem:aae57f6401a7ce99eba81873bd7f07b7d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> Derived&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#aae57f6401a7ce99eba81873bd7f07b7d">jaut::stynamic_cast</a> (Base *const base) noexcept</td></tr>
+<tr class="memitem:aae57f6401a7ce99eba81873bd7f07b7d"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> Derived&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#aae57f6401a7ce99eba81873bd7f07b7d">jaut::stynamic_cast</a> (Base *const base) noexcept</td></tr>
+<tr class="memdesc:aae57f6401a7ce99eba81873bd7f07b7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to downcast a base class to a derived class without the overhead of "dynamic_cast", this should be used when you are 100% certain that a base class pointer will be an instance to a derived class.  <br /></td></tr>
 <tr class="separator:aae57f6401a7ce99eba81873bd7f07b7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab438476159dede0bcaf144e83c41091c"><td class="memTemplParams" colspan="2">template&lt;class Derived , class Base &gt; </td></tr>
-<tr class="memitem:ab438476159dede0bcaf144e83c41091c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> Derived&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#ab438476159dede0bcaf144e83c41091c">jaut::stynamic_cast</a> (Base &amp;base) noexcept</td></tr>
+<tr class="memitem:ab438476159dede0bcaf144e83c41091c"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> Derived&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#ab438476159dede0bcaf144e83c41091c">jaut::stynamic_cast</a> (Base &amp;base) noexcept</td></tr>
+<tr class="memdesc:ab438476159dede0bcaf144e83c41091c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tries to downcast a base class to a derived class without the overhead of "dynamic_cast", this should be used when you are 100% certain that a base class pointer will be an instance to a derived class.  <br /></td></tr>
 <tr class="separator:ab438476159dede0bcaf144e83c41091c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5e9d5328b4b5f08c8532436b9737c872"><td class="memTemplParams" colspan="2">template&lt;class Exception &gt; </td></tr>
-<tr class="memitem:a5e9d5328b4b5f08c8532436b9737c872"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a5e9d5328b4b5f08c8532436b9737c872">jaut::throwAssertFalse</a> (const juce::String &amp;message)</td></tr>
+<tr class="memitem:a5e9d5328b4b5f08c8532436b9737c872"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#a5e9d5328b4b5f08c8532436b9737c872">jaut::throwAssertFalse</a> (const juce::String &amp;message)</td></tr>
+<tr class="memdesc:a5e9d5328b4b5f08c8532436b9737c872"><td class="mdescLeft">&#160;</td><td class="mdescRight">Will assert in debug mode before throwing an exception, so as to that it's easier to find the root cause of a problem in your program.  <br /></td></tr>
 <tr class="separator:a5e9d5328b4b5f08c8532436b9737c872"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a45faaa0a608e3e6f1afb29237761f170"><td class="memTemplParams" colspan="2">template&lt;class Exception , class Fn &gt; </td></tr>
-<tr class="memitem:a45faaa0a608e3e6f1afb29237761f170"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a45faaa0a608e3e6f1afb29237761f170">jaut::throwAssert</a> (bool mustBeTrue, Fn &amp;&amp;errorBuilder)</td></tr>
+<tr class="memitem:a45faaa0a608e3e6f1afb29237761f170"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#a45faaa0a608e3e6f1afb29237761f170">jaut::throwAssert</a> (bool mustBeTrue, Fn &amp;&amp;errorBuilder)</td></tr>
+<tr class="memdesc:a45faaa0a608e3e6f1afb29237761f170"><td class="mdescLeft">&#160;</td><td class="mdescRight">Will assert in debug mode before throwing an exception when the condition holds true, so as to that it's easier to find the root cause of a problem in your program.  <br /></td></tr>
 <tr class="separator:a45faaa0a608e3e6f1afb29237761f170"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:aad27c6239b29ca7364d015083fa26b10"><td class="memItemLeft" align="right" valign="top"><a id="aad27c6239b29ca7364d015083fa26b10" name="aad27c6239b29ca7364d015083fa26b10"></a>
-constexpr <a class="el" href="../../d2/d2b/structjaut_1_1unique__construct__t.html">unique_construct_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>jaut::unique_construct</b></td></tr>
+<tr class="memitem:aad27c6239b29ca7364d015083fa26b10"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d2/d2b/structjaut_1_1unique__construct__t.html">unique_construct_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#aad27c6239b29ca7364d015083fa26b10">jaut::unique_construct</a></td></tr>
 <tr class="separator:aad27c6239b29ca7364d015083fa26b10"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a04886df2438f468c4b07975e800b9c38"><td class="memItemLeft" align="right" valign="top"><a id="a04886df2438f468c4b07975e800b9c38" name="a04886df2438f468c4b07975e800b9c38"></a>
-constexpr <a class="el" href="../../d2/d2b/structjaut_1_1unique__construct__t.html">unique_construct_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>jaut::shared_construct</b></td></tr>
+<tr class="memitem:a04886df2438f468c4b07975e800b9c38"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="../../d2/d2b/structjaut_1_1unique__construct__t.html">unique_construct_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="../../d8/d02/namespacejaut.html#a04886df2438f468c4b07975e800b9c38">jaut::shared_construct</a></td></tr>
 <tr class="separator:a04886df2438f468c4b07975e800b9c38"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>─────────────────────────────── ⋆⋅☆⋅⋆ ─────────────────────────────── ░░░░░██╗░█████╗░██╗░░░██╗████████╗ ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝ ░░░░░██║███████║██║░░░██║░░░██║░░░ ██╗░░██║██╔══██║██║░░░██║░░░██║░░░ ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░ ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░ JUCE Augmented Utility Toolbox ─────────────────────────────── ⋆⋅☆⋅⋆ ───────────────────────────────</p>
+<div class="textblock"><p>─────────────────────────────── ⋆⋅☆⋅⋆ ─────────────────────────────── ░░░░░██╗░█████╗░██╗░░░██╗████████╗ ░░░░░██║██╔══██╗██║░░░██║╚══██╔══╝ ░░░░░██║███████║██║░░░██║░░░██║░░░ ██╗░░██║██╔══██║██║░░░██║░░░██║░░░ ╚█████╔╝██║░░██║╚██████╔╝░░░██║░░░ ░╚════╝░╚═╝░░╚═╝░╚═════╝░░░░╚═╝░░░ JUCE Augmented Utility Toolbox ─────────────────────────────── ⋆⋅☆⋅⋆ ─────────────────────────────── </p>
 <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any internal version.</p>
 <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
 <p>You should have received a copy of the GNU General Public License along with this program. If not, see <a href="https://www.gnu.org/licenses/">https://www.gnu.org/licenses/</a>.</p>
-<h1><a class="anchor" id="autotoc_md58"></a>
+<h1><a class="anchor" id="autotoc_md48"></a>
 Copyright (c) 2022 ElandaSunshine</h1>
 <dl class="section author"><dt>Author</dt><dd>Elanda</dd></dl>
 <dl class="section date"><dt>Date</dt><dd>09, May 2022</dd></dl>
 <hr  />
  </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="a8b8eb2a5a171aca8fe79060ae3eca222" name="a8b8eb2a5a171aca8fe79060ae3eca222"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b8eb2a5a171aca8fe79060ae3eca222">&#9670;&#160;</a></span>dbgassertfalse</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define dbgassertfalse</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">MSG</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Uses JUCE's jasserts to always assert false, but prints a message first. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">MSG</td><td>The message to print before asserting </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a28086e1f4101f318ded2d2f45a5ca807" name="a28086e1f4101f318ded2d2f45a5ca807"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a28086e1f4101f318ded2d2f45a5ca807">&#9670;&#160;</a></span>dbgassert</h2>
 
@@ -240,279 +275,12 @@ Copyright (c) 2022 ElandaSunshine</h1>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Uses JUCE's jasserts to assert false if the condition was not true, but prints a message first.</p>
+
+<p>Uses JUCE's jasserts to assert false if the condition was not true, but prints a message first. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">COND</td><td>The condition to check if it should assert </td></tr>
     <tr><td class="paramname">MSG</td><td>The message to print before asserting </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a8b8eb2a5a171aca8fe79060ae3eca222" name="a8b8eb2a5a171aca8fe79060ae3eca222"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8b8eb2a5a171aca8fe79060ae3eca222">&#9670;&#160;</a></span>dbgassertfalse</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define dbgassertfalse</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">MSG</td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Uses JUCE's jasserts to always assert false, but prints a message first. </p><dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">MSG</td><td>The message to print before asserting </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<h2 class="groupheader">Typedef Documentation</h2>
-<a id="a7bd0624d1142801f5fdc9896d64ee018" name="a7bd0624d1142801f5fdc9896d64ee018"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7bd0624d1142801f5fdc9896d64ee018">&#9670;&#160;</a></span>FunctionPointer_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Ret , class ... Types&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a7bd0624d1142801f5fdc9896d64ee018">jaut::FunctionPointer_t</a> = typedef Ret(*)(Types...)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A convenience type-wrapper for function pointers.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Ret</td><td>The return type </td></tr>
-    <tr><td class="paramname">Types</td><td>The function arguments </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a852780d3cb551fbcd80dd137b884e979" name="a852780d3cb551fbcd80dd137b884e979"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a852780d3cb551fbcd80dd137b884e979">&#9670;&#160;</a></span>MemberDataPointer_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Obj , class T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a852780d3cb551fbcd80dd137b884e979">jaut::MemberDataPointer_t</a> = typedef T Obj::*</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A convenience type-wrapper for pointer-to-member objects.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Obj</td><td>The object containing the non-static member object </td></tr>
-    <tr><td class="paramname">T</td><td>The object's type </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a037076626db7e3316654747da6f06cd2" name="a037076626db7e3316654747da6f06cd2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a037076626db7e3316654747da6f06cd2">&#9670;&#160;</a></span>MemberFunctionPointer_t</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Obj , class Ret , class ... Types&gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">using <a class="el" href="../../d7/d07/jaut__CommonUtils_8h.html#a037076626db7e3316654747da6f06cd2">jaut::MemberFunctionPointer_t</a> = typedef Ret(Obj::*)(Types...)</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>A convenience type-wrapper for pointer-to-member functions.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Obj</td><td>The object containing the non-static member function </td></tr>
-    <tr><td class="paramname">Ret</td><td>The return type </td></tr>
-    <tr><td class="paramname">Types</td><td>The function arguments </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<h2 class="groupheader">Function Documentation</h2>
-<a id="ab438476159dede0bcaf144e83c41091c" name="ab438476159dede0bcaf144e83c41091c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab438476159dede0bcaf144e83c41091c">&#9670;&#160;</a></span>stynamic_cast() <span class="overload">[1/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Derived , class Base &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> Derived jaut::stynamic_cast </td>
-          <td>(</td>
-          <td class="paramtype">Base &amp;&#160;</td>
-          <td class="paramname"><em>base</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Tries to downcast a base class to a derived class without the overhead of "dynamic_cast", this should be used when you are 100% certain that a base class pointer will be an instance to a derived class.<br  />
- If this assumption is false, in debug builds will assert.<br  />
- This makes it possible for making sure a type is of a certain polymorphic type in debug builds, and when it is, remove this check in release builds.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Derived</td><td>The type to cast the base type to </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">base</td><td>The reference to the base class </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The casted derived object </dd></dl>
-
-</div>
-</div>
-<a id="aae57f6401a7ce99eba81873bd7f07b7d" name="aae57f6401a7ce99eba81873bd7f07b7d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae57f6401a7ce99eba81873bd7f07b7d">&#9670;&#160;</a></span>stynamic_cast() <span class="overload">[2/2]</span></h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Derived , class Base &gt; </div>
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname"><a class="el" href="../../d3/d9e/jaut__Define_8h.html#a3afa0a5e8f288558f70b10f4c91a414b">JAUT_NODISCARD</a> Derived jaut::stynamic_cast </td>
-          <td>(</td>
-          <td class="paramtype">Base *const&#160;</td>
-          <td class="paramname"><em>base</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-<p>Tries to downcast a base class to a derived class without the overhead of "dynamic_cast", this should be used when you are 100% certain that a base class pointer will be an instance to a derived class.<br  />
- If this assumption is false, in debug builds will assert.<br  />
- This makes it possible for making sure a type is of a certain polymorphic type in debug builds, and when it is, remove this check in release builds.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Derived</td><td>The type to cast the base type to </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">base</td><td>The pointer to the base class </td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="section return"><dt>Returns</dt><dd>The casted derived object </dd></dl>
-
-</div>
-</div>
-<a id="a45faaa0a608e3e6f1afb29237761f170" name="a45faaa0a608e3e6f1afb29237761f170"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a45faaa0a608e3e6f1afb29237761f170">&#9670;&#160;</a></span>throwAssert()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Exception , class Fn &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void jaut::throwAssert </td>
-          <td>(</td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>mustBeTrue</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Fn &amp;&amp;&#160;</td>
-          <td class="paramname"><em>errorBuilder</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Will assert in debug mode before throwing an exception when the condition holds true, so as to that it's easier to find the root cause of a problem in your program.<br  />
- The error will also be printed to the debug console first, to make sure you have a reasonable message to understand the issue at hand. <br  />
-<br  />
- The message will be passed by lambda, so that when the evaluation works in favour of not throwing, the string does not have to be unnecessarily created.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Exception</td><td>The exception class to throw</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">mustBeTrue</td><td>The condition that must be true to avoid an assert throw </td></tr>
-    <tr><td class="paramname">errorBuilder</td><td>A lambda returning a string </td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="a5e9d5328b4b5f08c8532436b9737c872" name="a5e9d5328b4b5f08c8532436b9737c872"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5e9d5328b4b5f08c8532436b9737c872">&#9670;&#160;</a></span>throwAssertFalse()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;class Exception &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">void jaut::throwAssertFalse </td>
-          <td>(</td>
-          <td class="paramtype">const juce::String &amp;&#160;</td>
-          <td class="paramname"><em>message</em></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<p>Will assert in debug mode before throwing an exception, so as to that it's easier to find the root cause of a problem in your program.<br  />
- The error will also be printed to the debug console first, to make sure you have a reasonable message to understand the issue at hand.</p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">Exception</td><td>The exception class to throw</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">errorBuilder</td><td>A lambda returning a string, this is so that the string has not to be created if no error occurs </td></tr>
   </table>
   </dd>
 </dl>
