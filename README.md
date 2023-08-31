@@ -1,5 +1,8 @@
 ![Jaut Banner](./resources/banner.png)
 
+
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=flat-square&logo=cmake&logoColor=blue)
+
 # WARNING
 This is still in heavy development, use this at your own risk.
 Many things are still not working as expected, and some of the code formatting is still off.
