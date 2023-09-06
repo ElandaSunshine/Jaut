@@ -29,7 +29,7 @@ A big fat **YES**; the answer is a common toolset.
 
 # Structure
 At first sight, it might be a bit complicated to look over this bundle's structure, however, soon you will find out it is not that big of a deal.  
-So let's have a deep dive into the various folders and bits this repo is comprised of:
+So let's have a deep dive into the various folders and bits this repo is comprised of.[^stc]
 
 ## Folders
 This project comes with plenty of files and folders, so it's no surprise that some of them might not be that obvious to decipher, but most of them should be familiar to you:
