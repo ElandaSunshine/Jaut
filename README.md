@@ -3,6 +3,8 @@
 
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=flat-square&logo=cmake&logoColor=blue&label=CTest)
 ![GitHub tag (with filter)](https://img.shields.io/github/v/tag/ElandaSunshine/Jaut?filter=!v-*&style=flat-square&label=Version)
+[![Codacy grade](https://img.shields.io/codacy/grade/722125803a844559a0e81855b20a45d0?style=flat-square&logo=codacy&label=Code%20Quality)
+](https://app.codacy.com/gh/ElandaSunshine/Jaut/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade&label=Grade)
 
 > [!WARNING]
 > This is still in heavy development, use this at your own risk. Many things are still not working as expected, and some of the code formatting is still off. Namely the gui module will not work in its current state.
