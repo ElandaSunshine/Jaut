@@ -134,6 +134,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 # Contact
 If you need more information or would like to contact us, you can find us on our Discord:  
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/ee0bb22b67d5480e9d6029b0db672022)](https://app.codacy.com/gh/ElandaSunshine/Jaut?utm_source=github.com&utm_medium=referral&utm_content=ElandaSunshine/Jaut&utm_campaign=Badge_Grade)
 [![ElandaSunshine Community](https://discordapp.com/api/guilds/781531690383179826/widget.png?style=banner2)](https://discord.com/invite/jzRyAtnJBc)
 
 [^stc]: Any of these things are subjects to change. It is best to keep that in mind and stay tuned.
