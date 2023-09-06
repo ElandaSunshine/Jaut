@@ -1,7 +1,7 @@
 ![Jaut Banner](./resources/banner.png)
 
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=flat-square&logo=cmake&logoColor=blue)
+![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=flat-square&logo=cmake&logoColor=blue&label=CTest)
 ![GitHub tag (with filter)](https://img.shields.io/github/v/tag/ElandaSunshine/Jaut?filter=!v-*&style=flat-square&label=Version)
 
 > [!WARNING]
