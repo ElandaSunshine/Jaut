@@ -116,11 +116,17 @@ Thankfully, this repository also provides a wiki and a reference which sheds som
 
 Also take a look at the `examples` and `test` folders for indicators on how to possibly use a tool.
 
+# Known Issues
+Here is a list of major known issues with this module bundle that take some more time to fix or can't be fixed due to limitations:
+| Description | Comment | Issue |
+|---|---|---|
+| Module `jaut_gui` does not work | This is a major issue that is currently being worked on and will likely be fixed with any of the next bundle updates. For now it's best to ignore this module and focus on the other ones instead. | n/a |
+
 # License
-### JAUT
+## JAUT
 You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.
 
-### FMT & MS SafeInt
+## FMT & MS SafeInt
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 # Contact
