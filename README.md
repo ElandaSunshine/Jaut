@@ -7,6 +7,9 @@
 > [!WARNING]
 > This is still in heavy development, use this at your own risk. Many things are still not working as expected, and some of the code formatting is still off. Namely the gui module will not work in its current state.
 
+> [!NOTE]
+> This repository is still in beta, it is not advisable to use it in production just yet.
+
 # Introduction
 JUCE, a wonderful framework, a vast collection of amazing tools.  
 It's main focus has always been on audio, but lately evolved into much more than just for sound engineers; everyone can do almost everything with it and it constantly grows bigger and bigger.
