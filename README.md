@@ -4,10 +4,8 @@
 ![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=flat-square&logo=cmake&logoColor=blue)
 ![GitHub tag (with filter)](https://img.shields.io/github/v/tag/ElandaSunshine/Jaut?filter=!v-*&style=flat-square&label=Version)
 
-# WARNING
-This is still in heavy development, use this at your own risk.
-Many things are still not working as expected, and some of the code formatting is still off.
-Namely the gui module will not work in its current state.
+[!WARNING]  
+This is still in heavy development, use this at your own risk. Many things are still not working as expected, and some of the code formatting is still off. Namely the gui module will not work in its current state.
 
 # JAUT: JUCE Augmented Utility Toolbox
 JUCE, a wonderful framework, a vast collection of amazing tools.  
@@ -19,22 +17,6 @@ This is the reason why this module-bundle came to exist.
 JAUT aims at developers that are missing that feeling of completeness and don't like to bother too much with adding more and more 3rd Party externals just to get one thing going.  
 All we try to accomplish is a central collection of useful stuff.
 
-# Table of Contents
-<details><summary>Click to expand</summary>
-
-- [Motivation](#motivation)
-- [Installation](#installation)
-  - [Dependencies](#dependencies)
-    - [JUCE](#juce)
-    - [Optionals](#optionals)
-  - [Setup](#setup)
-    - [CMake](#cmake)
-    - [Projucer](#projucer)
-- [Usage](#usage)
-- [License](#license)
-- [Contact](#contact)
-</details>
-
 # Motivation
 The origin-story of this collection couldn't be any more trivial.
 During work on some projects, I came to realise that most of the things that flow into any of them are not unique cases.  
@@ -44,6 +26,38 @@ So wouldn't it be a wonderful thing if all these projects had some sort of ancho
 Is there a way to, such that I don't have to copy everything over and over again?  
 Well, I love to break it to you:  
 A big fat **YES**; the answer is a common toolset.
+
+# Structure
+At first sight, it might be a bit complicated to look over this bundle's structure, however, soon you will find out it is not that big of a deal.  
+So let's have a deep dive into the various folders and bits this repo is comprised of:
+
+## Folders
+This project comes with plenty of files and folders, so it's no surprise that some of them might not be that obvious to decipher, but most of them should be familiar to you:
+
+- _**/cmake**_  
+Main entry point for CMake scripts the project uses, all files inside this folder will be .cmake files used by the project.
+  - _**/**_  
+Contains all build and project related CMake scripts like find() related module definitions, install scripts, package definitions ect.
+  - _**/tools**_  
+Additional CMake scripts that are not used but provided by this package; to be used on the user side of things
+
+- _**/docs**_  
+Serving all documentation related needs for this repository.
+  - _**/doxygen**_  
+Any Doxygen related files and scripts needed to generate the source reference of this bundle.
+  - _**/wiki**_  
+The bundle's Wiki pages in raw format, for a fully rendered view refer to this repo's [Wiki Page](https://github.com/ElandaSunshine/Jaut/wiki)
+- _**/examples**_  
+Providing a set of examples, showcasing how some of the things are used and how you can use them too the best way possible.
+- _**/modules**_  
+The actual source code, split across several [JUCE Modules](https://github.com/juce-framework/JUCE/blob/master/docs/JUCE%20Module%20Format.md).
+This will be the most important folder and where to look when you need something specific code-wise.
+
+  See: [Modules](#modules)
+- _**/resources**_  
+Assets this some of this project's tools use to function properly or provide additional features.
+- _**/test**_  
+Testing facilities for this bundle, you probably won't ever need to open this folder except if you want to take inspiration on how to use things if the provided examples didn't fit your needs.
 
 # Installation
 The entire bundle is backed by a CMake module, so there is not much to do.
@@ -112,3 +126,5 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 # Contact
 If you need more information or would like to contact us, you can find us on our Discord:  
 [![ElandaSunshine Community](https://discordapp.com/api/guilds/781531690383179826/widget.png?style=banner2)](https://discord.com/invite/jzRyAtnJBc)
+
+[^stc]: Any of these things are subjects to change. It is best to keep that in mind and stay tuned.
