@@ -120,7 +120,7 @@ Also take a look at the `examples` and `test` folders for indicators on how to p
 Here is a list of major known issues with this module bundle that take some more time to fix or can't be fixed due to limitations:
 | Description | Comment | Issue |
 |---|---|---|
-| Module `jaut_gui` does not work | This is a major issue that is currently being worked on and will likely be fixed with any of the next bundle updates. For now it's best to ignore this module and focus on the other ones instead. | n/a |
+| Module `jaut_gui` does not work | This is a major issue that is currently being worked on and will likely be fixed with any of the next bundle updates. For now it's best to ignore this module and focus on the other ones instead. | [#2](https://github.com/ElandaSunshine/Jaut/issues/2) |
 
 # License
 ## JAUT
