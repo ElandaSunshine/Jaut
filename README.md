@@ -1,19 +1,19 @@
-![Jaut Banner](./resources/banner.png)
+![Jaut Banner](https://user-images.githubusercontent.com/34101281/266309298-edf7a19f-0af9-41c2-8eea-a3bd1f6344a9.png)
 
 
-![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=flat-square&logo=cmake&logoColor=blue&label=CTest)
-![GitHub tag (with filter)](https://img.shields.io/github/v/tag/ElandaSunshine/Jaut?filter=!v-*&style=flat-square&label=Version)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=flat-square&logo=cmake&logoColor=blue&label=CTest)](https://github.com/ElandaSunshine/Jaut/actions/workflows/cmake-multi-platform.yml)
+[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/ElandaSunshine/Jaut?filter=!v-*&style=flat-square&label=Version)](https://github.com/ElandaSunshine/Jaut/releases)
 [![Codacy grade](https://img.shields.io/codacy/grade/722125803a844559a0e81855b20a45d0?style=flat-square&logo=codacy&label=Code%20Quality)
 ](https://app.codacy.com/gh/ElandaSunshine/Jaut/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade&label=Grade)
 
-> [!WARNING]
+> [!WARNING]  
 > This is still in heavy development, use this at your own risk. Many things are still not working as expected, and some of the code formatting is still off. Namely the gui module will not work in its current state.
 
-> [!NOTE]
+> [!NOTE]  
 > This repository is still in beta, it is not advisable to use it in production just yet.
 
 # Introduction
-JUCE, a wonderful framework, a vast collection of amazing tools.  
+[JUCE](https://juce.com/), a wonderful framework, a vast collection of amazing tools.  
 It's main focus has always been on audio, but lately evolved into much more than just for sound engineers; everyone can do almost everything with it and it constantly grows bigger and bigger.
 
 However, it hasn't got everything and many many cool things it provides aren't that super duper great thing everyone is craving or just isn't there to begin with.  
@@ -37,7 +37,8 @@ At first sight, it might be a bit complicated to look over this bundle's structu
 So let's have a deep dive into the various folders and bits this repo is comprised of.[^stc]
 
 ## Folders
-This project comes with plenty of files and folders, so it's no surprise that some of them might not be that obvious to decipher, but most of them should be familiar to you:
+This project comes with plenty of files and folders, so it's no surprise that some of them might not be that obvious to decipher, but most of them should be familiar to you.  
+Most of the files in the root folder are just repository description files or only relate to the tooling of the project like configuration, analysis and workflow files.
 
 - _**/cmake**_  
 Main entry point for CMake scripts the project uses, all files inside this folder will be .cmake files used by the project.
@@ -64,9 +65,58 @@ Assets this some of this project's tools use to function properly or provide add
 - _**/test**_  
 Testing facilities for this bundle, you probably won't ever need to open this folder except if you want to take inspiration on how to use things if the provided examples didn't fit your needs.
 
+## Modules
+Of course, there is also the main focus of this repositories, our modules.  
+By now you should know what [JUCE Modules](https://github.com/juce-framework/JUCE/blob/master/docs/JUCE%20Module%20Format.md) are, if not don't worry, you can still use them without knowing how
+to create them.  
+
+| Module   | Description                                                                                      | Full name     |
+|----------|--------------------------------------------------------------------------------------------------|:-------------:|
+| Core     | Core functionality of jaut.                                                                      | jaut_core     |
+| Audio    | Various processing and dsp related classes.                                                      | jaut_audio    |
+| Message  | Tools for simple message passing management.                                                     | jaut_message  |
+| Provider | Defines classes for advanced data management like configurations and folder management.          | jaut_provider |
+| Logger   | Defines facilities to log to different outputs in different ways and formats.                    | jaut_logger   |
+| Gui      | Gui related utils.                                                                               | jaut_gui      |
+| Dummy    | JAUT dummy module for unit testing purposes, you won't likely need this, sooo... just ignore it. | jaut_dummy    |
+
+You will also notice that the JUCE module format defines versions for each and every module, but we will just leave them at 1.0.0
+regardless.  
+You can just ignore them and live on as if they weren't here, as we already have the bundle versioning.
+
 # Installation
-The entire bundle is backed by a CMake module, so there is not much to do.
+The entire bundle is backed by a [CMake Module](https://cmake.org/cmake/help/book/mastering-cmake/chapter/Modules.html), so there is not much to do.  
 However, you will still need to be aware of one or the other thing.
+
+## Setup
+### CMake
+> [!NOTE]  
+> This does note yet provide an actual CMake module that you can use with [CMake's find_package()](https://cmake.org/cmake/help/latest/command/find_package.html).  
+> But in future this will all be settled.
+
+#### Linking
+It couldn't be any easier, thanks to the [JUCE Module Format](https://github.com/juce-framework/JUCE/blob/master/docs/JUCE%20Module%20Format.md), all you need to do is adding this bundle as a subdirectory. (after adding JUCE)  
+You can then selectively link the module, you want to use, to your target:
+```cmake
+add_subdirectory(path/to/jaut)
+target_link_libraries(YourTarget
+    VISIBILITY
+        jaut::jaut_core
+        jaut::jaut_gui
+        # ect.
+        )
+```
+
+#### Options
+There are also a few additional options provided with this CMake module that you can use to build/configure the process.
+| Name                 | Description                                                                                                                                            | Default |
+|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|--------:|
+| JAUT_BUILD_TESTS     | Build unit tests for the JAUT bundle                                                                                                                   | OFF     |
+| JAUT_BUILD_EXAMPLES  | Build examples for the JAUT bundle                                                                                                                     | OFF     |
+| JAUT_CLONE_JUCE      | Whether JUCE should be cloned for JAUT specifically, this will majorly be used for standalone builds of the module bundle like testing or development  | OFF     |
+
+### Projucer
+Add the module of interest to the module section of the Projucer. (the little '+' in the corner of the module list)
 
 ## Dependencies
 ### JUCE
@@ -95,23 +145,6 @@ These are not necessary but needed when making use of these tools.
   Homepage: https://github.com/jbeder/yaml-cpp  
   Depends: `jaut::YamlParser`  
   Provides the JAUT configuration tools with a yaml parser.
-
-## Setup
-### CMake
-It couldn't be any easier. Thanks to the JUCE module system, all you need to do is adding this bundle as a subdirectory. (after adding JUCE)  
-You can then selectively link the module, you want to use, to your target:
-```cmake
-add_subdirectory(path/to/jaut)
-target_link_libraries(YourTarget
-    VISIBILITY
-        jaut::jaut_core
-        jaut::jaut_gui
-        # ect.
-        )
-```
-
-### Projucer
-Add the module of interest to the module section of the Projucer. (the little '+' in the corner of the module list)
 
 # Usage
 Since JAUT is a bigger collection of tools and utilities, it wouldn't make much sense to give details about every single thing in this section. 
