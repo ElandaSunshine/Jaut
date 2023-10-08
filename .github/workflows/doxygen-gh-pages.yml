@@ -7,6 +7,8 @@ on:
     - 'modules/**'
     - 'test/**'
     - 'examples/**'
+    - 'docs/doxygen/**'
+    - '.github/workflows/doxygen-gh-pages.yml'
 
 jobs:
   build:
