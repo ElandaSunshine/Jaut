@@ -1,0 +1,5 @@
+<map id="jaut::LogSinkOstream&lt; CriticalSection &gt;" name="jaut::LogSinkOstream&lt; CriticalSection &gt;">
+<area shape="rect" id="Node000001" title="A Logger output sink for the standard std::ostream." alt="" coords="5,79,152,120"/>
+<area shape="rect" id="Node000002" href="$structjaut_1_1ILogSink.html" title="Sinks are the actual output implementations, they will be there to map a logger to an output stream." alt="" coords="28,5,129,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="81,46,81,79,76,79,76,46"/>
+</map>

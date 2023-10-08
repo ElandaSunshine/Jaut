@@ -1,5 +1,0 @@
-<map id="jaut::LogWorkerAsync&lt; BufferSize, CriticalSection &gt;" name="jaut::LogWorkerAsync&lt; BufferSize, CriticalSection &gt;">
-<area shape="rect" id="Node000001" title="The async log worker, which works asynchronously to the threads the logger is used by." alt="" coords="5,79,199,120"/>
-<area shape="rect" id="Node000002" href="$db/d69/structjaut_1_1ILogWorker.html" title="A worker is a separate layer to a jaut::BasicLogger, used to actually transport messages to the loggi..." alt="" coords="44,5,160,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,46,105,79,99,79,99,46"/>
-</map>

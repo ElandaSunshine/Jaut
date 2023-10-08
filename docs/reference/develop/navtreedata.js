@@ -25,25 +25,34 @@
 var NAVTREE =
 [
   [ "JAUT", "index.html", [
-    [ "README", "d5/d74/md__2github_2workspace_2README.html", [
-      [ "WARNING", "d5/d74/md__2github_2workspace_2README.html#autotoc_md204", null ],
-      [ "JAUT: JUCE Augmented Utility Toolbox", "d5/d74/md__2github_2workspace_2README.html#autotoc_md205", null ],
-      [ "Table of Contents", "d5/d74/md__2github_2workspace_2README.html#autotoc_md206", null ],
-      [ "Motivation", "d5/d74/md__2github_2workspace_2README.html#autotoc_md207", null ],
-      [ "Installation", "d5/d74/md__2github_2workspace_2README.html#autotoc_md208", [
-        [ "Dependencies", "d5/d74/md__2github_2workspace_2README.html#autotoc_md209", [
-          [ "JUCE", "d5/d74/md__2github_2workspace_2README.html#autotoc_md210", null ],
-          [ "Integrated", "d5/d74/md__2github_2workspace_2README.html#autotoc_md211", null ],
-          [ "Optionals", "d5/d74/md__2github_2workspace_2README.html#autotoc_md212", null ]
+    [ "README", "md__2github_2workspace_2README.html", [
+      [ "Introduction", "md__2github_2workspace_2README.html#autotoc_md204", null ],
+      [ "Motivation", "md__2github_2workspace_2README.html#autotoc_md205", null ],
+      [ "Structure", "md__2github_2workspace_2README.html#autotoc_md206", [
+        [ "Folders", "md__2github_2workspace_2README.html#autotoc_md207", null ],
+        [ "Modules", "md__2github_2workspace_2README.html#autotoc_md208", null ]
+      ] ],
+      [ "Installation", "md__2github_2workspace_2README.html#autotoc_md209", [
+        [ "Setup", "md__2github_2workspace_2README.html#autotoc_md210", [
+          [ "CMake", "md__2github_2workspace_2README.html#autotoc_md211", [
+            [ "Linking", "md__2github_2workspace_2README.html#autotoc_md212", null ],
+            [ "Options", "md__2github_2workspace_2README.html#autotoc_md213", null ]
+          ] ],
+          [ "Projucer", "md__2github_2workspace_2README.html#autotoc_md214", null ]
         ] ],
-        [ "Setup", "d5/d74/md__2github_2workspace_2README.html#autotoc_md213", [
-          [ "CMake", "d5/d74/md__2github_2workspace_2README.html#autotoc_md214", null ],
-          [ "Projucer", "d5/d74/md__2github_2workspace_2README.html#autotoc_md215", null ]
+        [ "Dependencies", "md__2github_2workspace_2README.html#autotoc_md215", [
+          [ "JUCE", "md__2github_2workspace_2README.html#autotoc_md216", null ],
+          [ "Integrated", "md__2github_2workspace_2README.html#autotoc_md217", null ],
+          [ "Optionals", "md__2github_2workspace_2README.html#autotoc_md218", null ]
         ] ]
       ] ],
-      [ "Usage", "d5/d74/md__2github_2workspace_2README.html#autotoc_md216", null ],
-      [ "License", "d5/d74/md__2github_2workspace_2README.html#autotoc_md217", null ],
-      [ "Contact", "d5/d74/md__2github_2workspace_2README.html#autotoc_md220", null ]
+      [ "Usage", "md__2github_2workspace_2README.html#autotoc_md219", null ],
+      [ "Known Issues", "md__2github_2workspace_2README.html#autotoc_md220", null ],
+      [ "License", "md__2github_2workspace_2README.html#autotoc_md221", [
+        [ "JAUT", "md__2github_2workspace_2README.html#autotoc_md222", null ],
+        [ "FMT & MS SafeInt", "md__2github_2workspace_2README.html#autotoc_md223", null ]
+      ] ],
+      [ "Contact", "md__2github_2workspace_2README.html#autotoc_md224", null ]
     ] ],
     [ "Namespace Members", "namespacemembers.html", [
       [ "All", "namespacemembers.html", null ],
@@ -80,13 +89,13 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"d2/d14/jaut__MessageDirection_8h.html#afee54c22810c71605b859af5c2664c26",
-"d5/d59/classjaut_1_1LogWorkerAsync.html#abb1ec1da7f5c7d4ae7188f58bd36d42a",
-"d7/d04/classjaut_1_1LogSinkFile.html#ab9c0af05d151a263a1f653f9ede4ec8f",
-"d9/d56/classjaut_1_1Config_1_1PropertyBuilder.html#ac3da7e21a05bf8852638db7e4dd1b81a",
-"db/df7/jaut__Event_8h.html",
-"de/daa/jaut__TypeTraits_8h.html#a27fac67fab4bd2eb84a7153604a885ec",
-"df/de0/jaut__provider__define_8h.html#af77c9fd746ec4d1db90cd50145a843ac"
+"classjaut_1_1ExtraComponent.html#a5dd0caf1048a12be8de2dcd5a95969ae",
+"classjaut_1_1MultiPagePanel.html#a1282fcac9e19df4c2153a33028805d10ab6d7e4327732500c6dec3b495ce72cc8",
+"classjaut_1_1Numeric.html#ae318f807e5dc5c4d2e437fab48651776",
+"functions_func_j.html",
+"jaut__TypeContainer_8h.html#a07c2802655bc8af5b49c21760fc40fba",
+"structjaut_1_1Distance.html#adf4618e5ca1cf1d3e57c7e9089c2c3c2",
+"structjaut_1_1SplitPanel_1_1Options.html#a84c007f6419969bfbd2d64f95fcb6c35"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

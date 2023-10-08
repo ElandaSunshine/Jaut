@@ -1,5 +1,0 @@
-<map id="jaut::ScopedCursorWait" name="jaut::ScopedCursorWait">
-<area shape="rect" id="Node000001" title="Sets the current cursor to the wait cursor and resets it back to the normal one." alt="" coords="5,79,162,105"/>
-<area shape="rect" id="Node000002" href="$dc/db9/classjaut_1_1ScopedCursor.html" title="A little utility that sets a mouse cursor and resets it to another once this object leaves the scope ..." alt="" coords="18,5,149,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,46,86,79,81,79,81,46"/>
-</map>

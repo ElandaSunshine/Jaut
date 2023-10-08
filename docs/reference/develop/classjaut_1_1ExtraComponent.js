@@ -1,0 +1,36 @@
+var classjaut_1_1ExtraComponent =
+[
+    [ "ContainerStyle", "structjaut_1_1ExtraComponent_1_1ContainerStyle.html", "structjaut_1_1ExtraComponent_1_1ContainerStyle" ],
+    [ "LookAndFeelMethods", "structjaut_1_1ExtraComponent_1_1LookAndFeelMethods.html", "structjaut_1_1ExtraComponent_1_1LookAndFeelMethods" ],
+    [ "StyleChangedHandler", "classjaut_1_1ExtraComponent.html#afb7485a0e268a908d84458d9ef9ee467", null ],
+    [ "ContentBoundsChangedHandler", "classjaut_1_1ExtraComponent.html#a894b404ce9148af72e20a9a187639a5c", null ],
+    [ "ColourId", "classjaut_1_1ExtraComponent.html#a41d8712364c9799863bf1a39756b6d1e", [
+      [ "ColourBackgroundId", "classjaut_1_1ExtraComponent.html#a41d8712364c9799863bf1a39756b6d1eaed79489b99c9b1530768fc332002c128", null ],
+      [ "ColourBorderId", "classjaut_1_1ExtraComponent.html#a41d8712364c9799863bf1a39756b6d1ea011a7115d1106fcbe5217a653bd11a48", null ]
+    ] ],
+    [ "ExtraComponent", "classjaut_1_1ExtraComponent.html#ad6ccd767ffef0256706dbbd2121879b3", null ],
+    [ "ExtraComponent", "classjaut_1_1ExtraComponent.html#aa65a442670042299ce26ad1208e9e364", null ],
+    [ "ExtraComponent", "classjaut_1_1ExtraComponent.html#ac83eb0a800ee7750491ef8b1c5f01ac2", null ],
+    [ "ExtraComponent", "classjaut_1_1ExtraComponent.html#a2f9413919765bc4d343d6570ab5ba223", null ],
+    [ "paintOverChildren", "classjaut_1_1ExtraComponent.html#ab756f45dcc90c2ea98414788441aacac", null ],
+    [ "paint", "classjaut_1_1ExtraComponent.html#a3096d8fedf965bc72573f5e7573b0588", null ],
+    [ "resized", "classjaut_1_1ExtraComponent.html#a5dd0caf1048a12be8de2dcd5a95969ae", null ],
+    [ "getContentBounds", "classjaut_1_1ExtraComponent.html#a37d3fcd4b7a04483e72ca83dc5372410", null ],
+    [ "getActualBounds", "classjaut_1_1ExtraComponent.html#a56204a88b8d868df35ee3c86f8987ff0", null ],
+    [ "getBorderThickness", "classjaut_1_1ExtraComponent.html#a6345bb722f879fead1c6537c634ca9b2", null ],
+    [ "getMargin", "classjaut_1_1ExtraComponent.html#a18acd14e8f9160038d54f867fb52bff5", null ],
+    [ "getPadding", "classjaut_1_1ExtraComponent.html#a09573409013166ff613bed99dd052c7f", null ],
+    [ "setBorderThickness", "classjaut_1_1ExtraComponent.html#ae1d25c8bbb8a5c20b91fb3f822a7d86a", null ],
+    [ "setMargin", "classjaut_1_1ExtraComponent.html#a394809a0ac980d883700968219a1e929", null ],
+    [ "setPadding", "classjaut_1_1ExtraComponent.html#a4f7de5132a0d5a62658c5a366dcad91c", null ],
+    [ "getContainerStyle", "classjaut_1_1ExtraComponent.html#a7ce4092a03f597a9bf28df46015c3371", null ],
+    [ "setContainerStyle", "classjaut_1_1ExtraComponent.html#ac5ac3ec90d729a05a3a0a37a83283539", null ],
+    [ "paintContents", "classjaut_1_1ExtraComponent.html#a7f1c25061a5ba61510a2f8ae1b36fd42", null ],
+    [ "resizeContents", "classjaut_1_1ExtraComponent.html#a2e71cd80a257cbd4cdc74a4068b20974", null ],
+    [ "drawBorder", "classjaut_1_1ExtraComponent.html#a71556ad777c7a374fabc0a896813ea71", null ],
+    [ "drawBackground", "classjaut_1_1ExtraComponent.html#a993e0d433e4b8c7f4324ff37985c8613", null ],
+    [ "eventMarginChanged", "classjaut_1_1ExtraComponent.html#a182034aa3f54150213592e4ca8b99c6f", null ],
+    [ "eventBorderThicknessChanged", "classjaut_1_1ExtraComponent.html#a4caa1f371ee918f9fe7579fd15867153", null ],
+    [ "eventPaddingChanged", "classjaut_1_1ExtraComponent.html#afe3398b920f2eab75bd3ce92c85b0653", null ],
+    [ "eventContentBoundsChanged", "classjaut_1_1ExtraComponent.html#a2cfcb5a2b39dcab8f7dde0f64f9f9082", null ]
+];

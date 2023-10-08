@@ -1,0 +1,5 @@
+<map id="jaut::IMessage" name="jaut::IMessage">
+<area shape="rect" id="Node000001" title="Implements a message policies that should be passed on to the policies." alt="" coords="58,5,163,31"/>
+<area shape="rect" id="Node000002" href="$classjaut_1_1message_1_1MessageCallback.html" title=" " alt="" coords="5,79,216,105"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,46,113,79,108,79,108,46"/>
+</map>

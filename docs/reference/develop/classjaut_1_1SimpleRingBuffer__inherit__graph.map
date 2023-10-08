@@ -1,0 +1,5 @@
+<map id="jaut::SimpleRingBuffer&lt; BufferSize, T &gt;" name="jaut::SimpleRingBuffer&lt; BufferSize, T &gt;">
+<area shape="rect" id="Node000001" title="A simple queue implementation that allows pushing and popping from single threads." alt="" coords="16,79,164,120"/>
+<area shape="rect" id="Node000002" href="$structjaut_1_1IMessageBuffer.html" title="The IMessageBuffer interface declares all needed virtual functions to craft your own message buffer." alt="" coords="5,5,175,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,46,93,79,87,79,87,46"/>
+</map>

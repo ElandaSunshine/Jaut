@@ -1,7 +1,0 @@
-<map id="jaut::MultiPagePanel::InitStyle" name="jaut::MultiPagePanel::InitStyle">
-<area shape="rect" id="Node000001" title="The style options for constructing this panel." alt="" coords="88,94,227,135"/>
-<area shape="rect" id="Node000002" href="$dc/dbd/structjaut_1_1MultiPagePanel_1_1Style.html" title=" " alt="" coords="5,5,145,46"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="106,55,141,92,137,95,102,59"/>
-<area shape="rect" id="Node000003" href="$d2/d04/structjaut_1_1ExtraComponent_1_1ContainerStyle.html" title="The container style options for any component inheriting from this component." alt="" coords="169,5,312,46"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,59,178,95,174,92,209,55"/>
-</map>

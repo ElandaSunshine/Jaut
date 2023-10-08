@@ -1,0 +1,5 @@
+<map id="jaut::AbstractLogger" name="jaut::AbstractLogger">
+<area shape="rect" id="Node000001" title="A simple and lightweight Logger implementation that aims at being a bit more advanced than the juce o..." alt="" coords="5,5,143,31"/>
+<area shape="rect" id="Node000002" href="$classjaut_1_1BasicLogger.html" title="A proper logging implementation that aims at being a bit more advanced than the juce native one." alt="" coords="9,79,139,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,46,77,79,71,79,71,46"/>
+</map>

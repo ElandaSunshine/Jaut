@@ -1,0 +1,5 @@
+<map id="jaut::SerialisableJuceProcessorProxy&lt; InternalAudioProcessor &gt;" name="jaut::SerialisableJuceProcessorProxy&lt; InternalAudioProcessor &gt;">
+<area shape="rect" id="Node000001" title="The SerialisableJuceProcessorProxy is an ISerializableAudioProcessor wrapper that wraps any other ins..." alt="" coords="5,94,216,135"/>
+<area shape="rect" id="Node000002" href="$structjaut_1_1ISerialisableAudioProcessor.html" title="A simple interface class for sub&#45;audio processors for your own processor implementation." alt="" coords="34,5,187,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="113,62,113,94,108,94,108,62"/>
+</map>

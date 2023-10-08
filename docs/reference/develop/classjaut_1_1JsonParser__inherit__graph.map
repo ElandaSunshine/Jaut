@@ -1,0 +1,5 @@
+<map id="jaut::JsonParser" name="jaut::JsonParser">
+<area shape="rect" id="Node000001" title="The JsonParser is an in&#45;built parser for the Config class used for parsing Json style config files." alt="" coords="11,79,126,105"/>
+<area shape="rect" id="Node000002" href="$structjaut_1_1IConfigParser.html" title="An interfaces to provide the bare&#45;bones for a new parser class to use in the jaut::Config class." alt="" coords="5,5,132,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,46,71,79,66,79,66,46"/>
+</map>
