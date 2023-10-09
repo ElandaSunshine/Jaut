@@ -51,8 +51,6 @@ Additional CMake scripts that are not used but provided by this package; to be u
 Serving all documentation related needs for this repository.
   - _**/doxygen**_  
 Any Doxygen related files and scripts needed to generate the source reference of this bundle.
-  - _**/wiki**_  
-The bundle's Wiki pages in raw format, for a fully rendered view refer to this repo's [Wiki Page](https://github.com/ElandaSunshine/Jaut/wiki)
 - _**/examples**_  
 Providing a set of examples, showcasing how some of the things are used and how you can use them too the best way possible.
 - _**/modules**_  
@@ -78,7 +76,7 @@ to create them.
 | Provider | Defines classes for advanced data management like configurations and folder management.          | jaut_provider |
 | Logger   | Defines facilities to log to different outputs in different ways and formats.                    | jaut_logger   |
 | Gui      | Gui related utils.                                                                               | jaut_gui      |
-| Dummy    | JAUT dummy module for unit testing purposes, you won't likely need this, sooo... just ignore it. | jaut_dummy    |
+| Dummy    | Jaut dummy module for unit testing purposes, you won't likely need this, sooo... just ignore it. | jaut_dummy    |
 
 You will also notice that the JUCE module format defines versions for each and every module, but we will just leave them at 1.0.0
 regardless.  
