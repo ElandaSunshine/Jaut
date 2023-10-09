@@ -1,9 +1,9 @@
 ![Jaut Banner](https://user-images.githubusercontent.com/34101281/266309298-edf7a19f-0af9-41c2-8eea-a3bd1f6344a9.png)
 
 
-[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=flat-square&logo=cmake&logoColor=blue&label=CTest)](https://github.com/ElandaSunshine/Jaut/actions/workflows/cmake-multi-platform.yml)
-[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/ElandaSunshine/Jaut?filter=!v-*&style=flat-square&label=Version)](https://github.com/ElandaSunshine/Jaut/releases)
-[![Codacy grade](https://img.shields.io/codacy/grade/722125803a844559a0e81855b20a45d0?style=flat-square&logo=codacy&label=Code%20Quality)
+[![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=for-the-badge&logo=cmake&logoColor=white&label=CTest)](https://github.com/ElandaSunshine/Jaut/actions/workflows/cmake-multi-platform.yml)
+[![GitHub tag (with filter)](https://img.shields.io/github/v/tag/ElandaSunshine/Jaut?filter=!v-*&style=for-the-badge&label=Version)](https://github.com/ElandaSunshine/Jaut/releases)
+[![Codacy grade](https://img.shields.io/codacy/grade/722125803a844559a0e81855b20a45d0?style=for-the-badge&logo=codacy&label=Code%20Quality)
 ](https://app.codacy.com/gh/ElandaSunshine/Jaut/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade&label=Grade)
 
 > [!WARNING]  
@@ -19,7 +19,7 @@ It's main focus has always been on audio, but lately evolved into much more than
 However, it hasn't got everything and many many cool things it provides aren't that super duper great thing everyone is craving or just isn't there to begin with.  
 This is the reason why this module-bundle came to exist.
 
-JAUT aims at developers that are missing that feeling of completeness and don't like to bother too much with adding more and more 3rd Party externals just to get one thing going.  
+Jaut aims at developers that are missing that feeling of completeness and don't like to bother too much with adding more and more 3rd Party externals just to get one thing going.  
 All we try to accomplish is a central collection of useful stuff.
 
 # Motivation
@@ -111,9 +111,9 @@ target_link_libraries(YourTarget
 There are also a few additional options provided with this CMake module that you can use to build/configure the process.
 | Name                 | Description                                                                                                                                            | Default |
 |----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|--------:|
-| JAUT_BUILD_TESTS     | Build unit tests for the JAUT bundle                                                                                                                   | OFF     |
-| JAUT_BUILD_EXAMPLES  | Build examples for the JAUT bundle                                                                                                                     | OFF     |
-| JAUT_CLONE_JUCE      | Whether JUCE should be cloned for JAUT specifically, this will majorly be used for standalone builds of the module bundle like testing or development  | OFF     |
+| JAUT_BUILD_TESTS     | Build unit tests for the Jaut bundle                                                                                                                   | OFF     |
+| JAUT_BUILD_EXAMPLES  | Build examples for the Jaut bundle                                                                                                                     | OFF     |
+| JAUT_CLONE_JUCE      | Whether JUCE should be cloned for Jaut specifically, this will majorly be used for standalone builds of the module bundle like testing or development  | OFF     |
 
 ### Projucer
 Add the module of interest to the module section of the Projucer. (the little '+' in the corner of the module list)
@@ -147,9 +147,9 @@ These are not necessary but needed when making use of these tools.
   Provides the JAUT configuration tools with a yaml parser.
 
 # Usage
-Since JAUT is a bigger collection of tools and utilities, it wouldn't make much sense to give details about every single thing in this section. 
+Since Jaut is a bigger collection of tools and utilities, it wouldn't make much sense to give details about every single thing in this section. 
 Thankfully, this repository also provides a wiki and a reference which sheds some light on the individual parts of this toolset which both can be found here:  
-- [Wiki](https://github.com/ElandaSunshine/jaut/wiki)  
+- [Wiki](https://elandasunshine.github.io/Jaut/docs/wiki)  
 - [Documentation](https://elandasunshine.github.io/Jaut/docs/reference)
 
 Also take a look at the `examples` and `test` folders for indicators on how to possibly use a tool.
@@ -161,7 +161,7 @@ Here is a list of major known issues with this module bundle that take some more
 | Module `jaut_gui` does not work | This is a major issue that is currently being worked on and will likely be fixed with any of the next bundle updates. For now it's best to ignore this module and focus on the other ones instead. | [#2](https://github.com/ElandaSunshine/Jaut/issues/2) |
 
 # License
-## JAUT
+## Jaut
 You may copy, distribute and modify the software as long as you track changes/dates in source files. Any modifications to or software including (via compiler) GPL-licensed code must also be made available under the GPL along with build & install instructions.
 
 ## FMT & MS SafeInt
