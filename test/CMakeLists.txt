@@ -38,7 +38,7 @@ function(jaut_add_test target group)
     string(TOUPPER ${target} TEST_NAME)
     set(TEST_TARGET Test${TEST_NAME})
     
-    add_executable(${TEST_TARGET} ${JAUT_SOURCE_DIR}/test/${group}/${target}.cpp)
+    add_executable(${TEST_TARGET} ${Jaut_SOURCE_DIR}/test/${group}/${target}.cpp)
     target_compile_definitions(${TEST_TARGET}
         PRIVATE
             JUCE_STANDALONE_APPLICATION=1
@@ -73,7 +73,7 @@ function(jaut_add_test target group)
             get_filename_component(FILE_OUT_NAME ${RESOURCE} NAME)
             
             list(APPEND RESOURCE_NAMES "${FILE_OUT_NAME}")
-            list(APPEND RESOURCE_PATHS "${JAUT_SOURCE_DIR}/test/assets/${RESOURCE}")
+            list(APPEND RESOURCE_PATHS "${Jaut_SOURCE_DIR}/test/assets/${RESOURCE}")
         endforeach()
                 
         add_custom_command(

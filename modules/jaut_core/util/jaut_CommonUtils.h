@@ -78,10 +78,10 @@ namespace jaut
 {
     //==================================================================================================================
     /** A dirty type previewer that will work in lots of IDEs. */
-    template<class> struct TView;
+    template<class> JAUT_API struct TView;
     
     /** A dirty value previewer that will work in lots of IDEs. */
-    template<auto> struct VView;
+    template<auto> JAUT_API struct VView;
     
     /**
      *  A convenience type-wrapper for function pointers.
@@ -138,7 +138,7 @@ namespace jaut
     #ifdef __GNUG__
         template<class T>
         JAUT_NODISCARD
-        juce::String getActualTypeName(JAUT_MUNUSED T *const type)
+        JAUT_API inline juce::String getActualTypeName(JAUT_MUNUSED T *const type)
         {
             jassert(type != nullptr);
             
@@ -153,7 +153,7 @@ namespace jaut
         
         template<class T>
         JAUT_NODISCARD
-        juce::String getActualTypeName()
+        JAUT_API inline juce::String getActualTypeName()
         {
             int                                   status {};
             std::unique_ptr<char, void(*)(void*)> name   {
@@ -166,7 +166,7 @@ namespace jaut
     #else
         template<class T>
         JAUT_NODISCARD
-        juce::String getActualTypeName(JAUT_MUNUSED T *const type)
+        JAUT_API inline juce::String getActualTypeName(JAUT_MUNUSED T *const type)
         {
             jassert(type != nullptr);
             return juce::String(typeid(*type).name()).fromFirstOccurrenceOf(" ", false, true);
@@ -174,7 +174,7 @@ namespace jaut
         
         template<class T>
         JAUT_NODISCARD
-        juce::String getActualTypeName()
+        JAUT_API inline juce::String getActualTypeName()
         {
             return juce::String(typeid(T).name()).fromFirstOccurrenceOf(" ", false, true);
         }
@@ -182,7 +182,7 @@ namespace jaut
     
     template<class T>
     JAUT_NODISCARD
-    juce::String getActualTypeName(JAUT_MUNUSED T &type)
+    JAUT_API inline juce::String getActualTypeName(JAUT_MUNUSED T &type)
     {
         return getActualTypeName(&type);
     }
@@ -377,12 +377,12 @@ namespace jaut
     //==================================================================================================================
     // Disambiguation helpers
     /** A type used for optional function overloads to instruct to allocate the object as std::unique_ptr. */
-    struct unique_construct_t {};
-    inline constexpr unique_construct_t unique_construct;
+    struct JAUT_API unique_construct_t {};
+    JAUT_API inline constexpr unique_construct_t unique_construct;
     
     /** A type used for optional function overloads to instruct to allocate the object as std::shared_ptr. */
-    struct shared_construct_t {};
-    inline constexpr unique_construct_t shared_construct;
+    struct JAUT_API shared_construct_t {};
+    JAUT_API inline constexpr unique_construct_t shared_construct;
     
     //==================================================================================================================
     namespace detail
@@ -483,7 +483,7 @@ namespace jaut
      *  @tparam Args      The argument list of all arguments
      */
     template<class Predicate, class ...Args>
-    struct ArgFilter
+    struct JAUT_API ArgFilter
     {
     private:
         using FilterResult = detail::getIndices<Predicate, Args...>;
@@ -555,7 +555,7 @@ namespace jaut
      */
     template<class Derived, class Base>
     JAUT_NODISCARD
-    inline Derived stynamic_cast(Base *const base) noexcept
+    JAUT_API inline Derived stynamic_cast(Base *const base) noexcept
     {
         dbgassert((!dynamic_cast<Derived>(base)),
                   "Tried converting pointer-to-base of type '" << getActualTypeName<Base>()
@@ -578,7 +578,7 @@ namespace jaut
      */
     template<class Derived, class Base>
     JAUT_NODISCARD
-    inline Derived stynamic_cast(Base &base) noexcept
+    JAUT_API inline Derived stynamic_cast(Base &base) noexcept
     {
         return stynamic_cast<Derived>(&base);
     }
@@ -592,14 +592,15 @@ namespace jaut
      *  
      *  @tparam Exception The exception class to throw
      *  
-     *  @param errorBuilder A lambda returning a string,
-     *                      this is so that the string has not to be created if no error occurs
+     *  @param args The arguments passed to the exception
      */
-    template<class Exception>
-    void throwAssertFalse(const juce::String &message)
-    {         
-        dbgassertfalse(message)
-        throw Exception(message.toStdString());
+    template<class Exception, class ...Args>
+    JAUT_API inline void throwAssertFalse(Args &&...args)
+    {
+        const Exception ex(std::forward<Args>(args)...);
+        
+        dbgassertfalse(juce::String(ex.what()));
+        throw ex; // NOLINT
     }
     
     /**
@@ -607,21 +608,18 @@ namespace jaut
      *  so as to that it's easier to find the root cause of a problem in your program.<br>
      *  The error will also be printed to the debug console first, to make sure you have a reasonable message to
      *  understand the issue at hand.
-     *  <br><br>
-     *  The message will be passed by lambda, so that when the evaluation works in favour of not throwing, the string
-     *  does not have to be unnecessarily created.
      *  
      *  @tparam Exception The exception class to throw
      *  
-     *  @param mustBeTrue   The condition that must be true to avoid an assert throw
-     *  @param errorBuilder A lambda returning a string
+     *  @param mustBeTrue The condition that must be true to avoid an assert throw
+     *  @param args       The arguments passed to the exception
      */
-    template<class Exception, class Fn>
-    void throwAssert(bool mustBeTrue, Fn &&errorBuilder)
+    template<class Exception, class ...Args>
+    JAUT_API inline void throwAssert(bool mustBeTrue, Args &&...args)
     {
         if (!mustBeTrue)
         {
-            throwAssertFalse<Exception>(std::forward<Fn>(errorBuilder)());
+            throwAssertFalse<Exception>(std::forward<Args>(args)...);
         }
     }
 }

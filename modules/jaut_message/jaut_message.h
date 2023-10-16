@@ -34,7 +34,7 @@
 
     ID:                 jaut_message
     vendor:             ElandaSunshine
-    version:            0.1.0
+    version:            1.0.0
     name:               JAUT Message & Threading Utilities
     description:        Tools for simple message passing management.
     website:            https://github.com/elandasunshine/jaut

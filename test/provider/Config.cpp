@@ -73,7 +73,6 @@ namespace
         jaut::Config::Property *propSubProps;
             jaut::Config::Property *propDouble;
             jaut::Config::Property *propInt64;
-        jaut::Config::Property *propNull;
         jaut::Config::Property *propString;
         jaut::Config::Property *propLongString;
         
@@ -103,12 +102,12 @@ namespace
             
             config = std::make_unique<jaut::Config>(config_path, std::move(parser), std::move(options));
             
-            propBool       = &config->createProperty("test_bool",        true)             .second;
-            propInt        = &config->createProperty("test_int",         45  )             .second;
-            propNull       = &config->createProperty("test_null")                          .second;
+            propBool = &config->createProperty("test_bool", true).second;
+            propInt  = &config->createProperty("test_int",  45  ).second;
+            
             propString     = &config->createProperty("test_string",      "a string")       .second;
             propLongString = &config->createProperty("test_long_string", longString.data()).second;
-
+            
             propSubProps = &config      ->createProperty("test_children")                                       .second;
             propDouble   = &propSubProps->createProperty("test_double", 23.0)                                   .second;
             propInt64    = &propSubProps->createProperty("test_int64",  std::numeric_limits<juce::int64>::max()).second;
@@ -135,11 +134,10 @@ namespace
                         "string": "\ntesthaha\" \\"
                     })JSON"),
                 2,
-                std::numeric_limits<juce::int64>().max(),
+                std::numeric_limits<juce::int64>::max(),
                 38921,
                 32.03,
                 " blbla<&",
-                juce::var(),
                 true,
                 juce::Array<juce::var> {
                     "test\"'>",
@@ -414,7 +412,6 @@ TYPED_TEST_P(ParserFixture, TestParsers)
     this->propBool       ->setValue(false);
     this->propInt        ->setValue(test_int);
     this->propDouble     ->setValue(test_double);
-    this->propNull       ->setValue(juce::String(test_null_string     .data()));
     this->propString     ->setValue(juce::String(test_multiline_string.data()));
     this->propInt64      ->setValue({});
         
@@ -428,7 +425,6 @@ TYPED_TEST_P(ParserFixture, TestParsers)
     
     this->setup(juce::String("config.") + ext);
     
-    EXPECT_TRUE     (this->propNull->getValue().isVoid());
     EXPECT_TRUE     (static_cast<bool>        (this->propBool  ->getValue()));
     EXPECT_DOUBLE_EQ(static_cast<double>      (this->propDouble->getValue()), 23.0);
     EXPECT_EQ       (static_cast<int>         (this->propInt   ->getValue()), 45  );
@@ -452,7 +448,6 @@ TYPED_TEST_P(ParserFixture, TestParsers)
     EXPECT_FALSE    (static_cast<bool>  (this->propBool  ->getValue()));
     EXPECT_EQ       (static_cast<int>   (this->propInt   ->getValue()), test_int);
     EXPECT_DOUBLE_EQ(static_cast<double>(this->propDouble->getValue()), test_double);
-    EXPECT_STREQ    (this->propNull  ->toString().toRawUTF8(),          test_null_string     .data());
     EXPECT_STREQ    (this->propString->toString().toRawUTF8(),          test_multiline_string.data());
     EXPECT_TRUE     (this->propInt64 ->getValue().isVoid());
     EXPECT_STREQ    (this->propObjectArray->getValue().getArray()->getReference(5).toString().toRawUTF8(),

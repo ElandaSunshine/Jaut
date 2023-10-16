@@ -26,7 +26,7 @@ function(jaut_add_example target)
     set(EXAMPLE_TARGET Example${EXAMPLE_NAME})
     
     if (NOT PARG_GUI_APP)
-        add_executable(${EXAMPLE_TARGET} ${JAUT_SOURCE_DIR}/examples/${target}.cpp)
+        add_executable(${EXAMPLE_TARGET} ${Jaut_SOURCE_DIR}/examples/${target}.cpp)
         target_compile_definitions(${EXAMPLE_TARGET}
             PRIVATE
                 JUCE_STANDALONE_APPLICATION=1
@@ -46,8 +46,8 @@ function(jaut_add_example target)
             NEEDS_CURL    FALSE)
     else()
         set(SOURCE_LIST
-            ${JAUT_SOURCE_DIR}/examples/${target}.cpp
-            ${JAUT_SOURCE_DIR}/examples/detail/GuiBase.cpp)
+            ${Jaut_SOURCE_DIR}/examples/${target}.cpp
+            ${Jaut_SOURCE_DIR}/examples/detail/GuiBase.cpp)
         
         if(CMAKE_SYSTEM_NAME STREQUAL "Android")
             add_library(${EXAMPLE_TARGET} SHARED ${SOURCE_LIST})
@@ -87,7 +87,7 @@ function(jaut_add_example target)
             get_filename_component(FILE_OUT_NAME ${RESOURCE} NAME)
             
             list(APPEND RESOURCE_NAMES "${FILE_OUT_NAME}")
-            list(APPEND RESOURCE_PATHS "${JAUT_SOURCE_DIR}/example/assets/${RESOURCE}")
+            list(APPEND RESOURCE_PATHS "${Jaut_SOURCE_DIR}/example/assets/${RESOURCE}")
         endforeach()
                 
         add_custom_command(

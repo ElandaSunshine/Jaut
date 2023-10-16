@@ -136,7 +136,7 @@ namespace jaut
              *  If a property's value has been set to a type it is not valid for, then properties will throw a
              *  jaut::ConfigIncompatibleTypeException.
              */
-            bool strictTyping = true;
+            bool strictTyping = false;
             
             /** Whether the config file should be automatically created if it doesn't exist. */
             bool createFileIfNotExists = true;
@@ -350,8 +350,12 @@ namespace jaut
         //==============================================================================================================
         /**
          *  Creates a new property and adds it to the config.
-         *  If the property already exists it will return the existing one.
-         *
+         *  If the property already exists it will return the existing one.<br>
+         *  <br>
+         *  Note that in strict mode, you will need to give a property a default value,
+         *  otherwise if set to juce::var::void (juce::var default), it will be treated as a map property and can't be
+         *  assigned any value, just be used as a property with its own child properties.
+         * 
          *  @param id           The name of the new property
          *  @param categoryId   The category the property should belong to, or empty for the default category
          *  @param defaultValue The default value the property should be initialized with
@@ -368,6 +372,7 @@ namespace jaut
         
         /**
          *  Resets a whole category's properties (and children) to their defaults.
+         *  
          *  @param category The category to reset, or empty for the default category
          *  @param notify   Whether to send the change to all listeners
          */
@@ -488,7 +493,11 @@ namespace jaut
         //==============================================================================================================
         /**
          *  Creates and adds a new child property if it doesn't exist already.
-         *  If a property by that name already exists, gets the existing one.
+         *  If a property by that name already exists, gets the existing one.<br>
+         *  <br>
+         *  Note that in strict mode, you will need to give a property a default value,
+         *  otherwise if set to juce::var::void (juce::var default), it will be treated as a map property and can't be
+         *  assigned any other value just be used as a property with its own child properties.
          *
          *  @param id           The id of the child property (alphanumeric and/or underscores)
          *  @param defaultValue The default value the child property should have
