@@ -361,13 +361,16 @@ namespace jaut
                                                               juce::NotificationType parNotify)
     {
         ::validateId(parId);
-        ::validateId(parCategoryId);
+        
+        if (!parCategoryId.isEmpty())
+        {
+            ::validateId(parCategoryId);
+        }
         
         if (options.strictTyping)
         {
             switch (VarUtil::getVarType(parDefaultValue))
             {
-                case VarUtil::VarTypeId::Void:      JAUT_FALLTHROUGH;
                 case VarUtil::VarTypeId::Undefined: JAUT_FALLTHROUGH;
                 case VarUtil::VarTypeId::Unknown:
                 {
@@ -375,7 +378,7 @@ namespace jaut
                     dbgassertfalse(juce::String(ex.what()));
                     throw ex; // NOLINT
                 }
-                    
+                
                 default: break;
             }
         }
@@ -500,7 +503,6 @@ namespace jaut
         {
             switch (VarUtil::getVarType(parDefaultValue))
             {
-                case VarUtil::VarTypeId::Void:      JAUT_FALLTHROUGH;
                 case VarUtil::VarTypeId::Undefined: JAUT_FALLTHROUGH;
                 case VarUtil::VarTypeId::Unknown:
                 {

@@ -76,8 +76,8 @@ namespace jaut
                 TypeMismatch,
                 
                 /**
-                 *  Occurs when the config is set to strict typing but the property's default value has not been set
-                 *  to a definite value type. (non-null)
+                 *  Occurs when the config is set to strict typing but the property's default value has been set to
+                 *  undefined.
                  */
                 NoStrictType
             };
@@ -108,7 +108,7 @@ namespace jaut
         static ConfigIncompatibleTypeException needsStrictType(const juce::String &id)
         {
             const juce::String message = juce::String("invalid default value for id '" + id + "', in strict mode, "
-                                                      "default values can neither be undefined nor void");
+                                                      "default values can not be undefined");
             return ConfigIncompatibleTypeException(message, ErrorCode::NoStrictType);
         }
         
