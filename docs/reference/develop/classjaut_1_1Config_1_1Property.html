@@ -451,7 +451,9 @@ Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates and adds a new child property if it doesn't exist already. </p>
-<p>If a property by that name already exists, gets the existing one.</p>
+<p>If a property by that name already exists, gets the existing one.<br  />
+ <br  />
+ Note that in strict mode, you will need to give a property a default value, otherwise if set to juce::var::void (juce::var default), it will be treated as a map property and can't be assigned any other value just be used as a property with its own child properties.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>The id of the child property (alphanumeric and/or underscores) </td></tr>

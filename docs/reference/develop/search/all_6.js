@@ -1,7 +1,7 @@
 var searchData=
 [
   ['failed_0',['failed',['../classjaut_1_1OperationResult.html#ab98b9d1bb174e1b575e3dbc1775e2f38',1,'jaut::OperationResult']]],
-  ['fatal_1',['fatal',['../classjaut_1_1AbstractLogger.html#a0917d43e016eeae2be265ae5113be7e2',1,'jaut::AbstractLogger::fatal(const juce::String &amp;message)'],['../classjaut_1_1AbstractLogger.html#a242103f8dbbaff41d647889ad2942694',1,'jaut::AbstractLogger::fatal(const juce::String &amp;message, const std::exception &amp;exception)'],['../classjaut_1_1AbstractLogger.html#a16fb716a6fd377fd96714d516c6fce73',1,'jaut::AbstractLogger::fatal(const juce::String &amp;message, Args &amp;&amp;...args)'],['../structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836a37584e257e6c9d908a780a783b50b9a5',1,'jaut::LogLevel::Fatal']]],
+  ['fatal_1',['fatal',['../structjaut_1_1LogLevel.html#a79dcdcc0e6c139be7b5c84bcdf8bc836a37584e257e6c9d908a780a783b50b9a5',1,'jaut::LogLevel::Fatal'],['../classjaut_1_1AbstractLogger.html#a0917d43e016eeae2be265ae5113be7e2',1,'jaut::AbstractLogger::fatal(const juce::String &amp;message)'],['../classjaut_1_1AbstractLogger.html#a242103f8dbbaff41d647889ad2942694',1,'jaut::AbstractLogger::fatal(const juce::String &amp;message, const std::exception &amp;exception)'],['../classjaut_1_1AbstractLogger.html#a16fb716a6fd377fd96714d516c6fce73',1,'jaut::AbstractLogger::fatal(const juce::String &amp;message, Args &amp;&amp;...args)']]],
   ['field_2',['Field',['../structjaut_1_1LogMessage_1_1Field.html',1,'jaut::LogMessage']]],
   ['fields_3',['fields',['../structjaut_1_1LogMessage.html#afe9b5a3c1b4d4166f7b80fd320da66d8',1,'jaut::LogMessage']]],
   ['filename_4',['fileName',['../structjaut_1_1Config_1_1Options.html#a92a15ebca586e6af96ae89ae380ccef2',1,'jaut::Config::Options']]],

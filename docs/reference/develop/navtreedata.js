@@ -49,7 +49,7 @@ var NAVTREE =
       [ "Usage", "md__2github_2workspace_2README.html#autotoc_md219", null ],
       [ "Known Issues", "md__2github_2workspace_2README.html#autotoc_md220", null ],
       [ "License", "md__2github_2workspace_2README.html#autotoc_md221", [
-        [ "JAUT", "md__2github_2workspace_2README.html#autotoc_md222", null ],
+        [ "Jaut", "md__2github_2workspace_2README.html#autotoc_md222", null ],
         [ "FMT & MS SafeInt", "md__2github_2workspace_2README.html#autotoc_md223", null ]
       ] ],
       [ "Contact", "md__2github_2workspace_2README.html#autotoc_md224", null ]

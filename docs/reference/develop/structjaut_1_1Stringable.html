@@ -133,7 +133,7 @@ struct jaut::Stringable&lt; T &gt;</div><p>Defines a customisable template speci
  If no other way of representing this object was found, it will print the name of the class and its address in memory. (ns::MyClass@0x0000...) <br  />
 <br  />
  Additionally, you can define your own way how type names should be serialised with a simple static <a class="el" href="structjaut_1_1Stringable.html#ae84f754539faf90be838dd973e4d3366">name()</a> function which returns a string with the name.<br  />
- Otherwise it will try to derive the type name with <a class="el" href="namespacejaut.html#ad4ce4bb74ea73e3c75ee03627f0eccdb">jaut::getActualTypeName()</a> which will try to get the name from its typeid. <br  />
+ Otherwise it will try to derive the type name with <a class="el" href="namespacejaut.html#af4cc5f078e527f1c647a1d0a2b40190f">jaut::getActualTypeName()</a> which will try to get the name from its typeid. <br  />
 <br  />
  The major intent behind this class is debugging and logging, but you can use it for anything you like.<br  />
  Just note that, for the most part, this does not return a representation that is usable for JSON or any other parser, but instead just a visual guideline helping in printing out the most important parts of an object.<br  />

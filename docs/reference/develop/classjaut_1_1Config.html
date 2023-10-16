@@ -854,7 +854,9 @@ Static Public Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a new property and adds it to the config. </p>
-<p>If the property already exists it will return the existing one.</p>
+<p>If the property already exists it will return the existing one.<br  />
+ <br  />
+ Note that in strict mode, you will need to give a property a default value, otherwise if set to juce::var::void (juce::var default), it will be treated as a map property and can't be assigned any value, just be used as a property with its own child properties.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>The name of the new property </td></tr>
