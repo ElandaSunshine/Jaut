@@ -1,5 +1,5 @@
 juce_add_modules(
-    INSTALL_PATH    "include/jaut/${JAUT_VERSION}"
+    INSTALL_PATH    "include/jaut/${Jaut_VERSION}"
     ALIAS_NAMESPACE jaut
     
     jaut_audio
