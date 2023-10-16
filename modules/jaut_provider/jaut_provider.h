@@ -34,7 +34,7 @@
 
     ID:                 jaut_provider
     vendor:             ElandaSunshine
-    version:            0.1.0
+    version:            1.0.0
     name:               JAUT Data & Storage Classes
     description:        Defines classes for advanced data management like configurations and folder management.
     website:            https://github.com/elandasunshine/jaut

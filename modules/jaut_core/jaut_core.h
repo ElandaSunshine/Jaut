@@ -34,7 +34,7 @@
 
     ID:                 jaut_core
     vendor:             ElandaSunshine
-    version:            0.1.0
+    version:            1.0.0
     name:               JAUT Core Library
     description:        Core functionality of jaut.
     website:            https://github.com/elandasunshine/jaut

@@ -34,7 +34,7 @@
 
     ID:                 jaut_dummy
     vendor:             ElandaSunshine
-    version:            0.1.0
+    version:            1.0.0
     name:               JAUT Unit Test Dummy
     description:        JAUT dummy module for unit testing purposes, you won't likely need this, sooo... just ignore it.
     website:            https://github.com/elandasunshine/jaut
