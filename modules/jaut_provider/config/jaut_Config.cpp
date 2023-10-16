@@ -87,7 +87,7 @@ namespace
     
     bool isValidType(const juce::var &defaultVar, const juce::var &var) noexcept
     {
-        return (defaultVar.hasSameTypeAs(var) || var.isVoid());
+        return (!defaultVar.isVoid() && (defaultVar.hasSameTypeAs(var) || var.isVoid()));
     }
     
     std::string_view deduceConfigName(const jaut::IConfigParser *const parser) noexcept
@@ -643,12 +643,12 @@ namespace jaut
     
     bool Config::Property::isMapProperty() const noexcept
     {
-        return hasChildren();
+        return (config.options.strictTyping ? defaultValue.isVoid() : hasChildren());
     }
     
     bool Config::Property::isValueProperty() const noexcept
     {
-        return !hasChildren();
+        return !isMapProperty();
     }
     
     bool Config::Property::isCategory() const noexcept
