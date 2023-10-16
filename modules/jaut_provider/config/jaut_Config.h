@@ -136,7 +136,7 @@ namespace jaut
              *  If a property's value has been set to a type it is not valid for, then properties will throw a
              *  jaut::ConfigIncompatibleTypeException.
              */
-            bool strictTyping = true;
+            bool strictTyping = false;
             
             /** Whether the config file should be automatically created if it doesn't exist. */
             bool createFileIfNotExists = true;

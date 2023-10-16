@@ -35,6 +35,7 @@
 #include <jaut_provider/config/jaut_Config.h>
 
 #include <jaut_core/util/jaut_VarUtil.h>
+#include <jaut_core/util/jaut_CommonUtils.h>
 #include <jaut_provider/config/jaut_ConfigException.h>
 
 #include <jaut_provider/config/parser/jaut_XmlParser.h>
@@ -54,34 +55,11 @@ namespace
         return (category.isEmpty() ? config.getOptions().defaultCategory : category);
     }
     
-    juce::juce_wchar getFirstInvalidCharacter(const juce::String &id)
-    {
-        for (const auto c : id)
-        {
-            if (!juce::CharacterFunctions::isLetterOrDigit(c) && c != '_')
-            {
-                return c;
-            }
-        }
-        
-        return 0;
-    }
-    
     void validateId(const juce::String &id)
     {
         if (id.isEmpty())
         {
-            throw jaut::ConfigPropertyIdException("", "can't be empty");
-        }
-        
-        if (id.equalsIgnoreCase("value"))
-        {
-            throw jaut::ConfigPropertyIdException(id, "name not allowed");
-        }
-        
-        if (const juce::juce_wchar c = getFirstInvalidCharacter(id))
-        {
-            throw jaut::ConfigPropertyIdException(id, juce::String("'") + c + "' is not a valid id character");
+            jaut::throwAssertFalse<jaut::ConfigPropertyIdException>("", "can't be empty");
         }
     }
     
@@ -93,7 +71,8 @@ namespace
         {
             if (expression.endsWithChar('.') || expression.startsWithChar('.') || expression.contains(".."))
             {
-                throw jaut::ConfigPropertyIdException(expression, "property-path expression is not valid");
+                jaut::throwAssertFalse<jaut::ConfigPropertyIdException>(expression,
+                                                                        "property-path expression is not valid");
             }
             
             hierarchy = juce::StringArray::fromTokens(expression, ".", "");
@@ -136,17 +115,12 @@ namespace
                                    const jaut::IConfigParser *const parser,
                                    const jaut::Config::Options      &options)
     {
-        if (!juce::File::isAbsolutePath(directory))
-        {
-            throw jaut::ConfigIOException("invalid file path'" + directory + "', directory must be an absolute path");
-        }
-        
-        juce::File config_file = directory;
+        juce::File config_file(directory);
         
         if (!config_file.exists() || !config_file.isDirectory())
         {
-            throw jaut::ConfigIOException("invalid file path'" + directory
-                                          + "', file does not exist or is not a directory");
+            jaut::throwAssertFalse<jaut::ConfigIOException>("invalid file path '" + directory
+                                                            + "', directory does not exist or is not a directory");
         }
         
         if (!options.fileName.isEmpty())
@@ -161,8 +135,8 @@ namespace
         
         if (config_file.exists() && config_file.isDirectory())
         {
-            throw jaut::ConfigIOException("invalid file path'" + config_file.getFullPathName()
-                                          + "', file exists but is a directory");
+            jaut::throwAssertFalse<jaut::ConfigIOException>("invalid file path '" + config_file.getFullPathName()
+                                                            + "', file exists but is a directory");
         }
         
         return config_file.getFullPathName();
@@ -248,9 +222,9 @@ namespace jaut
     
     //==================================================================================================================
     Config::Config(juce::File parDirectory, NonNull<ConfigParserPtr> parConfigParser, Options parOptions)
-        : options(std::move(parOptions)),
+        : options (std::move(parOptions)),
           fullPath(std::move(parDirectory)),
-          parser(std::move(parConfigParser.get()))
+          parser  (std::move(parConfigParser.get()))
     {
         fullPath = ::processConfigName(fullPath.getFullPathName(), parser.get(), options);
         ::validateId(options.defaultCategory);
@@ -308,8 +282,9 @@ namespace jaut
             
             if (const juce::Result result = config_file.create(); !result.wasOk())
             {
-                throw ConfigIOException("config file could not be created, " + result.getErrorMessage()
-                                        + "(" + config_file.getFullPathName() + ")");
+                jaut::throwAssertFalse<jaut::ConfigIOException>("config file could not be created, "
+                                                                + result.getErrorMessage()
+                                                                + "(" + config_file.getFullPathName() + ")");
             }
         }
     
@@ -385,6 +360,26 @@ namespace jaut
                                                               const juce::String     &parCategoryId,
                                                               juce::NotificationType parNotify)
     {
+        ::validateId(parId);
+        ::validateId(parCategoryId);
+        
+        if (options.strictTyping)
+        {
+            switch (VarUtil::getVarType(parDefaultValue))
+            {
+                case VarUtil::VarTypeId::Void:      JAUT_FALLTHROUGH;
+                case VarUtil::VarTypeId::Undefined: JAUT_FALLTHROUGH;
+                case VarUtil::VarTypeId::Unknown:
+                {
+                    const auto ex = ConfigIncompatibleTypeException::needsStrictType(parId);
+                    dbgassertfalse(juce::String(ex.what()));
+                    throw ex; // NOLINT
+                }
+                    
+                default: break;
+            }
+        }
+        
         Property *category = getCategory(parCategoryId);
         
         if (!category)
@@ -501,6 +496,23 @@ namespace jaut
     {
         ::validateId(parId);
         
+        if (config.options.strictTyping)
+        {
+            switch (VarUtil::getVarType(parDefaultValue))
+            {
+                case VarUtil::VarTypeId::Void:      JAUT_FALLTHROUGH;
+                case VarUtil::VarTypeId::Undefined: JAUT_FALLTHROUGH;
+                case VarUtil::VarTypeId::Unknown:
+                {
+                    const auto ex = ConfigIncompatibleTypeException::needsStrictType(parId);
+                    dbgassertfalse(juce::String(ex.what()));
+                    throw ex; // NOLINT
+                }
+                    
+                default: break;
+            }
+        }
+        
         const auto &[it, inserted] = properties.try_emplace(parId, internalDelegate_v, parId,
                                                             parDefaultValue, config, this);
         
@@ -600,7 +612,9 @@ namespace jaut
     {
         if (config.options.strictTyping && !::isValidType(defaultValue, parNewValue))
         {
-            throw ConfigIncompatibleTypeException::unexpectedPropertyType(parNewValue, defaultValue);
+            const auto ex = ConfigIncompatibleTypeException::unexpectedPropertyType(parNewValue, defaultValue);
+            dbgassertfalse(juce::String(ex.what()))
+            throw ex; // NOLINT
         }
         
         return modifyValue(parNewValue, parNotify);
