@@ -127,27 +127,15 @@ function(jaut_add_example target)
             
             ${BINARY_DATA_TARGET}
             ${PARG_DEPENDENCIES})
-    
-    if (MSVC)
-        target_compile_options(${EXAMPLE_TARGET}
-            PRIVATE
-                /W4
-                /WX)
-    else()
-        target_compile_options(${EXAMPLE_TARGET}
-            PRIVATE
-                -Wall
-                -Wextra
-                -Wpedantic
-                -Werror)
-    endif()
 endfunction()
 
 
 
 ########################################################################################################################
-jaut_add_example(GuiExamples GUI_APP
+##jaut_add_example(GuiExamples GUI_APP
+##    DEPENDENCIES
+##        jaut::jaut_gui)
+
+jaut_add_example(Config
     DEPENDENCIES
-        jaut::jaut_gui)
-
-
+        jaut::jaut_provider)
