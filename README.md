@@ -3,8 +3,8 @@
 
 [![GitHub Workflow Status (with event)](https://img.shields.io/github/actions/workflow/status/ElandaSunshine/Jaut/cmake-multi-platform.yml?style=for-the-badge&logo=cmake&logoColor=white&label=CTest)](https://github.com/ElandaSunshine/Jaut/actions/workflows/cmake-multi-platform.yml)
 [![GitHub tag (with filter)](https://img.shields.io/github/v/tag/ElandaSunshine/Jaut?filter=!v-*&style=for-the-badge&label=Version)](https://github.com/ElandaSunshine/Jaut/releases)
-[![Codacy grade](https://img.shields.io/codacy/grade/722125803a844559a0e81855b20a45d0?style=for-the-badge&logo=codacy&label=Code%20Quality)
-](https://app.codacy.com/gh/ElandaSunshine/Jaut/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade&label=Grade)
+[![Codacy grade](https://img.shields.io/codacy/grade/2e299d0fd75a4f92a5d016b3a92eaeee?style=for-the-badge&logo=codacy&label=Code%20Quality)
+](https://app.codacy.com/gh/ElandaSunshine/ExTrait/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade&label=Grade)
 
 > [!WARNING]  
 > This is still in heavy development, use this at your own risk. Many things are still not working as expected, and some of the code formatting is still off. Namely the gui module will not work in its current state.
